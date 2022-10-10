@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "HL7Validation": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7034",
+      "launchBrowser": false
+    }
+  }
+}
