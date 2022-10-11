@@ -3,7 +3,6 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NHapi.Base.Parser;
-using NHapi.Base.Validation.Implementation;
 
 namespace HL7Validation.Parser
 {
@@ -29,8 +28,8 @@ namespace HL7Validation.Parser
             try
             {
                 //make the parser use 'StrictValidation'
-                var parser = new PipeParser { ValidationContext = new StrictValidation() };
-                var parsedMessage = parser.Parse(hl7Message);
+                var parser = new PipeParser { ValidationContext =new Validation.CustomValidation() };
+                var parsedMessage = parser.Parse(hl7Message);                
                 return await Task.FromResult(new ContentResult() { Content = parsedMessage?.GetType().Name, StatusCode = 200, ContentType = "text/plain" });
 
             }
@@ -38,7 +37,7 @@ namespace HL7Validation.Parser
             {
                 _logger?.LogError(ex, "{Name}-{Id} validation message.", Name, Id);
                 _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                return await Task.FromResult(new ContentResult() { Content = $"Error while validating message:{ex.Message}", StatusCode = 500, ContentType = "text/plain" });
+                return await Task.FromResult(new ContentResult() { Content = $"Error while validating message:{(ex.InnerException!=null?ex.InnerException:ex.Message)}", StatusCode = 500, ContentType = "text/plain" });
             }
         }
     }
