@@ -1,5 +1,5 @@
 ﻿using HL7Validation.Configuration;
-using HL7Validation.Parser;
+using HL7Validation.ValidateMessage;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace HL7Validation.Parser
+namespace HL7Validation.ValidateMessage
 {
     public interface IValidateHL7Message
     {

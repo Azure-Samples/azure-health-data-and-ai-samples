@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NHapi.Base.Parser;
 
-namespace HL7Validation.Parser
+namespace HL7Validation.ValidateMessage
 {
     public class ValidateHL7Message : IValidateHL7Message
     {

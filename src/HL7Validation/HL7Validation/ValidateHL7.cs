@@ -1,4 +1,4 @@
-using HL7Validation.Parser;
+using HL7Validation.ValidateMessage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
