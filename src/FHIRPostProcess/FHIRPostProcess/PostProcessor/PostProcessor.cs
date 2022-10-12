@@ -6,6 +6,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text;
+using Task = System.Threading.Tasks.Task;
 
 namespace FHIRPostProcess.PostProcessor
 {
@@ -59,17 +60,18 @@ namespace FHIRPostProcess.PostProcessor
                 }
 
                 var postProcessBundle = bundleResource.ToJson();
-                MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(postProcessBundle));
 
                 var response = request.CreateResponse(HttpStatusCode.OK);
-                response.Body = stream;
+                response.Body = new MemoryStream(Encoding.UTF8.GetBytes(postProcessBundle));
                 return response;
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "{Name}-{Id} validation message.", Name, Id);
                 _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                throw;
+                var errorResponse = request.CreateResponse(HttpStatusCode.InternalServerError);
+                errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(ex.Message));
+                return await Task.FromResult(errorResponse);
             }
         }
 
