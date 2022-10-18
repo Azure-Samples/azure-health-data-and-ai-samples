@@ -1,5 +1,6 @@
 # HL7 Validation Function
-    This Azure Function is used to validate the HL7 Messages with the help of NAHPI Tool. We'll cover everything from deploying infrastructure, debugging locally and deploying to Azure.		
+
+This Azure Function is used to validate the HL7 Messages with the help of NAHPI Tool. We'll cover everything from deploying infrastructure, debugging locally and deploying to Azure.		
 
 ## Prerequisites
 - An Azure account with an active subscription.
