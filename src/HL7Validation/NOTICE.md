@@ -1,17 +1,17 @@
-﻿NOTICES
+﻿## NOTICES
 
 This repository incorporates material as listed below or described in the code.
 
-### Component
+## Component
 NHAPI
 
-### Open Source License/Copyright Notice
+## Open Source License/Copyright Notice
 Copyright (c) Mozilla Public License 2.0. All rights reserved.
 
-Mozilla Public License Version 2.0
+### Mozilla Public License Version 2.0
 ==================================
 
-1. Definitions
+1.Definitions
 --------------
 
 1.1. "Contributor"
@@ -93,7 +93,7 @@ Mozilla Public License Version 2.0
     fifty percent (50%) of the outstanding shares or beneficial
     ownership of such entity.
 
-2. License Grants and Conditions
+2.License Grants and Conditions
 --------------------------------
 
 2.1. Grants
@@ -164,7 +164,7 @@ equivalents.
 Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted
 in Section 2.1.
 
-3. Responsibilities
+3.Responsibilities
 -------------------
 
 3.1. Distribution of Source Form
@@ -226,7 +226,7 @@ indemnity or liability terms You offer. You may include additional
 disclaimers of warranty and limitations of liability specific to any
 jurisdiction.
 
-4. Inability to Comply Due to Statute or Regulation
+4.Inability to Comply Due to Statute or Regulation
 ---------------------------------------------------
 
 If it is impossible for You to comply with any of the terms of this
@@ -239,7 +239,7 @@ Software under this License. Except to the extent prohibited by statute
 or regulation, such description must be sufficiently detailed for a
 recipient of ordinary skill to be able to understand it.
 
-5. Termination
+5.Termination
 --------------
 
 5.1. The rights granted under this License will terminate automatically
@@ -268,49 +268,49 @@ end user license agreements (excluding distributors and resellers) which
 have been validly granted by You or Your distributors under this License
 prior to termination shall survive termination.
 
-************************************************************************
-*                                                                      *
-*  6. Disclaimer of Warranty                                           *
-*  -------------------------                                           *
-*                                                                      *
-*  Covered Software is provided under this License on an "as is"       *
-*  basis, without warranty of any kind, either expressed, implied, or  *
-*  statutory, including, without limitation, warranties that the       *
-*  Covered Software is free of defects, merchantable, fit for a        *
-*  particular purpose or non-infringing. The entire risk as to the     *
-*  quality and performance of the Covered Software is with You.        *
-*  Should any Covered Software prove defective in any respect, You     *
-*  (not any Contributor) assume the cost of any necessary servicing,   *
-*  repair, or correction. This disclaimer of warranty constitutes an   *
-*  essential part of this License. No use of any Covered Software is   *
-*  authorized under this License except under this disclaimer.         *
-*                                                                      *
-************************************************************************
+```sh
+                                                                       
+   6.Disclaimer of Warranty                                           
+   -------------------------                                           
+                                                                     
+   Covered Software is provided under this License on an "as is"       
+   basis, without warranty of any kind, either expressed, implied, or  
+   statutory, including, without limitation, warranties that the       
+   Covered Software is free of defects, merchantable, fit for a        
+   particular purpose or non-infringing. The entire risk as to the     
+   quality and performance of the Covered Software is with You.        
+   Should any Covered Software prove defective in any respect, You     
+   (not any Contributor) assume the cost of any necessary servicing,   
+   repair, or correction. This disclaimer of warranty constitutes an   
+    essential part of this License. No use of any Covered Software is   
+   authorized under this License except under this disclaimer.         
+                                                                       
+```
 
-************************************************************************
-*                                                                      *
-*  7. Limitation of Liability                                          *
-*  --------------------------                                          *
-*                                                                      *
-*  Under no circumstances and under no legal theory, whether tort      *
-*  (including negligence), contract, or otherwise, shall any           *
-*  Contributor, or anyone who distributes Covered Software as          *
-*  permitted above, be liable to You for any direct, indirect,         *
-*  special, incidental, or consequential damages of any character      *
-*  including, without limitation, damages for lost profits, loss of    *
-*  goodwill, work stoppage, computer failure or malfunction, or any    *
-*  and all other commercial damages or losses, even if such party      *
-*  shall have been informed of the possibility of such damages. This   *
-*  limitation of liability shall not apply to liability for death or   *
-*  personal injury resulting from such party's negligence to the       *
-*  extent applicable law prohibits such limitation. Some               *
-*  jurisdictions do not allow the exclusion or limitation of           *
-*  incidental or consequential damages, so this exclusion and          *
-*  limitation may not apply to You.                                    *
-*                                                                      *
-************************************************************************
+```sh
+                                                                     
+   7.Limitation of Liability                                          
+   --------------------------                                          
+                                                                       
+   Under no circumstances and under no legal theory, whether tort      
+   (including negligence), contract, or otherwise, shall any           
+   Contributor, or anyone who distributes Covered Software as          
+   permitted above, be liable to You for any direct, indirect,         
+   special, incidental, or consequential damages of any character      
+   including, without limitation, damages for lost profits, loss of    
+   goodwill, work stoppage, computer failure or malfunction, or any    
+   and all other commercial damages or losses, even if such party      
+   shall have been informed of the possibility of such damages. This   
+   limitation of liability shall not apply to liability for death or   
+   personal injury resulting from such party's negligence to the       
+   extent applicable law prohibits such limitation. Some               
+   jurisdictions do not allow the exclusion or limitation of           
+   incidental or consequential damages, so this exclusion and          
+   limitation may not apply to You.                                    
+                                                                      
+```
 
-8. Litigation
+8.Litigation
 -------------
 
 Any litigation relating to this License may be brought only in the
@@ -320,7 +320,7 @@ jurisdiction, without reference to its conflict-of-law provisions.
 Nothing in this Section shall prevent a party's ability to bring
 cross-claims or counter-claims.
 
-9. Miscellaneous
+9.Miscellaneous
 ----------------
 
 This License represents the complete agreement concerning the subject
@@ -330,7 +330,7 @@ necessary to make it enforceable. Any law or regulation which provides
 that the language of a contract shall be construed against the drafter
 shall not be used to construe this License against a Contributor.
 
-10. Versions of the License
+10.Versions of the License
 ---------------------------
 
 10.1. New Versions
@@ -381,3 +381,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 
   This Source Code Form is "Incompatible With Secondary Licenses", as
   defined by the Mozilla Public License, v. 2.0.
+
+## Additional Attribution
+
+- AUTHORS : Chad Chenoweth,Duane Edwards,Jake Aitchison
