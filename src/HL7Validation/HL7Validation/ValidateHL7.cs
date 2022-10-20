@@ -18,18 +18,11 @@ namespace HL7Validation
         private readonly ILogger _logger;
 
         [Function("ValidateHL7")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
             _logger.LogInformation("ValidateHL7 function processed a request.");
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            if (requestBody != null)
-            {
-                return await _iValidateHL7Message.ValidateMessage(requestBody);
-            }
-            else
-            {
-                return await Task.FromResult(new ContentResult() { Content = $"Requested content should not be blank.", StatusCode = 500, ContentType = "text/plain" });
-            }
+            return await _iValidateHL7Message.ValidateMessage(req);
+
         }
     }
 }

@@ -1,9 +1,15 @@
 using HL7Validation.Configuration;
 using HL7Validation.ValidateMessage;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Text;
 using Xunit.Abstractions;
+using HL7Validation.Tests.Assets;
 
 namespace HL7Validation.Test
 {
@@ -29,8 +35,17 @@ namespace HL7Validation.Test
             try
             {
                 IValidateHL7Message validateHL7Message = new ValidateHL7Message();
-                ContentResult contentResult = await validateHL7Message.ValidateMessage(message);
-                Assert.Equal(200, contentResult.StatusCode);
+                string requestUriString = "http://example.org/test";
+                FunctionContext funcContext = new FakeFunctionContext();
+                List<KeyValuePair<string, string>> headerList = new();
+                headerList.Add(new KeyValuePair<string, string>("Accept", "application/json"));
+                HttpHeadersCollection headers = new();
+                MemoryStream reqstream = new MemoryStream(Encoding.UTF8.GetBytes(message));
+                HttpRequestData request = new FakeHttpRequestData(funcContext, "POST", requestUriString, reqstream, headers);
+
+                var httpResponseData = await validateHL7Message.ValidateMessage(request);
+                Assert.Equal(HttpStatusCode.OK, httpResponseData.StatusCode);
+
             }
             catch (Exception ex)
             {
@@ -45,8 +60,16 @@ namespace HL7Validation.Test
             try
             {
                 IValidateHL7Message validateHL7Message = new ValidateHL7Message();
-                ContentResult contentResult = await validateHL7Message.ValidateMessage(message);
-                Assert.Equal(500, contentResult.StatusCode);
+                string requestUriString = "http://example.org/test";
+                FunctionContext funcContext = new FakeFunctionContext();
+                List<KeyValuePair<string, string>> headerList = new();
+                headerList.Add(new KeyValuePair<string, string>("Accept", "application/json"));
+                HttpHeadersCollection headers = new();
+                MemoryStream reqstream = new MemoryStream(Encoding.UTF8.GetBytes(message));
+                HttpRequestData request = new FakeHttpRequestData(funcContext, "POST", requestUriString, reqstream, headers);
+
+                var httpResponseData = await validateHL7Message.ValidateMessage(request);
+                Assert.Equal(HttpStatusCode.InternalServerError, httpResponseData.StatusCode);
             }
             catch (Exception ex)
             {
