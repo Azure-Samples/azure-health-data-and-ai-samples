@@ -35,6 +35,10 @@ namespace FHIRPostProcess.PostProcessor
             try
             {
                 FhirJsonParser _parser = new();
+                //change the parser settings to skip validations
+                _parser.Settings.AllowUnrecognizedEnums = true;
+                _parser.Settings.AcceptUnknownMembers = true;
+                _parser.Settings.PermissiveParsing = true;
                 string reqBundle = await new StreamReader(request.Body).ReadToEndAsync();
                 Bundle bundleResource = _parser.Parse<Bundle>(reqBundle);
 

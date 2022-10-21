@@ -72,7 +72,8 @@ This post process will create the below resources. These will be used both for l
  - post processing involves two operations 
       - changing bundle type to `transaction`
       - removing empty resources from FHIR bundle.
-- `Hl7.Fhir.R4` library also has inbuilt validation for invalid fields and its data For FHIR Bundle parsing which we can disable using `FhirJsonParser` settings.
+- `Hl7.Fhir.R4` library also has inbuilt validation for invalid fields and its data For FHIR Bundle parsing which we can disable using `FhirJsonParser` settings, currently we have disabled parsing validations in given post processing function.
 - To know more about `Hl7.Fhir.R4` please refer this [link](https://github.com/FirelyTeam/firely-net-sdk/tree/develop-r4).
 - The FHIR Post process function end point method is listed below   
   - PUT: Accepts the FHIR Bundle json as input and performs post processing in order to remove empty resources from Bundle and returns FHIR bundle json with bundle type as `transaction`.
+
