@@ -1,60 +1,44 @@
-# Project Name
+# Azure Health Data Services Samples Repo
+The Azure Health Data Services Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data Services, learn how to use our products, and accelerate your implementations. 
 
-(short, 1-3 sentenced, description of the project)
+This project hosts open-source **samples** for Azure Health Data Services. To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/en-us/azure/healthcare-apis/healthcare-apis-overview)
 
-## Features
+## Samples
 
-This project framework provides the following features:
+This project provides samples outlining example implementations of various use cases across stages of health data workflows. The samples are listed here:
 
-* Feature 1
-* Feature 2
-* ...
+### Data ingestion into Health Data Services
 
-## Getting Started
-
-### Prerequisites
-
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+|Sample|Description|
+| --- | --- |
+| [Sample HL7v2 Data Ingestion Pipeline]() | Sample app that shows how to ingest HL7v2 data into FHIR server, including conversion and validation. |
 
 
-## Demo
+### Sample transactions
+|Sample|Description|
+| --- | --- |
+| [Example Postman queries *(coming soon)*]() | Postman collection of common Postman queries used to query FHIR data.|
 
-A demo app is included to show how to use the project.
+### Analytics and machine learning
+|Sample|Description|
+| --- | --- |
+| FHIR Delta Lake with Databricks | End-to-end sample showing data from FHIR Service into Databricks Delta Lake Bronze, Silver, and Gold Levels |
+| PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
 
-To run the demo, follow these steps:
+### SMART on FHIR
+|Sample|Description|
+| --- | --- |
+| Sample coming soon! | |
 
-(Add steps to start up the demo)
+### Other integrations
+|Sample|Description|
+| --- | --- |
+| FHIR to HL7v2 format for ingestion back into an EHR (coming soon)| Sample to convert FHIR data to HL7v2 format suitable for ingestion into an EHR. |
 
-1.
-2.
-3.
+
 
 ## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+- [Azure Health Data Services documentation](https://learn.microsoft.com/en-us/azure/healthcare-apis/healthcare-apis-overview)
 
 
 ## Contributing
