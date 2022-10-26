@@ -1,4 +1,6 @@
     MIT License
+    
+    Azure Health Data Services Samples Repo
 
     Copyright (c) Microsoft Corporation.
 
