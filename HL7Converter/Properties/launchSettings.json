@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "HL7Converter": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7159",
+      "launchBrowser": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <IsPackable>false</IsPackable>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <LangVersion>preview</LangVersion>
+	  <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+	  <OutputType>Exe</OutputType>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <OutputType>Exe</OutputType>
+	  <UserSecretsId>1a6b031d-636a-4b92-9352-6c3a72050ef0</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+	  <PackageReference Include="Azure.Identity" Version="1.7.0" />
+	  <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+	  <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+	  <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
+	  <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" OutputItemType="Analyzer" />
+	  <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.9.0" />
+	  <PackageReference Include="DotNetEnv " Version="2.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>
