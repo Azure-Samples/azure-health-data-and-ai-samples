@@ -89,7 +89,7 @@ namespace HL7Validation.ValidateMessage
                                     if (postData.proceedOnError == false)
                                     {
                                         var errorResponse = request.CreateResponse(HttpStatusCode.InternalServerError);
-                                        errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(blob.Name + " "+exMessage));
+                                        errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes("FileName: " + blob.Name + ",Error Message: " + exMessage));
                                         return await Task.FromResult(errorResponse);
                                     }
                                     FailHl7Files failHl7File = new();
