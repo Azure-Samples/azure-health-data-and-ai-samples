@@ -9,6 +9,7 @@ namespace HL7Validation.Validation
         {
             var messageTypeRule = new MessageTypeRule();
             MessageRuleBindings.Add(new RuleBinding("*", "*", messageTypeRule));
+
         }
     }
 }

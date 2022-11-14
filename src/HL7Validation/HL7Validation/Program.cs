@@ -9,13 +9,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using System.Reflection;
 
-MyServiceConfig config = new();
+HL7ValidationConfig config = new();
 
 using IHost host = new HostBuilder()
     .ConfigureAppConfiguration((hostingContext, configuration) =>
     {
-        configuration.Sources.Clear();        
+        configuration.Sources.Clear();
+
         configuration
+            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
             .AddEnvironmentVariables("AZURE_");
 
@@ -25,6 +27,7 @@ using IHost host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices(services =>
     {
+
         if (config.AppInsightConnectionstring != null)
         {
             services.AddLogging(builder =>
@@ -37,9 +40,18 @@ using IHost host = new HostBuilder()
             {
                 options.ConnectionString = config.AppInsightConnectionstring;
             });
-            services.AddTransient<TelemetryClient>();
+            services.AddScoped<TelemetryClient>();
         }
+        BlobConfig blobConfig = new()
+        {
+            BlobConnectionString = config.BlobConnectionString,
+            ValidatedBlobContainer = config.ValidatedBlobContainer,
+            Hl7validationfailBlobContainer = config.Hl7validationfailBlobContainer
+        };
+
+        services.AddSingleton(blobConfig);
         services.AddTransient<IValidateHL7Message, ValidateHL7Message>();
+
     })
     .Build();
 

@@ -1,21 +1,19 @@
 using HL7Validation.Configuration;
+using HL7Validation.Tests.Assets;
 using HL7Validation.ValidateMessage;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using Xunit.Abstractions;
-using HL7Validation.Tests.Assets;
 
 namespace HL7Validation.Test
 {
     public class ValidateHL7Test
     {
-        private static MyServiceConfig? config;
+        private static HL7ValidationConfig? config;
         private static ITestOutputHelper? testContext;
 
         public ValidateHL7Test(ITestOutputHelper context)
@@ -25,7 +23,7 @@ namespace HL7Validation.Test
                 .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
                 .AddEnvironmentVariables("AZURE_");
             IConfigurationRoot root = builder.Build();
-            config = new MyServiceConfig();
+            config = new HL7ValidationConfig();
             root.Bind(config);
         }
         [Fact]
@@ -34,7 +32,14 @@ namespace HL7Validation.Test
             string message = await File.ReadAllTextAsync(@"../../../TestSample/ADT_A01_Pid_CX1.hl7");
             try
             {
-                IValidateHL7Message validateHL7Message = new ValidateHL7Message();
+                BlobConfig blobConfig = new()
+                {
+                    BlobConnectionString = config?.BlobConnectionString,
+                    ValidatedBlobContainer = config?.ValidatedBlobContainer,
+                    Hl7validationfailBlobContainer = config?.Hl7validationfailBlobContainer
+                };
+
+                IValidateHL7Message validateHL7Message = new ValidateHL7Message(blobConfig);
                 string requestUriString = "http://example.org/test";
                 FunctionContext funcContext = new FakeFunctionContext();
                 List<KeyValuePair<string, string>> headerList = new();
@@ -49,7 +54,7 @@ namespace HL7Validation.Test
             }
             catch (Exception ex)
             {
-                testContext.WriteLine(ex.StackTrace);
+                testContext?.WriteLine(ex.StackTrace);
             }
         }
 
@@ -59,7 +64,13 @@ namespace HL7Validation.Test
             string message = await File.ReadAllTextAsync(@"../../../TestSample/ADT_A01_Pid.hl7");
             try
             {
-                IValidateHL7Message validateHL7Message = new ValidateHL7Message();
+                BlobConfig blobConfig = new()
+                {
+                    BlobConnectionString = config?.BlobConnectionString,
+                    ValidatedBlobContainer = config?.ValidatedBlobContainer,
+                    Hl7validationfailBlobContainer = config?.Hl7validationfailBlobContainer
+                };
+                IValidateHL7Message validateHL7Message = new ValidateHL7Message(blobConfig);
                 string requestUriString = "http://example.org/test";
                 FunctionContext funcContext = new FakeFunctionContext();
                 List<KeyValuePair<string, string>> headerList = new();
@@ -73,7 +84,7 @@ namespace HL7Validation.Test
             }
             catch (Exception ex)
             {
-                testContext.WriteLine(ex.StackTrace);
+                testContext?.WriteLine(ex.StackTrace);
             }
         }
 
