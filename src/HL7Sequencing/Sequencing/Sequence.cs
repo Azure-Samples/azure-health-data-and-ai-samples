@@ -1,7 +1,6 @@
 ﻿using Azure.Storage.Blobs;
-using HL7Sequencing.Comman;
 using HL7Sequencing.Configuration;
-using HL7Validation.Comman;
+using HL7Sequencing.Model;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -16,7 +15,7 @@ namespace HL7Sequencing.Sequencing
 {
     public class Sequence : ISequence
     {
-        public Sequence(BlobConfig config, TelemetryClient telemetryClient, ILogger<Sequence> logger)
+        public Sequence(BlobConfig config, TelemetryClient telemetryClient = null, ILogger<Sequence> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _config = config;
@@ -46,7 +45,7 @@ namespace HL7Sequencing.Sequencing
 
                     if (postDataList != null && postDataList.Count > 0)
                     {
-                        List<string> hl7files = postDataList.Select(x => x.HL7FileName ?? "").ToList();
+                        List<string> hl7files = postDataList.Select(x => x.HL7FileName).ToList();
 
                         BlobContainerClient blobContainer = new(_config.BlobConnectionString, _config.ValidatedBlobContainer);
 

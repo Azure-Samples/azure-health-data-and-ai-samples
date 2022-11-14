@@ -1,4 +1,4 @@
-﻿namespace HL7Converter.Configuration
+﻿namespace HL7Converter.Model
 {
     public class HL7Input
     {

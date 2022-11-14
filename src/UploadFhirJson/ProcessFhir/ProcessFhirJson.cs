@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Text;
+using UploadFhirJson.Configuration;
 using UploadFhirJson.Model;
 
 namespace UploadFhirJson.ProcessFhir

@@ -1,4 +1,4 @@
-﻿namespace HL7Sequencing.Comman
+﻿namespace HL7Sequencing.Model
 {
     public class Hl7Files
     {

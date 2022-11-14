@@ -1,4 +1,4 @@
-﻿namespace UploadFhirJson.Model
+﻿namespace UploadFhirJson.Configuration
 {
     public class BlobConfiguration
     {

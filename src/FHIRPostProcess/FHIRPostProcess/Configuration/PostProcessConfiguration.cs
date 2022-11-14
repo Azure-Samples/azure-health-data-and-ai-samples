@@ -1,6 +1,4 @@
-﻿
-
-namespace FHIRPostProcess.Configuration
+﻿namespace FHIRPostProcess.Configuration
 {
     public class PostProcessConfiguration
     {

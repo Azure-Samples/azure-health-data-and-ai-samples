@@ -1,5 +1,5 @@
 ﻿
-namespace HL7Validation.Comman
+namespace HL7Sequencing.Model
 {
     public class PostData
     {

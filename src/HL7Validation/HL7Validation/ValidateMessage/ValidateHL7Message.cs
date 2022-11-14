@@ -71,8 +71,8 @@ namespace HL7Validation.ValidateMessage
                                     hl7Files.HL7FileName = Path.GetFileNameWithoutExtension(blob.Name) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob.Name);
                                     hl7Files.HL7BlobFile = blob.Name;
                                     var parser = new PipeParser { ValidationContext = new Validation.CustomValidation() };
-                                    
-                                    
+
+
                                     var parsedMessage = parser.Parse(fileData);
                                     if (parsedMessage != null)
                                     {
@@ -86,8 +86,12 @@ namespace HL7Validation.ValidateMessage
                                     var exMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                                     _logger?.LogError(ex, "{Name}-{Id} " + exMessage, Name, Id);
                                     _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                                    if (postData.proceedOnError == false) throw (ex.InnerException != null ? ex.InnerException : ex);
-
+                                    if (postData.proceedOnError == false)
+                                    {
+                                        var errorResponse = request.CreateResponse(HttpStatusCode.InternalServerError);
+                                        errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(blob.Name + " "+exMessage));
+                                        return await Task.FromResult(errorResponse);
+                                    }
                                     FailHl7Files failHl7File = new();
                                     failHl7File.HL7FileName = Path.GetFileNameWithoutExtension(blob.Name) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob.Name);
                                     failHl7File.HL7BlobFile = blob.Name;
