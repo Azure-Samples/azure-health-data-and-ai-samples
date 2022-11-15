@@ -165,7 +165,7 @@ namespace UploadFhirJson.ProcessFhir
             {
                 BlobContainerClient blobClient = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FailedBlobContainer);
                 var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(fileData));
-                await blobClient.UploadBlobAsync(targetBloblName + "/" + fileName, memoryStream);
+                await blobClient.UploadBlobAsync(_blobConfiguration.FhirFailedBlob + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json", memoryStream);
                 memoryStream.Close();
                 await memoryStream.DisposeAsync();
             }
