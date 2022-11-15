@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using NHapi.Base.Parser;
 using System.Net;
 using System.Text;
+using NHapi.Model.V28.Segment;
 
 namespace HL7Validation.ValidateMessage
 {
@@ -76,7 +77,8 @@ namespace HL7Validation.ValidateMessage
                                     var parsedMessage = parser.Parse(fileData);
                                     if (parsedMessage != null)
                                     {
-                                        hl7Files.HL7FileType = parsedMessage?.GetType().Name;
+                                        var MSH = parsedMessage?.GetStructure("MSH") as MSH;
+                                        hl7Files.HL7FileType = MSH.MessageType.MessageStructure.Value;
                                         validatedHl7Files.Add(hl7Files);
 
                                     }
