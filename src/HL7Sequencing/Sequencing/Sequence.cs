@@ -77,16 +77,14 @@ namespace HL7Sequencing.Sequencing
                                                 var parsedMessage = parser.Parse(fileData);
                                                 if (parsedMessage != null)
                                                 {
-                                                    hl7Files.HL7FileType = parsedMessage?.GetType().Name;
                                                     var MSH = parsedMessage?.GetStructure("MSH") as MSH;
-
+                                                    hl7Files.HL7FileType = MSH?.MessageType.MessageStructure.Value;
                                                     var MSH13 = MSH?.SequenceNumber.Value;
 
                                                     if (MSH13 != null && MSH13 != "")
                                                     {
                                                         if (MSH13 == "0" || MSH13 == "-1")
                                                         {
-
                                                             var resynchronizationFileName = Path.GetFileNameWithoutExtension(hl7FileName) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(hl7FileName);
                                                             BlobContainerClient hl7ReSynchronizationContainer = new BlobContainerClient(_config.BlobConnectionString, _config.Hl7ResynchronizationContainer);
 
