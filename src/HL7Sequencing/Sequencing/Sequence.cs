@@ -142,6 +142,7 @@ namespace HL7Sequencing.Sequencing
 
                         var hl7SequnceList = validatedHl7Files.OrderBy(hl7Files => hl7Files.DateTimeOffsetOfMessage)
                                                               .ThenBy(hl7Files => String.IsNullOrEmpty(hl7Files.SequenceNumber))
+                                                              .ThenBy(hl7Files => hl7Files.SequenceNumber)
                                                               .ThenBy(hl7Files => hl7Files.HL7FileName);
 
                         if (hl7SequnceList != null && hl7SequnceList.Count() > 0)
