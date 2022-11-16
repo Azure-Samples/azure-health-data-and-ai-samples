@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using System.Reflection;
 using UploadFhirJson.Configuration;
+using UploadFhirJson.FhirClient;
 using UploadFhirJson.ProcessFhir;
 
 ServiceConfiguration config = new();
@@ -53,7 +54,7 @@ using IHost host = new HostBuilder()
         services.AddSingleton(blobConfig);
 
         services.AddTransient<IProcessFhirJson, ProcessFhirJson>();
-        services.AddHttpClient<IFhirService, FhirService>(httpClient =>
+        services.AddHttpClient<IFhirClient, FhirClient>(httpClient =>
         {
             httpClient.BaseAddress = new Uri(config.FhirURL);
 

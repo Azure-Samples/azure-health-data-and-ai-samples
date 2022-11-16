@@ -1,4 +1,4 @@
-﻿namespace HL7Converter.ProcessConverter
+﻿namespace UploadFhirJson.FhirClient
 {
     public interface IFhirClient
     {

@@ -2,13 +2,13 @@
 using Azure.Identity;
 using System.Text;
 
-namespace UploadFhirJson.ProcessFhir
+namespace UploadFhirJson.FhirClient
 {
-    public class FhirService : IFhirService
+    public class FhirClient : IFhirClient
     {
         private readonly HttpClient _httpClient;
 
-        public FhirService(HttpClient httpClient)
+        public FhirClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
             var accessToken = FetchToken();

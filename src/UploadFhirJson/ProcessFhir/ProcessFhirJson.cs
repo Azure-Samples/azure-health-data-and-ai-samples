@@ -9,25 +9,26 @@ using System.IO;
 using System.Net;
 using System.Text;
 using UploadFhirJson.Configuration;
+using UploadFhirJson.FhirClient;
 using UploadFhirJson.Model;
 
 namespace UploadFhirJson.ProcessFhir
 {
     public class ProcessFhirJson : IProcessFhirJson
     {
-        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirService fhirService, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
+        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
-            _fhirService = fhirService;
+            _fhirClient = fhirClient;
             _blobConfiguration = blobConfiguration;
         }
 
         private readonly string _id;
         private readonly TelemetryClient _telemetryClient;
         private readonly BlobConfiguration _blobConfiguration;
-        private readonly IFhirService _fhirService;
+        private readonly IFhirClient _fhirClient;
         private readonly ILogger _logger;
         public string Id => _id;
         public string Name => "ProcessFhirJson";
@@ -60,7 +61,7 @@ namespace UploadFhirJson.ProcessFhir
                         }
                         else
                         {
-                            var result = await ProcessFhirRequest(valFiles);
+                            var result = await ProcessFhirRequest(valFiles, fhirInputs.proceedOnError);
                             if (result != null && result.StatusCode == 200)
                             {
                                 fhirReponse.success.Add(result);
@@ -96,7 +97,7 @@ namespace UploadFhirJson.ProcessFhir
 
         }
 
-        public async Task<Response> ProcessFhirRequest(FhirDetails fhirInput)
+        public async Task<Response> ProcessFhirRequest(FhirDetails fhirInput, bool proceedOnError)
         {
             Response fhirReponse = new();
             HttpResponseMessage httpResponseMessage = new();
@@ -106,7 +107,7 @@ namespace UploadFhirJson.ProcessFhir
                 {
                     _logger?.LogInformation($"Processing {fhirInput.HL7FileName} file to fhir server.");
                     string requestBody = System.Text.Encoding.Default.GetString(Convert.FromBase64String(fhirInput.FhirJson));
-                    httpResponseMessage = await _fhirService.Send(requestBody);
+                    httpResponseMessage = await _fhirClient.Send(requestBody);
                     var responseString = await httpResponseMessage.Content.ReadAsStringAsync() ?? "{}";
                     if (httpResponseMessage.IsSuccessStatusCode)
                     {
@@ -116,7 +117,7 @@ namespace UploadFhirJson.ProcessFhir
                     }
                     else
                     {
-                        isFilesSkipped = true;
+                        isFilesSkipped = !proceedOnError ? true : false;
                         fhirReponse.StatusCode = (int)httpResponseMessage.StatusCode;
                         fhirReponse.FileName = fhirInput.HL7FileName;
                         fhirReponse.Error = responseString;

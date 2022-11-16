@@ -2,7 +2,7 @@
 using Azure.Identity;
 using System.Text;
 
-namespace HL7Converter.ProcessConverter
+namespace HL7Converter.FhirClient
 {
     public class FhirClient : IFhirClient
     {

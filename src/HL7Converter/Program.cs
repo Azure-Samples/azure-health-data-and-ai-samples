@@ -1,4 +1,5 @@
 ﻿using HL7Converter.Configuration;
+using HL7Converter.FhirClient;
 using HL7Converter.ProcessConverter;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;

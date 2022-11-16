@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using HL7Converter.Configuration;
+using HL7Converter.FhirClient;
 using HL7Converter.Model;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
