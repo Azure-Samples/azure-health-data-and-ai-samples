@@ -52,13 +52,14 @@ Param(
 
 # TODO: Align Tags here and ARM template, maybe save schemas in Storage/ACR and run remotely.
 $Tags = @{
-    "FhirAnalyticsPipeline" = "FhirToDataLake"
     "FhirSchemaVersion" = "v0.4.0"
 }
 
 $JobName = "FhirSynapseJob"
 $PlaceHolderName = ".readme.txt"
 $CustomizedTemplateDirectory = "CustomizedSchema"
+
+$StoreProcedureScriptLocation = Join-Path $SqlScriptCollectionPath "Stored_Procedure"
 
 $OrasDirectoryPath = "Oras"
 $OrasAppPath = "oras.exe"
@@ -268,12 +269,10 @@ function New-PlaceHolderBlobs
 
 function New-TableAndViewsForResources
 {
-    param([string]$serviceEndpoint, [string]$databaseName, [string]$masterKey, [string]$storageName, [string]$container)
+    param([string]$serviceEndpoint, [string]$databaseName, [string]$masterKey, [string]$storageName, [string]$container, [string]$location)
 
-    $files = Get-ChildItem $SqlScriptCollectionPath -Filter "*.sql"
+    $files = Get-ChildItem $location -Filter "*.sql"
     $sqlAccessToken = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
-
-    Write-Host "Start to create default TABLEs and VIEWs on '$databaseName' of '$serviceEndpoint'" -ForegroundColor Green 
     
     foreach ($file in $files) {
         $jobs = @(Get-Job -Name $JobName -ErrorAction Ignore)
@@ -283,7 +282,7 @@ function New-TableAndViewsForResources
             if (($finishedJob.State -eq 'Failed') -or ($finishedJob.ChildJobs[0].State -eq 'Failed')) {
                 Write-Host "$($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)" -ForegroundColor Red
                 Get-Job -Name $JobName | Wait-Job | Remove-Job | Out-Null
-                throw "Creating Table and Views job failed: $($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)"
+                throw "Creating Table, Views and Stored Procedure job failed: $($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)"
             }
             else {
                 Write-Host $finishedJob.ChildJobs[0].Information[0].MessageData.Message
@@ -310,7 +309,7 @@ function New-TableAndViewsForResources
         if (($finishedJob.State -eq 'Failed') -or ($finishedJob.ChildJobs[0].State -eq 'Failed')) {
             Write-Host "$($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)" -ForegroundColor Red
             Get-Job -Name $JobName | Wait-Job | Remove-Job | Out-Null
-            throw "Creating Table and Views job failed: $($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)"
+            throw "Creating Table, Views and Stored Procedure job failed: $($finishedJob.ChildJobs[0].JobStateInfo.Reason.Message)"
         }
         else {
             Write-Host $finishedJob.ChildJobs[0].Information[0].MessageData.Message
@@ -541,7 +540,7 @@ catch {
 }
 
 ###
-# 2.Create Tables and Views for default schema data.
+# 2.Create Tables, Views and Store Procedure for default schema data.
 ###
 # a). Create placeholder blobs for default schema data.
 try{
@@ -560,8 +559,8 @@ New-FhirDatabase `
     -databaseName $Database `
     -serviceEndpoint $synapseSqlServerEndpoint
 
-# Try to create TABLEs and VIEWs for all resource types.
-# And will try to drop database if failed to create TABLEs and VIEWs.
+# Try to create TABLEs and VIEWs for all resource types and STORED PROCEDUREs.
+# And will try to drop database if failed to create TABLEs, VIEWs and STORED PROCEDUREs .
 try{
     # c). Initialize database environment.
     Set-InitializeEnvironment `
@@ -573,15 +572,27 @@ try{
         -resultPath $ResultPath
 
     # d). Create TABLEs and VIEWs on Synapse.
+    Write-Host "Start to create default TABLEs and VIEWs on '$Database' of '$synapseSqlServerEndpoint'" -ForegroundColor Green 
     New-TableAndViewsForResources `
         -serviceEndpoint $synapseSqlServerEndpoint `
         -databaseName $Database `
         -masterKey $MasterKey `
         -storage $StorageName `
-        -container $Container
+        -container $Container `
+        -location $SqlScriptCollectionPath
+
+    # e). Create STORED PROCEDUREs on Synapse.
+    Write-Host "Start to create STORED PROCEDUREs on '$Database' of '$synapseSqlServerEndpoint'" -ForegroundColor Green   
+    New-TableAndViewsForResources `
+        -serviceEndpoint $synapseSqlServerEndpoint `
+        -databaseName $Database `
+        -masterKey $MasterKey `
+        -storage $StorageName `
+        -container $Container `
+        -location $StoreProcedureScriptLocation
 }
 catch{
-    Write-Host "Create TABLEs and VIEWs for default schema data failed, will try to drop database '$Database'." -ForegroundColor Red
+    Write-Host "Create TABLEs, VIEWs and STORED PROCEUREs for default schema data failed, will try to drop database '$Database'." -ForegroundColor Red
     Remove-FhirDatabase -serviceEndpoint $synapseSqlServerEndpoint -databaseName $Database
     throw
 }

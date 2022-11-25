@@ -2,7 +2,7 @@ targetScope = 'subscription'
 
 @minLength(1)
 @maxLength(64)
-@description('Name of the the environment which is used to generate a short unique hash used in all resources.')
+@description('Name of the environment which is used to generate a short unique hash used in resources.')
 param name string
 
 @description('Data lake Storage Account Name.')
@@ -35,7 +35,6 @@ var createResourceGroup = empty(existingResourceGroupName) ? true : false
 
 var appTags = {
   'PowerBI sample': 'powerbi-analytics-pipeline-sample'
-  'fhir-schema-version': 'v0.4.0'
 }
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {
