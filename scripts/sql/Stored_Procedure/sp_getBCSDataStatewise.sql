@@ -1,9 +1,9 @@
 USE
 [fhirdb]
 GO
-IF EXISTS(SELECT 1 FROM sys.procedures WHERE Name = 'sp_getBCSNumeratorDetails')
+IF EXISTS(SELECT 1 FROM sys.procedures WHERE Name = 'sp_getBCSDataStatewise')
 BEGIN 
-	DROP PROCEDURE [dbo].[sp_getBCSNumeratorDetails]
+	DROP PROCEDURE [dbo].[sp_getBCSDataStatewise]
 END
 GO
 SET ANSI_NULLS ON
@@ -15,14 +15,13 @@ GO
 -- Create Date: <Create Date, , >
 -- Description: <Description, , >
 -- =============================================
-CREATE PROCEDURE sp_getBCSNumeratorDetails
+CREATE PROCEDURE sp_getBCSDataStatewise
 (
-    @vMeasurementPeriodStartDate DATE,
-	@vMeasurementPeriodEndDate DATE
+    @vMeasurementPeriodStartDate DATE NULL,
+	@vMeasurementPeriodEndDate DATE NULL
 )
 AS
 BEGIN
-
 WITH ComposeIncludeValueSets (id, url)
 AS
 (
@@ -50,15 +49,15 @@ BreastCancerScreeningEligiblePatients (PatientId, PatientResourceVersionId, Pati
 AS
 (
     SELECT
-        Patient.id AS PatientId,
-        Patient.[meta.versionId] AS PatientResourceVersionId,
-        Patient.[meta.lastUpdated] AS PatientResourceLastUpdated,
-        CAST(Patient.birthDate AS DATE) AS PatientBirthDate,
-        Patient.gender AS PatientGender,
-        DATEDIFF(year, Patient.birthDate, Encounter.[period.start]) AS AgeAtEncounter,
-        Encounter.[period.end] AS EncounterDate
+        Patient.id as PatientId,
+        Patient.[meta.versionId] as PatientResourceVersionId,
+        Patient.[meta.lastUpdated] as PatientResourceLastUpdated,
+        Patient.birthDate as PatientBirthDate,
+        Patient.gender as PatientGender,
+        DATEDIFF(year, Patient.birthDate, Encounter.[period.start]) as AgeAtEncounter,
+        Encounter.[period.end] as EncounterDate
     FROM
-        [fhir].[Encounter] AS Encounter
+        [fhir].[Encounter] as Encounter
     -- join with EncounterTypeExpanded for encounter codes
     INNER JOIN EncounterTypeExpanded ON
     Encounter.Id = EncounterTypeExpanded.id
@@ -71,8 +70,8 @@ AS
 
     WHERE
         Patient.gender = 'female'
-       AND DATEDIFF(year, Patient.birthDate, @vMeasurementPeriodEndDate) >= 50
-       AND DATEDIFF(year, Patient.birthDate, @vMeasurementPeriodEndDate) <= 70       
+       AND DATEDIFF(year, Patient.birthDate, @vMeasurementPeriodEndDate) >= 52
+       AND DATEDIFF(year, Patient.birthDate, @vMeasurementPeriodEndDate) <= 74       
 ),
 MammogramProcedure(id,PatientID,codeid,codeextension,[coding],codetext,performedperiod,codingsystem,codingcode,codingdisplay)
 AS
@@ -96,68 +95,42 @@ CROSS APPLY openjson (pro.[code.coding]) WITH (
     ) proSystem
 WHERE proSystem.code IN ('241055006','24623002','71651007')   
 ),
-
-BCSNumerator (Patient, [Family Name], [First Name], PatientBirthDate, PatientGender, PatientAge, PatientState, RaceCategory, EthnicityCategory)
+BCSNumerator (PatientID, [State])
 AS
 (
 SELECT DISTINCT
-    Patient.id AS PatientId,
-	JSON_VALUE([name],'$[0].family') AS [Family Name],
-	JSON_VALUE([name],'$[0].given[0]') AS [First Name],
-    CAST(Patient.birthDate AS DATE) AS PatientBirthDate,
-    Patient.gender AS PatientGender,
-	DATEDIFF(year, Patient.birthDate, @vMeasurementPeriodEndDate) as PatientAge,
-	JSON_VALUE(Patient.[address],'$[0].state') [state],
-	JSON_VALUE(Patient.[extension],'$[0].extension[0].valueCoding.display') RaceCategory,
-	JSON_VALUE(Patient.[extension],'$[1].extension[0].valueCoding.display') EthnicityCategory
-	-- BEP.EncounterDate
+    Patient.id AS PatientID, JSON_VALUE(Patient.[address],'$[0].state') [state]
     FROM [fhir].[Patient] AS Patient
     INNER JOIN MammogramProcedure ON
     Patient.id = SUBSTRING(MammogramProcedure.PatientID, 9, 1000)
-    INNER JOIN BreastCancerScreeningEligiblePatients BEP ON
-    BEP.PatientId = Patient.Id 
+    INNER JOIN BreastCancerScreeningEligiblePatients ON
+    BreastCancerScreeningEligiblePatients.PatientId = Patient.Id 
     AND
-	DATEDIFF(MONTH, CONVERT (DATETIMEOFFSET,MammogramProcedure.performedperiod,111), @vMeasurementPeriodEndDate) < = 48
+    DATEDIFF(MONTH, CONVERT (DATETIMEOFFSET,MammogramProcedure.performedperiod,111), @vMeasurementPeriodEndDate) < = 48
     --CONVERT (DATETIMEOFFSET,MammogramProcedure.performedperiod,111) >= DATEFROMPARTS(YEAR(@vMeasurementPeriodStartDate)-2,10,1) 
     --AND 
     --CONVERT (DATETIMEOFFSET,MammogramProcedure.performedperiod,111) <= @vMeasurementPeriodEndDate
-	
-)
---,
---ClaimData (claimId, patientId, PatientInsurance, ClaimProcedures)
---AS ( SELECT distinct id, 
---		RIGHT([patient.reference], LEN([patient.reference]) - 8) AS PatientId,
---		JSON_VALUE(claim.[insurance],'$[0].coverage.display') AS insurance,
---		[procedure]
---		FROM fhir.Claim claim
---		WHERE RIGHT([patient.reference], LEN([patient.reference]) - 8) 
---		in (SELECT Patient from BCSNumerator)
---		--AND [procedure] is not null
---)
+),
 
-SELECT DISTINCT
-    N.Patient,
-	[Family Name],
-	[First Name],
-    PatientBirthDate,
-    PatientGender,
-	PatientState,
-    PatientAge,
-	CASE
-		WHEN PatientAge BETWEEN 50 and 54 THEN '50 - 54'
-		WHEN PatientAge BETWEEN 55 and 59 THEN '55 - 59'
-		WHEN PatientAge BETWEEN 60 and 64 THEN '60 - 64'
-		WHEN PatientAge BETWEEN 65 and 69 THEN '65 - 69'
-		WHEN PatientAge BETWEEN 70 and 74 THEN '70 - 74'
-	END
-	AS [Age Range],
-	RaceCategory,
-	EthnicityCategory
-	-- EncounterDate
-	-- ClaimProcedures,
-	-- PatientInsurance
-    FROM BCSNumerator N
- --   INNER JOIN ClaimData C ON C.PatientId = N.Patient
-	--Order by N.Patient
+StatewisePercentage ( [State], Percentages)
+	AS (SELECT [state], CONVERT(DECIMAL(10,2),COUNT(*) * 100.0 / SUM(COUNT(*)) OVER()) AS [Percentage]
+	FROM BCSNumerator
+	GROUP BY [state])
+
+Select '0 - 20' as [Percentages], [State]
+	FROM StatewisePercentage WHERE Percentages between 0 and 20
+	Union All
+	Select '21 - 40' as [Percentages], [State]
+	FROM StatewisePercentage WHERE Percentages between 21 and 40
+	Union All
+	Select '41 - 60' as [Percentages], [State]
+	FROM StatewisePercentage WHERE Percentages between 41 and 60
+	Union All
+	Select '61 - 80' as [Percentages], [State]
+	FROM StatewisePercentage WHERE Percentages between 61 and 80
+	Union All
+	Select '81 - 100' as [Percentages], [State]
+	FROM StatewisePercentage WHERE Percentages between 81 and 100
+
 END
 GO
