@@ -1,9 +1,6 @@
-USE
-[fhirdb]
-GO
-IF EXISTS(SELECT 1 FROM sys.procedures WHERE Name = 'sp_getBCSDataStatewise')
+IF EXISTS(SELECT 1 FROM sys.procedures WHERE Name = 'sp_getBCSNumeratorPopulation')
 BEGIN 
-	DROP PROCEDURE [dbo].[sp_getBCSDataStatewise]
+	DROP PROCEDURE [dbo].[sp_getBCSNumeratorPopulation]
 END
 GO
 SET ANSI_NULLS ON
@@ -15,13 +12,14 @@ GO
 -- Create Date: <Create Date, , >
 -- Description: <Description, , >
 -- =============================================
-CREATE PROCEDURE sp_getBCSDataStatewise
+CREATE PROCEDURE sp_getBCSNumeratorPopulation
 (
-    @vMeasurementPeriodStartDate DATE,
-	@vMeasurementPeriodEndDate DATE
+    @vMeasurementPeriodStartDate DATE NULL,
+	@vMeasurementPeriodEndDate DATE NULL
 )
 AS
 BEGIN
+
 WITH 
 EncounterTypeExpanded (id, code)
 AS
@@ -66,51 +64,16 @@ AS
         [display]         VARCHAR(256)        '$.display'
 		) proSystem
 	WHERE proSystem.code IN ('241055006','24623002','71651007')   
-),
-BCSNumerator (PatientID, [State])
-AS
-(
-	SELECT DISTINCT
-		Patient.id AS PatientID,
-		JSON_VALUE(Patient.[address],'$[0].state') [state]
-    FROM [fhir].[Patient] AS Patient
-    INNER JOIN MammogramProcedure MP ON
-    Patient.id = SUBSTRING(MP.PatientID, 9, 1000)
-    INNER JOIN BreastCancerScreeningEligiblePatients ON
-    BreastCancerScreeningEligiblePatients.PatientId = Patient.Id 
-    AND
-    DATEDIFF(MONTH, CONVERT (DATETIMEOFFSET,MP.performedperiod,111), @vMeasurementPeriodEndDate) < = 48
-),
-
-StatewisePercentage ( [State], Percentages)
-AS 
-(
-	SELECT 
-		[state],
-		CONVERT(DECIMAL(10,2),COUNT(*) * 100.0 / SUM(COUNT(*)) OVER()) AS [Percentage]
-	FROM BCSNumerator
-	GROUP BY [state]
 )
-
-	SELECT '0 - 20' AS [Percentages], [State]
-		FROM StatewisePercentage 
-		WHERE Percentages between 0 and 20
-	UNION All
-		SELECT '21 - 40' as [Percentages], [State]
-		FROM StatewisePercentage 
-		WHERE Percentages between 21 and 40
-	UNION All
-		SELECT '41 - 60' as [Percentages], [State]
-		FROM StatewisePercentage 
-		WHERE Percentages between 41 and 60
-	UNION All
-		SELECT '61 - 80' as [Percentages], [State]
-		FROM StatewisePercentage 
-		WHERE Percentages between 61 and 80
-	UNION All
-		SELECT '81 - 100' as [Percentages], [State]
-		FROM StatewisePercentage 
-		WHERE Percentages between 81 and 100
+	SELECT
+		COUNT (DISTINCT Patient.id) AS NumeratorCount
+    FROM [fhir].[Patient] AS Patient
+    INNER JOIN MammogramProcedure MP 
+		ON Patient.id = SUBSTRING(MP.PatientID, 9, 1000)
+    INNER JOIN BreastCancerScreeningEligiblePatients 
+		ON BreastCancerScreeningEligiblePatients.PatientId = Patient.Id 
+    AND
+	DATEDIFF(MONTH, CONVERT (DATETIMEOFFSET,MP.performedperiod,111), @vMeasurementPeriodEndDate) < = 48
 
 END
 GO
