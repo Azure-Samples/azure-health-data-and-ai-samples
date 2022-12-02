@@ -27,7 +27,7 @@ This project provides samples outlining example implementations of various use c
 | PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
 --->
 
-### SMART on FHIR
+### Standardized API for patient and population services - sample
 |Sample|Description|
 | --- | --- |
 | Standardized API for patient and population services sample | |
