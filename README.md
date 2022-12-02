@@ -7,6 +7,7 @@ This project hosts open-source **samples** for Azure Health Data Services. To le
 
 This project provides samples outlining example implementations of various use cases across stages of health data workflows. The samples are listed here:
 
+<!---
 ### Data ingestion into Health Data Services
 
 |Sample|Description|
@@ -24,18 +25,25 @@ This project provides samples outlining example implementations of various use c
 | --- | --- |
 | FHIR Delta Lake with Databricks | End-to-end sample showing data from FHIR Service into Databricks Delta Lake Bronze, Silver, and Gold Levels |
 | PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
+--->
 
 ### SMART on FHIR
 |Sample|Description|
 | --- | --- |
-| Sample coming soon! | |
+| Standardized API for patient and population services sample | |
 
+<!---
 ### Other integrations
 |Sample|Description|
 | --- | --- |
 | FHIR to HL7v2 format for ingestion back into an EHR (coming soon)| Sample to convert FHIR data to HL7v2 format suitable for ingestion into an EHR. |
 
+--->
 
+
+ 
+
+NOTE: These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data. 
 
 ## Resources
 - [Azure Health Data Services documentation](https://learn.microsoft.com/en-us/azure/healthcare-apis/healthcare-apis-overview)
@@ -57,9 +65,9 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Disclaimers
 
-The Azure Health Data Services Samples Repo is an open-source project. It is not a managed service, and it is not part of Microsoft Azure Health Data Services. The sample apps and sample code provided in this repo are used as examples only. You bear sole responsibility for compliance with local law and for any data you use when using these samples. Please review the information and licensing terms on this GitHub website before using the Azure Health Data Services Samples repo.
+The Azure Health Data Services Samples Repo is an open-source project. It is not a managed service, and it is not part of Microsoft Azure Health Data Services. The sample apps and sample code provided in this repo are used as examples only. You bear sole responsibility for compliance with local law and for any data you use when using these samples. Please review the information and licensing terms on this GitHub website before using the Azure Health Data Services Samples repo. 
 
-The Azure Health Data Services Samples Github repo is intended only for use in transferring and formatting data. It is not intended for use as a medical device or to perform any analysis or any medical function and the performance of the software for such purposes has not been established. You bear sole responsibility for any use of this software, including incorporation into any product intended for a medical purpose.
+The Azure Health Data Services Samples Github repo is intended only for use in transferring and formatting data. It is not intended for use as a medical device or to perform any analysis or any medical function and the performance of the software for such purposes has not been established. You bear sole responsibility for any use of this software, including incorporation into any product intended for a medical purpose. 
 
 ## Trademarks
 
