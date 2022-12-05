@@ -31,6 +31,8 @@ namespace HL7Sequencing.Sequencing
         public string Id => _id;
         public string Name => "Sequence";
 
+        public int MaxParallelism => 230;
+
         public async Task<HttpResponseData> GetSequencListAsync(HttpRequestData request)
         {
             DateTime start = DateTime.Now;
@@ -40,6 +42,7 @@ namespace HL7Sequencing.Sequencing
 
                 if (!string.IsNullOrEmpty(reqContent))
                 {
+                    Object listLock = new Object();
                     List<Hl7Files> validatedHl7Files = new();
                     var postDataList = JsonConvert.DeserializeObject<List<PostData>>(reqContent);
 
@@ -51,9 +54,13 @@ namespace HL7Sequencing.Sequencing
 
                         if (hl7files != null && hl7files.Count > 0)
                         {
-                            foreach (string hl7FileName in hl7files)
+                            ParallelOptions parallelOptions = new();
+                            parallelOptions.MaxDegreeOfParallelism = MaxParallelism;
+
+                            await Parallel.ForEachAsync(hl7files, parallelOptions, async (hl7FileName, CancellationToken) =>
                             {
-                                if (hl7FileName != null)
+
+                                if (hl7FileName != null && hl7FileName != String.Empty)
                                 {
                                     BlobClient blobClient = blobContainer.GetBlobClient(hl7FileName);
                                     if (blobClient != null && await blobClient.ExistsAsync())
@@ -92,7 +99,7 @@ namespace HL7Sequencing.Sequencing
                                                             await hl7ReSynchronizationContainer.UploadBlobAsync(resynchronizationFileName, memoryStream);
                                                             memoryStream.Close();
                                                             await blobContainer.DeleteBlobAsync(hl7FileName);
-                                                            continue;
+                                                            return;
                                                         }
                                                         else
                                                         {
@@ -117,7 +124,10 @@ namespace HL7Sequencing.Sequencing
                                                         }
                                                     }
 
-                                                    validatedHl7Files.Add(hl7Files);
+                                                    lock (listLock)
+                                                    {
+                                                        validatedHl7Files.Add(hl7Files);
+                                                    }
 
                                                 }
                                             }
@@ -128,10 +138,9 @@ namespace HL7Sequencing.Sequencing
                                                 throw;
                                             }
                                         }
-
                                     }
                                 }
-                            }
+                            });
                         }
                     }
 

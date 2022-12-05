@@ -113,7 +113,7 @@ namespace UploadFhirJson.ProcessFhir
                     {
                         fhirReponse.StatusCode = (int)HttpStatusCode.OK;
                         fhirReponse.FileName = fhirInput.HL7FileName;
-                        await UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ValidatedBlobContainer, _blobConfiguration.SuccessBlobContainer);
+                        await UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.ProcessedBlobContainer);
                     }
                     else
                     {
@@ -121,7 +121,7 @@ namespace UploadFhirJson.ProcessFhir
                         fhirReponse.StatusCode = (int)httpResponseMessage.StatusCode;
                         fhirReponse.FileName = fhirInput.HL7FileName;
                         fhirReponse.Error = responseString;
-                        await UploadToFailBlob(fhirInput.HL7FileName, requestBody, _blobConfiguration.ValidatedBlobContainer, _blobConfiguration.HL7FailedBlob);
+                        await UploadToFailBlob(fhirInput.HL7FileName, requestBody, _blobConfiguration.ConvertedContainer, _blobConfiguration.HL7FailedBlob);
                     }
 
                 }
@@ -137,7 +137,7 @@ namespace UploadFhirJson.ProcessFhir
 
         public async Task<Response> UploadSkippedFile(FhirDetails fhirInput)
         {
-            await UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ValidatedBlobContainer, _blobConfiguration.SkippedBlobContainer);
+            await UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.SkippedBlobContainer);
             Response fhirReponse = new();
             fhirReponse.FileName = fhirInput.HL7FileName;
             fhirReponse.StatusCode = (int)HttpStatusCode.FailedDependency;

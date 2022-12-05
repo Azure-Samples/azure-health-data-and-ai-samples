@@ -1,5 +1,4 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using HL7Validation.Configuration;
 using HL7Validation.Model;
 using Microsoft.ApplicationInsights;
@@ -10,7 +9,8 @@ using Newtonsoft.Json;
 using NHapi.Base.Parser;
 using System.Net;
 using System.Text;
-using NHapi.Model.V28.Segment;
+using NHapi.Base.Util;
+
 
 namespace HL7Validation.ValidateMessage
 {
@@ -31,6 +31,7 @@ namespace HL7Validation.ValidateMessage
         public string Id => _id;
         public string Name => "ValidateHL7Message";
 
+        public int MaxParallelism => 230;
 
         public async Task<HttpResponseData> ValidateMessage(HttpRequestData request)
         {
@@ -43,117 +44,130 @@ namespace HL7Validation.ValidateMessage
                 {
                     postData = JsonConvert.DeserializeObject<PostData>(reqContent);
 
-
                     BlobContainerClient blobContainer = new BlobContainerClient(_config.BlobConnectionString, postData.ContainerName);
 
+                    Object listLock = new();
                     List<Hl7Files> validatedHl7Files = new();
                     List<FailHl7Files> failHl7Files = new();
+                    List<string> blobList = new();
+                    ParallelOptions parallelOptions = new();
 
-                    await foreach (BlobItem blob in blobContainer.GetBlobsAsync())
+                    await foreach (var blob in blobContainer.GetBlobsAsync())
                     {
+                        blobList.Add(blob.Name);
+                    }
 
-                        BlobClient blobClient = blobContainer.GetBlobClient(blob.Name);
-                        if (blobClient != null && await blobClient.ExistsAsync())
+
+                    if (blobList.Any())
+                    {
+                        ParallelOptions blobparallelOptions = new();
+                        blobparallelOptions.MaxDegreeOfParallelism = MaxParallelism;
+
+                        await Parallel.ForEachAsync(blobList, blobparallelOptions, async (blob, CancellationToken) =>
                         {
-                            string fileData = string.Empty;
-                            Hl7Files hl7Files = new();
-                            var blobData = await blobClient.OpenReadAsync();
-                            using (var streamReader = new StreamReader(blobData))
+                            BlobClient blobClient = blobContainer.GetBlobClient(blob);
+                            if (blobClient != null && await blobClient.ExistsAsync())
                             {
-                                fileData = await streamReader.ReadToEndAsync();
-                            }
+                                string fileData = string.Empty;
 
-                            //Use NHapi to read HL7 messages                            
-                            if (fileData != string.Empty && fileData != null)
-                            {
-                                try
+                                var blobData = await blobClient.OpenReadAsync();
+                                using (var streamReader = new StreamReader(blobData))
                                 {
-                                    hl7Files.HL7FileData = fileData;
-                                    hl7Files.HL7FileName = Path.GetFileNameWithoutExtension(blob.Name) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob.Name);
-                                    hl7Files.HL7BlobFile = blob.Name;
-                                    var parser = new PipeParser { ValidationContext = new Validation.CustomValidation() };
+                                    fileData = await streamReader.ReadToEndAsync();
+                                }
 
-
-                                    var parsedMessage = parser.Parse(fileData);
-                                    if (parsedMessage != null)
+                                //Use NHapi to read HL7 messages                            
+                                if (fileData != string.Empty && fileData != null)
+                                {
+                                    try
                                     {
-                                        var MSH = parsedMessage?.GetStructure("MSH") as MSH;
-                                        hl7Files.HL7FileType = MSH.MessageType.MessageStructure.Value;
-                                        validatedHl7Files.Add(hl7Files);
+                                        var parser = new PipeParser { ValidationContext = new Validation.CustomValidation() };
+                                        var parsedMessage = parser.Parse(fileData);
+                                        if (parsedMessage != null)
+                                        {
+                                            var terser = new Terser(parsedMessage);
+                                            Hl7Files hl7Files = new();
+                                            hl7Files.HL7FileType = terser.Get("/MSH-9-1") + "_" + terser.Get("/MSH-9-2");
+                                            hl7Files.HL7FileData = fileData;
+                                            hl7Files.HL7FileName = Path.GetFileNameWithoutExtension(blob) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob);
+                                            hl7Files.HL7BlobFile = blob;
 
+                                            lock (listLock)
+                                            {
+                                                validatedHl7Files.Add(hl7Files);
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        var exMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                                        _logger?.LogError(ex, "{Name}-{Id} " + exMessage, Name, Id);
+                                        _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+                                        if (postData.proceedOnError == false)
+                                        {
+                                            throw new Exception("FileName: " + blob + ",Error Message: " + exMessage);
+                                        }
+                                        FailHl7Files failHl7File = new();
+                                        failHl7File.HL7FileName = Path.GetFileNameWithoutExtension(blob) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob);
+                                        failHl7File.HL7BlobFile = blob;
+                                        failHl7File.HL7FileData = fileData;
+                                        failHl7File.HL7FileError = exMessage;
+
+                                        lock (listLock)
+                                        {
+                                            failHl7Files.Add(failHl7File);
+                                        }
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    var exMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                                    _logger?.LogError(ex, "{Name}-{Id} " + exMessage, Name, Id);
-                                    _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                                    if (postData.proceedOnError == false)
-                                    {
-                                        var errorResponse = request.CreateResponse(HttpStatusCode.InternalServerError);
-                                        errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes("FileName: " + blob.Name + ",Error Message: " + exMessage));
-                                        return await Task.FromResult(errorResponse);
-                                    }
-                                    FailHl7Files failHl7File = new();
-                                    failHl7File.HL7FileName = Path.GetFileNameWithoutExtension(blob.Name) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(blob.Name);
-                                    failHl7File.HL7BlobFile = blob.Name;
-                                    failHl7File.HL7FileData = fileData;
-                                    failHl7File.HL7FileError = exMessage;
-                                    failHl7Files.Add(failHl7File);
-
-                                }
                             }
-
-                        }
-
+                        });
                     }
 
                     if (validatedHl7Files.Any() || failHl7Files.Any())
                     {
-
-                        foreach (Hl7Files hl7File in validatedHl7Files)
+                        if (validatedHl7Files.Count > 0)
                         {
-                            BlobContainerClient validatedContainer = new BlobContainerClient(_config.BlobConnectionString, _config.ValidatedBlobContainer);
+                            parallelOptions.MaxDegreeOfParallelism = MaxParallelism;
+                            await Parallel.ForEachAsync(validatedHl7Files, parallelOptions, async (hl7File, CancellationToken) =>
+                            {
+                                BlobContainerClient validatedContainer = new BlobContainerClient(_config.BlobConnectionString, _config.ValidatedBlobContainer);
 
-                            var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(hl7File.HL7FileData));
-                            await validatedContainer.UploadBlobAsync(hl7File.HL7FileName, memoryStream);
-                            memoryStream.Close();
-                            await blobContainer.DeleteBlobAsync(hl7File.HL7BlobFile);
+                                var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(hl7File.HL7FileData));
+                                await validatedContainer.UploadBlobAsync(hl7File.HL7FileName, memoryStream);
+                                memoryStream.Close();
+                                await blobContainer.DeleteBlobAsync(hl7File.HL7BlobFile);
+                            });
                         }
 
-
-                        foreach (FailHl7Files failhl7File in failHl7Files)
+                        if (failHl7Files.Count > 0)
                         {
-                            BlobContainerClient hl7validationfaildContainer = new BlobContainerClient(_config.BlobConnectionString, _config.Hl7validationfailBlobContainer);
+                            parallelOptions.MaxDegreeOfParallelism = MaxParallelism;
+                            await Parallel.ForEachAsync(failHl7Files, parallelOptions, async (failhl7File, CancellationToken) =>
+                            {
+                                BlobContainerClient hl7validationfaildContainer = new BlobContainerClient(_config.BlobConnectionString, _config.Hl7validationfailBlobContainer);
 
-                            var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(failhl7File.HL7FileData));
-                            await hl7validationfaildContainer.UploadBlobAsync(failhl7File.HL7FileName, memoryStream);
-                            memoryStream.Close();
-                            await blobContainer.DeleteBlobAsync(failhl7File.HL7BlobFile);
+                                var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(failhl7File.HL7FileData));
+                                await hl7validationfaildContainer.UploadBlobAsync(failhl7File.HL7FileName, memoryStream);
+                                memoryStream.Close();
+                                await blobContainer.DeleteBlobAsync(failhl7File.HL7BlobFile);
+                            });
                         }
 
                         ResponseData responseData = new();
                         responseData.Success = validatedHl7Files.Select(x => new { x.HL7FileName, x.HL7FileType });
                         responseData.Fail = failHl7Files.Select(x => new { x.HL7FileName, x.HL7FileError });
-
-
                         var jsonResponseToReturn = JsonConvert.SerializeObject(responseData);
-
-
                         var response = request.CreateResponse(HttpStatusCode.OK);
                         response.Body = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponseToReturn));
                         return await Task.FromResult(response);
                     }
-
                     var jsonEmptyResponseToReturn = JsonConvert.SerializeObject(new List<string>());
                     var emptyBlobresponse = request.CreateResponse(HttpStatusCode.OK);
                     emptyBlobresponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(jsonEmptyResponseToReturn));
                     return await Task.FromResult(emptyBlobresponse);
                 }
-
                 var noContentresponse = request.CreateResponse(HttpStatusCode.NoContent);
                 return await Task.FromResult(noContentresponse);
-
             }
             catch (Exception ex)
             {
@@ -163,7 +177,6 @@ namespace HL7Validation.ValidateMessage
                 errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(ex.Message));
                 return await Task.FromResult(errorResponse);
             }
-
         }
     }
 }

@@ -2,7 +2,6 @@
 using NHapi.Base.Parser;
 using NHapi.Base.Util;
 using NHapi.Base.Validation;
-using NHapi.Model.V28.Segment;
 using System.Text.RegularExpressions;
 
 namespace HL7Validation.CustomValidation.Rules
@@ -18,15 +17,13 @@ namespace HL7Validation.CustomValidation.Rules
         {
             var validationResults = new ValidationException[0];
             var encodingChars = new EncodingCharacters('|', null);
-            var msh = (MSH)message.GetStructure("MSH");
-            var messageType = PipeParser.Encode(msh, encodingChars).Split('|');
-            if (string.IsNullOrEmpty(messageType[8]))
+
+            var terser = new Terser(message);
+            if (string.IsNullOrEmpty(terser.Get("/MSH-9")))
             {
                 validationResults = new ValidationException[1] { new ValidationException("MSH.9 - Message Type should not be empty") };
             }
 
-            //check the segment value is empty.
-            var terser = new Terser(message);
             if (string.IsNullOrEmpty(terser.Get("/MSH-9-1")))
             {
                 validationResults = new ValidationException[1] { new ValidationException("MSH.9.1 - Message Code should not be empty") };
@@ -37,7 +34,7 @@ namespace HL7Validation.CustomValidation.Rules
                 validationResults = new ValidationException[1] { new ValidationException("MSH.9.2 - Trigger Event should not be empty") };
             }
 
-            if (string.IsNullOrEmpty(terser.Get("/MSH-9-3")))
+            if (terser.Get("/MSH-12").ToString() == "2.8" && string.IsNullOrEmpty(terser.Get("/MSH-9-3")))
             {
                 validationResults = new ValidationException[1] { new ValidationException("MSH.9.3 - Message Structure should not be empty") };
             }
@@ -46,11 +43,11 @@ namespace HL7Validation.CustomValidation.Rules
             {
                 Regex dateTimeRegex = new Regex(@"^((?<year>\d{4})((?<month>\d{2})((?<day>\d{2})(?<time>((?<hour>\d{2})((?<minute>\d{2})((?<second>\d{2})(\.(?<millisecond>\d+))?)?)?))?)?)?(?<timeZone>(?<sign>-|\+)(?<timeZoneHour>\d{2})(?<timeZoneMinute>\d{2}))?)$");
                 var isDateTimeValid = dateTimeRegex.IsMatch(terser.Get("/MSH-7"));
-                if(!isDateTimeValid)
+                if (!isDateTimeValid)
                 {
                     validationResults = new ValidationException[1] { new ValidationException("MSH.7 - Message Structure should be valid") };
                 }
-               
+
             }
 
             return validationResults;

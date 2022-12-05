@@ -44,11 +44,11 @@ using IHost host = new HostBuilder()
         BlobConfiguration blobConfig = new()
         {
             BlobConnectionString = config.BlobConnectionString,
-            SuccessBlobContainer = config.SuccessBlobContainer,
+            ProcessedBlobContainer = config.ProcessedBlobContainer,
             FhirFailedBlob = config.FhirFailedBlob,
             HL7FailedBlob = config.HL7FailedBlob,
             SkippedBlobContainer = config.SkippedBlobContainer,
-            ValidatedBlobContainer = config.ValidatedBlobContainer,
+            ConvertedContainer = config.ConvertedContainer,
             FailedBlobContainer = config.FailedBlobContainer
         };
         services.AddSingleton(blobConfig);
