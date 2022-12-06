@@ -59,7 +59,7 @@ Azure Health Data Services needs some modification to the capability statement a
 
 ## EHR Launch
 
-TODO - confirm this diagram and write informational text (Erik).
+TODO
 
 ```mermaid
   sequenceDiagram
