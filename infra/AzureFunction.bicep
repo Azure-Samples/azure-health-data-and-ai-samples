@@ -78,8 +78,10 @@ resource fhirProxyAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
   }, functionSettings)
 }
 
+var key = listkeys('${functionApp.id}/host/default', '2016-08-01').functionKeys.default
+
 output functionAppName string = functionAppName
 output functionAppPrincipalId string = functionApp.identity.principalId
 output hostName string = functionApp.properties.defaultHostName
-output functionkey string = listkeys('${functionApp.id}/host/default', '2016-08-01').functionKeys.default
+output functionkey string = key
 output functionURL string = 'https://${functionApp.properties.defaultHostName}'

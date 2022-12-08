@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
-      "value": "dataingesttest"
+      "value": "${AZURE_ENV_NAME}"
     },
     "location": {
-      "value": "eastus"
+      "value": "${AZURE_LOCATION}"
     },
     "principalId": {
-      "value": ""
+      "value": "${AZURE_PRINCIPAL_ID}"
     },
     "existingAzureHealthDataServicesWorkspaceName": {
       "value": ""
