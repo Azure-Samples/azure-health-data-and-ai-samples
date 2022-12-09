@@ -161,6 +161,7 @@ namespace HL7Validation.ValidateMessage
                         response.Body = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponseToReturn));
                         return await Task.FromResult(response);
                     }
+
                     var jsonEmptyResponseToReturn = JsonConvert.SerializeObject(new List<string>());
                     var emptyBlobresponse = request.CreateResponse(HttpStatusCode.OK);
                     emptyBlobresponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(jsonEmptyResponseToReturn));
