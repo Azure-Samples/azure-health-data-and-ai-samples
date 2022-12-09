@@ -145,7 +145,7 @@ resource logicAppSetting 'Microsoft.Web/sites/config@2020-12-01' = {
     APPINSIGHTS_INSTRUMENTATIONKEY: appi.properties.InstrumentationKey
     ApplicationInsightsAgent_EXTENSION_VERSION:'~2'
     APPLICATIONINSIGHTS_CONNECTION_STRING : appi.properties.ConnectionString
-    subscription_Id : subscription().id
+    subscription_Id : subscription().subscriptionId
     resource_group : resourceGroup().name
     azureFunctionOperation_functionAppKey : key
     site_name : funcAppName
