@@ -53,8 +53,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             var audience = _configuration.Audience!;
 
-            // TODO: Check for fhirUser in id_token
-
             // Replace scopes from fully qualified AD scopes to SMART scopes
             if (!tokenResponse["scope"]!.IsNullOrEmpty())
             {
@@ -65,21 +63,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 ns = ns.Replace("user.", "user/", StringComparison.InvariantCulture);
                 ns = ns.Replace("system.", "system/", StringComparison.InvariantCulture);
                 ns = ns.Replace("launch.", "launch/", StringComparison.InvariantCulture);
-
-                // Why is this here?
-                if (tokenResponse.ContainsKey("refresh_token"))
-                {
-                    ns += " offline_access";
-                }
-                else
-                {
-                    ns += " online_access";
-                }
-
-                if (tokenResponse.ContainsKey("id_token"))
-                {
-                    ns += " openid";
-                }
 
                 tokenResponse["scope"] = ns;
             }
@@ -93,6 +76,24 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 if (roles is not null)
                 {
                     tokenResponse["scope"] = string.Join(" ", roles.Select(x => x.Value));
+                }
+            }
+
+            if (!tokenResponse["id_token"]!.IsNullOrEmpty())
+            {
+                try
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    JwtSecurityToken id_token = (JwtSecurityToken)handler.ReadToken(tokenResponse["id_token"]!.ToString());
+                    var fhirUser = id_token.Claims.First(x => x.Type == "fhirUser");
+                    if (fhirUser is not null)
+                    {
+                        context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={fhirUser.Value}; path=/; secure; HttpOnly", CustomHeaderType.ResponseStatic));
+                        context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
+                    }
+                }
+                catch (Exception ex) {
+                    _logger.LogWarning("fhirUser not found in id_token");
                 }
             }
 

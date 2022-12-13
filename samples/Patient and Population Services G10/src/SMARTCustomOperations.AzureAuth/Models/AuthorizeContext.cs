@@ -55,7 +55,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public AuthorizeContext Translate(string fhirServerAud)
         {
-            _audience = fhirServerAud;
+            //_audience = fhirServerAud;
             _scope = Scope.ParseScope(fhirServerAud);
             return this;
         }
@@ -112,6 +112,19 @@ namespace SMARTCustomOperations.AzureAuth.Models
         {
             if (!string.IsNullOrEmpty(ResponseType) &&
                 ResponseType.ToLowerInvariant() == "code")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsValidAudience(string audience)
+        {
+            audience = audience.EndsWith("/") ? audience.TrimEnd("/".ToCharArray()) : audience;
+            if (Audience.ToLowerInvariant() == audience.ToLowerInvariant())
             {
                 return true;
             }
