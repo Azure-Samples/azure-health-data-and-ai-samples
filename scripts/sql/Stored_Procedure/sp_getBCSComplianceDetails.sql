@@ -81,26 +81,16 @@ AS
 		JSON_VALUE(claim.[insurance],'$[0].coverage.display') as Insurance,
 		SUBSTRING(JSON_VALUE(claim.item,'$[0].encounter[0].reference'), 11, 1000) AS EncounterId	
 	FROM fhir.Claim claim
-	--INNER JOIN Numerators N ON RIGHT([patient.reference], LEN([patient.reference]) - 8) = N.PatientId
 	INNER JOIN EncounterMeasure E ON SUBSTRING(JSON_VALUE(claim.item,'$[0].encounter[0].reference'), 11, 1000) = E.Id
 ),
-Patients (PatientId, Age, PatientCity, PatientState, RaceCategory, EthnicityCategory, AgeRange, Numerator, Place, Payor)
+Patients (PatientId, Age, PatientCity, PatientState, RaceCategory, EthnicityCategory, Numerator , Payor)
 AS
 (
 	SELECT DISTINCT P.PatientId, Age, PatientCity, PatientState, RaceCategory, EthnicityCategory,
-	CASE
-		WHEN Age BETWEEN 50 and 54 THEN '50 - 54'
-		WHEN Age BETWEEN 55 and 59 THEN '55 - 59'
-		WHEN Age BETWEEN 60 and 64 THEN '60 - 64'
-		WHEN Age BETWEEN 65 and 69 THEN '65 - 69'
-		WHEN Age BETWEEN 70 and 74 THEN '70 - 74'
-	END
-	AS AgeRange,
 	CASE 
         WHEN N.IsNumerator = 1 THEN 1
         ELSE 0
     END AS Numerator,
-	PatientCity + ', ' + PatientState AS Place,
 	C.Payor
 	FROM InitialPopulation P  
 	LEFT JOIN Numerators N ON P.PatientId = N.PatientId
