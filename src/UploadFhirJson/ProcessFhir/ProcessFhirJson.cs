@@ -5,6 +5,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -16,18 +17,20 @@ namespace UploadFhirJson.ProcessFhir
 {
     public class ProcessFhirJson : IProcessFhirJson
     {
-        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
+        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, BlobServiceClient blobServiceClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
             _fhirClient = fhirClient;
             _blobConfiguration = blobConfiguration;
+            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
         private readonly TelemetryClient _telemetryClient;
         private readonly BlobConfiguration _blobConfiguration;
+        private readonly BlobServiceClient _blobServiceClient;
         private readonly IFhirClient _fhirClient;
         private readonly ILogger _logger;
         public string Id => _id;
@@ -37,42 +40,42 @@ namespace UploadFhirJson.ProcessFhir
         public async Task<HttpResponseData> Execute(HttpRequestData httpRequestData)
         {
             DateTime start = DateTime.Now;
-            HttpResponseMessage httpResponseMessage = new();
             try
             {
                 FhirInput fhirInputs = JsonConvert.DeserializeObject<FhirInput>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
-                if (fhirInputs != null && fhirInputs.FhirData != null && fhirInputs.FhirData.Count > 0)
+                if (fhirInputs != null && fhirInputs.sortedHL7files.Count > 0)
                 {
-                    if (!fhirInputs.proceedOnError && fhirInputs.FhirData.Where(e => !e.HL7Conversion).Any())
-                    {
-                        _logger?.LogInformation("{Name}-{Id} Request will not process as proceedOnValidationError value or Conversion value is false.", Name, Id);
-                        _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                        var blankResponse = httpRequestData.CreateResponse(HttpStatusCode.BadRequest);
-                        blankResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes($"Request will not process as proceedOnValidationError value is false."));
-                        return await Task.FromResult(blankResponse);
-                    }
+                    var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
                     FhirResponse fhirReponse = new();
                     foreach (var item in fhirInputs.sortedHL7files)
                     {
-                        FhirDetails valFiles = fhirInputs.FhirData.Where(e => e.HL7FileName == item.HL7FileName).FirstOrDefault();
-                        if (isFilesSkipped)
+                        BlobClient blobClient = blobContainer.GetBlobClient(item.HL7FileName);
+                        if (blobClient != null && await blobClient.ExistsAsync())
                         {
-                            fhirReponse.skipped.Add(await UploadSkippedFile(valFiles));
-                        }
-                        else
-                        {
-                            var result = await ProcessFhirRequest(valFiles, fhirInputs.proceedOnError);
-                            if (result != null && result.StatusCode == 200)
+                            FhirDetails fhirDetails = new();
+                            var blobData = await blobClient.OpenReadAsync();
+                            using (var streamReader = new StreamReader(blobData))
                             {
-                                fhirReponse.success.Add(result);
+                                fhirDetails = JsonConvert.DeserializeObject<FhirDetails>(await streamReader.ReadToEndAsync());
+                            }
+                            if (isFilesSkipped)
+                            {
+                                fhirReponse.skipped.Add(await UploadSkippedFile(fhirDetails));
                             }
                             else
-                            { fhirReponse.failed.Add(result); }
+                            {
+                                var result = await ProcessFhirRequest(fhirDetails, fhirInputs.proceedOnError);
+                                if (result != null && result.StatusCode == 200)
+                                {
+                                    fhirReponse.success.Add(result);
+                                }
+                                else
+                                { fhirReponse.failed.Add(result); }
+                            }
 
+                            await blobContainer.DeleteBlobAsync(item.HL7FileName);
                         }
-
                     }
-
                     var response = httpRequestData.CreateResponse(HttpStatusCode.OK);
                     response.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(fhirReponse)));
                     return await Task.FromResult(response);
@@ -94,7 +97,6 @@ namespace UploadFhirJson.ProcessFhir
                 response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"Error while sending Fhir data to server :{(ex.InnerException != null ? ex.InnerException : ex.Message)}"));
                 return await Task.FromResult(response);
             }
-
         }
 
         public async Task<Response> ProcessFhirRequest(FhirDetails fhirInput, bool proceedOnError)
@@ -147,8 +149,8 @@ namespace UploadFhirJson.ProcessFhir
 
         public async Task UploadToSuccessBlob(string fileName, string soruceBlobName, string targetBloblName)
         {
-            BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
-            BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, targetBloblName);
+            var sourceClient = _blobServiceClient.GetBlobContainerClient(soruceBlobName);
+            var targetClient = _blobServiceClient.GetBlobContainerClient(targetBloblName);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
             await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
@@ -157,14 +159,14 @@ namespace UploadFhirJson.ProcessFhir
 
         public async Task UploadToFailBlob(string fileName, string fileData, string soruceBlobName, string targetBloblName)
         {
-            BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
-            BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FailedBlobContainer);
+            var sourceClient = _blobServiceClient.GetBlobContainerClient(soruceBlobName);
+            var targetClient = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FailedBlobContainer);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(targetBloblName + "/" + fileName);
             await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
             if (!string.IsNullOrEmpty(fileData))
             {
-                BlobContainerClient blobClient = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FailedBlobContainer);
+                var blobClient = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FailedBlobContainer);
                 var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(fileData));
                 await blobClient.UploadBlobAsync(_blobConfiguration.FhirFailedBlob + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json", memoryStream);
                 memoryStream.Close();

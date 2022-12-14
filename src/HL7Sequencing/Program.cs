@@ -2,11 +2,13 @@ using HL7Sequencing.Configuration;
 using HL7Sequencing.Sequencing;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
+using NHapi.Base.Parser;
 using System.Reflection;
 
 HL7SequencingConfiguration config = new();
@@ -47,6 +49,12 @@ using IHost host = new HostBuilder()
 
         services.AddSingleton(blobConfig);
         services.AddTransient<ISequence,Sequence>();
+        services.AddSingleton<PipeParser>();
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
+        });
+
 
     })
     .Build();

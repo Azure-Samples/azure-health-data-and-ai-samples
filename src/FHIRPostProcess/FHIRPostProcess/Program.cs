@@ -1,5 +1,6 @@
 ﻿using FHIRPostProcess.Configuration;
 using FHIRPostProcess.PostProcessor;
+using Hl7.Fhir.Serialization;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +41,15 @@ using IHost host = new HostBuilder()
             });
             services.AddTransient<TelemetryClient>();
         }
-        services.AddTransient<IPostProcess,PostProcess>();
+        services.AddTransient<IPostProcess, PostProcess>();
+
+        FhirJsonParser _parser = new();
+        //change the parser settings to skip validations
+        _parser.Settings.AllowUnrecognizedEnums = true;
+        _parser.Settings.AcceptUnknownMembers = true;
+        _parser.Settings.PermissiveParsing = true;
+
+        services.AddSingleton(_parser);
     })
     .Build();
 

@@ -1,11 +1,13 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using System.Reflection;
+using UploadFhirJson.Caching;
 using UploadFhirJson.Configuration;
 using UploadFhirJson.FhirClient;
 using UploadFhirJson.ProcessFhir;
@@ -49,16 +51,27 @@ using IHost host = new HostBuilder()
             HL7FailedBlob = config.HL7FailedBlob,
             SkippedBlobContainer = config.SkippedBlobContainer,
             ConvertedContainer = config.ConvertedContainer,
-            FailedBlobContainer = config.FailedBlobContainer
+            FailedBlobContainer = config.FailedBlobContainer,
+            FhirJsonContainer = config.FhirJsonContainer
+
         };
         services.AddSingleton(blobConfig);
 
-        services.AddTransient<IProcessFhirJson, ProcessFhirJson>();
+        services.AddMemoryCache();
+        services.AddScoped<IProcessFhirJson, ProcessFhirJson>();
+
+        services.AddSingleton<IInMemoryCache, InMemoryCache>();
         services.AddHttpClient<IFhirClient, FhirClient>(httpClient =>
         {
             httpClient.BaseAddress = new Uri(config.FhirURL);
-
         });
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
+        });
+
+
     })
     .Build();
 

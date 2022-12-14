@@ -3,6 +3,7 @@ using HL7Converter.FhirClient;
 using HL7Converter.ProcessConverter;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,7 +56,11 @@ using IHost host = new HostBuilder()
         services.AddHttpClient<IFhirClient, FhirClient>(httpClient =>
         {
             httpClient.BaseAddress = new Uri(config.FhirURL);
+        });
 
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
         });
 
     })

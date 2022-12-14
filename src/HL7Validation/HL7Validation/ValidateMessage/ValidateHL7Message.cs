@@ -16,18 +16,22 @@ namespace HL7Validation.ValidateMessage
 {
     public class ValidateHL7Message : IValidateHL7Message
     {
-        public ValidateHL7Message(BlobConfig config, TelemetryClient telemetryClient = null, ILogger<ValidateHL7Message> logger = null)
+        public ValidateHL7Message(BlobConfig config, PipeParser pipeParser = null, BlobServiceClient blobServiceClient = null, TelemetryClient telemetryClient = null, ILogger<ValidateHL7Message> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _config = config;
             _logger = logger;
             _telemetryClient = telemetryClient;
+            _pipeParser = pipeParser;
+            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
         private readonly BlobConfig _config;
         private readonly ILogger _logger;
         private readonly TelemetryClient _telemetryClient;
+        private readonly PipeParser _pipeParser;
+        private readonly BlobServiceClient _blobServiceClient;
         public string Id => _id;
         public string Name => "ValidateHL7Message";
 
@@ -44,7 +48,7 @@ namespace HL7Validation.ValidateMessage
                 {
                     postData = JsonConvert.DeserializeObject<PostData>(reqContent);
 
-                    BlobContainerClient blobContainer = new BlobContainerClient(_config.BlobConnectionString, postData.ContainerName);
+                    var blobContainer = _blobServiceClient.GetBlobContainerClient(postData.ContainerName);
 
                     Object listLock = new();
                     List<Hl7Files> validatedHl7Files = new();
@@ -81,8 +85,7 @@ namespace HL7Validation.ValidateMessage
                                 {
                                     try
                                     {
-                                        var parser = new PipeParser { ValidationContext = new Validation.CustomValidation() };
-                                        var parsedMessage = parser.Parse(fileData);
+                                        var parsedMessage = _pipeParser.Parse(fileData);
                                         if (parsedMessage != null)
                                         {
                                             var terser = new Terser(parsedMessage);
@@ -130,8 +133,7 @@ namespace HL7Validation.ValidateMessage
                             parallelOptions.MaxDegreeOfParallelism = MaxParallelism;
                             await Parallel.ForEachAsync(validatedHl7Files, parallelOptions, async (hl7File, CancellationToken) =>
                             {
-                                BlobContainerClient validatedContainer = new BlobContainerClient(_config.BlobConnectionString, _config.ValidatedBlobContainer);
-
+                                var validatedContainer = _blobServiceClient.GetBlobContainerClient(_config.ValidatedBlobContainer);
                                 var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(hl7File.HL7FileData));
                                 await validatedContainer.UploadBlobAsync(hl7File.HL7FileName, memoryStream);
                                 memoryStream.Close();
@@ -144,8 +146,7 @@ namespace HL7Validation.ValidateMessage
                             parallelOptions.MaxDegreeOfParallelism = MaxParallelism;
                             await Parallel.ForEachAsync(failHl7Files, parallelOptions, async (failhl7File, CancellationToken) =>
                             {
-                                BlobContainerClient hl7validationfaildContainer = new BlobContainerClient(_config.BlobConnectionString, _config.Hl7validationfailBlobContainer);
-
+                                var hl7validationfaildContainer = _blobServiceClient.GetBlobContainerClient(_config.Hl7validationfailBlobContainer);
                                 var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(failhl7File.HL7FileData));
                                 await hl7validationfaildContainer.UploadBlobAsync(failhl7File.HL7FileName, memoryStream);
                                 memoryStream.Close();

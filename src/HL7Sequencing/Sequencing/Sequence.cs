@@ -15,18 +15,22 @@ namespace HL7Sequencing.Sequencing
 {
     public class Sequence : ISequence
     {
-        public Sequence(BlobConfig config, TelemetryClient telemetryClient = null, ILogger<Sequence> logger = null)
+        public Sequence(BlobConfig config, BlobServiceClient blobServiceClient, PipeParser pipeParser, TelemetryClient telemetryClient = null, ILogger<Sequence> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _config = config;
             _logger = logger;
             _telemetryClient = telemetryClient;
+            _pipeParser = pipeParser;
+            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
         private readonly BlobConfig _config;
+        private readonly PipeParser _pipeParser;
         private readonly ILogger _logger;
         private readonly TelemetryClient _telemetryClient;
+        private readonly BlobServiceClient _blobServiceClient;
 
         public string Id => _id;
         public string Name => "Sequence";
@@ -50,7 +54,7 @@ namespace HL7Sequencing.Sequencing
                     {
                         List<string> hl7files = postDataList.Select(x => x.HL7FileName).ToList();
 
-                        BlobContainerClient blobContainer = new(_config.BlobConnectionString, _config.ValidatedBlobContainer);
+                        var blobContainer = _blobServiceClient.GetBlobContainerClient(_config.ValidatedBlobContainer);
 
                         if (hl7files != null && hl7files.Count > 0)
                         {
@@ -78,10 +82,8 @@ namespace HL7Sequencing.Sequencing
                                         {
                                             try
                                             {
-
                                                 hl7Files.HL7FileName = hl7FileName;
-                                                var parser = new PipeParser();
-                                                var parsedMessage = parser.Parse(fileData);
+                                                var parsedMessage = _pipeParser.Parse(fileData);
                                                 if (parsedMessage != null)
                                                 {
                                                     var MSH = parsedMessage?.GetStructure("MSH") as MSH;
@@ -93,7 +95,7 @@ namespace HL7Sequencing.Sequencing
                                                         if (MSH13 == "0" || MSH13 == "-1")
                                                         {
                                                             var resynchronizationFileName = Path.GetFileNameWithoutExtension(hl7FileName) + "_" + DateTime.Now.ToString("MMddyyyyhhmmss") + Path.GetExtension(hl7FileName);
-                                                            BlobContainerClient hl7ReSynchronizationContainer = new BlobContainerClient(_config.BlobConnectionString, _config.Hl7ResynchronizationContainer);
+                                                            var hl7ReSynchronizationContainer = _blobServiceClient.GetBlobContainerClient(_config.Hl7ResynchronizationContainer);
 
                                                             var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(fileData));
                                                             await hl7ReSynchronizationContainer.UploadBlobAsync(resynchronizationFileName, memoryStream);
@@ -119,7 +121,7 @@ namespace HL7Sequencing.Sequencing
                                                         else
                                                         {
                                                             var gmtOffset = MSH7.GMTOffset;
-                                                            TimeSpan timeSpan = new TimeSpan(gmtOffset / 100, gmtOffset % 100, 0);
+                                                            TimeSpan timeSpan = new(gmtOffset / 100, gmtOffset % 100, 0);
                                                             hl7Files.DateTimeOffsetOfMessage = new DateTimeOffset(MSH7.Year, MSH7.Month, MSH7.Day, MSH7.Hour, MSH7.Minute, MSH7.Second, Convert.ToInt32(MSH7.FractSecond), timeSpan);
                                                         }
                                                     }

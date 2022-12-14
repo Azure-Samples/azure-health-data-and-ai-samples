@@ -14,13 +14,14 @@ namespace HL7Converter.ProcessConverter
 {
     public class Converter : IConverter
     {
-        public Converter(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<Converter> logger = null)
+        public Converter(BlobConfiguration blobConfiguration, IFhirClient fhirClient, BlobServiceClient blobServiceClient, TelemetryClient telemetryClient = null, ILogger<Converter> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
             _blobConfiguration = blobConfiguration;
             _fhirClient = fhirClient;
+            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
@@ -28,6 +29,7 @@ namespace HL7Converter.ProcessConverter
         private readonly BlobConfiguration _blobConfiguration;
         private readonly ILogger _logger;
         private readonly IFhirClient _fhirClient;
+        private readonly BlobServiceClient _blobServiceClient;
         public string Id => _id;
         public string Name => "HL7Converter";
 
@@ -85,8 +87,8 @@ namespace HL7Converter.ProcessConverter
 
         public async Task UploadToBlob(string fileName, string soruceBlobName, string targetBloblName)
         {
-            BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
-            BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, targetBloblName);
+            var sourceClient = _blobServiceClient.GetBlobContainerClient(soruceBlobName);
+            var targetClient = _blobServiceClient.GetBlobContainerClient(targetBloblName);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
             await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);

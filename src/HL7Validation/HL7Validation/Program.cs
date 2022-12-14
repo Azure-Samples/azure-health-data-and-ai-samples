@@ -2,11 +2,13 @@
 using HL7Validation.ValidateMessage;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
+using NHapi.Base.Parser;
 using System.Reflection;
 
 HL7ValidationConfig config = new();
@@ -51,6 +53,14 @@ using IHost host = new HostBuilder()
 
         services.AddSingleton(blobConfig);
         services.AddTransient<IValidateHL7Message, ValidateHL7Message>();
+        var parser = new PipeParser { ValidationContext = new HL7Validation.Validation.CustomValidation() };
+        services.AddSingleton(parser);
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
+        });
+
 
     })
     .Build();

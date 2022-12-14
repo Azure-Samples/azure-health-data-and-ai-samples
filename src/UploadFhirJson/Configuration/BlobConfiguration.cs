@@ -15,5 +15,7 @@
         public string ConvertedContainer { get; set; }
 
         public string SkippedBlobContainer { get; set; }
+
+        public string FhirJsonContainer { get; set; }
     }
 }

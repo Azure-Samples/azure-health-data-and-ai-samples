@@ -13,16 +13,18 @@ namespace FHIRPostProcess.PostProcessor
     public class PostProcess : IPostProcess
     {
 
-        public PostProcess(TelemetryClient telemetryClient = null, ILogger<PostProcess> logger = null)
+        public PostProcess(FhirJsonParser fhirJsonParser, TelemetryClient telemetryClient = null, ILogger<PostProcess> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _logger = logger;
             _telemetryClient = telemetryClient;
+            _fhirJsonParser = fhirJsonParser;
         }
 
         private readonly string _id;
         private readonly ILogger _logger;
         private readonly TelemetryClient _telemetryClient;
+        private readonly FhirJsonParser _fhirJsonParser;
         public string Id => _id;
         public string Name => "PostProcess";
         private readonly DateTime start = DateTime.Now;
@@ -34,13 +36,8 @@ namespace FHIRPostProcess.PostProcessor
 
             try
             {
-                FhirJsonParser _parser = new();
-                //change the parser settings to skip validations
-                _parser.Settings.AllowUnrecognizedEnums = true;
-                _parser.Settings.AcceptUnknownMembers = true;
-                _parser.Settings.PermissiveParsing = true;
                 string reqBundle = await new StreamReader(request.Body).ReadToEndAsync();
-                Bundle bundleResource = _parser.Parse<Bundle>(reqBundle);
+                Bundle bundleResource = _fhirJsonParser.Parse<Bundle>(reqBundle);
 
                 if (bundleResource.Type != Bundle.BundleType.Transaction)
                 {

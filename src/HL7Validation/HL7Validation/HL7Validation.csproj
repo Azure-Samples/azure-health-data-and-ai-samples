@@ -23,6 +23,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NHapiTools" Version="2.0.3" />
 		<PackageReference Include="DotNetEnv " Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="host.json">
