@@ -1,0 +1,353 @@
+{
+  "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+          "FHIR_Data_Upload_Null_Check": {
+              "actions": {
+                  "Parsing_FHIR_Upload_Function_Output": {
+                      "inputs": {
+                          "content": "@json(outputs('UploadFhirJson')?['body'])",
+                          "schema": {
+                              "properties": {
+                                  "failed": {
+                                      "type": "array"
+                                  },
+                                  "skipped": {
+                                      "type": "array"
+                                  },
+                                  "success": {
+                                      "type": "array"
+                                  }
+                              },
+                              "type": "object"
+                          }
+                      },
+                      "runAfter": {
+                          "UploadFhirJson": [
+                              "Succeeded"
+                          ]
+                      },
+                      "type": "ParseJson"
+                  },
+                  "UploadFhirJson": {
+                      "inputs": {
+                          "body": "@outputs('Request_creation_for_Fhir_Upload')",
+                          "function": {
+                              "connectionName": "azureFunctionOperation-5"
+                          },
+                          "method": "POST",
+                          "retryPolicy": {
+                              "type": "none"
+                          }
+                      },
+                      "runAfter": {},
+                      "trackedProperties": {
+                          "Output": "@{if(equals(action()['outputs']['statusCode'],200),'No Error in FHIR Upload', action()['outputs']['body'])}",
+                          "StatusCode": "@action()['outputs']['statusCode']",
+                          "StatusDisplay": "@{if(equals(action()['outputs']['statusCode'],200),'Pass', 'Fail')}"
+                      },
+                      "type": "Function"
+                  }
+              },
+              "expression": {
+                  "and": [
+                      {
+                          "not": {
+                              "equals": [
+                                  "@length(body('Parse_JSON')?['FhirData'])",
+                                  0
+                              ]
+                          }
+                      }
+                  ]
+              },
+              "runAfter": {
+                  "Parse_JSON": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "If"
+          },
+          "FHIR_Upload_Array": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "FhirUpload",
+                          "type": "array",
+                          "value": "@null"
+                      }
+                  ]
+              },
+              "runAfter": {},
+              "type": "InitializeVariable"
+          },
+          "For_each": {
+              "actions": {
+                  "Append_to_FHIR_Upload_array_variable": {
+                      "inputs": {
+                          "name": "FhirUpload",
+                          "value": "@outputs('Compose_Fhir_Data_')"
+                      },
+                      "runAfter": {
+                          "Compose_Fhir_Data_": [
+                              "Succeeded"
+                          ]
+                      },
+                      "type": "AppendToArrayVariable"
+                  },
+                  "Compose_Fhir_Data_": {
+                      "inputs": {
+                          "FhirJson": "@{if(equals(outputs('Hl7Converter')['statusCode'],200),if(equals(outputs('FHIRPostProcessFunction')['statusCode'],200),base64(body('FHIRPostProcessFunction')),base64(body('Hl7Converter'))), '')}",
+                          "HL7Conversion": "@{if(equals(outputs('Hl7Converter')['statusCode'],200),'true','false')}",
+                          "HL7FileName": "@{items('For_each')?['HL7FileName']}"
+                      },
+                      "runAfter": {
+                          "FHIRPostProcessFunction": [
+                              "Succeeded",
+                              "FAILED"
+                          ]
+                      },
+                      "type": "Compose"
+                  },
+                  "FHIRPostProcessFunction": {
+                      "inputs": {
+                          "body": "@body('HL7Converter')",
+                          "function": {
+                              "connectionName": "azureFunctionOperation-4"
+                          },
+                          "method": "PUT",
+                          "retryPolicy": {
+                              "type": "none"
+                          }
+                      },
+                      "runAfter": {
+                          "HL7Converter": [
+                              "Succeeded",
+                              "FAILED"
+                          ]
+                      },
+                      "trackedProperties": {
+                          "Output": "@{if(equals(action()['outputs']['statusCode'],200),'No Error in FHIR Post processing', action()['outputs']['body'])}",
+                          "StatusCode": "@action()['outputs']['statusCode']",
+                          "StatusDisplay": "@{if(equals(action()['outputs']['statusCode'],200),'Pass', 'Fail')}"
+                      },
+                      "type": "Function"
+                  },
+                  "FHIR_Request_Compose": {
+                      "inputs": {
+                          "parameter": [
+                              {
+                                  "name": "inputData",
+                                  "valueString": "@{body('Get_HL7_file_content')}"
+                              },
+                              {
+                                  "name": "inputDataType",
+                                  "valueString": "Hl7v2"
+                              },
+                              {
+                                  "name": "templateCollectionReference",
+                                  "valueString": "microsofthealth/fhirconverter:default"
+                              },
+                              {
+                                  "name": "rootTemplate",
+                                  "valueString": "@{items('For_each')?['HL7FileType']}"
+                              }
+                          ],
+                          "resourceType": "Parameters"
+                      },
+                      "runAfter": {
+                          "Get_HL7_file_content": [
+                              "Succeeded"
+                          ]
+                      },
+                      "type": "Compose"
+                  },
+                  "Get_HL7_file_content": {
+                      "inputs": {
+                          "host": {
+                              "connection": {
+                                  "referenceName": "azureblob_1"
+                              }
+                          },
+                          "method": "get",
+                          "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/validated/',items('For_each')?['HL7FileName']))}/content",
+                          "queries": {
+                              "inferContentType": true
+                          }
+                      },
+                      "runAfter": {},
+                      "type": "ApiConnection"
+                  },
+                  "HL7Converter": {
+                      "inputs": {
+                          "body": {
+                              "ConversionBody": "@base64(outputs('FHIR_Request_Compose'))",
+                              "HL7FileName": "@{items('For_each')?['HL7FileName']}"
+                          },
+                          "function": {
+                              "connectionName": "azureFunctionOperation-3"
+                          },
+                          "method": "POST",
+                          "retryPolicy": {
+                              "type": "none"
+                          }
+                      },
+                      "runAfter": {
+                          "FHIR_Request_Compose": [
+                              "Succeeded"
+                          ]
+                      },
+                      "trackedProperties": {
+                          "FileName": "@items('For_each')?['HL7FileName']",
+                          "Output": "@{if(equals(action()['outputs']['statusCode'],200),'No Error in HL7 Conversion', action()['outputs']['body'])}",
+                          "StatusCode": "@action()['outputs']['statusCode']",
+                          "StatusDisplay": "@{if(equals(action()['outputs']['statusCode'],200),'Pass', 'Fail')}"
+                      },
+                      "type": "Function"
+                  }
+              },
+              "foreach": "@json(outputs('HL7Sequencing')?['body'])",
+              "runAfter": {
+                  "HL7Sequencing": [
+                      "Succeeded"
+                  ]
+              },
+              "runtimeConfiguration": {
+                  "concurrency": {
+                      "repetitions": 50
+                  }
+              },
+              "type": "Foreach"
+          },
+          "HL7Sequencing": {
+              "inputs": {
+                  "body": "@body('Parsing_HL7_Validate_Func_Output')?['Success']",
+                  "function": {
+                      "connectionName": "azureFunctionOperation-2"
+                  },
+                  "method": "POST",
+                  "retryPolicy": {
+                      "type": "none"
+                  }
+              },
+              "runAfter": {
+                  "Parsing_HL7_Validate_Func_Output": [
+                      "Succeeded"
+                  ]
+              },
+              "trackedProperties": {
+                  "Output": "@{if(equals(action()['outputs']['statusCode'],200),'No Error in HL7 Sorting', action()['outputs']['body'])}",
+                  "StatusCode": "@action()['outputs']['statusCode']",
+                  "StatusDisplay": "@{if(equals(action()['outputs']['statusCode'],200),'Pass', 'Fail')}"
+              },
+              "type": "Function"
+          },
+          "Parse_JSON": {
+              "inputs": {
+                  "content": "@outputs('Request_creation_for_Fhir_Upload')",
+                  "schema": {
+                      "properties": {
+                          "FhirData": {
+                              "type": "array"
+                          },
+                          "proceedOnError": {
+                              "type": "string"
+                          },
+                          "sortedHl7files": {
+                              "type": "array"
+                          }
+                      },
+                      "type": "object"
+                  }
+              },
+              "runAfter": {
+                  "Request_creation_for_Fhir_Upload": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "ParseJson"
+          },
+          "Parsing_HL7_Validate_Func_Output": {
+              "inputs": {
+                  "content": "@json(outputs('ValidateHL7')?['body'])",
+                  "schema": {
+                      "properties": {
+                          "Fail": {
+                              "type": "array"
+                          },
+                          "Success": {
+                              "type": "array"
+                          }
+                      },
+                      "type": "object"
+                  }
+              },
+              "runAfter": {
+                  "ValidateHL7": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "ParseJson"
+          },
+          "Request_creation_for_Fhir_Upload": {
+              "inputs": {
+                  "FhirData": "@variables('FhirUpload')",
+                  "proceedOnError": "@triggerBody()?['proceedOnError']",
+                  "sortedHl7files": "@json(body('HL7Sequencing'))"
+              },
+              "runAfter": {
+                  "For_each": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "Compose"
+          },
+          "ValidateHL7": {
+              "inputs": {
+                  "body": "@triggerBody()",
+                  "function": {
+                      "connectionName": "azureFunctionOperation"
+                  },
+                  "method": "POST",
+                  "retryPolicy": {
+                      "type": "none"
+                  }
+              },
+              "runAfter": {
+                  "FHIR_Upload_Array": [
+                      "Succeeded"
+                  ]
+              },
+              "trackedProperties": {
+                  "Output": "@{if(equals(action()['outputs']['statusCode'],200),'No Error in HL7 Validation', action()['outputs']['body'])}",
+                  "StatusCode": "@action()['outputs']['statusCode']",
+                  "StatusDisplay": "@{if(equals(action()['outputs']['statusCode'],200),'Pass', 'Fail')}"
+              },
+              "type": "Function"
+          }
+      },
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "triggers": {
+          "manual": {
+              "inputs": {
+                  "method": "POST",
+                  "schema": {
+                      "properties": {
+                          "containerName": {
+                              "type": "string"
+                          },
+                          "proceedOnError": {
+                              "type": "boolean"
+                          }
+                      },
+                      "type": "object"
+                  }
+              },
+              "kind": "Http",
+              "type": "Request"
+          }
+      }
+  },
+  "kind": "Stateful"
+}
