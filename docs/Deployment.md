@@ -1,10 +1,9 @@
-# FHIR Data to PowerBI Reports
+# Analytics pipeline visualization: PowerBI dashboard from parquet files in Data Lake sample
 
-FHIR Data to PowerBI reports enables you to perform Analytics on FHIR data by moving FHIR data to Azure Data Lake and making it available to a Synapse workspace.
+This sample will demonstrate how to visualize FHIR data that has already been converted to parquet files. This sample creates a PowerBI dashboard from parquet files in a Data Lake storage account via a Synapse workspace.
 
-This solution also contains a script to create External Tables, Views and Stored Procedure in Synapse Serverless SQL pool pointing to the Parquet files. 
+This sample also contains a script to create External Tables, Views and Stored Procedure in Synapse Serverless SQL pool pointing to the parquet files. The sample code provided enables you to query against the entire FHIR data with tools such as Synapse Studio, SSMS, and Power BI. You can also access the parquet files directly from a Synapse Spark pool.
 
-This solution enables you to query against the entire FHIR data with tools such as Synapse Studio, SSMS, and Power BI. You can also access the Parquet files directly from a Synapse Spark pool.
 ## Deployment
 
 ### Prerequisites
