@@ -22,11 +22,12 @@ This sample also contains a script to create External Tables, Views and Stored P
 6. Query data from Synapse Studio.
 
 ### 1. Deploy the Sample
-1. Deploy the Bicep template
-It will create the data lake storage account and synapse workspace in the new resource group or in the exsiting resource group as per the paramter configuration.
+1. Deploy the Bicep template.
 
-    1. Browse to the infra folder under this path (..\FhirToDataLake\scripts\infra).
-    2. Run below command to set the subscription where the infra deployment will be done
+    It will create the data lake storage account and synapse workspace in the new resource group or in the exsiting resource group as per the paramter configuration.
+
+    1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Clone the repo and browse to the infra folder under this path (..\FhirToDataLake\scripts\infra).
+    2. Run below command on powershell terminal to set the subscription where the infra deployment will be done.
     ```Powershell
     az account set -s 'xxxx-xxxx-xxxx-xxxx-xxxxxx'
     ```
@@ -45,7 +46,7 @@ It will create the data lake storage account and synapse workspace in the new re
         | AllowAllConnections | Allow all connection for synapse workspace firewall. |
         | ExistingResourceGroupName | Name of your existing resource group (leave blank to create a new one). |
 
-	5. Then run below bicep deployment command
+	5. Then run below bicep deployment command on powershell terminal.
         ```Powershell
         az deployment sub create \
         --name demoSubDeployment \
@@ -62,8 +63,9 @@ You must provide the following roles to your account to run the PowerShell scrip
 3. Provide access of the Storage Account to the Synapse Workspace
 To enable Synapse to read the data from the Storage Account, assign the Storage Blob Data Contributor role to it. You can do this by selecting Managed identify while adding members to the role. You should be able to pick your Synapse workspace instance from the list of managed identities shown on the portal.
 
-4. Run the PowerShell script
-Running the PowerShell script that creates following artifacts:
+4. Run the PowerShell script.
+
+    Running the PowerShell script that creates following artifacts:
 
     1. Resource specific folders in the Azure Storage Account.
     2. A database in Synapse serverless SQL pool with External Tables, Views and Store Procedure pointing to the files in the Storage Account.
@@ -116,11 +118,12 @@ Running the PowerShell script that creates following artifacts:
 
 5. Download the [AzCopy](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10)
 
-    1. Once Downloaded login to Azcopy with tenant id
+    1. Go to the dowloaded folder of azcopy.
+    2. Login to Azcopy with tenant id using below command
         ```Powershell
         azcopy login --tenant-id 'xxxx-xxxx-xxxx-xxxx'  
         ```
-    2. Run below command to copy the parquet file to the data lake storage which is created while running the bicep template
+    3. Run below command to copy the parquet file to the data lake storage which is created while running the bicep template
 
         ```Powershell
         azcopy copy 'https://ahdssampledata.blob.core.windows.net/fhir/50k/fhir/result' 'https://{DestinationstorageAccountName}.blob.core.windows.net/fhir' --recursive
