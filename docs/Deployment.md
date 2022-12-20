@@ -33,6 +33,8 @@ This sample also contains a script to create External Tables, Views and Stored P
     ```Powershell
     az account set -s 'xxxx-xxxx-xxxx-xxxx-xxxxxx'
     ```
+    where 'xxxx-xxxx-xxxx-xxxx-xxxxxx' is your subscription ID.
+    
     3. Browse to the main.paramter.json under this path (..\FhirToDataLake\scripts\infra).
     4. Set the paramter values as per your requirement. For more details, refer to the below :
 
@@ -50,11 +52,7 @@ This sample also contains a script to create External Tables, Views and Stored P
 
 	5. Then run below bicep deployment command on powershell terminal.
         ```Powershell
-        az deployment sub create \
-        --name demoSubDeployment \
-        --location eastus \
-        --template-file main.bicep \
-        --parameters main.parameters.json
+        az deployment sub create --name demoSubDeployment --location eastus --template-file main.bicep --parameters main.parameters.json
         ```
 2. Provide privilege to your account
 You must provide the following roles to your account to run the PowerShell script in the next step. You may revoke these roles after the installation is complete.
