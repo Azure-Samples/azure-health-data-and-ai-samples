@@ -1,6 +1,8 @@
-# Analytics pipeline visualization: PowerBI dashboard from parquet files in Data Lake sample
+# Analytics pipeline visualization: PowerBI dashboard from parquet files in Azure Data Lake sample
 
-This sample will demonstrate how to visualize FHIR data that has already been converted to parquet files. This sample creates a PowerBI dashboard from parquet files in a Data Lake storage account via a Synapse workspace.
+This sample will demonstrate how to visualize FHIR data that has already been converted to parquet files in Azure Data Lake. This sample creates a PowerBI dashboard from parquet files in an Azure Data Lake storage account via a Synapse workspace.
+
+If you have FHIR data that needs to be converted into parquet files in Azure Data Lake, please refer to our documentation on the [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool. 
 
 This sample also contains a script to create External Tables, Views and Stored Procedure in Synapse Serverless SQL pool pointing to the parquet files. The sample code provided enables you to query against the entire FHIR data with tools such as Synapse Studio, SSMS, and Power BI. You can also access the parquet files directly from a Synapse Spark pool.
 
