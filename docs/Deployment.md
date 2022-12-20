@@ -28,7 +28,7 @@ This sample also contains a script to create External Tables, Views and Stored P
 
     It will create the data lake storage account and synapse workspace in the new resource group or in the exsiting resource group as per the paramter configuration.
 
-    1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Clone the repo and browse to the infra folder under this path (..\FhirToDataLake\scripts\infra).
+    1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Clone the repo and browse to the infra folder under this path (..\FhirToDataLake\scripts\infra). Log in by running az login and following the instructions.
     2. Run below command on powershell terminal to set the subscription where the infra deployment will be done.
     ```Powershell
     az account set -s 'xxxx-xxxx-xxxx-xxxx-xxxxxx'
