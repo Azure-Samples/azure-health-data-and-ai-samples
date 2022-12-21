@@ -35,7 +35,7 @@ This sample also contains a script to create External Tables, Views and Stored P
     ```
     where 'xxxx-xxxx-xxxx-xxxx-xxxxxx' is your subscription ID.
     
-    3. Browse to the main.paramter.json under this path (..\FhirToDataLake\scripts\infra).
+    3. Browse to the main.paramter.json under this path (..\scripts\infra).
     4. Set the paramter values as per your requirement. For more details, refer to the below :
 
         |Parameter   | Description   |
@@ -87,7 +87,7 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
     ``` PowerShell
     Connect-AzAccount -SubscriptionId 'yyyy-yyyy-yyyy-yyyy'
     ```
-    6. Browse to the scripts folder under this path (..\FhirToDataLake\scripts).
+    6. Browse to the scripts folder under this path (..\scripts).
     7. Run the following PowerShell script. 
     ```Powershell
     ./Set-SynapseEnvironment.ps1 -SynapseWorkspaceName "{Name of your Synapse workspace instance}" -StorageName "{Name of your storage account where Parquet files will be written}".
