@@ -270,7 +270,7 @@ Before proceeding ahead with dashboard, please connect to “fhirdb” database 
 After editing the values, click on right tick as highlighted in image below:
 ![image](https://user-images.githubusercontent.com/116351573/209017679-fd794acf-222b-4c39-bbaa-6cea2b6d47af.png)
 
-5.	If there is an “Edit permission” button, click on it, if there is “Edit Credentials” button, jump to step 7.
+5.	If there is an “Edit permission” button, click on it, if there is “Edit Credentials” button, jump to step 8.
 
 ![image](https://user-images.githubusercontent.com/116351573/209017715-5ebb2883-4aeb-4b77-8e39-3e63f6639dc0.png)
 6.	On new pop-up window click on “Run” button:
