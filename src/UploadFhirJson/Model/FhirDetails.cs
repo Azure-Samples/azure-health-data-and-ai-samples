@@ -1,6 +1,6 @@
 ﻿namespace UploadFhirJson.Model
 {
-    public class FhirDetails
+    internal class FhirDetails
     {
         public string HL7FileName { get; set; }
         public bool HL7Conversion { get; set; }
