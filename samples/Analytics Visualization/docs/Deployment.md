@@ -1,10 +1,20 @@
 # Analytics pipeline visualization: PowerBI dashboard from parquet files in Azure Data Lake sample
 
-This sample will demonstrate how to visualize FHIR data that has already been converted to parquet files in Azure Data Lake. This sample creates a PowerBI dashboard from parquet files in an Azure Data Lake storage account via a Synapse workspace.
+This sample will focus on how to visualize FHIR data that **has already been converted to parquet files in Azure Data Lake**. This sample creates a PowerBI dashboard from parquet files in an Azure Data Lake storage account via a Synapse workspace.
 
 If you have FHIR data that needs to be converted into parquet files in Azure Data Lake, please refer to our documentation on the [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool. 
 
-This sample also contains a script to create External Tables, Views and Stored Procedure in Synapse Serverless SQL pool pointing to the parquet files. The sample code provided enables you to query against the entire FHIR data with tools such as Synapse Studio, SSMS, and Power BI. You can also access the parquet files directly from a Synapse Spark pool.
+If you want to follow this tutorial from scratch with provided sample data, instructions will be provided as well. 
+
+## End to End pipeline
+The FHIR Analytics Pipeline is an Azure Function that continually exports new and modified FHIR resources in specific time chunks to Azure Data Lake Storage in the form of Parquet files. By default, this function runs every 5 minutes and exports changed data in five-minute chunks (or windows). Each export window will only export the latest version of a resource and a single resource will exist in multiple windows as it's changed in the FHIR service. 
+![image](https://user-images.githubusercontent.com/116351573/209014574-ef46aa8c-f41e-400a-a79f-a1124cdf921d.png)
+	Figure 1 - Sample Data Flow for FHIR analytics pipeline and Power BI sample application
+
+# Getting started
+- If you are starting from scratch or want to follow along this tutorial from scratch and use provided sample data parquet files, start at section 1. Create Data Lake, Synapse, and copy sample data.
+  - Note: This section only quickly creates a data lake and Synapse workspace and copies parquet files into it for the purpose of this sample app. In the future, if you have your own sample data and want to run the FHIR to Data Lake pipeline, please follow 
+- If you are 
 
 ## Deployment
 
@@ -131,15 +141,7 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
 
 6. Go to your Synapse workspace serverless SQL pool. You should see a new database named fhirdb. Expand External Tables and Views to see the entities. Your FHIR data is now ready to be queried.
 
-
-# Data visualization with Power BI using FHIR analytics pipelines for Breast Cancer Screening (BCS)
-
-With Power BI as Data visualization tool, this is an application to visualize FHIR Data using FHIR Analytics Pipeline. In pipeline new or updated FHIR data is moved to Azure Data Lake stores data in parquet files, from parquet files we create external tables and views in Azure Synapse Analytics database with Serverless SQL pool. On the Database we have stored procedures to calculate data as per quality measures, that stratified data is visualized on power BI desktop report.
-
-## About FHIR to Data Lake pipeline:
-The FHIR Analytics Pipeline is an Azure Function that continually exports new and modified FHIR resources in specific time chunks to Azure Data Lake Storage in the form of Parquet files. By default, this function runs every 5 minutes and exports changed data in five-minute chunks (or windows). Each export window will only export the latest version of a resource and a single resource will exist in multiple windows as it's changed in the FHIR service. 
-![image](https://user-images.githubusercontent.com/116351573/209014574-ef46aa8c-f41e-400a-a79f-a1124cdf921d.png)
-	Figure 1 - Sample Data Flow for FHIR analytics pipeline and Power BI sample application
+# Data visualization 
 
 ## Database in Synapse:
 A database is created in Synapse with serverless pool, database has External Tables and Views pointing to the parquet files in the Azure Data Lake Storage.
