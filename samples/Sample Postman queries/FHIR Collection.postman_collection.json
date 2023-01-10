@@ -889,7 +889,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"resourceType\": \"Condition\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition\"\r\n    ]\r\n  },\r\n  \"clinicalStatus\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\r\n        \"code\": \"resolved\"\r\n      }\r\n    ]\r\n  },\r\n  \"verificationStatus\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\r\n        \"code\": \"confirmed\"\r\n      }\r\n    ]\r\n  },\r\n  \"category\": [\r\n    {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"http://terminology.hl7.org/CodeSystem/condition-category\",\r\n          \"code\": \"encounter-diagnosis\",\r\n          \"display\": \"Encounter Diagnosis\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://snomed.info/sct\",\r\n        \"code\": \"65363002\",\r\n        \"display\": \"Otitis media\"\r\n      }\r\n    ],\r\n    \"text\": \"Otitis media\"\r\n  },\r\n  \"subject\": {\r\n    \"reference\": \"Patient/{{paatientId}}\"\r\n  },\r\n  \"encounter\": {\r\n    \"reference\": \"Encounter/{{encounterId}}\"\r\n  },\r\n  \"onsetDateTime\": \"2011-10-04T14:39:58+05:30\",\r\n  \"abatementDateTime\": \"2011-11-11T14:39:58+05:30\",\r\n  \"recordedDate\": \"2011-10-04T14:39:58+05:30\"\r\n}"
+							"raw": "{\r\n  \"resourceType\": \"Condition\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition\"\r\n    ]\r\n  },\r\n  \"clinicalStatus\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\r\n        \"code\": \"resolved\"\r\n      }\r\n    ]\r\n  },\r\n  \"verificationStatus\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\r\n        \"code\": \"confirmed\"\r\n      }\r\n    ]\r\n  },\r\n  \"category\": [\r\n    {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"http://terminology.hl7.org/CodeSystem/condition-category\",\r\n          \"code\": \"encounter-diagnosis\",\r\n          \"display\": \"Encounter Diagnosis\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://snomed.info/sct\",\r\n        \"code\": \"65363002\",\r\n        \"display\": \"Otitis media\"\r\n      }\r\n    ],\r\n    \"text\": \"Otitis media\"\r\n  },\r\n  \"subject\": {\r\n    \"reference\": \"Patient/{{patientId}}\"\r\n  },\r\n  \"encounter\": {\r\n    \"reference\": \"Encounter/{{encounterId}}\"\r\n  },\r\n  \"onsetDateTime\": \"2011-10-04T14:39:58+05:30\",\r\n  \"abatementDateTime\": \"2011-11-11T14:39:58+05:30\",\r\n  \"recordedDate\": \"2011-10-04T14:39:58+05:30\"\r\n}"
 						},
 						"url": {
 							"raw": "{{fhirurl}}/Condition",
@@ -948,7 +948,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"resourceType\": \"Coverage\",\r\n  \"meta\": {\r\n  },\r\n  \"identifier\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://example.com/CodeSystem/additional-identifier\",\r\n            \"code\": \"PLN\",\r\n            \"display\": \"Policy Number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/Identifier/policy-id\",\r\n      \"value\": \"PIN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MC\",\r\n            \"display\": \"Patient's Medicare number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://hl7.org/fhir/sid/us-medicare\",\r\n      \"value\": \"Medicare-PIN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MA\",\r\n            \"display\": \"Patient Medicaid number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/sid/us-medicaid\",\r\n      \"value\": \"MCN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MR\",\r\n            \"display\": \"Medical record number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/Identifier/HCD\",\r\n      \"value\": \"PNM1234\",\r\n      \"period\": {\r\n        \"start\": \"1995-10-11\",\r\n        \"end\": \"1995-10-12\"\r\n      },\r\n      \"assigner\": {\r\n        \"reference\": \"Organization/{{organizationId}}\"\r\n      }\r\n    }\r\n  ],\r\n  \"status\": \"active\",\r\n  \"type\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\r\n        \"code\": \"HMO\",\r\n        \"display\": \"health maintenance organization policy\"\r\n      }\r\n    ]\r\n  },\r\n  \"policyHolder\": {\r\n    \"reference\": \"Organization/{{organizationId}}\"\r\n  },\r\n  \"subscriber\": {\r\n    \"reference\": \"RelatedPerson/fd1eed45-4ccb-bb7c-d157-58eb0366d777\"\r\n  },\r\n  \"subscriberId\": \"HMO1111\",\r\n  \"beneficiary\": {\r\n    \"reference\": \"Patient/{{patintId}}\"\r\n  },\r\n  \"relationship\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/subscriber-relationship\",\r\n        \"code\": \"spouse\",\r\n        \"display\": \"Spouse\"\r\n      }\r\n    ]\r\n  },\r\n  \"period\": {\r\n    \"start\": \"1994-10-01\",\r\n    \"end\": \"2050-10-01\"\r\n  },\r\n  \"payor\": [\r\n    {\r\n      \"reference\": \"Organization/{{organizationId}}\"\r\n    }\r\n  ],\r\n  \"class\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/coverage-class\",\r\n            \"code\": \"plan\",\r\n            \"display\": \"Plan\"\r\n          }\r\n        ]\r\n      },\r\n      \"value\": \"BAV\",\r\n      \"name\": \"Blue Advantage HMO\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/coverage-class\",\r\n            \"code\": \"group\",\r\n            \"display\": \"Group\"\r\n          }\r\n        ]\r\n      },\r\n      \"value\": \"PUBSUMB\",\r\n      \"name\": \"SelfPay\"\r\n    }\r\n  ],\r\n  \"network\": \"Blue Advantage HMO\",\r\n  \"costToBeneficiary\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0205\",\r\n            \"code\": \"DC\",\r\n            \"display\": \"direct unit cost\"\r\n          }\r\n        ]\r\n      },\r\n      \"valueMoney\": {\r\n        \"value\": 150,\r\n        \"currency\": \"USD\"\r\n      }\r\n    }\r\n  ]\r\n}"
+							"raw": "{\r\n  \"resourceType\": \"Coverage\",\r\n  \"meta\": {\r\n  },\r\n  \"identifier\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://example.com/CodeSystem/additional-identifier\",\r\n            \"code\": \"PLN\",\r\n            \"display\": \"Policy Number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/Identifier/policy-id\",\r\n      \"value\": \"PIN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MC\",\r\n            \"display\": \"Patient's Medicare number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://hl7.org/fhir/sid/us-medicare\",\r\n      \"value\": \"Medicare-PIN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MA\",\r\n            \"display\": \"Patient Medicaid number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/sid/us-medicaid\",\r\n      \"value\": \"MCN1111\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"MR\",\r\n            \"display\": \"Medical record number\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"http://example.com/v2-to-fhir-converter/Identifier/HCD\",\r\n      \"value\": \"PNM1234\",\r\n      \"period\": {\r\n        \"start\": \"1995-10-11\",\r\n        \"end\": \"1995-10-12\"\r\n      },\r\n      \"assigner\": {\r\n        \"reference\": \"Organization/{{organizationId}}\"\r\n      }\r\n    }\r\n  ],\r\n  \"status\": \"active\",\r\n  \"type\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\r\n        \"code\": \"HMO\",\r\n        \"display\": \"health maintenance organization policy\"\r\n      }\r\n    ]\r\n  },\r\n  \"policyHolder\": {\r\n    \"reference\": \"Organization/{{organizationId}}\"\r\n  },\r\n  \"subscriber\": {\r\n    \"reference\": \"RelatedPerson/fd1eed45-4ccb-bb7c-d157-58eb0366d777\"\r\n  },\r\n  \"subscriberId\": \"HMO1111\",\r\n  \"beneficiary\": {\r\n    \"reference\": \"Patient/{{patientId}}\"\r\n  },\r\n  \"relationship\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/subscriber-relationship\",\r\n        \"code\": \"spouse\",\r\n        \"display\": \"Spouse\"\r\n      }\r\n    ]\r\n  },\r\n  \"period\": {\r\n    \"start\": \"1994-10-01\",\r\n    \"end\": \"2050-10-01\"\r\n  },\r\n  \"payor\": [\r\n    {\r\n      \"reference\": \"Organization/{{organizationId}}\"\r\n    }\r\n  ],\r\n  \"class\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/coverage-class\",\r\n            \"code\": \"plan\",\r\n            \"display\": \"Plan\"\r\n          }\r\n        ]\r\n      },\r\n      \"value\": \"BAV\",\r\n      \"name\": \"Blue Advantage HMO\"\r\n    },\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/coverage-class\",\r\n            \"code\": \"group\",\r\n            \"display\": \"Group\"\r\n          }\r\n        ]\r\n      },\r\n      \"value\": \"PUBSUMB\",\r\n      \"name\": \"SelfPay\"\r\n    }\r\n  ],\r\n  \"network\": \"Blue Advantage HMO\",\r\n  \"costToBeneficiary\": [\r\n    {\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0205\",\r\n            \"code\": \"DC\",\r\n            \"display\": \"direct unit cost\"\r\n          }\r\n        ]\r\n      },\r\n      \"valueMoney\": {\r\n        \"value\": 150,\r\n        \"currency\": \"USD\"\r\n      }\r\n    }\r\n  ]\r\n}"
 						},
 						"url": {
 							"raw": "{{fhirurl}}/Coverage",
@@ -1440,7 +1440,7 @@
 			"name": "Resource Deletion",
 			"item": [
 				{
-					"name": "Fetch Allergy Intolerance",
+					"name": "Delete Allergy Intolerance",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1462,6 +1462,34 @@
 							"path": [
 								"AllergyIntolerance",
 								"{{allergyIntoleranceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Appointment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Appointment/{{appointmentId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Appointment",
+								"{{appointmentId}}"
 							]
 						}
 					},
@@ -1504,6 +1532,1098 @@
 							"path": [
 								"Patient",
 								"{{patientId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CarePlan",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan/{{carePlanId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan",
+								"{{carePlanId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CareTeam",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam/{{careTeamId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam",
+								"{{careTeamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Claim",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Claim/{{claimId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Claim",
+								"{{claimId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Communication",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Communication/{{communicationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Communication",
+								"{{communicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Condition",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Condition/{{conditionId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition",
+								"{{conditionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Coverage",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Coverage/{{coverageId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage",
+								"{{coverageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Device",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Device/{{deviceId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Device",
+								"{{deviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete DiagnosticReport",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport/{{diagnosticReportId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport",
+								"{{diagnosticReportId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete DocumentReference",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference/{{documentreferenceId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference",
+								"{{documentreferenceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Encounter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Encounter/{{encounterId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Encounter",
+								"{{encounterId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete FamilyMemberHistory",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/FamilyMemberHistory/{{familyMemberHistory}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"FamilyMemberHistory",
+								"{{familyMemberHistory}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Goal",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Goal/{{goalId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Goal",
+								"{{goalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Immunization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Immunization/{{immunizationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization",
+								"{{immunizationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Location",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Location/{{locationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Location",
+								"{{locationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Medication",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Medication/{{medicationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Medication",
+								"{{medicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete MedicationAdministration",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration/{{medicationAdministrationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration",
+								"{{medicationAdministrationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete MedicationKnowledge",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/MedicationKnowledge/{{medicationAdministrationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationKnowledge",
+								"{{medicationAdministrationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete MedicationRequest",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest/{{medicationRequestId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest",
+								"{{medicationRequestId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Observation",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Observation/{{observationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation",
+								"{{observationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Organization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Organization/{{organizationId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization",
+								"{{organizationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Patient",
+								"{{patientId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Practitioner",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Practitioner/{{practitionerId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Practitioner",
+								"{{practitionerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete PractitionerRole",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/PractitionerRole/{{practitionerRoleId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"PractitionerRole",
+								"{{practitionerRoleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Procedure",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/Procedure/{{procedureId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Procedure",
+								"{{procedureId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete RelatedPerson",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/RelatedPerson/{{relatedPersonId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"RelatedPerson",
+								"{{relatedPersonId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ServiceRequest",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearerToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{fhirurl}}/ServiceRequest/{{serviceRequestId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"ServiceRequest",
+								"{{serviceRequestId}}"
 							]
 						}
 					},
@@ -2279,13 +3399,244 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/CarePlan/a293b466-8f22-9176-70ac-4fe5aec7f29a",
+							"raw": "{{fhirurl}}/CarePlan/{{carePlanId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"CarePlan",
-								"a293b466-8f22-9176-70ac-4fe5aec7f29a"
+								"{{carePlanId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?patient=Patient/c7de240e-a413-bb88-3fdf-61fdc031bdcb",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/c7de240e-a413-bb88-3fdf-61fdc031bdcb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?encounter=Encounter/ce917453-dd59-b88d-7632-9721dbe6d93b",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/ce917453-dd59-b88d-7632-9721dbe6d93b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by CareTeam",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?care-team=CareTeam/2aa79e60-15fd-fde5-6517-21a87130a1cf",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "care-team",
+									"value": "CareTeam/2aa79e60-15fd-fde5-6517-21a87130a1cf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by ActivityCode",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?activity-code=304510005",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "activity-code",
+									"value": "304510005"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?category=assess-plan",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "assess-plan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?status=completed",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "completed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CarePlan by Period start date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CarePlan?date=gt2015-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CarePlan"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "gt2015-01-01"
+								}
 							]
 						}
 					},
@@ -2324,7 +3675,7 @@
 					"response": []
 				},
 				{
-					"name": "Fetch CarePlan by Id Copy",
+					"name": "Fetch CareTeam by Id",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -2339,13 +3690,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/CareTeam/06d0afef-f51e-b815-25e4-eeeb2d33d843",
+							"raw": "{{fhirurl}}/CareTeam/{{careTeamId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"CareTeam",
-								"06d0afef-f51e-b815-25e4-eeeb2d33d843"
+								"{{careTeamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?patient=Patient/c7de240e-a413-bb88-3fdf-61fdc031bdcb",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/c7de240e-a413-bb88-3fdf-61fdc031bdcb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?encounter=Encounter/ce917453-dd59-b88d-7632-9721dbe6d93b",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/ce917453-dd59-b88d-7632-9721dbe6d93b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?status=active",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by Period start date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?date=lt2015-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "lt2015-01-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by ManagingOrganization",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?managingOrganization=Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "managingOrganization",
+									"value": "Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All CareTeam by ReasonCode",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/CareTeam?reasonCode=10509002",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"CareTeam"
+							],
+							"query": [
+								{
+									"key": "reasonCode",
+									"value": "10509002"
+								}
 							]
 						}
 					},
@@ -2399,13 +3948,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Claim/ce3f159b-44db-f5a4-74e3-3a6257e58fb1",
+							"raw": "{{fhirurl}}/Claim/{{claimId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Claim",
-								"ce3f159b-44db-f5a4-74e3-3a6257e58fb1"
+								"{{claimId}}"
 							]
 						}
 					},
@@ -2427,12 +3976,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Procedure?patient=Patient/55eca691-c7bf-6db3-4608-d7830237ecbb",
+							"raw": "{{fhirurl}}/Claim?patient=Patient/55eca691-c7bf-6db3-4608-d7830237ecbb",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
-								"Procedure"
+								"Claim"
 							],
 							"query": [
 								{
@@ -2478,7 +4027,7 @@
 					"response": []
 				},
 				{
-					"name": "List All Claims by Type(not working)",
+					"name": "List All Claims by status",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -2493,17 +4042,116 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Procedure?code=430193006",
+							"raw": "{{fhirurl}}/Claim?status=active",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
-								"Procedure"
+								"Claim"
 							],
 							"query": [
 								{
-									"key": "code",
-									"value": "430193006"
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Claims by Provider",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Claim?provider=Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Claim"
+							],
+							"query": [
+								{
+									"key": "provider",
+									"value": "Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Claims by Facility (Location)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Claim?facility=Location/1008512e-1ea7-4a18-8a0c-722d7c844ea7",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Claim"
+							],
+							"query": [
+								{
+									"key": "facility",
+									"value": "Location/1008512e-1ea7-4a18-8a0c-722d7c844ea7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Claims by CreatedDate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Claim?created=gt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Claim"
+							],
+							"query": [
+								{
+									"key": "created",
+									"value": "gt2020-01-01"
 								}
 							]
 						}
@@ -2618,13 +4266,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Condition/27812556-b002-5e53-e15a-30550d1ec033",
+							"raw": "{{fhirurl}}/Condition/{{conditionId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Condition",
-								"27812556-b002-5e53-e15a-30550d1ec033"
+								"{{conditionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by patient Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?patient=Patient/55eca691-c7bf-6db3-4608-d7830237ecbb",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/55eca691-c7bf-6db3-4608-d7830237ecbb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?encounter=Encounter/094055b6-1945-d4be-cb17-48bdfa7db846",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/094055b6-1945-d4be-cb17-48bdfa7db846"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by clinicalStatus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?clinicalStatus=resolved",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "clinicalStatus",
+									"value": "resolved"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by VerificationStatus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?verificationStatus=confirmed",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "verificationStatus",
+									"value": "confirmed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?category=encounter-diagnosis",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "encounter-diagnosis"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Condition by Recorded date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Condition?recorded-date=gt2021-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Condition"
+							],
+							"query": [
+								{
+									"key": "recorded-date",
+									"value": "gt2021-01-01"
+								}
 							]
 						}
 					},
@@ -2678,13 +4524,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Coverage/dfab6985-a691-c4f5-d2b2-6481fdfd59e4",
+							"raw": "{{fhirurl}}/Coverage/{{coverageId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Coverage",
-								"dfab6985-a691-c4f5-d2b2-6481fdfd59e4"
+								"{{coverageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by Patient (Beneficiary)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?status=active",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by PolicyHolder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?policy-holder=Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "policy-holder",
+									"value": "Organization/d72fbc31-b4af-4deb-8aef-1eaf9f674399"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by Subsciber",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?subscriber=RelatedPerson/fd1eed45-4ccb-bb7c-d157-58eb0366d777",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "subscriber",
+									"value": "RelatedPerson/fd1eed45-4ccb-bb7c-d157-58eb0366d777"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by Type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?type=HMO",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "HMO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Coverage by Class Type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Coverage?class-type=plan",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Coverage"
+							],
+							"query": [
+								{
+									"key": "class-type",
+									"value": "plan"
+								}
 							]
 						}
 					},
@@ -2784,60 +4828,178 @@
 							"raw": "{\r\n  \"resourceType\": \"Device\",\r\n  \"identifier\": [\r\n    {\r\n      \"system\": \"http://azure/device/registration\",\r\n      \"value\": \"12345\"\r\n    }\r\n  ],\r\n  \"patient\":{\r\n  \t\"reference\":\"Patient/\"\r\n  }\r\n}"
 						},
 						"url": {
-							"raw": "{{fhirurl}}/Device/72c7b706-1473-441c-c4e9-cee50f834466",
+							"raw": "{{fhirurl}}/Device/{{deviceId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Device",
-								"72c7b706-1473-441c-c4e9-cee50f834466"
+								"{{deviceId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Save Device",
+					"name": "List All Device by Patient",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL3dvcmtwYWNlc2RrZmhpci1zamJ1aWxkZmhpci5maGlyLmF6dXJlaGVhbHRoY2FyZWFwaXMuY29tIiwiaXNzIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3LyIsImlhdCI6MTY3MjI4MDQyOSwibmJmIjoxNjcyMjgwNDI5LCJleHAiOjE2NzIyODUxNjksImFjciI6IjEiLCJhaW8iOiJBVlFBcS84VEFBQUFmQU9GWjJubFFibXNtSkZxL0hydy85ekxBZWxDN3ljdUpEaWJ5czRYdHhoOVFDYm5UZkI5VnpQektMa1VzVnRWUDloa1NiTkZuMWRRNmtFZkcvT3dqWmN4cy9qVEYxc3pFbHF2UzFVT2kxbz0iLCJhbXIiOlsicHdkIiwibWZhIl0sImFwcGlkIjoiMDRiMDc3OTUtOGRkYi00NjFhLWJiZWUtMDJmOWUxYmY3YjQ2IiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJNYWR3YW5pIiwiZ2l2ZW5fbmFtZSI6Ik5pdGVzaCIsImlwYWRkciI6IjEwNC4zLjE5MS4yMDkiLCJuYW1lIjoiTml0ZXNoIE1hZHdhbmkgKFhPUklBTlQgQ09SUE9SQVRJT04pIiwib2lkIjoiZDIxYTZlNmMtODY3YS00ZGQ4LTlhZWEtYzc3OWZkYTQ4MThhIiwib25wcmVtX3NpZCI6IlMtMS01LTIxLTIxMjc1MjExODQtMTYwNDAxMjkyMC0xODg3OTI3NTI3LTYxODMxNjgwIiwicHVpZCI6IjEwMDMyMDAyM0NDMzJDN0MiLCJyaCI6IjAuQVFFQXY0ajVjdkdHcjBHUnF5MTgwQkhiUjloNFowX3ZXdHhEb2Ytd2MzSkxsSlVhQUhjLiIsInNjcCI6InVzZXJfaW1wZXJzb25hdGlvbiIsInN1YiI6Ii1hdzQxVVVlY3BBdldDTGZDemR6SUd3b3lNYjBOVkFRY25BQ0wtVFlhcjgiLCJ0aWQiOiI3MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDciLCJ1bmlxdWVfbmFtZSI6InYtbm1hZHdhbmlAbWljcm9zb2Z0LmNvbSIsInVwbiI6InYtbm1hZHdhbmlAbWljcm9zb2Z0LmNvbSIsInV0aSI6IllwM185ZS14UWtXQWhCa0sxUUM5QWciLCJ2ZXIiOiIxLjAifQ.lLTgY950poSX0pfN4nxKbQJbPo0vxB0tKzJwmQlYX1Bht7x7KXxTip88iufigmUnn4IR1o9TgMeXwBnl8xpJaY0BISaFaEpyX1-O1rJRZ0CID9k7nosdY4MmiHF-FZhF_vk-CiLHuetwil_5cuqzxfWGMMQti5V1xDWMW86t_dq4cjwd5QAdZOsyr4_86QzApfBz-0qGXJxX8lVQOaFXHAF2p-VRBu2OHRGrzIxMEDASViFMzR7ItYAalKPW1c25DsB0RCY7xX54JBYCG-IXGIvPahnATRn5fJLUAUPN0n0TEY_jrn86_CQdm3rHZPRoVCV7tWjqLg7o9zdgvjrElQ",
+									"value": "{{bearerToken}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{bearerToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"resourceType\": \"Device\",\r\n  \"identifier\": [\r\n    {\r\n      \"system\": \"http://azure/device/registration\",\r\n      \"value\": \"12345\"\r\n    }\r\n  ],\r\n  \"patient\":{\r\n  \t\"reference\":\"Patient/\"\r\n  }\r\n}"
-						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Device",
+							"raw": "{{fhirurl}}/Device?patient=Patient/{{patientId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Device"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Device by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Device?status=active",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Device"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Device by Type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Device?type=705643001",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Device"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "705643001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Device by UDI DI",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Device?udi-di=13750511693917",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Device"
+							],
+							"query": [
+								{
+									"key": "udi-di",
+									"value": "13750511693917"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Device by Device Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Device?device-name=Coronary",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Device"
+							],
+							"query": [
+								{
+									"key": "device-name",
+									"value": "Coronary"
+								}
 							]
 						}
 					},
@@ -2891,13 +5053,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/DiagnosticReport/bcc3c320-9895-a8f3-5a07-f0152953bae9",
+							"raw": "{{fhirurl}}/DiagnosticReport/{{diagnosticReportId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"DiagnosticReport",
-								"bcc3c320-9895-a8f3-5a07-f0152953bae9"
+								"{{diagnosticReportId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?encounter=Encounter/{{encounterId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/{{encounterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Performer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?performer=Practitioner/49c6155c-10a1-42dd-a16a-22c5f021be11",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "performer",
+									"value": "Practitioner/49c6155c-10a1-42dd-a16a-22c5f021be11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?status=final",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "final"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?category=51847-2",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "51847-2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DiagnosticReport by Issued Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DiagnosticReport?issued=gt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DiagnosticReport"
+							],
+							"query": [
+								{
+									"key": "issued",
+									"value": "gt2020-01-01"
+								}
 							]
 						}
 					},
@@ -2951,13 +5311,244 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/DocumentReference/eda6f40f-28f2-10f5-d456-4e155e520c97",
+							"raw": "{{fhirurl}}/DocumentReference/{{documentreferenceId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"DocumentReference",
-								"eda6f40f-28f2-10f5-d456-4e155e520c97"
+								"{{documentreferenceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch DocumentReference by Author",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?author=Practitioner/49c6155c-10a1-42dd-a16a-22c5f021be11",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Practitioner/49c6155c-10a1-42dd-a16a-22c5f021be11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?encounter=Encounter/{{encounterId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/{{encounterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?status=superseded",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "superseded"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?category=clinical-note",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "clinical-note"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?type=34117-2",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "34117-2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All DocumentReference by Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/DocumentReference?date=gt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"DocumentReference"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "gt2020-01-01"
+								}
 							]
 						}
 					},
@@ -3267,13 +5858,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Immunization/b90ab189-9b2f-12fa-4f5f-70040885016b",
+							"raw": "{{fhirurl}}/Immunization/{{immunizationId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Immunization",
-								"b90ab189-9b2f-12fa-4f5f-70040885016b"
+								"{{immunizationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?encounter=Encounter/{{encounterId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/{{encounterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?status=completed",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "completed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Vaccine Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?vaccine-code=140",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "vaccine-code",
+									"value": "140"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?date=gt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "gt2020-01-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Immunization by Location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Immunization?location=Location/1008512e-1ea7-4a18-8a0c-722d7c844ea7",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Immunization"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "Location/1008512e-1ea7-4a18-8a0c-722d7c844ea7"
+								}
 							]
 						}
 					},
@@ -3486,13 +6275,112 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Medication/eb794d76-9060-31b6-1052-63f80f889d4d",
+							"raw": "{{fhirurl}}/Medication/{{medicationId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Medication",
-								"eb794d76-9060-31b6-1052-63f80f889d4d"
+								"{{medicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Medication by Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Medication?expiration-date=lt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Medication"
+							],
+							"query": [
+								{
+									"key": "expiration-date",
+									"value": "lt2020-01-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Medication by Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Medication?code=199885",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Medication"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "199885"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Medication by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Medication?status=active",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Medication"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active"
+								}
 							]
 						}
 					},
@@ -3546,13 +6434,178 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/MedicationAdministration/3d85708f-ad55-78ce-80b8-48d28cafad91",
+							"raw": "{{fhirurl}}/MedicationAdministration/{{medicationAdministrationId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"MedicationAdministration",
-								"3d85708f-ad55-78ce-80b8-48d28cafad91"
+								"{{medicationAdministrationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationAdministration by Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration?code=199885",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "199885"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationAdministration by Context",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration?context=Encounter/525d486c-d3c9-400a-9773-be11d7395903",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration"
+							],
+							"query": [
+								{
+									"key": "context",
+									"value": "Encounter/525d486c-d3c9-400a-9773-be11d7395903"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationAdministration by Effective Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration?effective-time=gt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration"
+							],
+							"query": [
+								{
+									"key": "effective-time",
+									"value": "gt2020-01-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationAdministration by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationAdministration by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationAdministration?status=completed",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationAdministration"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "completed"
+								}
 							]
 						}
 					},
@@ -3671,13 +6724,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/MedicationRequest/74068c15-0052-2fa2-c920-35693b3dbf67",
+							"raw": "{{fhirurl}}/MedicationRequest/{{medicationRequestId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"MedicationRequest",
-								"74068c15-0052-2fa2-c920-35693b3dbf67"
+								"{{medicationRequestId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationRequest by Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?code=834061",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "834061"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationRequest by Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?date=lt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "lt2020-01-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationRequest by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?encounter=Encounter/525d486c-d3c9-400a-9773-be11d7395903",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/525d486c-d3c9-400a-9773-be11d7395903"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Medication Request By Intent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?intent=order",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "intent",
+									"value": "order"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationRequest by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All MedicationRequest by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/MedicationRequest?status=stopped",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"MedicationRequest"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "stopped"
+								}
 							]
 						}
 					},
@@ -3731,13 +6982,211 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{fhirurl}}/Observation/f75b5fbd-e65b-48a0-473e-3b769aa36fe0",
+							"raw": "{{fhirurl}}/Observation/{{observationId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Observation",
-								"f75b5fbd-e65b-48a0-473e-3b769aa36fe0"
+								"{{observationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?status=final",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "final"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?category=survey",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "survey"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?code=72166-2",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "72166-2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Patient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?patient=Patient/{{patientId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "patient",
+									"value": "Patient/{{patientId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Encounter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?encounter=Encounter/{{encounterId}}",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "encounter",
+									"value": "Encounter/{{encounterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Observation by Effective Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Observation?date=lt2020-01-01",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Observation"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "lt2020-01-01"
+								}
 							]
 						}
 					},
@@ -3798,6 +7247,237 @@
 							"path": [
 								"Organization",
 								"{{organizationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Identifier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?identifier=ORG1111",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "identifier",
+									"value": "ORG1111"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Active status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?active=true",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?name=TestOrg",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "TestOrg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?type=prov",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "prov"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Postal Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?address-postalcode=94134",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "address-postalcode",
+									"value": "94134"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?address=San",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "San"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Organization by State Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fhirurl}}/Organization?address-state=CA",
+							"host": [
+								"{{fhirurl}}"
+							],
+							"path": [
+								"Organization"
+							],
+							"query": [
+								{
+									"key": "address-state",
+									"value": "CA"
+								}
 							]
 						}
 					},
