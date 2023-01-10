@@ -14,13 +14,14 @@ namespace UploadFhirJson.ProcessFhir
 {
     public class ProcessFhirJson : IProcessFhirJson
     {
-        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
+        public ProcessFhirJson(BlobConfiguration blobConfiguration, BlobServiceClient blobServiceClient, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
             _fhirClient = fhirClient;
             _blobConfiguration = blobConfiguration;
+            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
@@ -28,6 +29,7 @@ namespace UploadFhirJson.ProcessFhir
         private readonly BlobConfiguration _blobConfiguration;
         private readonly IFhirClient _fhirClient;
         private readonly ILogger _logger;
+        private readonly BlobServiceClient _blobServiceClient;
         public string Id => _id;
         public string Name => "ProcessFhirJson";
         public bool isFilesSkipped = false;
@@ -50,6 +52,7 @@ namespace UploadFhirJson.ProcessFhir
                 if (fhirInputs != null && fhirInputs.sortedHL7files.Count > 0)
                 {
                     BlobContainerClient blobContainer = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FhirJsonContainer);
+                    //var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
                     FhirResponse fhirReponse = new();
                     var take = request.BatchLimit;
                     var skip = (request.CurrentIndex * request.BatchLimit);
@@ -89,7 +92,7 @@ namespace UploadFhirJson.ProcessFhir
                                 }
                                 i++;
                             }
-                            await blobContainer.DeleteBlobAsync(hl7JsonFile);
+                            //await blobContainer.DeleteBlobAsync(hl7JsonFile);
                         }
 
                     }
@@ -155,6 +158,7 @@ namespace UploadFhirJson.ProcessFhir
                             fhirResponse.FileName = fhirInput.HL7FileName;
                             fhirResponse.Error = responseString;
                             await UploadToFailBlob(fhirInput.HL7FileName, requestBody, _blobConfiguration.ConvertedContainer, _blobConfiguration.HL7FailedBlob);
+
                         }
                     }
                     else
@@ -208,6 +212,11 @@ namespace UploadFhirJson.ProcessFhir
             BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, targetBloblName);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
+
+            //var sourceClient = _blobServiceClient.GetBlobContainerClient(soruceBlobName);
+            //var targetClient = _blobServiceClient.GetBlobContainerClient(targetBloblName);
+            //BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
+            //BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
             try
             {
                 if (sourceBlobClient != null && await sourceBlobClient.ExistsAsync())
@@ -238,14 +247,20 @@ namespace UploadFhirJson.ProcessFhir
         /// <param name="fileData"></param>
         /// <param name="soruceBlobName"></param>
         /// <param name="targetBloblName"></param>
-        /// <returns></returns>
+        /// <returns></returns>      
+
         private async Task UploadToFailBlob(string fileName, string fileData, string soruceBlobName, string targetBloblName)
         {
             BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
             BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FailedBlobContainer);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(targetBloblName + "/" + fileName);
-         
+
+            //var sourceClient = _blobServiceClient.GetBlobContainerClient(soruceBlobName);
+            //var targetClient = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FailedBlobContainer);
+            //BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
+            //BlobClient targetBlobClient = targetClient.GetBlobClient(targetBloblName + "/" + fileName);
+
             try
             {
                 if (sourceBlobClient != null && await sourceBlobClient.ExistsAsync())

@@ -10,11 +10,6 @@
 	  <UserSecretsId>1a6b031d-636a-4b92-9352-6c3a72050ef0</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Caching\**" />
-    <EmbeddedResource Remove="Caching\**" />
-    <None Remove="Caching\**" />
-  </ItemGroup>
-  <ItemGroup>
 	  <PackageReference Include="Azure.Identity" Version="1.7.0" />
 	  <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
 	  <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />

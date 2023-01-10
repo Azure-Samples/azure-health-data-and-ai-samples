@@ -1,14 +1,18 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
+using Microsoft.Identity.Client;
 using System.Reflection;
+using UploadFhirJson.Caching;
 using UploadFhirJson.Configuration;
 using UploadFhirJson.FhirClient;
 using UploadFhirJson.ProcessFhir;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 ServiceConfiguration config = new();
 
@@ -54,16 +58,12 @@ using IHost host = new HostBuilder()
 
         };
         services.AddSingleton(blobConfig);
-
-        //services.AddMemoryCache();
         services.AddScoped<IProcessFhirJson, ProcessFhirJson>();
-
-        
-        services.AddHttpClient<IFhirClient, FhirClient>(httpClient =>
-        {
-            httpClient.BaseAddress = new Uri(config.FhirURL);
-            httpClient.Timeout=TimeSpan.FromMinutes(4);
-        });
+        services.AddMemoryCache();
+        services.AddScoped<IAuthTokenCache, AuthTokenCache>();
+        services.AddScoped<IFhirClient, FhirClient>();
+        services.AddSingleton(config);
+        services.AddHttpClient();
 
         //services.AddAzureClients(clientBuilder =>
         //{
@@ -71,6 +71,10 @@ using IHost host = new HostBuilder()
         //});
 
 
+    })
+    .ConfigureLogging(e =>
+    {
+        e.AddEventSourceLogger();
     })
     .Build();
 
