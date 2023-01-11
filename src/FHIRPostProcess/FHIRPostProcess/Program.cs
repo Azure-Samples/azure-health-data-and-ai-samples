@@ -50,6 +50,11 @@ using IHost host = new HostBuilder()
         _parser.Settings.PermissiveParsing = true;
 
         services.AddSingleton(_parser);
+
+    })
+    .ConfigureLogging(e =>
+    {
+        e.AddEventSourceLogger();
     })
     .Build();
 

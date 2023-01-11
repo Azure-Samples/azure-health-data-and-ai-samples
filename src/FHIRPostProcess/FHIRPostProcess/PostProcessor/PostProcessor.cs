@@ -1,9 +1,11 @@
-﻿using Hl7.Fhir.Model;
+﻿using FHIRPostProcess.Model;
+using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 using Task = System.Threading.Tasks.Task;
@@ -18,7 +20,7 @@ namespace FHIRPostProcess.PostProcessor
             _id = Guid.NewGuid().ToString();
             _logger = logger;
             _telemetryClient = telemetryClient;
-            _fhirJsonParser = fhirJsonParser;
+            _fhirJsonParser = fhirJsonParser;          
         }
 
         private readonly string _id;
@@ -33,42 +35,89 @@ namespace FHIRPostProcess.PostProcessor
 
         public async Task<HttpResponseData> PostProcessResources(HttpRequestData request)
         {
-
+            PostProcessInput postProcessInput = new();
+            string postProcessBundle = string.Empty;
             try
             {
-                string reqBundle = await new StreamReader(request.Body).ReadToEndAsync();
-                Bundle bundleResource = _fhirJsonParser.Parse<Bundle>(reqBundle);
-
-                if (bundleResource.Type != Bundle.BundleType.Transaction)
+              
+                postProcessInput = JsonConvert.DeserializeObject<PostProcessInput>(await new StreamReader(request.Body).ReadToEndAsync());
+                if (postProcessInput != null && postProcessInput.HL7FileName != string.Empty)
                 {
-
-                    bundleResource.Type = Bundle.BundleType.Transaction;
-                }
-                var resourceList = bundleResource.Entry.ToList();
-                if (resourceList != null && resourceList.Count > 0)
-                {
-                    foreach (var e in resourceList)
+                    if(postProcessInput.FhirJson != string.Empty && postProcessInput.HL7Conversion == true)
                     {
-                        var resource = e.Resource;
-                        var isEmpty = IsEmptyResource(resource);
-                        var isAbsent = IsIdAbsentResource(resource);
-                        if (isEmpty || isAbsent)
+                        _logger?.LogInformation($"post process start for file {postProcessInput.HL7FileName}.");
+                        string reqBundle = System.Text.Encoding.Default.GetString(Convert.FromBase64String(postProcessInput.FhirJson));
+                        
+                        Bundle bundleResource = _fhirJsonParser.Parse<Bundle>(reqBundle);
+
+                        if (bundleResource.Type != Bundle.BundleType.Batch)
                         {
-                            //remove empty resources from the Fhir Bundle
-                            bundleResource.Entry.Remove(e);
+
+                            bundleResource.Type = Bundle.BundleType.Batch;
                         }
+
+                        var resourceList = bundleResource.Entry.ToList();
+                        if (resourceList != null && resourceList.Count > 0)
+                        {
+                            foreach (var e in resourceList)
+                            {
+                                var resource = e.Resource;
+                                var isEmpty = IsEmptyResource(resource);
+                                var isAbsent = IsIdAbsentResource(resource);
+                                if (isEmpty || isAbsent)
+                                {
+                                    //remove empty resources from the Fhir Bundle
+                                    bundleResource.Entry.Remove(e);
+                                }
+                            }
+                        }
+                       var postProcessBundlejson = bundleResource.ToJson();
+                       _logger?.LogInformation($"post processing performed for file {postProcessInput.HL7FileName}.");
+                       postProcessBundle = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(postProcessBundlejson));
                     }
+
+                    
+                    postProcessInput.FhirJson = postProcessBundle;
+                    _logger?.LogInformation($"post process FHIR bundle created for file {postProcessInput.HL7FileName}.");
+
+                   
+
+                    var blobFileContent = JsonConvert.SerializeObject(postProcessInput);
+
+                   
+                    if (blobFileContent != string.Empty)
+                    {
+                        
+                        var response = request.CreateResponse(HttpStatusCode.OK);
+                        response.Body = new MemoryStream(Encoding.UTF8.GetBytes(blobFileContent));
+                         return await Task.FromResult(response);
+                    }
+                    else
+                    {
+                        _logger?.LogInformation($"Post processing failed for file {postProcessInput.HL7FileName}.");
+                        _logger?.LogInformation("{Name}-{Id} No content found in incoming request.", Name, Id);
+                        _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+                        var response = request.CreateResponse(HttpStatusCode.InternalServerError);
+                        response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"No content found in incoming request."));
+                        return await Task.FromResult(response);
+                    }
+
+                }
+                else
+                {
+                    
+                    _logger?.LogInformation("{Name}-{Id} No content found in incoming request.", Name, Id);
+                    _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+                    var response = request.CreateResponse(HttpStatusCode.InternalServerError);
+                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"No content found in incoming request."));
+                    return await Task.FromResult(response);
                 }
 
-                var postProcessBundle = bundleResource.ToJson();
-
-                var response = request.CreateResponse(HttpStatusCode.OK);
-                response.Body = new MemoryStream(Encoding.UTF8.GetBytes(postProcessBundle));
-                return response;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "{Name}-{Id} validation message.", Name, Id);
+                _logger?.LogInformation($"Post processing execption for file {postProcessInput.HL7FileName}  with exception:{ex.Message}");
+                _logger?.LogError(ex, "{Name}-{Id} Post processing message.", Name, Id);
                 _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
                 var errorResponse = request.CreateResponse(HttpStatusCode.InternalServerError);
                 errorResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(ex.Message));
