@@ -47,9 +47,18 @@ using IHost host = new HostBuilder()
             BlobConnectionString = config.BlobConnectionString,
             ConvertedContainer = config.ConvertedContainer,
             ValidatedContainer = config.ValidatedContainer,
-            ConversionfailContainer = config.ConversionfailContainer
+            ConversionfailContainer = config.ConversionfailContainer,
+            SkippedBlobContainer = config.SkippedBlobContainer
         };
+
+        AppConfiguration appConfig = new()
+        {
+            HttpFailStatusCodes = config.HttpFailStatusCodes
+        };
+
+        
         services.AddSingleton(blobConfig);
+        services.AddSingleton(appConfig);
 
         services.AddTransient<IConverter, Converter>();
 
@@ -64,6 +73,10 @@ using IHost host = new HostBuilder()
         });
 
     })
+     .ConfigureLogging(e =>
+     {
+         e.AddEventSourceLogger();
+     })
     .Build();
 
 await host.RunAsync();

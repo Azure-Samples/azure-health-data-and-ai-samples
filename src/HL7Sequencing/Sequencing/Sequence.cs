@@ -35,7 +35,7 @@ namespace HL7Sequencing.Sequencing
         public string Id => _id;
         public string Name => "Sequence";
 
-        public int MaxParallelism => 230;
+        public int MaxParallelism => 250;
 
         public async Task<HttpResponseData> GetSequencListAsync(HttpRequestData request)
         {

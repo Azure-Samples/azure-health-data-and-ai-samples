@@ -5,5 +5,7 @@
         public string HL7FileName { get; set; }
 
         public string ConversionBody { get; set; }
+
+        public bool ProceedOnError { get; set; }
     }
 }

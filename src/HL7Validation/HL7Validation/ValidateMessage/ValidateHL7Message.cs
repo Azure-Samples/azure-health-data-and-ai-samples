@@ -35,7 +35,7 @@ namespace HL7Validation.ValidateMessage
         public string Id => _id;
         public string Name => "ValidateHL7Message";
 
-        public int MaxParallelism => 230;
+        public int MaxParallelism => 250;
 
         public async Task<HttpResponseData> ValidateMessage(HttpRequestData request)
         {
