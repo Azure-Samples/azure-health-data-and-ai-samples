@@ -7,7 +7,7 @@ If you have FHIR data that needs to be converted into parquet files in Azure Dat
 If you want to follow this tutorial from scratch with provided sample data, instructions will be provided as well. 
 
 ## End-to-end pipeline
-The end-to-end pipeline is shown below. Starting with FHIR data in a FHIR server, it gets converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. Then, in Synapse, external tables and views of that Parquet files are made, and Stored Procedures query the data to visualize in a PowerBI dashboard. This sample mainly focuses on **Step 3: Query and Visualize**. Steps 1 and 2 are covered more in-depth separately (references will be provided for these steps).
+The end-to-end pipeline is shown below. Starting with FHIR data in a FHIR server, it gets converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. Then, in Synapse, external tables and views of that Parquet files are made, and Stored Procedures query the data to visualize in a PowerBI dashboard. This sample mainly focuses on **Stage 3: Query and Visualize**. Stage 1 and 2 are covered more in-depth separately (references will be provided for these steps).
 ![End to end pipeline](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/analyticspipelinediagram1.png)
 
 # Stage 1: Convert FHIR data to Parquet
@@ -158,10 +158,28 @@ Note: This is a simple, basic example to demonstrate capabilities of FHIR analyt
 ## Query: Setting up Database from SQL Server Management Studio
 
 ### Option 1: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview
-If you have not set up FHIR Analytics pipeline with sample data using BICEP template just want to visualize the data you already have in your database using power bi report, follow below steps to create the stored procedure to be used by power bi report:
-1.	Check “sp_getBCSComplianceDetails.sql” file (..azure-health-data-services-samples/scripts/sql/Stored_Procedure)
+ If you used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or our analytics connector private preview to convert FHIR data to Parquet files, please follow these steps to upload the stored procedures for querying.
 
-2.	Open the “Microsoft SQL Server Management Studio”, Connect to your database server. In below sample database is “fhirdb”
+1.	Find the “sp_getBCSComplianceDetails.sql” file in this repo (..azure-health-data-services-samples/samples/Analytics Visualization/scripts/sql/Stored_Procedure)
+
+2.	Open the “Microsoft SQL Server Management Studio”, Connect to your database server using "Serverless SQL endpoint".  
+Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
+
+![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)  
+
+Open the “Microsoft SQL Server Management Studio”, from “Object Explorer” menu click on “Connect” and select “Database Engine” from list.
+
+![image](https://user-images.githubusercontent.com/116351573/209016930-88397ea6-1972-457a-9ca1-7317fc9532a7.png)  
+
+Enter serverless SQL endpoint from Synapse workspace into server name textbox, choose authentication method, provide username, and click connect:
+
+![image](https://user-images.githubusercontent.com/116351573/209016965-06591ed5-8a61-4716-b143-1c12433ee3e3.png)  
+
+After clicking connect you will be asked to provide authentication details for user, once user authentication is done, database connection will be done:
+
+![image](https://user-images.githubusercontent.com/116351573/209017010-390892c6-4063-455b-a6fd-ceea7c714b76.png)  
+
+In below sample database is “fhirdb”
 
 ![image](https://user-images.githubusercontent.com/116351573/209015656-67b40cb3-b343-4b2a-b54a-ffa27d7cdd16.png)
 
@@ -177,10 +195,10 @@ If you have not set up FHIR Analytics pipeline with sample data using BICEP temp
 
 ![image](https://user-images.githubusercontent.com/116351573/209016007-05d2f17d-0209-48df-99cc-d7d2778c6d8c.png)
 
-6.	Go to “Checking and editing the dashboard in Power BI desktop application” section.
+6.	Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section.
 
 ###  Option 2: Using provided sample data 
-If you have created FHIR analytics pipeline using the BICEP template, Stored procedure would be created and available in the database.
+If you are using provided Parquet sample files to run this sample, the stored procedure is already created and available in the database.
 To explore (view/edit) the stored procedure used for Power BI dashboard report, we need to connect to database using “Serverless SQL endpoint” in synapse workspace that was created by BICEP.
 
 Serverless SQL endpoint could be found in Synapse Workspace as highlighted below:
@@ -203,10 +221,11 @@ Serverless SQL endpoint could be found in Synapse Workspace as highlighted below
 
 ![image](https://user-images.githubusercontent.com/116351573/209017036-69925a00-8050-4989-a5f9-3f67134a93bb.png)
 
+5. Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section.
 
 ## Visualize: Checking and editing the dashboard in Power BI desktop application
 
-Before proceeding ahead with dashboard, please connect to “fhirdb” database using serverless SQL endpoint from Microsoft SQL Server Management Studio and make sure the stored procedures are created there.
+Before proceeding ahead with dashboard, please ensure that the previous section "Query: Setting up Database from SQL Server Management Studio" has been completed, you are connected to “fhirdb” database using serverless SQL endpoint from Microsoft SQL Server Management Studio, and that the stored procedures are there.
 1.	Check “BCS_Compliance_Dashboard.pbix” file at (../azure-health-data-services-samples/powerbianalytics/powerbiReport).
 ![image](https://user-images.githubusercontent.com/116351573/209017082-b65e9b78-e414-4979-8a21-5285ed5c5cec.png)
 
@@ -307,7 +326,7 @@ To be able to view the dashboard in Power BI service we need to publish it from 
 ![image](https://user-images.githubusercontent.com/116351573/209018131-f08b4874-cf75-4585-af54-6106e6bb0727.png)
 
 
-## View the dashboard in Power BI service!
+## View the dashboard in Power BI service
 
 1.	Login to Power BI service and select your workspace in left-hand side pane, under workspaces scroll down and select your report from “Reports” section, once you select the report, it will open, and you can see all the pages listed in “Pages” as highlighted in below image:
 
