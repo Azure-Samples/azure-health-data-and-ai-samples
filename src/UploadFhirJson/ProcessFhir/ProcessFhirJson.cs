@@ -14,14 +14,13 @@ namespace UploadFhirJson.ProcessFhir
 {
     public class ProcessFhirJson : IProcessFhirJson
     {
-        public ProcessFhirJson(BlobConfiguration blobConfiguration, BlobServiceClient blobServiceClient, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
+        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
             _fhirClient = fhirClient;
             _blobConfiguration = blobConfiguration;
-            _blobServiceClient = blobServiceClient;
         }
 
         private readonly string _id;
@@ -29,7 +28,6 @@ namespace UploadFhirJson.ProcessFhir
         private readonly BlobConfiguration _blobConfiguration;
         private readonly IFhirClient _fhirClient;
         private readonly ILogger _logger;
-        private readonly BlobServiceClient _blobServiceClient;
         public string Id => _id;
         public string Name => "ProcessFhirJson";
         public bool isFilesSkipped = false;
