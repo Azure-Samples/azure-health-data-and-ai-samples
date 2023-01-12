@@ -13,17 +13,17 @@ The end-to-end pipeline is shown below. Starting with FHIR data in a FHIR server
 # Stage 1: Convert FHIR data to Parquet
 First, convert your FHIR data into Parquet files and store them in Azure Data Lake. Converting FHIR data into Parquet files makes it easier to facilitate data analysis later on.
 ## Option 1: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview
-- If you have your own sample FHIR data that needs to be converted into Parquet files, please use our OSS tool [FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) and follow steps 1 - 3. Once you are finished, move on to Stage 2. 
-- If you have already converted your FHIR data into Parquet files with our [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from our analytics connector private preview, please move on to Stage 2.
+- If you have your own sample FHIR data that needs to be converted into Parquet files, please use our OSS tool [FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) and follow steps 1 - 3. Once you are finished, move on to "Stage 2: Create external tables and views". 
+- If you have already converted your FHIR data into Parquet files with our [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from our analytics connector private preview, please move on to "Stage 2: Create external tables and views".
 
 ## Option 2: Using provided sample data
 If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, below steps will create a Data Lake and copy our sample Parquet files inside.
 
-Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample. If you have FHIR data that needs to be analyzed, please follow the above steps to use the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to convert the FHIR data into Parquet files. 
+Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample. If you have yout own sample FHIR data that needs to be analyzed, please follow the above steps in Option 1 to use the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to convert the FHIR data into Parquet files. 
 ### Prerequisites needed
 - An Azure Account to create Data lake and Synapse workspace
 ### Steps
-1. Deploy the Bicep template.
+1. Deploy the Bicep template by following these steps.
 
     It will create a Data Lake storage account and Synapse workspace in the new resource group or in the exsiting resource group as per the parameter configuration.
 
@@ -42,7 +42,7 @@ Please note that this copies over sample Parquet files into Data Lake and is onl
         | Name | Name of the environment which is used to generate a short unique hash used in resources. |
         | DataLakeName | Provide a name for the Data Lake Storage Account where parquet files will be stored. |
         | DataLakefileSystemName | Provide a name for the container (filesystem) while creating synapse workspace. |
-        | SynapseworkspaceName | Provid name for the Synapse Workspace. |
+        | SynapseworkspaceName | Provide name for the Synapse Workspace. |
         | SqlAdministratorLogin | SQL server admin required while creating synpase workspace. |
         | Location | Location where the resources will be deployed. |
         | AllowAllConnections | Allow all connection for synapse workspace firewall. |
@@ -52,28 +52,29 @@ Please note that this copies over sample Parquet files into Data Lake and is onl
         ```Powershell
         az deployment sub create --name demoSubDeployment --location eastus --template-file main.bicep --parameters main.parameters.json
         ```
-2. Provide privilege to your account
+2. Provide privilege to your account.  
 You must provide the following roles to your account to run the PowerShell script in the next step. You may revoke these roles after the installation is complete.
 
     1. In your Synapse workspace, select Synapse Studio > Manage > Access Control, and then provide the Synapse Administrator role to your account.
     2. In the Storage Account created during the pipeline installation, select the Access Control (IAM) and assign the Storage Blob Data Contributor role to your account.
 
+3. Move on to "Stage 2: Create external tables and views"
 
 # Stage 2: Create external tables and views
 Next, create external tables and views from the Parquet files. 
 ## Option 1: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview
-- If you have already used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or our analytics connector private preview to convert FHIR data to Parquet files, please follow steps 4 - 7 [here](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to create the external tables and views. Note that if you do not already have a Synapse workspace, you will need to create a Synapse workspace in Azure Portal before proceeding. 
+If you have already used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or our analytics connector private preview to convert FHIR data to Parquet files, please follow steps 4 - 7 [here](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to create the external tables and views. Note that if you do not already have a Synapse workspace, you will need to create a Synapse workspace in Azure Portal before proceeding. Once you have completed those steps, please move on to "Stage 3: Query and Visualize".
 
 ## Option 2: Using provided sample data 
-- If you are using provided Parquet sample files to run this sample, please follow these steps:
+If you are using provided Parquet sample files to run this sample, please follow these steps:
 
 ### Steps
-1. Provide access of the Storage Account to the Synapse Workspace
+1. Provide access of the Storage Account to the Synapse Workspace.  
 To enable Synapse to read the data from the Storage Account, assign the Storage Blob Data Contributor role to it. In your Storage Account created during the pipeline installation, select the Access Control (IAM), assign Store Blob Data Contributor, and select Managed Identity while adding members to the role. You should be able to pick your Synapse workspace instance from the list of managed identities shown on the portal.
 
 2. Run the PowerShell script.
 
-    Running the PowerShell script that creates following artifacts:
+    Running the PowerShell script creates the following artifacts:
 
     1. Resource specific folders in the Azure Storage Account.
     2. A database in Synapse serverless SQL pool with External Tables, Views and Store Procedure pointing to the files in the Storage Account.
@@ -124,25 +125,26 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
     | Concurrent | Max concurrent tasks number that will be used to upload place holder files and execute SQL scripts. |
     | CustomizedSchemaImage | Customized schema image reference. Need to be provided when customized schema is enable. |
 
-3. Download [AzCopy](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10)
+3. Download [AzCopy](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) if you don't already have it.
 
-    1. Go to the dowloaded folder of azcopy.
+    1. Go to the downloaded folder of azcopy.
     2. Login to Azcopy with tenant id using below command
         ```Powershell
         azcopy login --tenant-id 'xxxx-xxxx-xxxx-xxxx'  
         ```
-    3. Run below command to copy the parquet file to the data lake storage which is created while running the bicep template
+    3. Run below command to copy the sample Parquet files to your new Data Lake storage which was created while running the above bicep template
 
         ```Powershell
         azcopy copy 'https://ahdssampledata.blob.core.windows.net/fhir/50k/fhir/result' 'https://{DestinationstorageAccountName}.blob.core.windows.net/fhir' --recursive
         ```
 
 4. Go to your Synapse workspace serverless SQL pool. You should see a new database named fhirdb. Expand External Tables and Views to see the entities. Your FHIR data is now ready to be queried.
+5. Move on to "Stage 3: Query and Visualize".
 
 
 # Stage 3: Query and Visualize
 Finally, create SQL stored procedures to query the external tables, and visualize that data in PowerBI. This example PowerBI visualizes the percentage of women 50-70 years of age who had a mammogram to screen for breast cancer in the 48 months prior to the end of the measurement period. 
-Note: This is a simple, basic example to demonstrate capabilities of FHIR analytics Pipeline and Data Visualization with Power BI. This sample uses Synthea data comprising of SNOMED codes.
+Note: This is a simple, basic example to demonstrate capabilities of FHIR analytics Pipeline and Data Visualization with Power BI, and should not be used for HEDIS quality measures. This sample uses Synthea data comprising of SNOMED codes.
 
 ### Prerequisites needed
 1.	Microsoft work or school account
@@ -162,8 +164,8 @@ Note: This is a simple, basic example to demonstrate capabilities of FHIR analyt
 
 1.	Find the “sp_getBCSComplianceDetails.sql” file in this repo (..azure-health-data-services-samples/samples/Analytics Visualization/scripts/sql/Stored_Procedure)
 
-2.	Open the “Microsoft SQL Server Management Studio”, Connect to your database server using "Serverless SQL endpoint".  
-Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
+2.	Open  “Microsoft SQL Server Management Studio”, and connect to your database server using "Serverless SQL endpoint".  
+The Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
 
 ![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)  
 
@@ -179,11 +181,11 @@ After clicking connect you will be asked to provide authentication details for u
 
 ![image](https://user-images.githubusercontent.com/116351573/209017010-390892c6-4063-455b-a6fd-ceea7c714b76.png)  
 
-In below sample database is “fhirdb”
+In below sample, the database is called “fhirdb”
 
 ![image](https://user-images.githubusercontent.com/116351573/209015656-67b40cb3-b343-4b2a-b54a-ffa27d7cdd16.png)
 
-3.	Click “File” menu choose “Open” and select “File” option, browse to the location of sql file from step 1:
+3.	Click “File” menu choose “Open” and select “File” option, browse to the location of the “sp_getBCSComplianceDetails.sql” file from step 1:
 
 ![image](https://user-images.githubusercontent.com/116351573/209015736-dc345b74-bc87-4d59-960a-33d6f8a41abf.png)
 
@@ -198,10 +200,10 @@ In below sample database is “fhirdb”
 6.	Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section.
 
 ###  Option 2: Using provided sample data 
-If you are using provided Parquet sample files to run this sample, the stored procedure is already created and available in the database.
+If you are using provided Parquet sample files to run this sample, the stored procedure was already created from the Bicep template and is available in the database.
 To explore (view/edit) the stored procedure used for Power BI dashboard report, we need to connect to database using “Serverless SQL endpoint” in synapse workspace that was created by BICEP.
 
-Serverless SQL endpoint could be found in Synapse Workspace as highlighted below:
+The Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
 
 ![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)
 
