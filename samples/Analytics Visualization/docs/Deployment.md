@@ -36,6 +36,7 @@ If you are using provided Parquet sample files to run this sample, please follow
 
 # Stage 3: Query and Visualize
 At this point, regardless of if you used Option 1 or 2 in the stages above, you should have external tables of data ready to be queried and visualized. In this stage, we will create SQL stored procedures to query the external tables, and visualize that data in PowerBI. This example PowerBI visualizes the percentage of women 50-70 years of age who had a mammogram to screen for breast cancer in the 48 months prior to the end of the measurement period. 
+
 Note: This is a simple, basic example to demonstrate capabilities of FHIR analytics Pipeline and Data Visualization with Power BI, and does not meet requirements of any standard quality measures. This sample uses Synthea data.
 
 ### Prerequisites needed
@@ -63,15 +64,11 @@ If you would like to explore (view/edit) the stored procedure in Microsoft SQL S
 
 ## Visualize: Checking and editing the dashboard in Power BI desktop application
 
-Before proceeding ahead with dashboard, please ensure that the previous section "Query: Setting up Database from SQL Server Management Studio" has been completed, you are connected to “fhirdb” database using serverless SQL endpoint from Microsoft SQL Server Management Studio, and that the stored procedures are there.
-
-1. Open the “BCS_Compliance_Dashboard.pbix” file at (../azure-health-data-services-samples/powerbianalytics/powerbiReport)in Power BI Desktop application, the report file has multiple pages, “Main Dashboard” is the landing page, as shown in below image:
-
-![image](https://user-images.githubusercontent.com/116351573/209017128-2ed5f5c4-949b-42e0-9cb3-de36591025ab.png)
+1. Open the “BCS_Compliance_Dashboard.pbix” file at (../azure-health-data-services-samples/powerbianalytics/powerbiReport)in Power BI Desktop application. The report file has multiple pages, “Main Dashboard” is the landing page.
 
 2. The charts get data from the "ComplianceData" table. See the [appendix]() for more on navigating the ComplianceData table. 
 
-## Change the serverless SQL pool URL to your data source
+## Change the serverless SQL endpoint to your endpoint
 1.	Go to “Model” section, here one can see the table is available, and can view properties and fields of the table, when you click “More Options” button (Three dots in top right corner of the table  ![image](https://user-images.githubusercontent.com/116351573/209017528-05921e0d-4ca9-493b-b520-d09325e01e39.png)
 ), it shows all the options available for the table, click on “Edit Query”.
 
@@ -82,16 +79,12 @@ Before proceeding ahead with dashboard, please ensure that the previous section 
 ![image](https://user-images.githubusercontent.com/116351573/209017584-1aec6844-5840-4bdf-8f11-a2e7734f78a3.png)
 
 
-
 ## Editing the query to change measurement period date range in parameters
 In this query editor, you can also change the measurement period date range. If you'd like detailed instructions on how to do this, follow the Appendix [here]().
 
 
 ## Publish the dashboard in Power BI Service
 Finally, publish the dashboard to PowerBI service and view. For detailed instructions, follow the Appendix [here]().
-
-
-
 
 
 
