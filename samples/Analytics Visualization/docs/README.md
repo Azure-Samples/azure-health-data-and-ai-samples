@@ -18,7 +18,7 @@ First, convert your FHIR data into Parquet files and store them in Azure Data La
 - If you have already converted your FHIR data into Parquet files with our [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from our analytics connector private preview, please move on to "Stage 2: Create external tables and views".
 
 ## Option B: Using provided sample data
-If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, follow steps in the "Stage 1" section [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data)  (#TODO FIX LINK) to create a Data Lake and copy our sample Parquet files inside. Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
+If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data) to create a Data Lake and copy our sample Parquet files inside. Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
 
 
 # Stage 2: Create external tables and views
@@ -27,7 +27,7 @@ Next, create external tables and views from the Parquet files.
 If you have already used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or our analytics connector private preview to convert FHIR data to Parquet files, please follow steps 4 - 7 [here](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to create the external tables and views. Note that if you do not already have a Synapse workspace, you will need to create a Synapse workspace in Azure Portal before proceeding. Once you have completed those steps, please move on to "Stage 3: Query and Visualize".
 
 ## Option B: Using provided sample data 
-If you are using provided Parquet sample files to run this sample, please follow steps in "Stage 2" section [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#stage-2-create-external-tables-and-views-option-b-using-provided-sample-data) #TODO FIX LINK
+If you are using provided Parquet sample files to run this sample, please follow steps in "Stage 2" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#stage-2-create-external-tables-and-views-option-b-using-provided-sample-data)
 
 
 # Stage 3: Query and Visualize
