@@ -64,7 +64,7 @@ If you would like to explore (view/edit) the stored procedure in Microsoft SQL S
 
 2. The charts get data from the "ComplianceData" table. See the [appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#navigating-the-compliancedata-table) for more details on navigating the ComplianceData table. 
 
-## Change the serverless SQL endpoint to your endpoint
+### Change the serverless SQL endpoint to your endpoint
 This example PowerBI is currently connected to an example endpoint. In this step, you will change the endpoint to your serverless SQL endpoint that you created above.
 1.	In the “Model” section,  click “More Options” button (Three dots in top right corner of the table  ![image](https://user-images.githubusercontent.com/116351573/209017528-05921e0d-4ca9-493b-b520-d09325e01e39.png)
 ), then click on “Edit Query”.
@@ -76,11 +76,11 @@ This example PowerBI is currently connected to an example endpoint. In this step
 ![image](https://user-images.githubusercontent.com/116351573/209017584-1aec6844-5840-4bdf-8f11-a2e7734f78a3.png)
 
 
-## Editing the query to change measurement period date range in parameters
+### Editing the query to change measurement period date range in parameters
 In this query editor, you can also change the measurement period date range. If you'd like detailed instructions on how to do this, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#editing-the-query-to-change-measurement-period-date-range-in-parameters).
 
 
-## Publish the dashboard in Power BI Service
+### Publish the dashboard in Power BI Service
 Finally, publish the dashboard to PowerBI service and view. For detailed instructions, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Appendix.md#publish-the-dashboard-in-powerbi-service).
 
 
