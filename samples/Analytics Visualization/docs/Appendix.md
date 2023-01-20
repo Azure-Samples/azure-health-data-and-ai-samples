@@ -1,6 +1,6 @@
 # Appendix
 
-## Stage 1: Convert FHIR data to Parquet (using provided sample data) 
+## Stage 1: Convert FHIR data to Parquet (Option B using provided sample data) 
 If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, below steps will create a Data Lake and copy our sample Parquet files inside.
 
 Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample. If you have your own sample FHIR data that needs to be analyzed, please follow the above steps in Option 1 to use the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to convert the FHIR data into Parquet files. 
@@ -46,7 +46,7 @@ You must provide the following roles to your account to run the PowerShell scrip
 3. Move on to "Stage 2: Create external tables and views"
 
 
-## Stage 2: Create external tables and views (using provided sample data)
+## Stage 2: Create external tables and views (Option B using provided sample data)
 1. Provide access of the Storage Account to the Synapse Workspace.  
 To enable Synapse to read the data from the Storage Account, assign the Storage Blob Data Contributor role to it. In your Storage Account created during the pipeline installation, select the Access Control (IAM), assign Store Blob Data Contributor, and select Managed Identity while adding members to the role. You should be able to pick your Synapse workspace instance from the list of managed identities shown on the portal.
 
