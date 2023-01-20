@@ -8,7 +8,7 @@ If you want to follow this tutorial from scratch with provided sample data, inst
 
 ## End-to-end pipeline
 The end-to-end pipeline is shown below. Starting with FHIR data in a FHIR server, it gets converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. Then, in Synapse, external tables and views of that Parquet files are made, and Stored Procedures query the data to visualize in a PowerBI dashboard. This sample mainly focuses on **Stage 3: Query and Visualize**. Stage 1 and 2 are covered more in-depth separately (references will be provided for these steps).
-![End to end pipeline](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/analyticspipelinediagram1.png)
+![End to end pipeline](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/analyticspipelinediagram.png)
 
 # Stage 1: Convert FHIR data to Parquet
 First, convert your FHIR data into Parquet files and store them in Azure Data Lake. Converting FHIR data into Parquet files makes it easier to facilitate data analysis later on.
