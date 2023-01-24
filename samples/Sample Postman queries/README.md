@@ -19,9 +19,7 @@ The queries are categorised into folders below:
 + **FHIR service** deployed. Information about FHIR service can be found [here](https://docs.microsoft.com/en-us/azure/healthcare-apis/fhir/overview).
 + **Postman** installed - desktop or web client. Information about installing Postman is available [here](https://www.getpostman.com/). 
 + **PowerShell** Information about installing Powershell as available [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?WT.mc_id=THOMASMAURER-blog-thmaure&view=powershell-7.3&viewFallbackFrom=powershell-7)
-+ **AZ module** install Az module for Powershell with below command:
-Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
-- more details for installation could be found [here](https://learn.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-9.3.0) 
+ 
 
 ## Getting started
 To set up Postman for testing FHIR service, we'll walk through these steps:
@@ -192,14 +190,22 @@ This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `Pra
 9. In `FHIR Collection`, folder `Common Operations` Contains queries for operations: 
 - [validate](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/validation-against-profiles), Make sure the profiles are loaded into fhir service for validation, more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir)
 - [convert](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/convert-data)
-- [import](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/import-data), Please make sure that  cofiguration settings for import are done, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-import-data)
-- [export](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data), Please make sure that  cofiguration settings for export are done, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-export-data)
+- [import](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/import-data), Please make sure that  the cofiguration settings for import are done before running import, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-import-data)
+- [export](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data), Please make sure that  the cofiguration settings for export are done before running export, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-export-data)
  
 10. In `FHIR Collection`, folder `Custom Search (Create and Use SearchParameter)` Contains queries to create create and use custom search parameter. More details are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
 - Once you create new search parameter, reindexing should be done to be able to use new search parameter.
-- once you run reindex, it takes some time to finish, reidex returns reindex task Id which is used to check status of reindex task, keep checking the status of reindex task with below command, run the command in powershell.
+- To prform reindexing, use `POST Reindex` request, once you run reindex, it takes some time to finish, `POST Reindex` request returns reindex task Id which is used to check status of reindex task.
+
+<img src="./images/Reindex.png" height="428">
+
+- Keep checking the status of reindex task with `GET Get Status on Reindex Job` request or with below command, run the command in powershell(requires powershell 7 or higher and Az module installed).
+
+<img src="./images/ReindexRequestStatus.png" height="428">
+
 
 `az rest --resource {{fhirurl}} --url {{fhirurl}}/_operations/reindex/{{ReindexTaskId}}`
+
 
 <img src="./images/ReindexStatus.png" height="428">
 
@@ -207,6 +213,8 @@ This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `Pra
 <img src="./images/ReindexStatus2.png" height="428">
 
 - Once reindex is completed, new search parameter is ready to use.
+
+<img src="./images/UseSearchParameter.png" height="428">
 
 
 11. Now you can experiment with other sample calls Or create your own FHIR API calls by following the examples.
