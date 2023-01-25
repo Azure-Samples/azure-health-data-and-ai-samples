@@ -79,81 +79,6 @@
 					"response": []
 				},
 				{
-					"name": "GetToken",
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "clientId",
-									"value": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "body",
-									"type": "string"
-								},
-								{
-									"key": "state",
-									"value": "112233",
-									"type": "string"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code_with_pkce",
-									"type": "string"
-								},
-								{
-									"key": "tokenName",
-									"value": "fhirToken",
-									"type": "string"
-								},
-								{
-									"key": "scope",
-									"value": "https://workpacesdkfhir-sjbuildfhir.fhir.azurehealthcareapis.com/.default",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47/oauth2/v2.0/token",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47/oauth2/v2.0/authorize",
-									"type": "string"
-								},
-								{
-									"key": "redirect_uri",
-									"value": "http://localhost",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Metadata",
 					"event": [
 						{
@@ -205,8 +130,6 @@
 								"exec": [
 									"if(pm.response.code == \"200\")\r",
 									"{\r",
-									"    postman.setNextRequest(\"Save a Patient\");\r",
-									"    var jsonData = JSON.parse(responseBody);\r",
 									"    postman.setEnvironmentVariable(\"patientId\", jsonData.entry[1].resource.id);\r",
 									"    postman.setEnvironmentVariable(\"practitionerId\", jsonData.entry[7].resource.id);\r",
 									"    postman.setEnvironmentVariable(\"organizationId\", jsonData.entry[8].resource.id);\r",
@@ -223,13 +146,7 @@
 									"    postman.setEnvironmentVariable(\"careTeamId\", jsonData.entry[25].resource.id);\r",
 									"    ;\r",
 									"}\r",
-									"else{\r",
-									"    \r",
-									"    var jsonData = JSON.parse(responseBody);\r",
-									"    var issue = jsonData.issue[0].severity + \", \" + jsonData.issue[0].diagnostics;\r",
-									"    console.error(\"Resquest: 'Create Resources Bundle (Multiple resources)' failed with status: \" + pm.response.status + \" Details: \" + issue);\r",
-									"    postman.setNextRequest(null);\r",
-									"}\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript"
@@ -253,6 +170,12 @@
 								"key": "User-Agent",
 								"value": "{{userAgentValue}}",
 								"type": "default"
+							},
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "default",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -285,8 +208,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"patientId\", jsonData.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -397,13 +319,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{fhirurl}}/Patient/0697ce21-ff0a-4c94-af24-d67a2974810f",
+							"raw": "{{fhirurl}}/Patient/{{patientId}}",
 							"host": [
 								"{{fhirurl}}"
 							],
 							"path": [
 								"Patient",
-								"0697ce21-ff0a-4c94-af24-d67a2974810f"
+								"{{patientId}}"
 							]
 						}
 					},
@@ -719,6 +641,16 @@
 						{
 							"name": "Convert data HL7v2",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -3877,16 +3809,6 @@
 						{
 							"name": "Delete CarePlan",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{bearerToken}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [
 									{
@@ -4365,7 +4287,14 @@
 							"name": "Delete CareTeam",
 							"request": {
 								"auth": {
-									"type": "noauth"
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
 								},
 								"method": "DELETE",
 								"header": [
@@ -4538,16 +4467,6 @@
 						{
 							"name": "List All Claims",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{bearerToken}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [
 									{
@@ -4890,54 +4809,6 @@
 									"path": [
 										"Claim",
 										"{{claimId}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Operations",
-					"item": [
-						{
-							"name": "$submit encounter for adjudication",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{bearerToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "User-Agent",
-										"value": "{{userAgentValue}}",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"resourceType\": \"Claim\",\r\n  \"status\": \"active\",\r\n  \"type\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/claim-type\",\r\n        \"code\": \"institutional\"\r\n      }\r\n    ]\r\n  },\r\n  \"use\": \"claim\",\r\n  \"patient\": {\r\n    \"reference\": \"Patient/{{patientId}}\",\r\n    \"display\": \"JohnTest Abernathy524\"\r\n  },\r\n  \"billablePeriod\": {\r\n    \"start\": \"2020-10-13T23:45:22+05:30\",\r\n    \"end\": \"2020-10-14T00:00:22+05:30\"\r\n  },\r\n  \"created\": \"2020-10-14T00:00:22+05:30\",\r\n  \"provider\": {\r\n    \"reference\": \"Organization?identifier=https://github.com/synthetichealth/synthea|ORG1111\",\r\n    \"display\": \"TEST MOUNT AUBURN HOSPITAL\"\r\n  },\r\n  \"priority\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/processpriority\",\r\n        \"code\": \"normal\"\r\n      }\r\n    ]\r\n  },\r\n  \"facility\": {\r\n    \"reference\": \"Location?identifier=https://github.com/synthetichealth/synthea|LOC1111\",\r\n    \"display\": \"TEST MOUNT AUBURN HOSPITAL\"\r\n  },\r\n  \"insurance\": [\r\n    {\r\n      \"sequence\": 1,\r\n      \"focal\": true,\r\n      \"coverage\": {\r\n        \"display\": \"NO_INSURANCE\"\r\n      }\r\n    }\r\n  ],\r\n  \"item\": [\r\n    {\r\n      \"sequence\": 1,\r\n      \"productOrService\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://snomed.info/sct\",\r\n            \"code\": \"410620009\",\r\n            \"display\": \"Well child visit (procedure)\"\r\n          }\r\n        ],\r\n        \"text\": \"Well child visit (procedure)\"\r\n      },\r\n      \"encounter\": [\r\n        {\r\n          \"reference\": \"Encounter/{{encounterId}}\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"total\": {\r\n    \"value\": 151.16,\r\n    \"currency\": \"USD\"\r\n  }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{fhirurl}}/Claim/$submit",
-									"host": [
-										"{{fhirurl}}"
-									],
-									"path": [
-										"Claim",
-										"$submit"
 									]
 								}
 							},
@@ -8621,36 +8492,6 @@
 									"path": [
 										"Encounter",
 										"{{encounterId}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Operations",
-					"item": [
-						{
-							"name": "$everything for Encounter",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "User-Agent",
-										"value": "{{userAgentValue}}",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "{{fhirurl}}/Encounter/525d486c-d3c9-400a-9773-be11d7395903/$everything",
-									"host": [
-										"{{fhirurl}}"
-									],
-									"path": [
-										"Encounter",
-										"525d486c-d3c9-400a-9773-be11d7395903",
-										"$everything"
 									]
 								}
 							},
@@ -12745,99 +12586,6 @@
 									"path": [
 										"Observation",
 										"{{observationId}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Operations",
-					"item": [
-						{
-							"name": "$stats for Observation",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{bearerToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "User-Agent",
-										"value": "{{userAgentValue}}",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "{{fhirurl}}/Observation/$stats?subject=Patient/8e65fac6-02a0-4f32-9190-b8d5aec1beae&statistic=average",
-									"host": [
-										"{{fhirurl}}"
-									],
-									"path": [
-										"Observation",
-										"$stats"
-									],
-									"query": [
-										{
-											"key": "subject",
-											"value": "Patient/8e65fac6-02a0-4f32-9190-b8d5aec1beae"
-										},
-										{
-											"key": "statistic",
-											"value": "average"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "$lastn for Observation",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{bearerToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "User-Agent",
-										"value": "{{userAgentValue}}",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "{{fhirurl}}/Observation/$lastn?max=3&patient=Patient/8e65fac6-02a0-4f32-9190-b8d5aec1beae",
-									"host": [
-										"{{fhirurl}}"
-									],
-									"path": [
-										"Observation",
-										"$lastn"
-									],
-									"query": [
-										{
-											"key": "max",
-											"value": "3"
-										},
-										{
-											"key": "patient",
-											"value": "Patient/8e65fac6-02a0-4f32-9190-b8d5aec1beae"
-										}
 									]
 								}
 							},
@@ -17084,6 +16832,36 @@
 					]
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

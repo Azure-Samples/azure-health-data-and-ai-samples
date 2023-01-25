@@ -5,20 +5,19 @@ This sample includes collection of FHIR queries which would be helpful to build 
 The collection could be downloaded and imported into postman.
 
 The queries are categorised into folders below:
-- AuthToken (Request to create an authentication token which is used in all other queries)
-- Create Starter Bundle (Here we create a multiple resources in one bundle, these resources would be used in queries further)
-- Common Queries (This folder has some of the most frequently used queries)
-- Common Operations (This folder has queries for operations like convert, valicate, export and import)
-- Chained and Reverse Chained Search (This folder has queries to use chaining and reverse chaining for fetching resources, more details about chaining could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).)
-- Include and Reverse Include Search (This folder has queries with _include and _revinclude parameters, more details about [here](https://www.hl7.org/fhir/search.html#return).)
-- Custom Search (Create and Use SearchParameter) (This folder has queries related to custom search, here we create new SearchParameter, run reindex and usethe newly create SearchParameter. More details about custom search could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).)
-- List of alphabetically sorted resource specific folders for resource specific queries for CRUD operations
+- `AuthToken` - Request to create an authentication token which is used in all other queries.
+- `Create Starter Bundle` -Here we create a multiple resources in one bundle, these resources would be used in queries further.
+- `Common Queries` - This folder has set of frequently used queries).
+- `Common Operations` - This folder has queries for FHIR operations like convert, valicate, export and import).
+- `Chained and Reverse Chained Search` (This folder has queries to use chaining and reverse chaining for fetching resources based on related(referenced) resources, more details about chaining could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
+- `Include and Reverse Include Search` - This folder has queries with _include and _revinclude parameters, We can fetch multiple related resources in result, more details about [here](https://www.hl7.org/fhir/search.html#return).
+- `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create new SearchParameter, run reindex and use the newly created SearchParameter. More details about custom search could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
+- List of alphabetically sorted, resource specific folders for resource specific queries for CRUD operations.
 
 ## Prerequisites
-+ [User Access Administrator](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#user-access-administrator) role in your FHIR service resource group or Azure subscription 
++ [**User Access Administrator**](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#user-access-administrator) role in your FHIR service resource group or Azure subscription 
 + **FHIR service** deployed. Information about FHIR service can be found [here](https://docs.microsoft.com/en-us/azure/healthcare-apis/fhir/overview).
 + **Postman** installed - desktop or web client. Information about installing Postman is available [here](https://www.getpostman.com/). 
-+ **PowerShell** Information about installing Powershell as available [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?WT.mc_id=THOMASMAURER-blog-thmaure&view=powershell-7.3&viewFallbackFrom=powershell-7)
  
 
 ## Getting started
@@ -117,7 +116,7 @@ Now you will configure your Postman environment (`fhir-service`).
 - `clientId` - Application (client) ID for Postman service client app (go to **AAD** -> **App registrations** -> `<postman-service-client-name>` -> **Overview** -> **Application (client) ID**) 
 - `clientSecret` - Client secret stored for Postman (see Step 1 #7 above) 
 - `fhirurl` - FHIR service endpoint - e.g. `https://<workspace-name>-<fhir-service-name>.fhir.azurehealthcareapis.com` (go to **Resource Group** -> **Overview** -> `<fhir-service-name>` -> **FHIR metadata endpoint** and copy *without* "/metadata" on the end)
-- `resource` - FHIR service endpoint - e.g. `https://<workspace-name>-<fhir-service-name>.fhir.azurehealthcareapis.com` (same as `fhirurl`)
+- `resource` - FHIR service endpoint - e.g. `https://<workspace-name>-<fhir-service-name>.fhir.azurehealthcareapis.com` (**same as `fhirurl`**)
 
 Populate the above parameter values in your `fhir-service` Postman environment as shown below. Input the values in the **CURRENT VALUE** column. Leave `bearerToken` blank. Make sure to click **Save** to retain the `fhir-service` environment values.  
 
@@ -169,7 +168,7 @@ __Note:__ Access tokens expire after 60 minutes. To obtain a token refresh, simp
 <img src="./images/ListPatients.png" height="428">
 
 5. Now we will create a bunch of resources by posting a bundle to FHIR service. Click on "POST Create Resources Bundle (Multiple resources)" in `FHIR Collection` and press **Send**. If The response is as shown below, this means you successfully created multiple resources included in a bundle.
-This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `PractitionerRole`, `Encounter`, `Observation`, `Condition`, `Procedure`, `Group`, `Device`, `RelatedPerson` and `ServiceRequest`. We would use these resources 
+This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `PractitionerRole`, `Encounter`, `Observation`, `Condition`, `Procedure`, `Group`, `Device`, `RelatedPerson` and `ServiceRequest`. These resources would be used as references for creating other resources which depend on them.
 
 <img src="./images/SaveBundle.png" height="428">
 
@@ -195,35 +194,34 @@ This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `Pra
  
 10. In `FHIR Collection`, folder `Custom Search (Create and Use SearchParameter)` Contains queries to create create and use custom search parameter. More details are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
 - Once you create new search parameter, reindexing should be done to be able to use new search parameter.
-- To prform reindexing, use `POST Reindex` request, once you run reindex, it takes some time to finish, `POST Reindex` request returns reindex task Id which is used to check status of reindex task.
+- To perform reindexing, use `POST Reindex` request, once you run reindex, it takes some time to finish, `POST Reindex` request returns reindex task Id which is used to check status of reindex task.
 
 <img src="./images/Reindex.png" height="428">
 
-- Keep checking the status of reindex task with `GET Get Status on Reindex Job` request or with below command, run the command in powershell(requires powershell 7 or higher and Az module installed).
+- Keep checking the status of reindex task with `GET Get Status on Reindex Job` request.
 
 <img src="./images/ReindexRequestStatus.png" height="428">
-
-
-`az rest --resource {{fhirurl}} --url {{fhirurl}}/_operations/reindex/{{ReindexTaskId}}`
-
-
-<img src="./images/ReindexStatus.png" height="428">
-
-
-<img src="./images/ReindexStatus2.png" height="428">
 
 - Once reindex is completed, new search parameter is ready to use.
 
 <img src="./images/UseSearchParameter.png" height="428">
 
+11. `Everything operation for patient` 
+- $everything operation for patient returns patient and related resources, Please check for more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything) and details about response order are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything#patient-everything-response-order).
 
-11. Now you can experiment with other sample calls Or create your own FHIR API calls by following the examples.
+- `GET $everything Patient by Id` will return a response with bundle having type searchset, it would consist patient reource and an array named `link` with an url for next set of records as shown in below image.
 
-### Resources 
+<img src="./images/PatientEverything.png" height="428">
 
-A tutorial for using Postman with FHIR service is available on [docs.microsoft.com](https://docs.microsoft.com/azure/healthcare-apis/fhir/use-postman).
+- On clicking url, new request would be opened in postman, In Auth tab select 'Bearer Token' and click on send, the response would bundle having type searchset, it would consist an array named `link` with an url for next set of records and list of related resources in an array named 'entry' as shown in below image.
+
+<img src="./images/PatientEverythingNext.png" height="428">
+
+
+12. Please check other sample calls Or create your own FHIR API calls by following the examples.
+
  
-### FAQ's / Issues 
+### FAQ's / Issues
 
 - Error with ```POST AuthorizeGetToken```: Ensure you selected your `fhir-service` environment from the dropdown menu.
 - 403 - Unauthorized:  Check the Azure RBAC for Azure Health Data Services documentation ([link](https://docs.microsoft.com/azure/healthcare-apis/configure-azure-rbac)).
