@@ -58,6 +58,11 @@ using IHost host = new HostBuilder()
 
         };
         services.AddSingleton(blobConfig);
+        AppConfiguration appConfiguration = new()
+        {
+            HttpFailStatusCodes = config.HttpFailStatusCodes
+        };
+        services.AddSingleton(appConfiguration);
         services.AddScoped<IProcessFhirJson, ProcessFhirJson>();
         services.AddMemoryCache();
         services.AddScoped<IAuthTokenCache, AuthTokenCache>();

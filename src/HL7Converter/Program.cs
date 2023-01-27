@@ -47,8 +47,7 @@ using IHost host = new HostBuilder()
             BlobConnectionString = config.BlobConnectionString,
             ConvertedContainer = config.ConvertedContainer,
             ValidatedContainer = config.ValidatedContainer,
-            ConversionfailContainer = config.ConversionfailContainer,
-            SkippedBlobContainer = config.SkippedBlobContainer
+            ConversionfailContainer = config.ConversionfailContainer
         };
 
         AppConfiguration appConfig = new()
