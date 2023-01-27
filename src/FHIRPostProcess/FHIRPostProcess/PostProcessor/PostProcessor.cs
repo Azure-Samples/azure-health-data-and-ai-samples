@@ -50,9 +50,12 @@ namespace FHIRPostProcess.PostProcessor
                         
                         Bundle bundleResource = _fhirJsonParser.Parse<Bundle>(reqBundle);
 
-                        if (bundleResource.Type != Bundle.BundleType.Batch)
+                        if(postProcessInput.FhirBundleType != null && postProcessInput.FhirBundleType.ToLower() == Bundle.BundleType.Transaction.ToString().ToLower())
                         {
-
+                            bundleResource.Type = Bundle.BundleType.Transaction;
+                        }
+                        else
+                        {
                             bundleResource.Type = Bundle.BundleType.Batch;
                         }
 
@@ -80,16 +83,21 @@ namespace FHIRPostProcess.PostProcessor
                     postProcessInput.FhirJson = postProcessBundle;
                     _logger?.LogInformation($"post process FHIR bundle created for file {postProcessInput.HL7FileName}.");
 
-                   
 
-                    var blobFileContent = JsonConvert.SerializeObject(postProcessInput);
+                    PostProcessOutput postProcessOutput = new PostProcessOutput
+                    {
+                        HL7FileName = postProcessInput.HL7FileName,
+                        HL7Conversion = postProcessInput.HL7Conversion,
+                        FhirJson = postProcessInput.FhirJson,
+                    };
 
-                   
-                    if (blobFileContent != string.Empty)
+                    var postProcessFhirBundle = JsonConvert.SerializeObject(postProcessOutput);
+
+                    if (postProcessFhirBundle != string.Empty)
                     {
                         
                         var response = request.CreateResponse(HttpStatusCode.OK);
-                        response.Body = new MemoryStream(Encoding.UTF8.GetBytes(blobFileContent));
+                        response.Body = new MemoryStream(Encoding.UTF8.GetBytes(postProcessFhirBundle));
                          return await Task.FromResult(response);
                     }
                     else
