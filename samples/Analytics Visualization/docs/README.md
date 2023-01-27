@@ -1,6 +1,6 @@
 # Analytics pipeline visualization: PowerBI dashboard from parquet files in Azure Data Lake sample
 
-This sample will focus on how to visualize FHIR data that **has already been converted to parquet files in Azure Data Lake**. This sample creates a PowerBI dashboard from parquet files in an Azure Data Lake storage account via a Synapse workspace.
+This sample will focus on how to visualize FHIR data that **has already been converted to parquet files in Azure Data Lake**. Converting to parquet files makes it easier to unlock a variety of analytics use cases. This sample creates a PowerBI dashboard from parquet files in an Azure Data Lake storage account via a Synapse workspace.
 
 ## End-to-end pipeline
 The end-to-end pipeline is shown in the diagram below, starting with FHIR data in a FHIR server. 
