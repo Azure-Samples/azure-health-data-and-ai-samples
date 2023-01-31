@@ -59,8 +59,6 @@ Azure Health Data Services needs some modification to the capability statement a
 
 ## EHR Launch
 
-TODO
-
 ```mermaid
   sequenceDiagram
     participant User/App
