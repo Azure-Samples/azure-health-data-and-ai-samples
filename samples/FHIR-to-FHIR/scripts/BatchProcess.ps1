@@ -22,7 +22,7 @@
 .OUTPUTS
     None.
 .EXAMPLE
-    .\BatchProcess.ps1 -srcResourceGroup 'fhir2fhir' -srcStorageAccount 'fhirexportdata' -destResourceGroup 'fhirv1tofhirv1' -destStorageAccount 'bulk25886store' -sourceContainer 'export-141'
+    .\BatchProcess.ps1 -srcResourceGroup 'fhir2fhir' -srcStorageAccount 'fhirexportdata' -destResourceGroup 'fhirv1tofhirv1' -destStorageAccount 'bulk25886store' -sourceContainer 'export-141' -FileCount '30' -BundleCount '3000'
 #>
 
 [cmdletbinding()]
@@ -145,13 +145,13 @@ function New-BatchProcess {
                     }
                                     
                 }
-                Write-Host "Sleeping for 5 Minutes" -ForegroundColor Yellow
+                Write-Host "Next Batch will run in 5 Minutes" -ForegroundColor Yellow
                 Start-Sleep -Seconds 300
             }
             else
             {
                 Write-Host "Not processing NDJSON file in this run.." -ForegroundColor Yellow
-                Write-Host "Sleeping for 5 Minutes" -ForegroundColor Yellow
+                Write-Host "Next Batch will run in 5 Minutes" -ForegroundColor Yellow
                 Start-Sleep -Seconds 300
             }
         }

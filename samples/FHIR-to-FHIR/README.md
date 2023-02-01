@@ -1,73 +1,62 @@
-# Azure Health Data Services Samples Repo
-The Azure Health Data Services Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data Services, learn how to use our products, and accelerate your implementations. 
+# FHIR-to-FHIR Data Movement: Moving data from one Azure API for FHIR server to another.
 
-This project hosts open-source **samples** for Azure Health Data Services. To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/en-us/azure/healthcare-apis/healthcare-apis-overview)
+This sample will focus on how to move the data from Azure API for FHIR (Generation-1) server to another Azure API for FHIR (Generation-1)server.
 
-## Samples
-
-This project provides samples outlining example implementations of various use cases across stages of health data workflows. The samples are listed here:
-
-### Data ingestion into Health Data Services
-
-|Sample|Description|
-| --- | --- |
-| [Sample HL7v2 Data Ingestion Pipeline]() | Sample app that shows how to ingest HL7v2 data into FHIR server, including conversion and validation. |
+## Prerequisites needed
+1.	Microsoft work or school account
+2.	Azure API for FHIR instances.
+	-	We will require 2 FHIR instance. 
+	-	One instance from where the data will be exported.
+	-	Second instance where the data will be imported.
 
 
-### Sample transactions
-|Sample|Description|
-| --- | --- |
-| [Example Postman queries *(coming soon)*]() | Postman collection of common Postman queries used to query FHIR data.|
+# Steps
+1. Deploy the FHIR Bulk Loader. Go to [FHIR Bulk Loader](https://github.com/microsoft/fhir-loader) and follow the deployment steps. It will create following resources:
+	- Resource Group
+	- Storage Account
+	- App Service Plan
+	- Function App
+	- Event Grid
+	- Key Vault
+	- Application Insight
 
-### Analytics and machine learning
-|Sample|Description|
-| --- | --- |
-| FHIR Delta Lake with Databricks | End-to-end sample showing data from FHIR Service into Databricks Delta Lake Bronze, Silver, and Gold Levels |
-| PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
+	The FHIR Bulk Loader will be linked to the Azure API for FHIR server on which the data will be imported.
+2. Export the data from source Azure API for FHIR server.
+	- Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/configure-export-data) for configuration of export on Azure API for FHIR server.
+	- Once the export configuration is setup, run the export command on Azure API for FHIR server.
+	Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) to run the export command.
+	- The exported data will be in the format of NDJSON files that are stored on new container created during export configuration process.
 
-### SMART on FHIR
-|Sample|Description|
-| --- | --- |
-| Sample coming soon! | |
+3. Run the PowerShell script
 
-### Other integrations
-|Sample|Description|
-| --- | --- |
-| FHIR to HL7v2 format for ingestion back into an EHR (coming soon)| Sample to convert FHIR data to HL7v2 format suitable for ingestion into an EHR. |
+	Running the PowerShell script will do following process:
 
+	1. Resource specific folder in the Azure Storage Account.
+	2. Copy the NDJSON files from source storage account to destination storage account which is linked to FHIR Bulk Loader.
 
+	To run the PowerShell Script, perform the following steps:
 
-## Resources
-- [Azure Health Data Services documentation](https://learn.microsoft.com/en-us/azure/healthcare-apis/healthcare-apis-overview)
-
-
-## Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-## Disclaimers
-
-The Azure Health Data Services Samples Repo is an open-source project. It is not a managed service, and it is not part of Microsoft Azure Health Data Services. The sample apps and sample code provided in this repo are used as examples only. You bear sole responsibility for compliance with local law and for any data you use when using these samples. Please review the information and licensing terms on this GitHub website before using the Azure Health Data Services Samples repo.
-
-The Azure Health Data Services Samples Github repo is intended only for use in transferring and formatting data. It is not intended for use as a medical device or to perform any analysis or any medical function and the performance of the software for such purposes has not been established. You bear sole responsibility for any use of this software, including incorporation into any product intended for a medical purpose.
-
-## Trademarks
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-
-FHIR® is the registered trademark of HL7 and is used with the permission of HL7. 
+	1. Clone this [FHIR-to-FHIR]() repo to your local machine.
+	2. Open the PowerShell console, ensure that you have the latest version of the **PowerShell 7** or **Powershell 5.1**.
+	3. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0) modules if they don't exist.
+		``` PowerShell
+		Install-Module -Name Az
+		```
+	4. Sign in to your Azure account to the subscription where synapse is located.
+		``` PowerShell
+		Connect-AzAccount -SubscriptionId 'yyyy-yyyy-yyyy-yyyy'
+		```
+	5. Browse to the scripts folder under this path (..\FHIR-to-FHIR\scripts).
+	6. Run the following PowerShell script. 
+		```Powershell
+		./BatchProcess.ps1 -srcResourceGroup '<Source Resource Group Name>'-srcStorageAccount '<Source Storage Account Name>' -destResourceGroup '<Destination Resource Group Name>' -destStorageAccount '<Destination Storage Account Name>' -sourceContainer '<Source Container Name>'
+		```
+		|Parameter   | Description   |
+        |---|---|
+        | srcResourceGroup | Name of the source resource group where the data from Azure API for FHIR is exported. |
+        | srcStorageAccount | Name of the storage account where the data from Azure API for FHIR is exported. |
+        | sourceContainer | Name of the container where the data from Azure API for FHIR is exported. |
+        | destResourceGroup | Name of the resource group where FHIR Bulk Loader is deployed. |
+        | destStorageAccount | Name of the storage account where all the containers under FHIR Bulk Loader are created. |
+        | FileCount | Number of the file count that will be processed in a single batch. |
+        | BundleCount | Number of the bundle files in destination storage container 'bundles'. Next Batch will trigger when the number of bundle file is below this number. 
