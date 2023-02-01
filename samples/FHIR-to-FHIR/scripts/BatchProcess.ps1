@@ -22,7 +22,7 @@
 .OUTPUTS
     None.
 .EXAMPLE
-    .\BatchProcess.ps1 -srcResourceGroup 'fhir2fhir' -srcStorageAccount 'fhirexportdata' -destResourceGroup 'fhirv1tofhirv1' -destStorageAccount 'bulk25886store' -sourceContainer 'export-141' -FileCount '30' -BundleCount '3000'
+    .\BatchProcess.ps1 -srcResourceGroup 'src-rg' -srcStorageAccount 'src-staccount' -destResourceGroup 'dest-rg' -destStorageAccount 'dest-staccount' -sourceContainer 'src-container' -FileCount '30' -BundleCount '3000'
 #>
 
 [cmdletbinding()]
