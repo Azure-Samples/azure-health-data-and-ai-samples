@@ -24,24 +24,26 @@ This sample will focus on how to move the data from Azure API for FHIR (Generati
 2. Export the data from source Azure API for FHIR server.
 	- Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/configure-export-data) for configuration of export on Azure API for FHIR server.
 	- Once the export configuration is setup, run the export command on Azure API for FHIR server.
-	Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) to run the export command.
+	Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) to run the export command.\
+	Example:
+	``` PowerShell
+	GET https://<<Source FHIR Server URL>>/$export?_container=<<CONTAINER NAME>>
+	```
+	
 	- The exported data will be in the format of NDJSON files that are stored on new container created during export configuration process.
 
 3. Run the PowerShell script
 
 	Running the PowerShell script will do following process:
 
-	1. Resource specific folder in the Azure Storage Account.
+	1. Batch processed files specific folder in the Azure Storage Account.
 	2. Copy the NDJSON files from source storage account to destination storage account which is linked to FHIR Bulk Loader.
 
 	To run the PowerShell Script, perform the following steps:
 
 	1. Clone this [FHIR-to-FHIR]() repo to your local machine.
 	2. Open the PowerShell console, ensure that you have the latest version of the **PowerShell 7** or **Powershell 5.1**.
-	3. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0) modules if they don't exist.
-		``` PowerShell
-		Install-Module -Name Az
-		```
+	3. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
 	4. Sign in to your Azure account to the subscription where synapse is located.
 		``` PowerShell
 		Connect-AzAccount -SubscriptionId 'yyyy-yyyy-yyyy-yyyy'
@@ -49,7 +51,7 @@ This sample will focus on how to move the data from Azure API for FHIR (Generati
 	5. Browse to the scripts folder under this path (..\FHIR-to-FHIR\scripts).
 	6. Run the following PowerShell script. 
 		```Powershell
-		./BatchProcess.ps1 -srcResourceGroup '<Source Resource Group Name>'-srcStorageAccount '<Source Storage Account Name>' -destResourceGroup '<Destination Resource Group Name>' -destStorageAccount '<Destination Storage Account Name>' -sourceContainer '<Source Container Name>'
+		./BatchProcess.ps1 -srcResourceGroup '<Source Resource Group Name>'-srcStorageAccount '<Source Storage Account Name>' -destResourceGroup '<Destination Resource Group Name>' -destStorageAccount '<Destination Storage Account Name>' -sourceContainer '<Source Container Name>' -FileCount '<# of File to process in a batch>' -BundleCount '<# of Bundle files in bundle container>'
 		```
 		|Parameter   | Description   |
         |---|---|
