@@ -27,6 +27,11 @@ This project provides samples outlining example implementations of various use c
 | PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
 --->
 
+### Analytics and machine learning
+|Sample|Description|
+| --- | --- |
+| [Analytics pipeline visualization with PowerBI dashboard sample](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#visualize-checking-and-editing-the-dashboard-in-power-bi-desktop-application) | Sample showing how to query FHIR data in Parquet file format (in Azure Data Lake) and Serverless SQL tables to calculate digital quality measures and visualize data in PowerBI.|
+
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 |Sample|Description|
 | --- | --- |
