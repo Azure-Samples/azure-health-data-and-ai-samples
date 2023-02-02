@@ -5,7 +5,7 @@ This sample will focus on how to visualize FHIR data that **has already been con
 ## End-to-end pipeline
 The end-to-end pipeline is shown in the diagram below, starting with FHIR data in a FHIR server. 
 <img src="./images/analyticspipelinediagram.png" height="220">
-- In **Stage 1: Convert FHIR data to Parquet**, FHIR data in a FHIR server is converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. This is done with our [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool, or our analytics connector private preview. 
+- In **Stage 1: Convert FHIR data to Parquet**, FHIR data in a FHIR server is converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. This is done with the [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool, or our analytics connector private preview. 
 - In **Stage 2: Create external tables**, external tables and views of that Parquet files are made in Synapse.
 - In **Stage 3: Query and Visualize**, Stored Procedures query the data to visualize in a PowerBI dashboard. This sample mainly focuses on Stage 3, but pointers will be provided for Stage 1 and 2. 
 
@@ -14,8 +14,8 @@ For each of the stages, two option paths are provided depending on what data you
 # Stage 1: Convert FHIR data to Parquet
 First, convert your FHIR data into Parquet files and store them in Azure Data Lake. Converting FHIR data into Parquet files makes it easier to facilitate data analysis later on.
 ## Option A: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview
-- If you have your own sample FHIR data that needs to be converted into Parquet files, please use our OSS tool [FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) and follow steps 1 - 3. Once you are finished, move on to "Stage 2: Create external tables and views". 
-- If you have already converted your FHIR data into Parquet files with our [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from our analytics connector private preview, please move on to "Stage 2: Create external tables and views".
+- If you have your own sample FHIR data that needs to be converted into Parquet files, please use the OSS tool [FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) and follow steps 1 - 3. Once you are finished, move on to "Stage 2: Create external tables and views". 
+- If you have already converted your FHIR data into Parquet files with the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from our analytics connector private preview, please move on to "Stage 2: Create external tables and views".
 
 ## Option B: Using provided sample data
 If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data) to create a Data Lake and copy our sample Parquet files inside. Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
