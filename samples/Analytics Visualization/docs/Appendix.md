@@ -13,13 +13,13 @@ Please note that this copies over sample Parquet files into Data Lake and is onl
     It will create a Data Lake storage account and Synapse workspace in the new resource group or in the exsiting resource group as per the parameter configuration.
 
     1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). Clone the repo and browse to the infra folder under this path (..\azure-health-data-services-samples\samples\Analytics Visualization\scripts\infra). Log in by running "az login" and following the instructions.
-    2. Run below command on powershell terminal to set the subscription where the infra deployment will be done.
+    2. Run below command on powershell terminal to set the subscription where the infra deployment will be done, where 'xxxx-xxxx-xxxx-xxxx-xxxxxx' is your subscription ID.
     ```PowerShell
     az account set -s 'xxxx-xxxx-xxxx-xxxx-xxxxxx'
     ```
     where 'xxxx-xxxx-xxxx-xxxx-xxxxxx' is your subscription ID.
     
-    3. Browse to the main.parameters.json under this path (..\scripts\infra).
+    3. Browse to the main.parameters.json under this path (.\azure-health-data-services-samples\samples\Analytics Visualization\scripts\infra)
     4. Set the parameter values as per your requirement. For more details, refer to the below :
 
         |Parameter   | Description   |
@@ -43,7 +43,7 @@ You must provide the following roles to your account to run the PowerShell scrip
     1. In your Synapse workspace, select Synapse Studio > Manage > Access Control, and then provide the Synapse Administrator role to your account.
     2. In the Storage Account created during the pipeline installation, select the Access Control (IAM) and assign the Storage Blob Data Contributor role to your account.
 
-3. Move on to "Stage 2: Create external tables and views"
+3. Move on to "Stage 2: Create external tables and views" [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#stage-2-create-external-tables-and-views).
 
 
 ## Stage 2: Create external tables and views (Option B using provided sample data)
@@ -74,7 +74,7 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
     ``` PowerShell
     Connect-AzAccount -SubscriptionId 'yyyy-yyyy-yyyy-yyyy'
     ```
-    6. Browse to the scripts folder under this path (..\scripts).
+    6. Browse to the scripts folder under this path (.\azure-health-data-services-samples\samples\Analytics Visualization\scripts\).
     7. Run the following PowerShell script. 
     ```Powershell
     ./Set-SynapseEnvironment.ps1 -SynapseWorkspaceName "{Name of your Synapse workspace instance}" -StorageName "{Name of your storage account where Parquet files will be written}".
@@ -117,10 +117,10 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
         ```
 
 4. Go to your Synapse workspace serverless SQL pool. You should see a new database named fhirdb. Expand External Tables and Views to see the entities. Your FHIR data is now ready to be queried.
-5. Move on to "Stage 3: Query and Visualize" [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/powerbianalytics/samples/Analytics%20Visualization/docs/Deployment.md#stage-3-query-and-visualize) #TODO FIX LINK
+5. Move on to "Stage 3: Query and Visualize" [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#stage-3-query-and-visualize)
 
 
-## Uploading stored procedures for querying
+## Uploading stored procedures for querying (Option A: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview) 
 Follow these steps to upload the stored procedures for querying.
 
 1.	Find the “sp_getBCSComplianceDetails.sql” file in this repo (..azure-health-data-services-samples/samples/Analytics Visualization/scripts/sql/Stored_Procedure)
@@ -158,10 +158,10 @@ In below sample, the database is called “fhirdb”
 
 ![image](https://user-images.githubusercontent.com/116351573/209016007-05d2f17d-0209-48df-99cc-d7d2778c6d8c.png)
 
-6.	Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section.
+6.	Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#visualize-checking-and-editing-the-dashboard-in-power-bi-desktop-application).
 
 
-## Connecting to Microsoft SQL Server Management Studio
+## Connecting to Microsoft SQL Server Management Studio (Option B: Using provided sample data)
 The Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
 
 ![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)
@@ -182,7 +182,7 @@ The Serverless SQL endpoint can be found in Synapse Workspace as highlighted bel
 
 ![image](https://user-images.githubusercontent.com/116351573/209017036-69925a00-8050-4989-a5f9-3f67134a93bb.png)
 
-5. Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section.
+5. Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#visualize-checking-and-editing-the-dashboard-in-power-bi-desktop-application).
 
 ## Navigating the ComplianceData table
 3.	Below image shows the “Data” section of the report which has tables, on selecting specific table in the right-hand side pane, it will show the data in that table as shown in below image:
