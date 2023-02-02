@@ -12,7 +12,7 @@ Please note that this copies over sample Parquet files into Data Lake and is onl
 
     It will create a Data Lake storage account and Synapse workspace in the new resource group or in the exsiting resource group as per the parameter configuration.
 
-    1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). Clone the repo and browse to the infra folder under this path (..\azure-health-data-services-samples\scripts\infra). Log in by running "az login" and following the instructions.
+    1. Install Powershell [Az](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.1.0). Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). Clone the repo and browse to the infra folder under this path (..\azure-health-data-services-samples\samples\Analytics Visualization\scripts\infra). Log in by running "az login" and following the instructions.
     2. Run below command on powershell terminal to set the subscription where the infra deployment will be done.
     ```PowerShell
     az account set -s 'xxxx-xxxx-xxxx-xxxx-xxxxxx'
