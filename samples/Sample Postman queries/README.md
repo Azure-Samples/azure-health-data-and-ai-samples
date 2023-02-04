@@ -1,8 +1,8 @@
 # Postman collection of FHIR queries 
 
-This sample includes postman collection of FHIR queries which would be helpful to build better understanding for querying/accessing FHIR service to perfom CRUD requests for FHIR resources, Operations supported my Microsoft FHIR and various options of seraching resources using postman.
+This sample includes postman collection of FHIR queries which would be helpful to build better understanding for querying/accessing FHIR service to perform CRUD requests for FHIR resources, Operations supported my Microsoft FHIR and various options of searching resources using postman.
 
-We assume that you already have knowledge of using postman to access FHIR service. If you are new to using postman to access FHIR service, we reccommend that you come back here after following below learning path:
+We assume that you already have knowledge of using postman to access FHIR service. If you are new to using postman to access FHIR service, we recommend that you come back here after following below learning path:
 - [Access the Azure Health Data Services FHIR service using Postman | Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/use-postman)
 
 ## Prerequisites
@@ -10,14 +10,14 @@ We assume that you already have knowledge of using postman to access FHIR servic
 
 
 ## Collection Details
-The queries in this collection are categorised into folders as below:
+The queries in this collection are categorized into folders as below:
 - `AuthToken` - Request to create an authentication token which is used in all other queries.
-- `Create Starter Bundle` -Here we create a multiple resources in one bundle, these resources would be used in queries further.
+- `Create Starter Bundle` - Here we create a multiple resources in one bundle, these resources would be used in queries further.
 - `Common Queries` - This folder has set of frequently used queries.
-- `Common Operations` - This folder has queries for FHIR operations like convert, valicate, export and import.
+- `Common Operations` - This folder has queries for FHIR operations like convert, validate, export and import.
 - `Chained and Reverse Chained Search` - This folder has queries to use chaining and reverse chaining for fetching resources based on related(referenced) resources, more details about chaining could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
-- `Include and Reverse Include Search` - This folder has queries with _include and _revinclude parameters, We can fetch multiple related resources in result, more details about [here](https://www.hl7.org/fhir/search.html#return).
-- `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create new SearchParameter, run reindex and use the newly created SearchParameter. More details about custom search could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
+- `Include and Reverse Include Search` - This folder has queries with `_include` and `_revinclude` parameters, to fetch resources related to the search results (e.g., `Patient` resources associated with an `Encounter` search). More details inclusions can be found on the [FHIR Search Page](https://www.hl7.org/fhir/search.html#return).
+- `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create a new `SearchParameter` resource, run the reindex operation (`$reindex`), and use the newly created SearchParameter. More details about custom search could be found in [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
 - List of alphabetically sorted, resource specific folders for resource specific queries for CRUD operations.
 
 
@@ -26,10 +26,10 @@ The queries in this collection are categorised into folders as below:
 ## Getting started
 To set up Postman for testing FHIR service, we'll walk through these steps:
 
-**Step 1:** Import environment template and collection files into Postman  
-**Step 2:** Enter parameter values for the Postman environment  
-**Step 3:** Get an authorization token from AAD  
-**Step 4:** Test FHIR service with Postman  
+**Step 1:** Import environment template and collection files into Postman
+**Step 2:** Enter parameter values for the Postman environment
+**Step 3:** Get an authorization token from AAD
+**Step 4:** Test FHIR service with Postman
 
 ## Step 1 - Import environment and collection files into Postman
 
@@ -66,7 +66,7 @@ Populate the above parameter values in your `fhir-service` Postman environment a
 <img src="./images/Screenshot_2022-05-04_084239_edit3.png" height="328">
 
 ## Step 3 - Get an access token from AAD
-To obtain an access token from AAD via Postman, you can send a ```POST Get Authorization Token``` request. The ```POST Get Authorization Token``` call comes pre-configured as part of the `FHIR Collection` collection that you imported earlier. 
+To obtain an access token from AAD via Postman, you can use the saved ```POST Get Authorization Token``` request. The ```POST Get Authorization Token``` call comes pre-configured as part of the `FHIR Collection` collection that you imported earlier.
 
 In Postman, click on **Collections** on the left, select the `FHIR Collection` collection, and then select `POST Get Authorization Token`. Press **Send** on the right.
 
@@ -98,51 +98,54 @@ __Note:__ Access tokens expire after 60 minutes. To obtain a token refresh, simp
 
 <img src="./images/ListPatients.png" height="428">
 
-2. Now we will create a bunch of resources by posting a bundle to FHIR service. Click on "POST Create Resources Bundle (Multiple resources)" in `FHIR Collection` and press **Send**. If The response is as shown below, this means you successfully created multiple resources included in a bundle.
+2. Now we will create a bunch of resources by posting a `Bundle` to the FHIR service. Click on ```POST Create Resources Bundle (Multiple resources)``` in `FHIR Collection` and press **Send**. If The response is as shown below, this means you successfully created multiple resources included in a bundle.
 This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `PractitionerRole`, `Encounter`, `Observation`, `Condition`, `Procedure`, `Group`, `Device`, `RelatedPerson` and `ServiceRequest`. These resources would be used as references for creating other resources which depend on them. The environment variables for Ids of these resources will be updates.
 
 <img src="./images/SaveBundle.png" height="428">
 
-3. In `FHIR Collection`, folder `Chained and Reverse Chained Search` Contains queries which search resources using chained and reverse chained search. More details are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
+3. In `FHIR Collection`, the folder `Chained and Reverse Chained Search` contains queries which search resources using chained and reverse chained search. More details are available on [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching) and the [FHIR Search Page](https://hl7.org/fhir/search.html#chaining).
 
-4. In `FHIR Collection`, folder `Include and Reverse Include Search` Contains queries which search resources using include and reverse include. More details are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#search-parameters) and in section `3.1.1.5.4 Including other resources in result` [here](https://www.hl7.org/fhir/search.html).
+4. In `FHIR Collection`, the folder `Include and Reverse Include Search` contains queries which search resources using include and reverse include. More details are available on [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#search-parameters) and the [FHIR Search Page](https://hl7.org/fhir/search.html#revinclude).
 
-5. In `FHIR Collection`, folder `Common Operations` Contains folders for queries of operations as detailed below:  
-- [validate](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/validation-against-profiles), Make sure the profiles are loaded into fhir service for validation, more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir)
-    - In collection, we have samples for posting and fetching the posted structure definition and samples for validating resource.
-- [convert](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/convert-data)
-    - In collection, we have samples for coverting HL7, Json and C-CDA data formats to FHIR
-- [import](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/import-data), Please make sure that  the cofiguration settings for import are done before running import, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-import-data)
-- [export](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data), Please make sure that  the cofiguration settings for export are done before running export, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-export-data)
-Below is the sample response from export, In response headers we receive 'Content-Location' header with a url value, this url is used to get status of export job.
+5. In `FHIR Collection`, the folder `Common Operations` contains folders for queries of operations as detailed below:  
+- [validate](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/validation-against-profiles): ensure that a FHIR resource conforms to the base resource requirements or a specified profile using the `$validate` operation.
+  - Please make sure the profiles are loaded into fhir service for validation, more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir)
+  - In the collection, we have samples for posting and fetching the posted structure definition and samples for validating resource.
+- [convert](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/convert-data): convert health data from various formats to FHIR using the `$convert-data` operation
+  - In the collection, we have samples for converting HL7v2, raw JSON, and C-CDA data formats to FHIR
+- [import](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/import-data): bulk-import FHIR resources into the FHIR Server at high throughput using the `$import` operation.
+  - Please make sure that the configuration settings for import are set before running import, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-import-data)
+- [export](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data): bulk-export data using the `$export` operation, as described in the [FHIR Bulk Data Access IG](https://hl7.org/fhir/uv/bulkdata/export/index.html).
+  - Please make sure that the configuration settings for export are set before running export, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-export-data)
+  - Below is the sample response from export, In response headers we receive 'Content-Location' header with a url value, this url is used to get status of export job.
     - Export
 <img src="./images/ExportResponse.png" height="428">
-    - Expoer Status
+    - Export Status
 <img src="./images/GetExportStatus.png" height="428">
  
 
-6. In `FHIR Collection`, folder `Custom Search (Create and Use SearchParameter)` Contains queries to create create and use custom search parameter. More details are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
-- Once you create new search parameter, reindexing should be done to be able to use new search parameter.
-- To perform reindexing, use `POST Reindex` request, once you run reindex, it takes some time to finish, `POST Reindex` request returns reindex task Id which is used to check status of reindex task.
+6. In `FHIR Collection`, the folder `Custom Search (Create and Use SearchParameter)` contains queries to create and use custom search parameters. More details are available on [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/how-to-do-custom-search).
+- Once you create new search parameter, reindexing must be done before the new search parameter is available.  More information is available at [Test new search Parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/how-to-do-custom-search#test-new-search-parameters).
+- To perform reindexing, use the `POST Reindex` request.  The reindex operation takes some time to finish - the `POST Reindex` request returns a reindex task Id, which can used to check status of reindex task.
 
 <img src="./images/Reindex.png" height="428">
 
-- Keep checking the status of reindex task with `GET Get Status on Reindex Job` request.
+- Keep checking the status of the reindex task with the `GET Get Status on Reindex Job` request.
 
 <img src="./images/ReindexRequestStatus.png" height="428">
 
-- Once reindex is completed, new search parameter is ready to use.
+- Once the reindex is completed, your new search parameter is ready to use.
 
 <img src="./images/UseSearchParameter.png" height="428">
 
-7. `Everything` operation for patient
-- $everything operation for patient returns patient and related resources, Please check for more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything) and details about response order are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything#patient-everything-response-order).
+7. `Everything` operation for Patient resources
+- The `$everything` operation for Patient resources returns a patient and related resources. More details are available on the Microsoft Lear page for the [Patient Everything operation](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything) - details about response order are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/patient-everything#patient-everything-response-order).
 
-- `GET $everything Patient by Id` will return a response with bundle having type searchset, it would consist patient reource and an array named `link` with an url for next set of records as shown in below image.
+- `GET $everything Patient by Id` will return a response with `Bundle` having type `searchset`. A successful match returns a bundle with the requested `Patient` resource, one or more related resources, and, if there are more resource to retrieve, a `link` with a `relation` of `next` with the URL for the next set of records as shown in the image below.
 
 <img src="./images/PatientEverything.png" height="428">
 
-- On clicking url, new request would be opened in postman, In Auth tab select 'Bearer Token' and click on send, the response would bundle having type searchset, it would consist an array named `link` with an url for next set of records and list of related resources in an array named 'entry' as shown in below image.
+- If you click the `next` URL in Postman, a new request will be opened.  Before sending the request, you need to add the authorization token to it - in the `Auth` tab, select `Bearer Token`.  After clicking on send, the response will be a `Bundle` with the type `searchset`. It will contain one or more resources related to the requested patient, and may contain another link to more results (a `link` with a `relation` of `next`), as shown in the image below.
 
 <img src="./images/PatientEverythingNext.png" height="428">
 
@@ -150,13 +153,13 @@ Below is the sample response from export, In response headers we receive 'Conten
 
 <img src="./images/ResourceFolder.png" height="428">
 
-- In `Get` queries, there are intermediate level queries that combine multiple search parameters and queries to fetch list of resources with multiple IDs. Examples are shown below:
+- In `FHIR Collection`, the `Get` folder under each resource contains intermediate level queries that combine multiple search parameters and queries to fetch list of resources with multiple IDs. Some examples are shown below:
 
 <img src="./images/PatientMultipleIds.png" height="428">
 
 <img src="./images/PatientMultipleSearchParameters.png" height="428">
 
-9. Please check other sample calls Or create your own FHIR API calls by following the examples.
+9. Please check other sample calls or create your own FHIR API calls by following the examples.
 
  
 ### FAQ's / Issues
