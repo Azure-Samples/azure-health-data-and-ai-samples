@@ -1391,7 +1391,7 @@
 					"name": "Validate",
 					"item": [
 						{
-							"name": "Put StructureDefinition",
+							"name": "Put StructureDefinition (Profile for Patient)",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -1439,7 +1439,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Structure Definition",
+							"name": "Get Structure Definition (Profile for Patient)",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -1478,7 +1478,229 @@
 							"response": []
 						},
 						{
-							"name": "Validate (Success)",
+							"name": "Put StructureDefinition (Extension for Race)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceType\": \"StructureDefinition\",\r\n  \"id\": \"us-core-race\",\r\n  \"text\": {\r\n    \"status\": \"extensions\"\r\n  },\r\n  \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n  \"version\": \"5.0.1\",\r\n  \"name\": \"USCoreRaceExtension\",\r\n  \"title\": \"US Core Race Extension\",\r\n  \"status\": \"active\",\r\n  \"date\": \"2019-05-21\",\r\n  \"publisher\": \"HL7 International - Cross-Group Projects\",\r\n  \"contact\": [\r\n    {\r\n      \"name\": \"HL7 International - Cross-Group Projects\",\r\n      \"telecom\": [\r\n        {\r\n          \"system\": \"url\",\r\n          \"value\": \"http://www.hl7.org/Special/committees/cgp\"\r\n        },\r\n        {\r\n          \"system\": \"email\",\r\n          \"value\": \"cgp@lists.HL7.org\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"description\": \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The race codes used to represent these concepts are based upon the [CDC Race and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 921 reference race.  The race concepts are grouped by and pre-mapped to the 5 OMB race categories:\\n\\n - American Indian or Alaska Native\\n - Asian\\n - Black or African American\\n - Native Hawaiian or Other Pacific Islander\\n - White.\",\r\n  \"jurisdiction\": [\r\n    {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"urn:iso:std:iso:3166\",\r\n          \"code\": \"US\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"purpose\": \"Complies with 2015 Edition Common Clinical Data Set for patient race.\",\r\n  \"copyright\": \"Used by permission of HL7 International, all rights reserved Creative Commons License\",\r\n  \"fhirVersion\": \"4.0.1\",\r\n  \"mapping\": [\r\n    {\r\n      \"identity\": \"rim\",\r\n      \"uri\": \"http://hl7.org/v3\",\r\n      \"name\": \"RIM Mapping\"\r\n    }\r\n  ],\r\n  \"kind\": \"complex-type\",\r\n  \"abstract\": false,\r\n  \"context\": [\r\n    {\r\n      \"type\": \"element\",\r\n      \"expression\": \"Patient\"\r\n    },\r\n    {\r\n      \"type\": \"element\",\r\n      \"expression\": \"RelatedPerson\"\r\n    },\r\n    {\r\n      \"type\": \"element\",\r\n      \"expression\": \"Person\"\r\n    },\r\n    {\r\n      \"type\": \"element\",\r\n      \"expression\": \"Practitioner\"\r\n    },\r\n    {\r\n      \"type\": \"element\",\r\n      \"expression\": \"FamilyMemberHistory\"\r\n    }\r\n  ],\r\n  \"type\": \"Extension\",\r\n  \"baseDefinition\": \"http://hl7.org/fhir/StructureDefinition/Extension\",\r\n  \"derivation\": \"constraint\",\r\n  \"snapshot\": {\r\n    \"element\": [\r\n      {\r\n        \"id\": \"Extension\",\r\n        \"path\": \"Extension\",\r\n        \"short\": \"US Core Race Extension\",\r\n        \"definition\": \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The race codes used to represent these concepts are based upon the [CDC Race and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 921 reference race.  The race concepts are grouped by and pre-mapped to the 5 OMB race categories:\\n\\n   - American Indian or Alaska Native\\n   - Asian\\n   - Black or African American\\n   - Native Hawaiian or Other Pacific Islander\\n   - White.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"condition\": [\r\n          \"ele-1\"\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false\r\n      },\r\n      {\r\n        \"id\": \"Extension.id\",\r\n        \"path\": \"Extension.id\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"Unique id for inter-element referencing\",\r\n        \"definition\": \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Element.id\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\": \"string\"\r\n              }\r\n            ],\r\n            \"code\": \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension\",\r\n        \"path\": \"Extension.extension\",\r\n        \"slicing\": {\r\n          \"discriminator\": [\r\n            {\r\n              \"type\": \"value\",\r\n              \"path\": \"url\"\r\n            }\r\n          ],\r\n          \"description\": \"Extensions are always sliced by (at least) url\",\r\n          \"rules\": \"open\"\r\n        },\r\n        \"short\": \"Additional content defined by implementations\",\r\n        \"definition\": \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\": \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\": [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"ombCategory\",\r\n        \"short\": \"American Indian or Alaska Native|Asian|Black or African American|Native Hawaiian or Other Pacific Islander|White\",\r\n        \"definition\": \"The 5 race category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n        \"min\": 0,\r\n        \"max\": \"5\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\": true,\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"iso11179\",\r\n            \"map\": \"/ClinicalDocument/recordTarget/patientRole/patient/raceCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.id\",\r\n        \"path\": \"Extension.extension.id\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"Unique id for inter-element referencing\",\r\n        \"definition\": \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Element.id\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\": \"string\"\r\n              }\r\n            ],\r\n            \"code\": \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.extension\",\r\n        \"path\": \"Extension.extension.extension\",\r\n        \"slicing\": {\r\n          \"discriminator\": [\r\n            {\r\n              \"type\": \"value\",\r\n              \"path\": \"url\"\r\n            }\r\n          ],\r\n          \"description\": \"Extensions are always sliced by (at least) url\",\r\n          \"rules\": \"open\"\r\n        },\r\n        \"short\": \"Additional content defined by implementations\",\r\n        \"definition\": \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\": \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\": [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"identifies the meaning of the extension\",\r\n        \"definition\": \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\": \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.url\",\r\n          \"min\": 1,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"ombCategory\",\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"short\": \"Value of extension\",\r\n        \"definition\": \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.value[x]\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Coding\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"binding\": {\r\n          \"strength\": \"required\",\r\n          \"description\": \"The 5 race category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n          \"valueSet\": \"http://hl7.org/fhir/us/core/ValueSet/omb-race-category\"\r\n        },\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"detailed\",\r\n        \"short\": \"Extended race codes\",\r\n        \"definition\": \"The 900+ CDC race codes that are grouped under one of the 5 OMB race category codes:.\",\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"iso11179\",\r\n            \"map\": \"/ClinicalDocument/recordTarget/patientRole/patient/sdtc:raceCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.id\",\r\n        \"path\": \"Extension.extension.id\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"Unique id for inter-element referencing\",\r\n        \"definition\": \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Element.id\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\": \"string\"\r\n              }\r\n            ],\r\n            \"code\": \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.extension\",\r\n        \"path\": \"Extension.extension.extension\",\r\n        \"slicing\": {\r\n          \"discriminator\": [\r\n            {\r\n              \"type\": \"value\",\r\n              \"path\": \"url\"\r\n            }\r\n          ],\r\n          \"description\": \"Extensions are always sliced by (at least) url\",\r\n          \"rules\": \"open\"\r\n        },\r\n        \"short\": \"Additional content defined by implementations\",\r\n        \"definition\": \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\": \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\": [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"identifies the meaning of the extension\",\r\n        \"definition\": \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\": \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.url\",\r\n          \"min\": 1,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"detailed\",\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"short\": \"Value of extension\",\r\n        \"definition\": \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.value[x]\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Coding\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"binding\": {\r\n          \"strength\": \"required\",\r\n          \"valueSet\": \"http://hl7.org/fhir/us/core/ValueSet/detailed-race\"\r\n        },\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"text\",\r\n        \"short\": \"Race Text\",\r\n        \"definition\": \"Plain text representation of the race concept(s).\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\": true,\r\n        \"isModifier\": false,\r\n        \"isSummary\": false\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.id\",\r\n        \"path\": \"Extension.extension.id\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"Unique id for inter-element referencing\",\r\n        \"definition\": \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Element.id\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\": \"string\"\r\n              }\r\n            ],\r\n            \"code\": \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.extension\",\r\n        \"path\": \"Extension.extension.extension\",\r\n        \"slicing\": {\r\n          \"discriminator\": [\r\n            {\r\n              \"type\": \"value\",\r\n              \"path\": \"url\"\r\n            }\r\n          ],\r\n          \"description\": \"Extensions are always sliced by (at least) url\",\r\n          \"rules\": \"open\"\r\n        },\r\n        \"short\": \"Additional content defined by implementations\",\r\n        \"definition\": \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\": \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\": [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"base\": {\r\n          \"path\": \"Element.extension\",\r\n          \"min\": 0,\r\n          \"max\": \"*\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\": \"ext-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"Must have either extensions or value[x], not both\",\r\n            \"expression\": \"extension.exists() != value.exists()\",\r\n            \"xpath\": \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"identifies the meaning of the extension\",\r\n        \"definition\": \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\": \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.url\",\r\n          \"min\": 1,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"text\",\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"short\": \"Value of extension\",\r\n        \"definition\": \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.value[x]\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"string\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.url\",\r\n        \"path\": \"Extension.url\",\r\n        \"representation\": [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\": \"identifies the meaning of the extension\",\r\n        \"definition\": \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\": \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"base\": {\r\n          \"path\": \"Extension.url\",\r\n          \"min\": 1,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\": \"uri\"\r\n              }\r\n            ],\r\n            \"code\": \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.value[x]\",\r\n        \"path\": \"Extension.value[x]\",\r\n        \"short\": \"Value of extension\",\r\n        \"definition\": \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\": 0,\r\n        \"max\": \"0\",\r\n        \"base\": {\r\n          \"path\": \"Extension.value[x]\",\r\n          \"min\": 0,\r\n          \"max\": \"1\"\r\n        },\r\n        \"type\": [\r\n          {\r\n            \"code\": \"base64Binary\"\r\n          },\r\n          {\r\n            \"code\": \"boolean\"\r\n          },\r\n          {\r\n            \"code\": \"canonical\"\r\n          },\r\n          {\r\n            \"code\": \"code\"\r\n          },\r\n          {\r\n            \"code\": \"date\"\r\n          },\r\n          {\r\n            \"code\": \"dateTime\"\r\n          },\r\n          {\r\n            \"code\": \"decimal\"\r\n          },\r\n          {\r\n            \"code\": \"id\"\r\n          },\r\n          {\r\n            \"code\": \"instant\"\r\n          },\r\n          {\r\n            \"code\": \"integer\"\r\n          },\r\n          {\r\n            \"code\": \"markdown\"\r\n          },\r\n          {\r\n            \"code\": \"oid\"\r\n          },\r\n          {\r\n            \"code\": \"positiveInt\"\r\n          },\r\n          {\r\n            \"code\": \"string\"\r\n          },\r\n          {\r\n            \"code\": \"time\"\r\n          },\r\n          {\r\n            \"code\": \"unsignedInt\"\r\n          },\r\n          {\r\n            \"code\": \"uri\"\r\n          },\r\n          {\r\n            \"code\": \"url\"\r\n          },\r\n          {\r\n            \"code\": \"uuid\"\r\n          },\r\n          {\r\n            \"code\": \"Address\"\r\n          },\r\n          {\r\n            \"code\": \"Age\"\r\n          },\r\n          {\r\n            \"code\": \"Annotation\"\r\n          },\r\n          {\r\n            \"code\": \"Attachment\"\r\n          },\r\n          {\r\n            \"code\": \"CodeableConcept\"\r\n          },\r\n          {\r\n            \"code\": \"Coding\"\r\n          },\r\n          {\r\n            \"code\": \"ContactPoint\"\r\n          },\r\n          {\r\n            \"code\": \"Count\"\r\n          },\r\n          {\r\n            \"code\": \"Distance\"\r\n          },\r\n          {\r\n            \"code\": \"Duration\"\r\n          },\r\n          {\r\n            \"code\": \"HumanName\"\r\n          },\r\n          {\r\n            \"code\": \"Identifier\"\r\n          },\r\n          {\r\n            \"code\": \"Money\"\r\n          },\r\n          {\r\n            \"code\": \"Period\"\r\n          },\r\n          {\r\n            \"code\": \"Quantity\"\r\n          },\r\n          {\r\n            \"code\": \"Range\"\r\n          },\r\n          {\r\n            \"code\": \"Ratio\"\r\n          },\r\n          {\r\n            \"code\": \"Reference\"\r\n          },\r\n          {\r\n            \"code\": \"SampledData\"\r\n          },\r\n          {\r\n            \"code\": \"Signature\"\r\n          },\r\n          {\r\n            \"code\": \"Timing\"\r\n          },\r\n          {\r\n            \"code\": \"ContactDetail\"\r\n          },\r\n          {\r\n            \"code\": \"Contributor\"\r\n          },\r\n          {\r\n            \"code\": \"DataRequirement\"\r\n          },\r\n          {\r\n            \"code\": \"Expression\"\r\n          },\r\n          {\r\n            \"code\": \"ParameterDefinition\"\r\n          },\r\n          {\r\n            \"code\": \"RelatedArtifact\"\r\n          },\r\n          {\r\n            \"code\": \"TriggerDefinition\"\r\n          },\r\n          {\r\n            \"code\": \"UsageContext\"\r\n          },\r\n          {\r\n            \"code\": \"Dosage\"\r\n          },\r\n          {\r\n            \"code\": \"Meta\"\r\n          }\r\n        ],\r\n        \"constraint\": [\r\n          {\r\n            \"key\": \"ele-1\",\r\n            \"severity\": \"error\",\r\n            \"human\": \"All FHIR elements must have a @value or children\",\r\n            \"expression\": \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\": \"@value|f:*|h:div\",\r\n            \"source\": \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\": false,\r\n        \"isSummary\": false,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"rim\",\r\n            \"map\": \"N/A\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n  \"differential\": {\r\n    \"element\": [\r\n      {\r\n        \"id\": \"Extension\",\r\n        \"path\": \"Extension\",\r\n        \"short\": \"US Core Race Extension\",\r\n        \"definition\": \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The race codes used to represent these concepts are based upon the [CDC Race and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 921 reference race.  The race concepts are grouped by and pre-mapped to the 5 OMB race categories:\\n\\n   - American Indian or Alaska Native\\n   - Asian\\n   - Black or African American\\n   - Native Hawaiian or Other Pacific Islander\\n   - White.\",\r\n        \"min\": 0,\r\n        \"max\": \"1\"\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"ombCategory\",\r\n        \"short\": \"American Indian or Alaska Native|Asian|Black or African American|Native Hawaiian or Other Pacific Islander|White\",\r\n        \"definition\": \"The 5 race category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n        \"min\": 0,\r\n        \"max\": \"5\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\": true,\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"iso11179\",\r\n            \"map\": \"/ClinicalDocument/recordTarget/patientRole/patient/raceCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"ombCategory\"\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:ombCategory.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Coding\"\r\n          }\r\n        ],\r\n        \"binding\": {\r\n          \"strength\": \"required\",\r\n          \"description\": \"The 5 race category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n          \"valueSet\": \"http://hl7.org/fhir/us/core/ValueSet/omb-race-category\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"detailed\",\r\n        \"short\": \"Extended race codes\",\r\n        \"definition\": \"The 900+ CDC race codes that are grouped under one of the 5 OMB race category codes:.\",\r\n        \"min\": 0,\r\n        \"max\": \"*\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"mapping\": [\r\n          {\r\n            \"identity\": \"iso11179\",\r\n            \"map\": \"/ClinicalDocument/recordTarget/patientRole/patient/sdtc:raceCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"detailed\"\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:detailed.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Coding\"\r\n          }\r\n        ],\r\n        \"binding\": {\r\n          \"strength\": \"required\",\r\n          \"valueSet\": \"http://hl7.org/fhir/us/core/ValueSet/detailed-race\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text\",\r\n        \"path\": \"Extension.extension\",\r\n        \"sliceName\": \"text\",\r\n        \"short\": \"Race Text\",\r\n        \"definition\": \"Plain text representation of the race concept(s).\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\": true\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.url\",\r\n        \"path\": \"Extension.extension.url\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\": \"text\"\r\n      },\r\n      {\r\n        \"id\": \"Extension.extension:text.value[x]\",\r\n        \"path\": \"Extension.extension.value[x]\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"type\": [\r\n          {\r\n            \"code\": \"string\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\": \"Extension.url\",\r\n        \"path\": \"Extension.url\",\r\n        \"min\": 1,\r\n        \"max\": \"1\",\r\n        \"fixedUri\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\"\r\n      },\r\n      {\r\n        \"id\": \"Extension.value[x]\",\r\n        \"path\": \"Extension.value[x]\",\r\n        \"min\": 0,\r\n        \"max\": \"0\"\r\n      }\r\n    ]\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{fhirurl}}/StructureDefinition?url=StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"StructureDefinition"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Structure Definition (Extension for Race)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"StructureDefinition"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put StructureDefinition (Extension for Ethnicity)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceType\" : \"StructureDefinition\",\r\n  \"id\" : \"us-core-ethnicity\",\r\n  \"text\" : {\r\n    \"status\" : \"extensions\"\r\n  },\r\n  \"url\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n  \"version\" : \"5.0.1\",\r\n  \"name\" : \"USCoreEthnicityExtension\",\r\n  \"title\" : \"US Core Ethnicity Extension\",\r\n  \"status\" : \"active\",\r\n  \"date\" : \"2019-05-21T00:00:00-04:00\",\r\n  \"publisher\" : \"HL7 International - Cross-Group Projects\",\r\n  \"contact\" : [\r\n    {\r\n      \"name\" : \"HL7 International - Cross-Group Projects\",\r\n      \"telecom\" : [\r\n        {\r\n          \"system\" : \"url\",\r\n          \"value\" : \"http://www.hl7.org/Special/committees/cgp\"\r\n        },\r\n        {\r\n          \"system\" : \"email\",\r\n          \"value\" : \"cgp@lists.HL7.org\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"description\" : \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The ethnicity codes used to represent these concepts are based upon the [CDC ethnicity and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 43 reference ethnicity.  The ethnicity concepts are grouped by and pre-mapped to the 2 OMB ethnicity categories: - Hispanic or Latino - Not Hispanic or Latino.\",\r\n  \"jurisdiction\" : [\r\n    {\r\n      \"coding\" : [\r\n        {\r\n          \"system\" : \"urn:iso:std:iso:3166\",\r\n          \"code\" : \"US\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"purpose\" : \"Complies with 2015 Edition Common Clinical Data Set for patient race.\",\r\n  \"copyright\" : \"Used by permission of HL7 International, all rights reserved Creative Commons License\",\r\n  \"fhirVersion\" : \"4.0.1\",\r\n  \"mapping\" : [\r\n    {\r\n      \"identity\" : \"rim\",\r\n      \"uri\" : \"http://hl7.org/v3\",\r\n      \"name\" : \"RIM Mapping\"\r\n    }\r\n  ],\r\n  \"kind\" : \"complex-type\",\r\n  \"abstract\" : false,\r\n  \"context\" : [\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"Patient\"\r\n    },\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"RelatedPerson\"\r\n    },\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"Person\"\r\n    },\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"Practitioner\"\r\n    },\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"FamilyMemberHistory\"\r\n    }\r\n  ],\r\n  \"type\" : \"Extension\",\r\n  \"baseDefinition\" : \"http://hl7.org/fhir/StructureDefinition/Extension\",\r\n  \"derivation\" : \"constraint\",\r\n  \"snapshot\" : {\r\n    \"element\" : [\r\n      {\r\n        \"id\" : \"Extension\",\r\n        \"path\" : \"Extension\",\r\n        \"short\" : \"US Core ethnicity Extension\",\r\n        \"definition\" : \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The ethnicity codes used to represent these concepts are based upon the [CDC ethnicity and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 43 reference ethnicity.  The ethnicity concepts are grouped by and pre-mapped to the 2 OMB ethnicity categories: - Hispanic or Latino - Not Hispanic or Latino.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"condition\" : [\r\n          \"ele-1\"\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false\r\n      },\r\n      {\r\n        \"id\" : \"Extension.id\",\r\n        \"path\" : \"Extension.id\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"Unique id for inter-element referencing\",\r\n        \"definition\" : \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.id\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"string\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"slicing\" : {\r\n          \"discriminator\" : [\r\n            {\r\n              \"type\" : \"value\",\r\n              \"path\" : \"url\"\r\n            }\r\n          ],\r\n          \"description\" : \"Extensions are always sliced by (at least) url\",\r\n          \"rules\" : \"open\"\r\n        },\r\n        \"short\" : \"Additional content defined by implementations\",\r\n        \"definition\" : \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\" : \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\" : [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"ombCategory\",\r\n        \"short\" : \"Hispanic or Latino|Not Hispanic or Latino\",\r\n        \"definition\" : \"The 2 ethnicity category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\" : true,\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \"/ClinicalDocument/recordTarget/patientRole/patient/ethnicGroupCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.id\",\r\n        \"path\" : \"Extension.extension.id\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"Unique id for inter-element referencing\",\r\n        \"definition\" : \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.id\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"string\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.extension\",\r\n        \"path\" : \"Extension.extension.extension\",\r\n        \"slicing\" : {\r\n          \"discriminator\" : [\r\n            {\r\n              \"type\" : \"value\",\r\n              \"path\" : \"url\"\r\n            }\r\n          ],\r\n          \"description\" : \"Extensions are always sliced by (at least) url\",\r\n          \"rules\" : \"open\"\r\n        },\r\n        \"short\" : \"Additional content defined by implementations\",\r\n        \"definition\" : \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\" : \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\" : [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"identifies the meaning of the extension\",\r\n        \"definition\" : \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\" : \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.url\",\r\n          \"min\" : 1,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"ombCategory\",\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"short\" : \"Value of extension\",\r\n        \"definition\" : \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.value[x]\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Coding\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/omb-ethnicity-category\"\r\n        },\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"detailed\",\r\n        \"short\" : \"Extended ethnicity codes\",\r\n        \"definition\" : \"The 41 CDC ethnicity codes that are grouped under one of the 2 OMB ethnicity category codes.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \"/ClinicalDocument/recordTarget/patientRole/patient/sdtc:ethnicGroupCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.id\",\r\n        \"path\" : \"Extension.extension.id\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"Unique id for inter-element referencing\",\r\n        \"definition\" : \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.id\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"string\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.extension\",\r\n        \"path\" : \"Extension.extension.extension\",\r\n        \"slicing\" : {\r\n          \"discriminator\" : [\r\n            {\r\n              \"type\" : \"value\",\r\n              \"path\" : \"url\"\r\n            }\r\n          ],\r\n          \"description\" : \"Extensions are always sliced by (at least) url\",\r\n          \"rules\" : \"open\"\r\n        },\r\n        \"short\" : \"Additional content defined by implementations\",\r\n        \"definition\" : \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\" : \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\" : [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"identifies the meaning of the extension\",\r\n        \"definition\" : \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\" : \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.url\",\r\n          \"min\" : 1,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"detailed\",\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"short\" : \"Value of extension\",\r\n        \"definition\" : \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.value[x]\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Coding\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity\"\r\n        },\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"text\",\r\n        \"short\" : \"ethnicity Text\",\r\n        \"definition\" : \"Plain text representation of the ethnicity concept(s).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\" : true,\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.id\",\r\n        \"path\" : \"Extension.extension.id\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"Unique id for inter-element referencing\",\r\n        \"definition\" : \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.id\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"string\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.extension\",\r\n        \"path\" : \"Extension.extension.extension\",\r\n        \"slicing\" : {\r\n          \"discriminator\" : [\r\n            {\r\n              \"type\" : \"value\",\r\n              \"path\" : \"url\"\r\n            }\r\n          ],\r\n          \"description\" : \"Extensions are always sliced by (at least) url\",\r\n          \"rules\" : \"open\"\r\n        },\r\n        \"short\" : \"Additional content defined by implementations\",\r\n        \"definition\" : \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\" : \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\" : [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"identifies the meaning of the extension\",\r\n        \"definition\" : \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\" : \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.url\",\r\n          \"min\" : 1,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"text\",\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"short\" : \"Value of extension\",\r\n        \"definition\" : \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.value[x]\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"string\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.url\",\r\n        \"path\" : \"Extension.url\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"identifies the meaning of the extension\",\r\n        \"definition\" : \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\" : \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.url\",\r\n          \"min\" : 1,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"uri\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.value[x]\",\r\n        \"path\" : \"Extension.value[x]\",\r\n        \"short\" : \"Value of extension\",\r\n        \"definition\" : \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\" : 0,\r\n        \"max\" : \"0\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.value[x]\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"base64Binary\"\r\n          },\r\n          {\r\n            \"code\" : \"boolean\"\r\n          },\r\n          {\r\n            \"code\" : \"canonical\"\r\n          },\r\n          {\r\n            \"code\" : \"code\"\r\n          },\r\n          {\r\n            \"code\" : \"date\"\r\n          },\r\n          {\r\n            \"code\" : \"dateTime\"\r\n          },\r\n          {\r\n            \"code\" : \"decimal\"\r\n          },\r\n          {\r\n            \"code\" : \"id\"\r\n          },\r\n          {\r\n            \"code\" : \"instant\"\r\n          },\r\n          {\r\n            \"code\" : \"integer\"\r\n          },\r\n          {\r\n            \"code\" : \"markdown\"\r\n          },\r\n          {\r\n            \"code\" : \"oid\"\r\n          },\r\n          {\r\n            \"code\" : \"positiveInt\"\r\n          },\r\n          {\r\n            \"code\" : \"string\"\r\n          },\r\n          {\r\n            \"code\" : \"time\"\r\n          },\r\n          {\r\n            \"code\" : \"unsignedInt\"\r\n          },\r\n          {\r\n            \"code\" : \"uri\"\r\n          },\r\n          {\r\n            \"code\" : \"url\"\r\n          },\r\n          {\r\n            \"code\" : \"uuid\"\r\n          },\r\n          {\r\n            \"code\" : \"Address\"\r\n          },\r\n          {\r\n            \"code\" : \"Age\"\r\n          },\r\n          {\r\n            \"code\" : \"Annotation\"\r\n          },\r\n          {\r\n            \"code\" : \"Attachment\"\r\n          },\r\n          {\r\n            \"code\" : \"CodeableConcept\"\r\n          },\r\n          {\r\n            \"code\" : \"Coding\"\r\n          },\r\n          {\r\n            \"code\" : \"ContactPoint\"\r\n          },\r\n          {\r\n            \"code\" : \"Count\"\r\n          },\r\n          {\r\n            \"code\" : \"Distance\"\r\n          },\r\n          {\r\n            \"code\" : \"Duration\"\r\n          },\r\n          {\r\n            \"code\" : \"HumanName\"\r\n          },\r\n          {\r\n            \"code\" : \"Identifier\"\r\n          },\r\n          {\r\n            \"code\" : \"Money\"\r\n          },\r\n          {\r\n            \"code\" : \"Period\"\r\n          },\r\n          {\r\n            \"code\" : \"Quantity\"\r\n          },\r\n          {\r\n            \"code\" : \"Range\"\r\n          },\r\n          {\r\n            \"code\" : \"Ratio\"\r\n          },\r\n          {\r\n            \"code\" : \"Reference\"\r\n          },\r\n          {\r\n            \"code\" : \"SampledData\"\r\n          },\r\n          {\r\n            \"code\" : \"Signature\"\r\n          },\r\n          {\r\n            \"code\" : \"Timing\"\r\n          },\r\n          {\r\n            \"code\" : \"ContactDetail\"\r\n          },\r\n          {\r\n            \"code\" : \"Contributor\"\r\n          },\r\n          {\r\n            \"code\" : \"DataRequirement\"\r\n          },\r\n          {\r\n            \"code\" : \"Expression\"\r\n          },\r\n          {\r\n            \"code\" : \"ParameterDefinition\"\r\n          },\r\n          {\r\n            \"code\" : \"RelatedArtifact\"\r\n          },\r\n          {\r\n            \"code\" : \"TriggerDefinition\"\r\n          },\r\n          {\r\n            \"code\" : \"UsageContext\"\r\n          },\r\n          {\r\n            \"code\" : \"Dosage\"\r\n          },\r\n          {\r\n            \"code\" : \"Meta\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n  \"differential\" : {\r\n    \"element\" : [\r\n      {\r\n        \"id\" : \"Extension\",\r\n        \"path\" : \"Extension\",\r\n        \"short\" : \"US Core ethnicity Extension\",\r\n        \"definition\" : \"Concepts classifying the person into a named category of humans sharing common history, traits, geographical origin or nationality.  The ethnicity codes used to represent these concepts are based upon the [CDC ethnicity and Ethnicity Code Set Version 1.0](http://www.cdc.gov/phin/resources/vocabulary/index.html) which includes over 900 concepts for representing race and ethnicity of which 43 reference ethnicity.  The ethnicity concepts are grouped by and pre-mapped to the 2 OMB ethnicity categories: - Hispanic or Latino - Not Hispanic or Latino.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"ombCategory\",\r\n        \"short\" : \"Hispanic or Latino|Not Hispanic or Latino\",\r\n        \"definition\" : \"The 2 ethnicity category codes according to the [OMB Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity, Statistical Policy Directive No. 15, as revised, October 30, 1997](https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf).\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\" : true,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \"/ClinicalDocument/recordTarget/patientRole/patient/ethnicGroupCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"ombCategory\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:ombCategory.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Coding\"\r\n          }\r\n        ],\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/omb-ethnicity-category\"\r\n        }\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"detailed\",\r\n        \"short\" : \"Extended ethnicity codes\",\r\n        \"definition\" : \"The 41 CDC ethnicity codes that are grouped under one of the 2 OMB ethnicity category codes.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \"/ClinicalDocument/recordTarget/patientRole/patient/sdtc:ethnicGroupCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"detailed\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:detailed.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Coding\"\r\n          }\r\n        ],\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity\"\r\n        }\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"sliceName\" : \"text\",\r\n        \"short\" : \"ethnicity Text\",\r\n        \"definition\" : \"Plain text representation of the ethnicity concept(s).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"mustSupport\" : true\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.url\",\r\n        \"path\" : \"Extension.extension.url\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"uri\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"text\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension:text.value[x]\",\r\n        \"path\" : \"Extension.extension.value[x]\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"string\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.url\",\r\n        \"path\" : \"Extension.url\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"fixedUri\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.value[x]\",\r\n        \"path\" : \"Extension.value[x]\",\r\n        \"min\" : 0,\r\n        \"max\" : \"0\"\r\n      }\r\n    ]\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{fhirurl}}/StructureDefinition?url=StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"StructureDefinition"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Structure Definition (Extension for Ethnicity)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"StructureDefinition"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put StructureDefinition (Extension for Birthsex)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceType\" : \"StructureDefinition\",\r\n  \"id\" : \"us-core-birthsex\",\r\n  \"text\" : {\r\n    \"status\" : \"extensions\",\r\n    \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><table border=\\\"0\\\" cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" style=\\\"border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;\\\"><tr style=\\\"border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top\\\"><th style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"The logical name of the element\\\">Name</a></th><th style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Information about the use of the element\\\">Flags</a></th><th style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Minimum and Maximum # of times the the element can appear in the instance\\\">Card.</a></th><th style=\\\"width: 100px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Reference to the type of the element\\\">Type</a></th><th style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Additional information about the element\\\">Description &amp; Constraints</a><span style=\\\"float: right\\\"><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Legend for this format\\\"><img src=\\\"http://hl7.org/fhir/R4/help16.png\\\" alt=\\\"doco\\\" style=\\\"background-color: inherit\\\"/></a></span></th></tr><tr style=\\\"border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\\\"><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)\\\" class=\\\"hierarchy\\\"><img src=\\\"tbl_spacer.png\\\" alt=\\\".\\\" style=\\\"background-color: inherit\\\" class=\\\"hierarchy\\\"/><img src=\\\"icon_element.gif\\\" alt=\\\".\\\" style=\\\"background-color: white; background-color: inherit\\\" title=\\\"Element\\\" class=\\\"hierarchy\\\"/> <a href=\\\"StructureDefinition-us-core-birthsex-definitions.html#Extension\\\" title=\\\"A code classifying the person's sex assigned at birth  as specified by the [Office of the National Coordinator for Health IT (ONC)](https://www.healthit.gov/newsroom/about-onc).\\\">Extension</a><a name=\\\"Extension\\\"> </a></td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"/><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\">0..1</td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/extensibility.html#Extension\\\">Extension</a></td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><span style=\\\"opacity: 0.5\\\">Extension</span></td></tr>\\r\\n<tr style=\\\"border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\\\"><td style=\\\"vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\\\" class=\\\"hierarchy\\\"><img src=\\\"tbl_spacer.png\\\" alt=\\\".\\\" style=\\\"background-color: inherit\\\" class=\\\"hierarchy\\\"/><img src=\\\"tbl_vjoin.png\\\" alt=\\\".\\\" style=\\\"background-color: inherit\\\" class=\\\"hierarchy\\\"/><img src=\\\"icon_element.gif\\\" alt=\\\".\\\" style=\\\"background-color: #F7F7F7; background-color: inherit\\\" title=\\\"Element\\\" class=\\\"hierarchy\\\"/> <a href=\\\"StructureDefinition-us-core-birthsex-definitions.html#Extension.url\\\">url</a><a name=\\\"Extension.url\\\"> </a></td><td style=\\\"vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"/><td style=\\\"vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><span style=\\\"opacity: 0.5\\\">1</span><span style=\\\"opacity: 0.5\\\">..</span><span style=\\\"opacity: 0.5\\\">1</span></td><td style=\\\"vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a style=\\\"opacity: 0.5\\\" href=\\\"http://hl7.org/fhir/R4/datatypes.html#uri\\\">uri</a></td><td style=\\\"vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><span style=\\\"color: darkgreen\\\">&quot;http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex&quot;</span></td></tr>\\r\\n<tr style=\\\"border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\\\"><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)\\\" class=\\\"hierarchy\\\"><img src=\\\"tbl_spacer.png\\\" alt=\\\".\\\" style=\\\"background-color: inherit\\\" class=\\\"hierarchy\\\"/><img src=\\\"tbl_vjoin_end.png\\\" alt=\\\".\\\" style=\\\"background-color: inherit\\\" class=\\\"hierarchy\\\"/><img src=\\\"icon_primitive.png\\\" alt=\\\".\\\" style=\\\"background-color: white; background-color: inherit\\\" title=\\\"Primitive Data Type\\\" class=\\\"hierarchy\\\"/> <a href=\\\"StructureDefinition-us-core-birthsex-definitions.html#Extension.value[x]\\\">value[x]</a><a name=\\\"Extension.value_x_\\\"> </a></td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"/><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\">1..1</td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><a href=\\\"http://hl7.org/fhir/R4/datatypes.html#code\\\">code</a></td><td style=\\\"vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\\\" class=\\\"hierarchy\\\"><span style=\\\"opacity: 0.5\\\">Value of extension</span><br/><span style=\\\"font-weight:bold\\\">Binding: </span><a href=\\\"ValueSet-birthsex.html\\\">Birth Sex</a> (<a href=\\\"http://hl7.org/fhir/R4/terminologies.html#required\\\" title=\\\"To be conformant, the concept in this element SHALL be from the specified value set.\\\">required</a>): Code for sex assigned at birth<br/><br/></td></tr>\\r\\n<tr><td colspan=\\\"5\\\" class=\\\"hierarchy\\\"><br/><a href=\\\"http://hl7.org/fhir/R4/formats.html#table\\\" title=\\\"Legend for this format\\\"><img src=\\\"http://hl7.org/fhir/R4/help16.png\\\" alt=\\\"doco\\\" style=\\\"background-color: inherit\\\"/> Documentation for this format</a></td></tr></table></div>\"\r\n  },\r\n  \"url\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n  \"version\" : \"5.0.1\",\r\n  \"name\" : \"USCoreBirthSexExtension\",\r\n  \"title\" : \"US Core Birth Sex Extension\",\r\n  \"status\" : \"active\",\r\n  \"date\" : \"2019-05-21\",\r\n  \"publisher\" : \"HL7 International - Cross-Group Projects\",\r\n  \"contact\" : [\r\n    {\r\n      \"name\" : \"HL7 International - Cross-Group Projects\",\r\n      \"telecom\" : [\r\n        {\r\n          \"system\" : \"url\",\r\n          \"value\" : \"http://www.hl7.org/Special/committees/cgp\"\r\n        },\r\n        {\r\n          \"system\" : \"email\",\r\n          \"value\" : \"cgp@lists.HL7.org\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"description\" : \"A code classifying the person's sex assigned at birth  as specified by the [Office of the National Coordinator for Health IT (ONC)](https://www.healthit.gov/newsroom/about-onc). This extension aligns with the C-CDA Birth Sex Observation (LOINC 76689-9).\",\r\n  \"jurisdiction\" : [\r\n    {\r\n      \"coding\" : [\r\n        {\r\n          \"system\" : \"urn:iso:std:iso:3166\",\r\n          \"code\" : \"US\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"copyright\" : \"Used by permission of HL7 International, all rights reserved Creative Commons License\",\r\n  \"fhirVersion\" : \"4.0.1\",\r\n  \"mapping\" : [\r\n    {\r\n      \"identity\" : \"rim\",\r\n      \"uri\" : \"http://hl7.org/v3\",\r\n      \"name\" : \"RIM Mapping\"\r\n    }\r\n  ],\r\n  \"kind\" : \"complex-type\",\r\n  \"abstract\" : false,\r\n  \"context\" : [\r\n    {\r\n      \"type\" : \"element\",\r\n      \"expression\" : \"Patient\"\r\n    }\r\n  ],\r\n  \"type\" : \"Extension\",\r\n  \"baseDefinition\" : \"http://hl7.org/fhir/StructureDefinition/Extension\",\r\n  \"derivation\" : \"constraint\",\r\n  \"snapshot\" : {\r\n    \"element\" : [\r\n      {\r\n        \"id\" : \"Extension\",\r\n        \"path\" : \"Extension\",\r\n        \"short\" : \"Extension\",\r\n        \"definition\" : \"A code classifying the person's sex assigned at birth  as specified by the [Office of the National Coordinator for Health IT (ONC)](https://www.healthit.gov/newsroom/about-onc).\",\r\n        \"comment\" : \"The codes required are intended to present birth sex (i.e., the sex recorded on the patient’s birth certificate) and not gender identity or reassigned sex.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"condition\" : [\r\n          \"ele-1\"\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"player[classCode=PSN|ANM and determinerCode=INSTANCE]/administrativeGender\"\r\n          },\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \".patient.administrativeGenderCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.id\",\r\n        \"path\" : \"Extension.id\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"Unique id for inter-element referencing\",\r\n        \"definition\" : \"Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.id\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"string\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.extension\",\r\n        \"path\" : \"Extension.extension\",\r\n        \"slicing\" : {\r\n          \"discriminator\" : [\r\n            {\r\n              \"type\" : \"value\",\r\n              \"path\" : \"url\"\r\n            }\r\n          ],\r\n          \"description\" : \"Extensions are always sliced by (at least) url\",\r\n          \"rules\" : \"open\"\r\n        },\r\n        \"short\" : \"Additional content defined by implementations\",\r\n        \"definition\" : \"May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.\",\r\n        \"comment\" : \"There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.\",\r\n        \"alias\" : [\r\n          \"extensions\",\r\n          \"user content\"\r\n        ],\r\n        \"min\" : 0,\r\n        \"max\" : \"*\",\r\n        \"base\" : {\r\n          \"path\" : \"Element.extension\",\r\n          \"min\" : 0,\r\n          \"max\" : \"*\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"Extension\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          },\r\n          {\r\n            \"key\" : \"ext-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"Must have either extensions or value[x], not both\",\r\n            \"expression\" : \"extension.exists() != value.exists()\",\r\n            \"xpath\" : \"exists(f:extension)!=exists(f:*[starts-with(local-name(.), \\\"value\\\")])\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Extension\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"n/a\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.url\",\r\n        \"path\" : \"Extension.url\",\r\n        \"representation\" : [\r\n          \"xmlAttr\"\r\n        ],\r\n        \"short\" : \"identifies the meaning of the extension\",\r\n        \"definition\" : \"Source of the definition for the extension code - a logical name or a URL.\",\r\n        \"comment\" : \"The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.url\",\r\n          \"min\" : 1,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"extension\" : [\r\n              {\r\n                \"url\" : \"http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type\",\r\n                \"valueUrl\" : \"uri\"\r\n              }\r\n            ],\r\n            \"code\" : \"http://hl7.org/fhirpath/System.String\"\r\n          }\r\n        ],\r\n        \"fixedUri\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.value[x]\",\r\n        \"path\" : \"Extension.value[x]\",\r\n        \"short\" : \"Value of extension\",\r\n        \"definition\" : \"Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/R4/extensibility.html) for a list).\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"base\" : {\r\n          \"path\" : \"Extension.value[x]\",\r\n          \"min\" : 0,\r\n          \"max\" : \"1\"\r\n        },\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"code\"\r\n          }\r\n        ],\r\n        \"constraint\" : [\r\n          {\r\n            \"key\" : \"ele-1\",\r\n            \"severity\" : \"error\",\r\n            \"human\" : \"All FHIR elements must have a @value or children\",\r\n            \"expression\" : \"hasValue() or (children().count() > id.count())\",\r\n            \"xpath\" : \"@value|f:*|h:div\",\r\n            \"source\" : \"http://hl7.org/fhir/StructureDefinition/Element\"\r\n          }\r\n        ],\r\n        \"isModifier\" : false,\r\n        \"isSummary\" : false,\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"description\" : \"Code for sex assigned at birth\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/birthsex\"\r\n        },\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"N/A\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n  \"differential\" : {\r\n    \"element\" : [\r\n      {\r\n        \"id\" : \"Extension\",\r\n        \"path\" : \"Extension\",\r\n        \"definition\" : \"A code classifying the person's sex assigned at birth  as specified by the [Office of the National Coordinator for Health IT (ONC)](https://www.healthit.gov/newsroom/about-onc).\",\r\n        \"comment\" : \"The codes required are intended to present birth sex (i.e., the sex recorded on the patient’s birth certificate) and not gender identity or reassigned sex.\",\r\n        \"min\" : 0,\r\n        \"max\" : \"1\",\r\n        \"isModifier\" : false,\r\n        \"mapping\" : [\r\n          {\r\n            \"identity\" : \"rim\",\r\n            \"map\" : \"player[classCode=PSN|ANM and determinerCode=INSTANCE]/administrativeGender\"\r\n          },\r\n          {\r\n            \"identity\" : \"iso11179\",\r\n            \"map\" : \".patient.administrativeGenderCode\"\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"id\" : \"Extension.url\",\r\n        \"path\" : \"Extension.url\",\r\n        \"fixedUri\" : \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\"\r\n      },\r\n      {\r\n        \"id\" : \"Extension.value[x]\",\r\n        \"path\" : \"Extension.value[x]\",\r\n        \"min\" : 1,\r\n        \"max\" : \"1\",\r\n        \"type\" : [\r\n          {\r\n            \"code\" : \"code\"\r\n          }\r\n        ],\r\n        \"binding\" : {\r\n          \"strength\" : \"required\",\r\n          \"description\" : \"Code for sex assigned at birth\",\r\n          \"valueSet\" : \"http://hl7.org/fhir/us/core/ValueSet/birthsex\"\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{fhirurl}}/StructureDefinition?url=StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"StructureDefinition"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "StructureDefinition?url=http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validate Patient",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -1526,7 +1748,7 @@
 							"response": []
 						},
 						{
-							"name": "Validate (Fail)",
+							"name": "Validate Patient (Missing required element)",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -1553,7 +1775,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceType\": \"Patient\",\r\n  \"id\": \"0697ce21-ff0a-4c94-af24-d67a2974810f\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n    ]\r\n  },\r\n  \"text\": {\r\n    \"status\": \"generated\",\r\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patrick21 Gerald21</div>\"\r\n  },\r\n  \"extension\": [\r\n    {\r\n      \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n      \"valueCodeableConcept\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://hl7.org/fhir/v3/Race\",\r\n            \"code\": \"2106-3\",\r\n            \"display\": \"White\"\r\n          }\r\n        ],\r\n        \"text\": \"race\"\r\n      }\r\n    }\r\n  ],\r\n  \"identifier\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"PI\",\r\n            \"display\": \"Patient internal identifier\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"https://www.kirsandinc.com/faye\",\r\n      \"value\": \"Patrick21Gerald21\",\r\n      \"period\": {\r\n        \"start\": \"1992-06-07\"\r\n      },\r\n      \"assigner\": {\r\n        \"display\": \"EMPI - Enterprise ID system\"\r\n      }\r\n    }\r\n  ],\r\n  \"name\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"text\": \"Patrick21 Gerald21\",\r\n      \"family\": \"Gerald21\",\r\n      \"given\": [\r\n        \"Patrick21\"\r\n      ]\r\n    }\r\n  ],\r\n  \"telecom\": [\r\n    {\r\n      \"system\": \"phone\",\r\n      \"value\": \"000-000-0021\",\r\n      \"use\": \"mobile\"\r\n    },\r\n    {\r\n      \"system\": \"email\",\r\n      \"value\": \"Patrick21Gerald21@Patrick21Gerald21.com\"\r\n    }\r\n  ],\r\n  \"gender\": \"male\",\r\n  \"birthDate\": \"1992-06-07\",\r\n  \"address\": [\r\n    {\r\n      \"use\": \"home\",\r\n      \"line\": [\r\n        \"0021 Capitol\"\r\n      ],\r\n      \"city\": \"San Jose\",\r\n      \"state\": \"CA\",\r\n      \"postalCode\": \"95132\",\r\n      \"country\": \"USA\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n    \"resourceType\": \"Patient\",\r\n    \"text\": {\r\n        \"status\": \"generated\",\r\n        \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">JohnTest RadleyTest</div>\"\r\n    },\r\n    \"identifier\": [\r\n        {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n                \"coding\": [\r\n                    {\r\n                        \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                        \"code\": \"PI\",\r\n                        \"display\": \"Patient internal identifier\"\r\n                    }\r\n                ]\r\n            },\r\n            \"system\": \"https://www.kirsandinc.com/faye\",\r\n            \"value\": \"TEST111222\",\r\n            \"period\": {\r\n                \"start\": \"2002-06-07\"\r\n            },\r\n            \"assigner\": {\r\n                \"display\": \"EMPI - Enterprise ID system\"\r\n            }\r\n        }\r\n    ],\r\n    \"name\": [\r\n        {\r\n            \"use\": \"official\",\r\n            \"text\": \"PattTest StephenTest\",\r\n            \"family\": \"StephenTest\",\r\n            \"given\": [\r\n                \"PattTest\"\r\n            ]\r\n        }\r\n    ],\r\n    \"telecom\": [\r\n        {\r\n            \"system\": \"phone\",\r\n            \"value\": \"666-666-7777\",\r\n            \"use\": \"mobile\"\r\n        },\r\n        {\r\n            \"system\": \"email\",\r\n            \"value\": \"PattTestPattTest@PattTestStephenTest.com\"\r\n        }\r\n    ],\r\n    \"gender\": \"male\",\r\n    \"birthDate\": \"1989-11-09\",\r\n    \"address\": [\r\n        {\r\n            \"use\": \"home\",\r\n            \"line\": [\r\n                \"2222 Eveready Drive\"\r\n            ],\r\n            \"city\": \"San Jose\",\r\n            \"state\": \"CA\",\r\n            \"postalCode\": \"94134\",\r\n            \"country\": \"USA\"\r\n        }\r\n    ],\r\n    \"communication\": [\r\n    {\r\n      \r\n      \"preferred\": true\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1574,7 +1796,7 @@
 							"response": []
 						},
 						{
-							"name": "Validate with profile",
+							"name": "Validate Patient with Extension",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -1601,7 +1823,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"resourceType\": \"Patient\",\r\n  \"id\": \"0697ce21-ff0a-4c94-af24-d67a2974810f\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://hl7.org/fhir/StructureDefinition/Patient\"\r\n    ]\r\n  },\r\n  \"text\": {\r\n    \"status\": \"generated\",\r\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patrick21 Gerald21</div>\"\r\n  },\r\n  \"extension\": [\r\n    {\r\n      \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n      \"valueCodeableConcept\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://hl7.org/fhir/v3/Race\",\r\n            \"code\": \"2106-3\",\r\n            \"display\": \"White\"\r\n          }\r\n        ],\r\n        \"text\": \"race\"\r\n      }\r\n    }\r\n  ],\r\n  \"identifier\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"PI\",\r\n            \"display\": \"Patient internal identifier\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"https://www.kirsandinc.com/faye\",\r\n      \"value\": \"Patrick21Gerald21\",\r\n      \"period\": {\r\n        \"start\": \"1992-06-07\"\r\n      },\r\n      \"assigner\": {\r\n        \"display\": \"EMPI - Enterprise ID system\"\r\n      }\r\n    }\r\n  ],\r\n  \"name\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"text\": \"Patrick21 Gerald21\",\r\n      \"family\": \"Gerald21\",\r\n      \"given\": [\r\n        \"Patrick21\"\r\n      ]\r\n    }\r\n  ],\r\n  \"telecom\": [\r\n    {\r\n      \"system\": \"phone\",\r\n      \"value\": \"000-000-0021\",\r\n      \"use\": \"mobile\"\r\n    },\r\n    {\r\n      \"system\": \"email\",\r\n      \"value\": \"Patrick21Gerald21@Patrick21Gerald21.com\"\r\n    }\r\n  ],\r\n  \"gender\": \"male\",\r\n  \"birthDate\": \"1992-06-07\",\r\n  \"address\": [\r\n    {\r\n      \"use\": \"home\",\r\n      \"line\": [\r\n        \"0021 Capitol\"\r\n      ],\r\n      \"city\": \"San Jose\",\r\n      \"state\": \"CA\",\r\n      \"postalCode\": \"95132\",\r\n      \"country\": \"USA\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"resourceType\": \"Patient\",\r\n  \"id\": \"0697ce21-ff0a-4c94-af24-d67a2974810f\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n    ]\r\n  },\r\n  \"text\": {\r\n    \"status\": \"generated\",\r\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patrick21 Gerald21</div>\"\r\n  },\r\n  \"extension\": [\r\n    {\r\n      \"url\": \"https://workpacesdkfhir-sjbuildfhir.fhir.azurehealthcareapis.com/StructureDefinition/us-core-race\",\r\n      \"valueCodeableConcept\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://hl7.org/fhir/v3/Race\",\r\n            \"code\": \"2106-3\",\r\n            \"display\": \"White\"\r\n          }\r\n        ],\r\n        \"text\": \"race\"\r\n      }\r\n    }\r\n  ],\r\n  \"identifier\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"type\": {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n            \"code\": \"PI\",\r\n            \"display\": \"Patient internal identifier\"\r\n          }\r\n        ]\r\n      },\r\n      \"system\": \"https://www.kirsandinc.com/faye\",\r\n      \"value\": \"Patrick21Gerald21\",\r\n      \"period\": {\r\n        \"start\": \"1992-06-07\"\r\n      },\r\n      \"assigner\": {\r\n        \"display\": \"EMPI - Enterprise ID system\"\r\n      }\r\n    }\r\n  ],\r\n  \"name\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"text\": \"Patrick21 Gerald21\",\r\n      \"family\": \"Gerald21\",\r\n      \"given\": [\r\n        \"Patrick21\"\r\n      ]\r\n    }\r\n  ],\r\n  \"telecom\": [\r\n    {\r\n      \"system\": \"phone\",\r\n      \"value\": \"000-000-0021\",\r\n      \"use\": \"mobile\"\r\n    },\r\n    {\r\n      \"system\": \"email\",\r\n      \"value\": \"Patrick21Gerald21@Patrick21Gerald21.com\"\r\n    }\r\n  ],\r\n  \"gender\": \"male\",\r\n  \"birthDate\": \"1992-06-07\",\r\n  \"address\": [\r\n    {\r\n      \"use\": \"home\",\r\n      \"line\": [\r\n        \"0021 Capitol\"\r\n      ],\r\n      \"city\": \"San Jose\",\r\n      \"state\": \"CA\",\r\n      \"postalCode\": \"95132\",\r\n      \"country\": \"USA\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1609,19 +1831,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{fhirurl}}/Patient/$validate?profile=http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+									"raw": "{{fhirurl}}/Patient/$validate",
 									"host": [
 										"{{fhirurl}}"
 									],
 									"path": [
 										"Patient",
 										"$validate"
-									],
-									"query": [
-										{
-											"key": "profile",
-											"value": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
-										}
 									]
 								}
 							},
@@ -2607,7 +2823,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Search Parameter By Id Copy",
+					"name": "Delete Search Parameter By Id",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -4535,6 +4751,227 @@
 					"name": "Get",
 					"item": [
 						{
+							"name": "SearchParameter Role",
+							"item": [
+								{
+									"name": "Create Search Parameter Role",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{bearerToken}}",
+												"type": "text"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "X-MS-AZUREFHIR-AUDIT-USERID",
+												"value": "Dale",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"resourceType\" : \"SearchParameter\",\r\n  \"id\" : \"us-core-careteam-role\",\r\n  \"text\" : {\r\n    \"status\" : \"generated\",\r\n    \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">  <!-- <h2>SearchParameter: USCoreCareTeamRole</h2>\\n\\t\\t\\t\\t<b> description</b> : <p>Returns CareTeam resources with a participant role matching the specified code.</p>\\n\\n\\t\\t\\t<br/> --><p><b> id</b> us-core-careteam-role</p><p><b> url</b> : <b> http://hl7.org/fhir/us/core/SearchParameter/us-core-careteam-role</b>\\n\\t\\t\\t</p><p><b> version</b> : 4.1.0</p><p><b> name</b> : USCoreCareTeamRole</p><p><b> status</b> : active</p><p><b> date</b> : 04/14/2022</p><p><b> publisher</b> : HL7 International - Cross-Group Projects</p><p><b> contact</b> : http://www.hl7.org/Special/committees/cgp</p>  <!-- <p>\\n\\t\\t\\t\\t<b> useContext</b> : </p> --><p><b> jurisdiction</b> : United States of America (the) <span> (Details : {urn:iso:std:iso:3166 code 'US' = 'United States of America', given as 'United\\n           States of America (the)'})</span>\\n\\t\\t\\t</p>  <!-- <p>\\n\\t\\t<b> purpose</b> : Need to search by identifier for various infrastructural cases - mainly retrieving packages,\\n         and matching as part of a chain</p> --><p><b> code</b> : <code>role</code>\\n\\t\\t\\t</p><p><b> base</b> :CareTeam</p><p><b> type</b> : token</p><p><b> expression</b> : <code>CareTeam.participant.role</code>\\n\\t\\t\\t</p><p><b> xpath</b> : <code>f:CareTeam/f:participant/f:role/@value</code>\\n\\t\\t\\t</p><p><b> xpathUsage</b> : normal</p><p><b> mulitpleOr</b> : True   (Conformance Expectation = MAY)</p><p><b> mulitpleAnd</b> : True  ( Conformance Expectation = MAY)</p></div>\"\r\n  },\r\n  \"url\" : \"http://hl7.org/fhir/us/core/SearchParameter/us-core-careteam-role\",\r\n  \"version\" : \"5.0.1\",\r\n  \"name\" : \"USCoreCareTeamRole\",\r\n  \"status\" : \"active\",\r\n  \"date\" : \"2022-04-14\",\r\n  \"publisher\" : \"HL7 International - Cross-Group Projects\",\r\n  \"contact\" : [\r\n    {\r\n      \"name\" : \"HL7 International - Cross-Group Projects\",\r\n      \"telecom\" : [\r\n        {\r\n          \"system\" : \"url\",\r\n          \"value\" : \"http://www.hl7.org/Special/committees/cgp\"\r\n        },\r\n        {\r\n          \"system\" : \"email\",\r\n          \"value\" : \"cgp@lists.HL7.org\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"description\" : \"Returns CareTeam resources with a participant role matching the specified code.\",\r\n  \"jurisdiction\" : [\r\n    {\r\n      \"coding\" : [\r\n        {\r\n          \"system\" : \"urn:iso:std:iso:3166\",\r\n          \"code\" : \"US\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\" : \"role\",\r\n  \"base\" : [\r\n    \"CareTeam\"\r\n  ],\r\n  \"type\" : \"token\",\r\n  \"expression\" : \"CareTeam.participant.role\",\r\n  \"xpath\" : \"f:CareTeam/f:participant/f:role/@value\",\r\n  \"xpathUsage\" : \"normal\",\r\n  \"multipleOr\" : true,\r\n  \"_multipleOr\" : {\r\n    \"extension\" : [\r\n      {\r\n        \"url\" : \"http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation\",\r\n        \"valueCode\" : \"MAY\"\r\n      }\r\n    ]\r\n  },\r\n  \"multipleAnd\" : true,\r\n  \"_multipleAnd\" : {\r\n    \"extension\" : [\r\n      {\r\n        \"url\" : \"http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation\",\r\n        \"valueCode\" : \"MAY\"\r\n      }\r\n    ]\r\n  }\r\n}"
+										},
+										"url": {
+											"raw": "{{fhirurl}}/SearchParameter",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"SearchParameter"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reindex",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"postman.setEnvironmentVariable(\"reindexJobId\", jsonData.id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{bearerToken}}",
+												"type": "text"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "X-MS-AZUREFHIR-AUDIT-USERID",
+												"value": "Dale",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \r\n\"resourceType\": \"Parameters\",\r\n\"parameter\": []\r\n}"
+										},
+										"url": {
+											"raw": "{{fhirurl}}/$reindex",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"$reindex"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Status on Reindex Job",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{fhirurl}}/_operations/reindex/{{reindexJobId}}",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"_operations",
+												"reindex",
+												"{{reindexJobId}}"
+											]
+										},
+										"description": "To check the status of reindex run the below command in powershell.\ncommand:\naz rest --resource fhirurl --url fhirurl/_operations/reindex/IdFromReindexResponse"
+									},
+									"response": []
+								},
+								{
+									"name": "List All CareTeam by Role",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{fhirurl}}/CareTeam?role=768681000",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"CareTeam"
+											],
+											"query": [
+												{
+													"key": "role",
+													"value": "768681000"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "List All CareTeams",
 							"request": {
 								"auth": {
@@ -4829,6 +5266,45 @@
 										{
 											"key": "reasonCode",
 											"value": "10509002"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List All CareTeam by Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/CareTeam?role=223366009",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"CareTeam"
+									],
+									"query": [
+										{
+											"key": "role",
+											"value": "223366009"
 										}
 									]
 								}
@@ -6002,7 +6478,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"resourceType\": \"Condition\",\r\n    \"id\": \"{{conditionId}}\",\r\n    \"meta\": {\r\n        \"versionId\": \"1\",\r\n        \"lastUpdated\": \"2023-01-09T20:41:04.387+00:00\",\r\n        \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition\"\r\n        ]\r\n    },\r\n    \"clinicalStatus\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\r\n                \"code\": \"resolved\"\r\n            }\r\n        ]\r\n    },\r\n    \"verificationStatus\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\r\n                \"code\": \"confirmed\"\r\n            }\r\n        ]\r\n    },\r\n    \"category\": [\r\n        {\r\n            \"coding\": [\r\n                {\r\n                    \"system\": \"http://terminology.hl7.org/CodeSystem/condition-category\",\r\n                    \"code\": \"encounter-diagnosis\",\r\n                    \"display\": \"Encounter Diagnosis\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"code\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://snomed.info/sct\",\r\n                \"code\": \"65363002\",\r\n                \"display\": \"Otitis media\"\r\n            }\r\n        ],\r\n        \"text\": \"Otitis media\"\r\n    },\r\n    \"subject\": {\r\n        \"reference\": \"Patient/{{patientId}}\"\r\n    },\r\n    \"encounter\": {\r\n        \"reference\": \"Encounter/{{encounterId}}\"\r\n    },\r\n    \"onsetDateTime\": \"2021-10-04T14:39:58+05:30\",\r\n    \"abatementDateTime\": \"2021-11-11T14:39:58+05:30\",\r\n    \"recordedDate\": \"2021-10-04T14:39:58+05:30\"\r\n}",
+									"raw": "{\r\n    \"resourceType\": \"Condition\",\r\n    \"id\": \"{{conditionId}}\",\r\n    \"meta\": {\r\n        \"versionId\": \"1\",\r\n        \"lastUpdated\": \"2023-01-09T20:41:04.387+00:00\",\r\n        \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition\"\r\n        ]\r\n    },\r\n    \"clinicalStatus\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\r\n                \"code\": \"resolved\"\r\n            }\r\n        ]\r\n    },\r\n    \"verificationStatus\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\r\n                \"code\": \"confirmed\"\r\n            }\r\n        ]\r\n    },\r\n    \"category\": [\r\n        {\r\n            \"coding\": [\r\n                {\r\n                    \"system\": \"http://terminology.hl7.org/CodeSystem/condition-category\",\r\n                    \"code\": \"encounter-diagnosis\",\r\n                    \"display\": \"Encounter Diagnosis\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"code\": {\r\n        \"coding\": [\r\n            {\r\n                \"system\": \"http://snomed.info/sct\",\r\n                \"code\": \"65363002\",\r\n                \"display\": \"Otitis media\"\r\n            }\r\n        ],\r\n        \"text\": \"Otitis media\"\r\n    },\r\n    \"participant\": [\r\n    {\r\n      \"role\": [\r\n        {\r\n          \"text\": \"responsiblePerson\"\r\n        }\r\n      ],\r\n      \"member\": {\r\n        \"reference\": \"Patient/{{patientId}}\",\r\n        \"display\": \"Patient Name\"\r\n      }\r\n    },\r\n    {\r\n      \"role\": [\r\n        {\r\n          \"text\": \"adviser\"\r\n        }\r\n      ],\r\n      \"member\": {\r\n        \"reference\": \"#pr1\",\r\n        \"display\": \"Dorothy Dietition\"\r\n      },\r\n      \"onBehalfOf\": {\r\n        \"reference\": \"Organization/{{organizationId}}\"\r\n      },\r\n      \"period\": {\r\n        \"end\": \"2021-10-10\"\r\n      }\r\n    }\r\n  ],\r\n    \"subject\": {\r\n        \"reference\": \"Patient/{{patientId}}\"\r\n    },\r\n    \"encounter\": {\r\n        \"reference\": \"Encounter/{{encounterId}}\"\r\n    },\r\n    \"onsetDateTime\": \"2021-10-04T14:39:58+05:30\",\r\n    \"abatementDateTime\": \"2021-11-11T14:39:58+05:30\",\r\n    \"recordedDate\": \"2021-10-04T14:39:58+05:30\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8700,7 +9176,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"resourceType\": \"Encounter\",\r\n    \"id\": \"{{encounterId}}\",\r\n    \"meta\": {\r\n        \"versionId\": \"1\",\r\n        \"lastUpdated\": \"2023-01-07T01:30:32.965+00:00\",\r\n        \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter\"\r\n        ]\r\n    },\r\n    \"identifier\": [\r\n        {\r\n            \"use\": \"official\",\r\n            \"system\": \"https://github.com/synthetichealth/synthea\"\r\n        }\r\n    ],\r\n    \"status\": \"finished\",\r\n    \"class\": {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\r\n        \"code\": \"AMB\"\r\n    },\r\n    \"type\": [\r\n        {\r\n            \"coding\": [\r\n                {\r\n                    \"system\": \"http://snomed.info/sct\",\r\n                    \"code\": \"162673000\",\r\n                    \"display\": \"General examination of patient (procedure)\"\r\n                }\r\n            ],\r\n            \"text\": \"General examination of patient (procedure)\"\r\n        }\r\n    ],\r\n    \"subject\": {\r\n        \"reference\": \"Patient/{{patientId}}\",\r\n        \"display\": \"Mr. Daniel12 Test12\"\r\n    },\r\n    \"participant\": [\r\n        {\r\n            \"type\": [\r\n                {\r\n                    \"coding\": [\r\n                        {\r\n                            \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ParticipationType\",\r\n                            \"code\": \"PPRF\",\r\n                            \"display\": \"primary performer\"\r\n                        }\r\n                    ],\r\n                    \"text\": \"primary performer\"\r\n                }\r\n            ],\r\n            \"period\": {\r\n                \"start\": \"2015-07-22T18:39:51+05:30\",\r\n                \"end\": \"2015-07-22T18:54:51+05:30\"\r\n            },\r\n            \"individual\": {\r\n                \"reference\": \"Practitioner/{{practitionerId}}\",\r\n                \"display\": \"Dr. Austin18 Test18\"\r\n            }\r\n        }\r\n    ],\r\n    \"period\": {\r\n        \"start\": \"2015-07-22T18:39:51+05:30\",\r\n        \"end\": \"2015-07-22T18:54:51+05:30\"\r\n    },\r\n    \"location\": [\r\n        {\r\n            \"location\": {\r\n                \"reference\": \"Location/{{locationId}}\",\r\n                \"display\": \"Loc Health Provider 11\"\r\n            }\r\n        }\r\n    ],\r\n    \"serviceProvider\": {\r\n        \"reference\": \"Organization/{{organizationId}}\",\r\n        \"display\": \"Org Health Provider 11\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"resourceType\": \"Encounter\",\r\n    \"id\": \"{{encounterId}}\",\r\n    \"meta\": {\r\n        \"versionId\": \"1\",\r\n        \"lastUpdated\": \"2023-01-07T01:30:32.965+00:00\",\r\n        \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter\"\r\n        ]\r\n    },\r\n    \"identifier\": [\r\n        {\r\n            \"use\": \"official\",\r\n            \"system\": \"https://github.com/synthetichealth/synthea\"\r\n        }\r\n    ],\r\n    \"status\": \"finished\",\r\n    \"class\": {\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\r\n        \"code\": \"AMB\"\r\n    },\r\n    \"type\": [\r\n        {\r\n            \"coding\": [\r\n                {\r\n                    \"system\": \"http://snomed.info/sct\",\r\n                    \"code\": \"162673000\",\r\n                    \"display\": \"General examination of patient (procedure)\"\r\n                }\r\n            ],\r\n            \"text\": \"General examination of patient (procedure)\"\r\n        }\r\n    ],\r\n    \"subject\": {\r\n        \"reference\": \"Patient/{{patientId}}\",\r\n        \"display\": \"Mr. Daniel12 Test12\"\r\n    },\r\n    \"participant\": [\r\n        {\r\n            \"type\": [\r\n                {\r\n                    \"coding\": [\r\n                        {\r\n                            \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ParticipationType\",\r\n                            \"code\": \"PPRF\",\r\n                            \"display\": \"primary performer\"\r\n                        }\r\n                    ],\r\n                    \"text\": \"primary performer\"\r\n                }\r\n            ],\r\n            \"period\": {\r\n                \"start\": \"2015-07-22T18:39:51+05:30\",\r\n                \"end\": \"2015-07-22T18:54:51+05:30\"\r\n            },\r\n            \"individual\": {\r\n                \"reference\": \"Practitioner/{{practitionerId}}\",\r\n                \"display\": \"Dr. Austin18 Test18\"\r\n            }\r\n        }\r\n    ],\r\n    \"period\": {\r\n        \"start\": \"2015-07-22T18:39:51+05:30\",\r\n        \"end\": \"2015-07-22T18:54:51+05:30\"\r\n    },\r\n    \"location\": [\r\n        {\r\n            \"location\": {\r\n                \"reference\": \"Location/{{locationId}}\",\r\n                \"display\": \"Loc Health Provider 11\"\r\n            }\r\n        }\r\n    ],\r\n    \"hospitalization\": {\r\n    \"origin\": {\r\n      \"reference\": \"Location/{{locationId}}\"\r\n    },\r\n    \"admitSource\": {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"http://snomed.info/sct\",\r\n          \"code\": \"309902002\",\r\n          \"display\": \"Clinical Oncology Department\"\r\n        }\r\n      ]\r\n    },\r\n    \"reAdmission\": {\r\n      \"coding\": [\r\n        {\r\n          \"display\": \"readmitted\"\r\n        }\r\n      ]\r\n    },\r\n    \"dietPreference\": [\r\n      {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://snomed.info/sct\",\r\n            \"code\": \"276026009\",\r\n            \"display\": \"Fluid balance regulation\"\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"specialCourtesy\": [\r\n      {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v3-EncounterSpecialCourtesy\",\r\n            \"code\": \"NRM\",\r\n            \"display\": \"normal courtesy\"\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"specialArrangement\": [\r\n      {\r\n        \"coding\": [\r\n          {\r\n            \"system\": \"http://terminology.hl7.org/CodeSystem/encounter-special-arrangements\",\r\n            \"code\": \"wheel\",\r\n            \"display\": \"Wheelchair\"\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"destination\": {\r\n      \"reference\": \"Location/{{locationId}}\"\r\n    },\r\n    \"dischargeDisposition\": {\r\n\t\t\"coding\": [\r\n\t\t\t{\r\n\t\t\t\t\"system\": \"http://snomed.info/sct\",\r\n\t\t\t\t\"code\": \"768681000\",\r\n\t\t\t\t\"display\": \"Antibacterial\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"text\": \"Antibacterial\"\r\n\t}\r\n  },\r\n    \"serviceProvider\": {\r\n        \"reference\": \"Organization/{{organizationId}}\",\r\n        \"display\": \"Org Health Provider 11\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8725,6 +9201,227 @@
 				{
 					"name": "Get",
 					"item": [
+						{
+							"name": "SearchParameter DischargeDisposition",
+							"item": [
+								{
+									"name": "Create Search Parameter",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{bearerToken}}",
+												"type": "text"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "X-MS-AZUREFHIR-AUDIT-USERID",
+												"value": "Dale",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"resourceType\" : \"SearchParameter\",\r\n  \"id\" : \"us-core-encounter-discharge-disposition\",\r\n  \"text\" : {\r\n    \"status\" : \"generated\",\r\n    \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">  <!-- <h2>SearchParameter: USCoreEncounterDischargeDisposition</h2>\\n\\t\\t\\t\\t<b> description</b> : <p>Returns encounters with an discharge-disposition matching the specified code.</p>\\n\\n\\t\\t\\t<br/> --><p><b> id</b> us-core-encounter-discharge-disposition</p><p><b> url</b> : <b> http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-discharge-disposition</b>\\n\\t\\t\\t</p><p><b> version</b> : 4.1.0</p><p><b> name</b> : USCoreEncounterDischargeDisposition</p><p><b> status</b> : active</p><p><b> date</b> : 04/14/2022</p><p><b> publisher</b> : HL7 International - Cross-Group Projects</p><p><b> contact</b> : http://www.hl7.org/Special/committees/cgp</p>  <!-- <p>\\n\\t\\t\\t\\t<b> useContext</b> : </p> --><p><b> jurisdiction</b> : United States of America (the) <span> (Details : {urn:iso:std:iso:3166 code 'US' = 'United States of America', given as 'United\\n           States of America (the)'})</span>\\n\\t\\t\\t</p>  <!-- <p>\\n\\t\\t<b> purpose</b> : Need to search by identifier for various infrastructural cases - mainly retrieving packages,\\n         and matching as part of a chain</p> --><p><b> code</b> : <code>discharge-disposition</code>\\n\\t\\t\\t</p><p><b> base</b> :Encounter</p><p><b> type</b> : token</p><p><b> expression</b> : <code>Encounter.hospitalization.dischargeDisposition</code>\\n\\t\\t\\t</p><p><b> xpath</b> : <code>f:Encounter/f:hospitalization/f:dischargeDisposition/@value</code>\\n\\t\\t\\t</p><p><b> xpathUsage</b> : normal</p><p><b> mulitpleOr</b> : True   (Conformance Expectation = MAY)</p><p><b> mulitpleAnd</b> : True  ( Conformance Expectation = MAY)</p></div>\"\r\n  },\r\n  \"url\" : \"http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-discharge-disposition\",\r\n  \"version\" : \"5.0.1\",\r\n  \"name\" : \"USCoreEncounterDischargeDisposition\",\r\n  \"status\" : \"active\",\r\n  \"date\" : \"2022-04-14\",\r\n  \"publisher\" : \"HL7 International - Cross-Group Projects\",\r\n  \"contact\" : [\r\n    {\r\n      \"name\" : \"HL7 International - Cross-Group Projects\",\r\n      \"telecom\" : [\r\n        {\r\n          \"system\" : \"url\",\r\n          \"value\" : \"http://www.hl7.org/Special/committees/cgp\"\r\n        },\r\n        {\r\n          \"system\" : \"email\",\r\n          \"value\" : \"cgp@lists.HL7.org\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"description\" : \"Returns encounters with an discharge-disposition matching the specified code.\",\r\n  \"jurisdiction\" : [\r\n    {\r\n      \"coding\" : [\r\n        {\r\n          \"system\" : \"urn:iso:std:iso:3166\",\r\n          \"code\" : \"US\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\" : \"discharge-disposition\",\r\n  \"base\" : [\r\n    \"Encounter\"\r\n  ],\r\n  \"type\" : \"token\",\r\n  \"expression\" : \"Encounter.hospitalization.dischargeDisposition\",\r\n  \"xpath\" : \"f:Encounter/f:hospitalization/f:dischargeDisposition/@value\",\r\n  \"xpathUsage\" : \"normal\",\r\n  \"multipleOr\" : true,\r\n  \"_multipleOr\" : {\r\n    \"extension\" : [\r\n      {\r\n        \"url\" : \"http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation\",\r\n        \"valueCode\" : \"MAY\"\r\n      }\r\n    ]\r\n  },\r\n  \"multipleAnd\" : true,\r\n  \"_multipleAnd\" : {\r\n    \"extension\" : [\r\n      {\r\n        \"url\" : \"http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation\",\r\n        \"valueCode\" : \"MAY\"\r\n      }\r\n    ]\r\n  }\r\n}"
+										},
+										"url": {
+											"raw": "{{fhirurl}}/SearchParameter",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"SearchParameter"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reindex",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"postman.setEnvironmentVariable(\"reindexJobId\", jsonData.id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{bearerToken}}",
+												"type": "text"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "X-MS-AZUREFHIR-AUDIT-USERID",
+												"value": "Dale",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \r\n\"resourceType\": \"Parameters\",\r\n\"parameter\": []\r\n}"
+										},
+										"url": {
+											"raw": "{{fhirurl}}/$reindex",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"$reindex"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Status on Reindex Job",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{fhirurl}}/_operations/reindex/{{reindexJobId}}",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"_operations",
+												"reindex",
+												"{{reindexJobId}}"
+											]
+										},
+										"description": "To check the status of reindex run the below command in powershell.\ncommand:\naz rest --resource fhirurl --url fhirurl/_operations/reindex/IdFromReindexResponse"
+									},
+									"response": []
+								},
+								{
+									"name": "List All Encounters by DischargeDisposition",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{bearerToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "User-Agent",
+												"value": "{{userAgentValue}}",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{fhirurl}}/Encounter?discharge-disposition=768681000",
+											"host": [
+												"{{fhirurl}}"
+											],
+											"path": [
+												"Encounter"
+											],
+											"query": [
+												{
+													"key": "discharge-disposition",
+													"value": "768681000"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
 						{
 							"name": "List All Encounters",
 							"request": {
@@ -8853,7 +9550,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{fhirurl}}/Encounter?patient=Patient/PQC00000012",
+									"raw": "{{fhirurl}}/Encounter?patient=Patient/{{patientId}}",
 									"host": [
 										"{{fhirurl}}"
 									],
@@ -8863,7 +9560,7 @@
 									"query": [
 										{
 											"key": "patient",
-											"value": "Patient/PQC00000012"
+											"value": "Patient/{{patientId}}"
 										}
 									]
 								}
