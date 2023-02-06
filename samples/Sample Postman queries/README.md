@@ -109,7 +109,9 @@ This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `Pra
 
 5. In `FHIR Collection`, folder `Common Operations` Contains folders for queries of operations as detailed below:  
 - [validate](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/validation-against-profiles), Make sure the profiles are loaded into fhir service for validation, more details [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir)
-    - In collection, we have samples for posting and fetching the posted structure definition and samples for validating resource.
+    - In collection, we have samples for posting and fetching the StructureDefinitions for resource/extensions and samples for validating resource.
+    - We have sample for uploading Structure Definition for `Patient` and `Extensions`(race, ethnicity and birthsex), Structure Definition of `Patient` refers to three extensions(race, ethnicity and birthsex). To validate a Patient resource with extension, the Structure Definitions for extensions also have to be uploaded to FHIR.
+    - to find more SturctureDefinitions of US core profiles/extensions visit [US Core Implementation Guide](http://hl7.org/fhir/us/core/STU5.0.1/profiles-and-extensions.html)
 - [convert](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/convert-data)
     - In collection, we have samples for coverting HL7, Json and C-CDA data formats to FHIR
 - [import](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/import-data), Please make sure that  the cofiguration settings for import are done before running import, more details for configurations are available [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/configure-import-data)
