@@ -5,7 +5,7 @@ This project hosts open-source **samples** for Azure Health Data Services. To le
 
 ## Samples
 
-This project provides samples outlining example implementations of various use cases across stages of health data workflows. The samples are listed here:
+This project provides samples outlining example implementations of various use cases across stages of health data workflows. The "samples" folder contains all the sample apps organized by use case. The samples are listed here:
 
 <!---
 ### Data ingestion into Health Data Services
@@ -30,7 +30,7 @@ This project provides samples outlining example implementations of various use c
 ### Analytics and machine learning
 |Sample|Description|
 | --- | --- |
-| [Analytics pipeline visualization with PowerBI dashboard sample](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization#visualize-checking-and-editing-the-dashboard-in-power-bi-desktop-application) | Sample showing how to query FHIR data in Parquet file format (in Azure Data Lake) and Serverless SQL tables to calculate digital quality measures and visualize data in PowerBI.|
+| [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
 
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 |Sample|Description|
