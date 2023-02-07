@@ -15,6 +15,13 @@
                 </return-response>
             </when>
         </choose>
+        <choose>
+            <when condition="@(context.Request.Url.Query.ContainsKey("aud") == true && System.Net.WebUtility.UrlDecode(context.Request.Url.Query.GetValueOrDefault("aud", "")).Equals("{{Audience}}", StringComparison.OrdinalIgnoreCase) == false)">
+                <return-response>
+                    <set-status code="400" reason="Invalid audience" />
+                </return-response>
+            </when>
+        </choose>
     </inbound>
     <backend>
         <base />
