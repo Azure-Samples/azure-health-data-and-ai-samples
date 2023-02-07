@@ -27,7 +27,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   location: location
   kind: 'functionapp'
   sku: {
-    name: 'S1'
+    name: 'B1'
   }
   properties: {}
   tags: appTags
