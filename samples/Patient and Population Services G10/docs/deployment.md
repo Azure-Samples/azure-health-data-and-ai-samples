@@ -46,13 +46,13 @@ The Authorize User Input Application is needed to allow users to select which sc
 
 This sample uses the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) for deployment. This allows for easy deployment of both infrastructure and code at the same time.
 
-Before deployment, lets look at the configuration needed to deploying this sample. All below assumes `samples/smart` as the working directory.
+Before deployment, lets look at the configuration needed to deploying this sample. All below assumes `samples/Patient and Population Services G10` as the working directory.
 
 - Open `main.pramaters.json` inside of the `infra` folder and fill out the following parameters:
   - `apimPublisherName`: Sample owner name.
   - `apimPublisherEmail`: Sample owner email address.
   - `contextAadApplicationId`: Client ID from step 2.
-- Open a terminal to the samples directory (`samples/smart`).
+- Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
 - Login with the Azure CLI. Specify the tenant if you have more than one.
   - `az login` or `az login -t <tenant-id>`.
 - Run the `azd up` command from this directory. Enter:
