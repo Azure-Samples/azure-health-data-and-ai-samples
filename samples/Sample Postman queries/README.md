@@ -66,7 +66,7 @@ Populate the above parameter values in your `fhir-service` Postman environment a
 <img src="./images/Screenshot_2022-05-04_084239_edit3.png" height="328">
 
 ## Step 3 - Get an access token from AAD
-To obtain an access token from AAD via Postman, you can use the saved ```POST Get Authorization Token``` request. The ```POST Get Authorization Token``` call comes pre-configured as part of the `FHIR Collection` collection that you imported earlier.
+To obtain an access token from AAD via Postman, you would typically follow steps outlined [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/use-postman#get-azure-ad-access-token), however, for the purposes of this starter collection, we have included the  ```POST Get Authorization Token``` call pre-configured.
 
 In Postman, click on **Collections** on the left, select the `FHIR Collection` collection, open the first folder titled `AuthToken`, and then select `POST Get Authorization Token`. Press **Send** on the right.
 
