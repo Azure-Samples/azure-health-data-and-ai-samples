@@ -123,7 +123,7 @@ This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `Pra
 <img src="./images/ExportResponse.png" height="428">
     - Export Status
 <img src="./images/GetExportStatus.png" height="428">
- 
+- `Delete & Conditional Delete`: Microsoft FHIR supports soft deletes, hard deletes and conditional deletes for resources, Soft deletes maintain the history of the resource which can used to recreate the resource if needed. Hard delete would delete resource along with history so you won't be able to recover. With conditional delete you can specify the conditions for delete, resources satisfying the condition would be deleted, by default delete count is one and it can go upto 100, we can specify count of resources that should be deleted with _count parameter, it could be upto 100. Hard delete can aslo be used with conditional delete. For more details follow [Delete and Conditional Delete](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-rest-api-capabilities#delete-and-conditional-delete)
 
 6. In `FHIR Collection`, the folder `Custom Search (Create and Use SearchParameter)` contains queries to create and use custom search parameters. More details are available on [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/how-to-do-custom-search).
 - Once you create new search parameter, reindexing must be done before the new search parameter is available.  More information is available at [Test new search Parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/how-to-do-custom-search#test-new-search-parameters).

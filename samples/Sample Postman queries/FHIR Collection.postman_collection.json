@@ -1879,6 +1879,371 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Delete & Conditional Delete",
+					"item": [
+						{
+							"name": "Create Patient resources",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									},
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"resourceType\": \"Bundle\",\r\n  \"type\": \"batch\",\r\n  \"entry\": [\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"id\": \"PQC00000051\",\r\n        \"meta\": {\r\n          \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n          ]\r\n        },\r\n        \"text\": {\r\n          \"status\": \"generated\",\r\n          \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Jamie11 Test11</div>\"\r\n        },\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2106-3\",\r\n                  \"display\": \"White\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2135-2\",\r\n                  \"display\": \"Hispanic or Latino\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n            \"valueCode\": \"F\"\r\n          }\r\n        ],\r\n        \"identifier\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                  \"code\": \"PI\",\r\n                  \"display\": \"Patient internal identifier\"\r\n                }\r\n              ]\r\n            },\r\n            \"system\": \"https://www.kirsandinc.com/faye\",\r\n            \"value\": \"PQC00000051\",\r\n            \"period\": {\r\n              \"start\": \"2002-04-05\"\r\n            },\r\n            \"assigner\": {\r\n              \"display\": \"EMPI - Enterprise ID system\"\r\n            }\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"text\": \"Emma51 Test51\",\r\n            \"family\": \"Test51\",\r\n            \"given\": [\r\n              \"Emma51\"\r\n            ]\r\n          }\r\n        ],\r\n        \"telecom\": [\r\n          {\r\n            \"system\": \"phone\",\r\n            \"value\": \"000-000-0051\",\r\n            \"use\": \"mobile\"\r\n          },\r\n          {\r\n            \"system\": \"email\",\r\n            \"value\": \"Emma51@test51.com\"\r\n          }\r\n        ],\r\n        \"gender\": \"female\",\r\n        \"birthDate\": \"2002-04-05\",\r\n        \"address\": [\r\n          {\r\n            \"use\": \"home\",\r\n            \"line\": [\r\n              \"51 Emma Ct\"\r\n            ],\r\n            \"city\": \"Redmond\",\r\n            \"state\": \"WA\",\r\n            \"postalCode\": \"98052\",\r\n            \"country\": \"US\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"url\": \"Patient/PQC00000051\",\r\n        \"method\": \"PUT\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"id\": \"PQC00000052\",\r\n        \"meta\": {\r\n          \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n          ]\r\n        },\r\n        \"text\": {\r\n          \"status\": \"generated\",\r\n          \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Daniel12 Test12</div>\"\r\n        },\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2106-3\",\r\n                  \"display\": \"White\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2186-5\",\r\n                  \"display\": \"Not Hispanic or Latino\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n            \"valueCode\": \"M\"\r\n          }\r\n        ],\r\n        \"identifier\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                  \"code\": \"PI\",\r\n                  \"display\": \"Patient internal identifier\"\r\n                }\r\n              ]\r\n            },\r\n            \"system\": \"https://www.adunoshinc.com/nathan\",\r\n            \"value\": \"PQC00000052\",\r\n            \"period\": {\r\n              \"start\": \"2001-03-02\"\r\n            },\r\n            \"assigner\": {\r\n              \"display\": \"EMPI - Enterprise ID system\"\r\n            }\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"text\": \"Chris52 Test52\",\r\n            \"family\": \"Test52\",\r\n            \"given\": [\r\n              \"Chris52\"\r\n            ]\r\n          }\r\n        ],\r\n        \"telecom\": [\r\n          {\r\n            \"system\": \"phone\",\r\n            \"value\": \"000-000-0052\",\r\n            \"use\": \"mobile\"\r\n          },\r\n          {\r\n            \"system\": \"email\",\r\n            \"value\": \"Chris52@test52.com\"\r\n          }\r\n        ],\r\n        \"gender\": \"male\",\r\n        \"birthDate\": \"2001-03-02\",\r\n        \"address\": [\r\n          {\r\n            \"use\": \"home\",\r\n            \"line\": [\r\n              \"52 Chris Place\"\r\n            ],\r\n            \"city\": \"Redmond\",\r\n            \"state\": \"WA\",\r\n            \"postalCode\": \"98051\",\r\n            \"country\": \"US\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"url\": \"Patient/PQC00000052\",\r\n        \"method\": \"PUT\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"id\": \"PQC00000053\",\r\n        \"meta\": {\r\n          \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n          ]\r\n        },\r\n        \"text\": {\r\n          \"status\": \"generated\",\r\n          \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Harry13 Test13</div>\"\r\n        },\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2106-3\",\r\n                  \"display\": \"White\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2186-5\",\r\n                  \"display\": \"Not Hispanic or Latino\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n            \"valueCode\": \"M\"\r\n          }\r\n        ],\r\n        \"identifier\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                  \"code\": \"MI\",\r\n                  \"display\": \"Military ID number\"\r\n                }\r\n              ]\r\n            },\r\n            \"system\": \"http://va.gov/fhir/NamingSystem/identifier\",\r\n            \"value\": \"VA-103\",\r\n            \"assigner\": {\r\n              \"display\": \"Veterans Affairs\"\r\n            },\r\n            \"period\": {\r\n              \"start\": \"2012-01-01\"\r\n            }\r\n          },\r\n          {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                  \"code\": \"PI\",\r\n                  \"display\": \"Patient internal identifier\"\r\n                }\r\n              ]\r\n            },\r\n            \"system\": \"http://busmeyerinc.com/harold\",\r\n            \"value\": \"PQC00000053\",\r\n            \"period\": {\r\n              \"start\": \"1962-06-09\"\r\n            },\r\n            \"assigner\": {\r\n              \"display\": \"EMPI - Enterprise ID system\"\r\n            }\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"text\": \"Jacob53 Test53\",\r\n            \"family\": \"Test53\",\r\n            \"given\": [\r\n              \"Jacob53\"\r\n            ],\r\n            \"prefix\": [\r\n              \"Mr.\"\r\n            ]\r\n          }\r\n        ],\r\n        \"telecom\": [\r\n          {\r\n            \"system\": \"phone\",\r\n            \"value\": \"000-000-0053\",\r\n            \"use\": \"mobile\"\r\n          },\r\n          {\r\n            \"system\": \"email\",\r\n            \"value\": \"Jacob53@test53.com\"\r\n          }\r\n        ],\r\n        \"gender\": \"male\",\r\n        \"birthDate\": \"1962-05-09\",\r\n        \"address\": [\r\n          {\r\n            \"use\": \"home\",\r\n            \"line\": [\r\n              \"53 Jacob Drive\"\r\n            ],\r\n            \"city\": \"Redmond\",\r\n            \"state\": \"WA\",\r\n            \"postalCode\": \"98052\",\r\n            \"country\": \"US\"\r\n          }\r\n        ],\r\n        \"maritalStatus\": {\r\n          \"coding\": [\r\n            {\r\n              \"system\": \"http://terminology.hl7.org/CodeSystem/v3-MaritalStatus\",\r\n              \"code\": \"M\",\r\n              \"display\": \"M\"\r\n            }\r\n          ],\r\n          \"text\": \"M\"\r\n        },\r\n        \"multipleBirthBoolean\": false,\r\n        \"communication\": [\r\n          {\r\n            \"language\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"urn:ietf:bcp:47\",\r\n                  \"code\": \"en-US\",\r\n                  \"display\": \"English\"\r\n                }\r\n              ],\r\n              \"text\": \"English\"\r\n            }\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"url\": \"Patient/PQC00000053\",\r\n        \"method\": \"PUT\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"id\": \"PQC00000054\",\r\n        \"meta\": {\r\n          \"profile\": [\r\n            \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient\"\r\n          ]\r\n        },\r\n        \"text\": {\r\n          \"status\": \"generated\",\r\n          \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Sandra14 Test14</div>\"\r\n        },\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-race\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2106-3\",\r\n                  \"display\": \"White\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity\",\r\n            \"extension\": [\r\n              {\r\n                \"url\": \"ombCategory\",\r\n                \"valueCoding\": {\r\n                  \"system\": \"urn:oid:2.16.840.1.113883.6.238\",\r\n                  \"code\": \"2135-2\",\r\n                  \"display\": \"Hispanic or Latino\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"url\": \"http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex\",\r\n            \"valueCode\": \"F\"\r\n          }\r\n        ],\r\n        \"identifier\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"type\": {\r\n              \"coding\": [\r\n                {\r\n                  \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\r\n                  \"code\": \"PI\",\r\n                  \"display\": \"Patient internal identifier\"\r\n                }\r\n              ]\r\n            },\r\n            \"system\": \"http://busmeyerinc.com/sally\",\r\n            \"value\": \"PQC00000054\",\r\n            \"period\": {\r\n              \"start\": \"1981-01-08\"\r\n            },\r\n            \"assigner\": {\r\n              \"display\": \"EMPI - Enterprise ID system\"\r\n            }\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"use\": \"official\",\r\n            \"text\": \"Andriana54 Test54\",\r\n            \"family\": \"Test54\",\r\n            \"given\": [\r\n              \"Andriana54\"\r\n            ]\r\n          }\r\n        ],\r\n        \"telecom\": [\r\n          {\r\n            \"system\": \"phone\",\r\n            \"value\": \"000-000-0014\",\r\n            \"use\": \"mobile\"\r\n          },\r\n          {\r\n            \"system\": \"email\",\r\n            \"value\": \"Andriana54@test54.com\"\r\n          }\r\n        ],\r\n        \"gender\": \"female\",\r\n        \"birthDate\": \"1981-01-08\",\r\n        \"address\": [\r\n          {\r\n            \"use\": \"home\",\r\n            \"line\": [\r\n              \"1500 Andriana Drive\"\r\n            ],\r\n            \"city\": \"Redmond\",\r\n            \"state\": \"WA\",\r\n            \"postalCode\": \"98052\",\r\n            \"country\": \"US\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"url\": \"Patient/PQC00000054\",\r\n        \"method\": \"PUT\"\r\n      }\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{fhirurl}}",
+									"host": [
+										"{{fhirurl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Patient (Soft Delete)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000051",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000051"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify history after soft delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000051/_history/1",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000051",
+										"_history",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Patient (Hard Delete)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000052?hardDelete=true",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000052"
+									],
+									"query": [
+										{
+											"key": "hardDelete",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify history after hard delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000052/_history/1",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000052",
+										"_history",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Conditional Delete Patient (Soft Delete)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient?given:exact=Jacob53",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient"
+									],
+									"query": [
+										{
+											"key": "given:exact",
+											"value": "Jacob53"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify history after soft delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000053/_history/1",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000053",
+										"_history",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Conditional Delete Patient (Hard Delete)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient?identifier=PQC00000054&hardDelete=true&_count=100",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient"
+									],
+									"query": [
+										{
+											"key": "identifier",
+											"value": "PQC00000054"
+										},
+										{
+											"key": "hardDelete",
+											"value": "true"
+										},
+										{
+											"key": "_count",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify history after hard delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "{{userAgentValue}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{fhirurl}}/Patient/PQC00000054/_history/1",
+									"host": [
+										"{{fhirurl}}"
+									],
+									"path": [
+										"Patient",
+										"PQC00000054",
+										"_history",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
