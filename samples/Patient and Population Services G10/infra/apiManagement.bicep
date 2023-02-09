@@ -83,6 +83,7 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
     apiManagementServiceName: apiManagementServiceName
     tenantId: subscription().tenantId
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
+    audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }
 
   dependsOn: [ apimService ]

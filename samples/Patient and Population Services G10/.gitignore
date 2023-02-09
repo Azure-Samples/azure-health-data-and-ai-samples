@@ -1,3 +1,5 @@
 *.env
 config.json
 src/**/local.settings.json
+
+.azure
