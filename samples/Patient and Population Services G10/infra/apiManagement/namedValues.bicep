@@ -20,7 +20,7 @@ resource contextStaticAppNamedValue 'Microsoft.ApiManagement/service/namedValues
 }
 
 resource audienceNamedVAlue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
-  name: '${apiManagementServiceName}Audience'
+  name: '${apiManagementServiceName}/Audience'
   properties: {
     displayName: 'Audience'
     value: '${audienceUrl}/smart'
