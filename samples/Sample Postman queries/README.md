@@ -1,23 +1,23 @@
-# Postman collection of FHIR queries 
+# Postman FHIR queries starter collection
 
-This sample includes postman collection of FHIR queries which would be helpful to build better understanding for querying/accessing FHIR service to perform CRUD requests for FHIR resources, Operations supported my Microsoft FHIR and various options of searching resources using postman.
-
-We assume that you already have knowledge of using postman to access FHIR service. If you are new to using postman to access FHIR service, we recommend that you come back here after following below learning path:
-- [Access the Azure Health Data Services FHIR service using Postman | Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/use-postman)
+To interact with FHIR data, you can utilize Postman to write FHIR queries to query resources. This sample includes a starter Postman collection that can help you learn and get started with querying/accessing the FHIR service. This starter Postman collection includes many common FHIR queries, including FHIR searches, CRUD (create, read, update, and delete) requests for FHIR resources, and other operations. 
 
 ## Prerequisites
-+ **Prerequisites** are same as in the above mentioned learning path, If you have done those setups, you are good to go ahead.
 
+* Please follow this tutorial first prior to starting this sample: [Access using Postman | Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/use-postman).
+  * If you already have knowledge of how to access the FHIR server using Postman, including [registering the client application to access the FHIR service](https://github.com/microsoft/azure-health-data-services-workshop/blob/main/resources/docs/Postman_FHIR_service_README.md#step-1---create-an-app-registration-for-postman-in-aad) and granting proper [FHIR Data Contributor](https://github.com/microsoft/azure-health-data-services-workshop/blob/main/resources/docs/Postman_FHIR_service_README.md#step-2---assign-fhir-data-contributor-role-in-azure-for-postman-service-client) permissions, you can skip this.
+* Postman installed locally. For more information about Postman, see [Get Started with Postman](https://www.getpostman.com/).
+* FHIR service deployed in Azure. For information about how to deploy the FHIR service, see [Deploy a FHIR service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/fhir-portal-quickstart).
 
 ## Collection Details
 The queries in this collection are categorized into folders as below:
 - `AuthToken` - Request to create an authentication token which is used in all other queries.
-- `Create Starter Bundle` - Here we create a multiple resources in one bundle, these resources would be used in queries further.
-- `Common Queries` - This folder has set of frequently used queries.
+- `Create Starter Bundle` - Here we create multiple resources in one bundle, these resources will be used or referenced in other queries in this tutorial.
+- `Common Queries` - This folder has a set of frequently used queries.
 - `Common Operations` - This folder has queries for FHIR operations like convert, validate, export and import.
-- `Chained and Reverse Chained Search` - This folder has queries to use chaining and reverse chaining for fetching resources based on related(referenced) resources, more details about chaining could be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
-- `Include and Reverse Include Search` - This folder has queries with `_include` and `_revinclude` parameters, to fetch resources related to the search results (e.g., `Patient` resources associated with an `Encounter` search). More details inclusions can be found on the [FHIR Search Page](https://www.hl7.org/fhir/search.html#return).
-- `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create a new `SearchParameter` resource, run the reindex operation (`$reindex`), and use the newly created SearchParameter. More details about custom search could be found in [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
+- `Chained and Reverse Chained Search` - This folder has queries to use chaining and reverse chaining for fetching resources based on related (referenced) resources, more details about chaining can be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview-of-search#chained--reverse-chained-searching).
+- `Include and Reverse Include Search` - This folder has queries with `_include` and `_revinclude` parameters, to fetch resources related to the search results (e.g., `Patient` resources associated with an `Encounter` search). More details on inclusions can be found on the [FHIR Search Page](https://www.hl7.org/fhir/search.html#return).
+- `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create a new `SearchParameter` resource, run the reindex operation (`$reindex`), and use the newly created `SearchParameter`. More details about custom search could be found in [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
 - List of alphabetically sorted, resource specific folders for resource specific queries for CRUD operations.
 
 
@@ -26,10 +26,10 @@ The queries in this collection are categorized into folders as below:
 ## Getting started
 To set up Postman for testing FHIR service, we'll walk through these steps:
 
-**Step 1:** Import environment template and collection files into Postman
-**Step 2:** Enter parameter values for the Postman environment
-**Step 3:** Get an authorization token from AAD
-**Step 4:** Test FHIR service with Postman
+**Step 1:** Import environment template and collection files into Postman  
+**Step 2:** Enter parameter values for the Postman environment  
+**Step 3:** Get an authorization token from AAD  
+**Step 4:** Test FHIR service with Postman  
 
 ## Step 1 - Import environment and collection files into Postman
 
@@ -53,11 +53,11 @@ To set up Postman for testing FHIR service, we'll walk through these steps:
 ## Step 2 - Configure Postman environment
 Now you will configure your Postman environment (`fhir-service`). 
 
-1. For the `fhir-service` Postman environment, you will need to retrieve the following values: 
+1. For the `fhir-service` Postman environment, fill out the following values in the **CURRENT VALUE** column:
 
-- `tenantId` - AAD tenant ID (go to **AAD** -> **Overview** -> **Tenant ID**)
-- `clientId` - Application (client) ID for Postman service client app (go to **AAD** -> **App registrations** -> `<postman-service-client-name>` -> **Overview** -> **Application (client) ID**) 
-- `clientSecret` - Client secret stored for Postman (see Step 1 #7 above) 
+- `tenantId` - AAD tenant ID (go to **Azure Active Directory** -> **Overview** -> **Tenant ID**)
+- `clientId` - Application (client) ID for Postman service client app (go to **Azure Active Directory** -> **App registrations** -> `<postman-service-client-name>` -> **Overview** -> **Application (client) ID**) 
+- `clientSecret` - Client secret stored for Postman that was created when you registered the app in Azure Active Directory. More information [here](https://github.com/microsoft/azure-health-data-services-workshop/blob/main/resources/docs/Postman_FHIR_service_README.md#step-1---create-an-app-registration-for-postman-in-aad) 
 - `fhirurl` - FHIR service endpoint - e.g. `https://<workspace-name>-<fhir-service-name>.fhir.azurehealthcareapis.com` (go to **Resource Group** -> **Overview** -> `<fhir-service-name>` -> **FHIR metadata endpoint** and copy *without* "/metadata" on the end)
 - `resource` - FHIR service endpoint - (**same as `fhirurl`**) e.g. `https://<workspace-name>-<fhir-service-name>.fhir.azurehealthcareapis.com` 
 
@@ -68,7 +68,7 @@ Populate the above parameter values in your `fhir-service` Postman environment a
 ## Step 3 - Get an access token from AAD
 To obtain an access token from AAD via Postman, you can use the saved ```POST Get Authorization Token``` request. The ```POST Get Authorization Token``` call comes pre-configured as part of the `FHIR Collection` collection that you imported earlier.
 
-In Postman, click on **Collections** on the left, select the `FHIR Collection` collection, and then select `POST Get Authorization Token`. Press **Send** on the right.
+In Postman, click on **Collections** on the left, select the `FHIR Collection` collection, open the first folder titled `AuthToken`, and then select `POST Get Authorization Token`. Press **Send** on the right.
 
 __IMPORTANT:__ Be sure to make the `fhir-service` environment active by selecting from the dropdown menu above the **Send** button. In the image below, `fhir-service` is shown as the active environment.
 
