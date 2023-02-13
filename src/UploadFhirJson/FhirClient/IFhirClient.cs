@@ -2,6 +2,6 @@
 {
     public interface IFhirClient
     {
-        Task<HttpResponseMessage> Send(string reqBody);
+        Task<HttpResponseMessage> Send(string reqBody, string hl7FileName);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UploadFhirJson.Model
 {
-    public class Request
+    public class ProcessRequest
     {
         public string FileList { get; set; }
 
@@ -15,5 +15,7 @@ namespace UploadFhirJson.Model
         public int BatchLimit { get; set; }
 
         public bool isFilesSkipped { get; set; }
+
+        public bool FileProcessInSequence { get; set; }
     }
 }

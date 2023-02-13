@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Core;
+using Azure.Storage.Blobs;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -49,60 +50,26 @@ namespace UploadFhirJson.ProcessFhir
             DateTime start = DateTime.Now;
             try
             {
-                Request request = JsonConvert.DeserializeObject<Request>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
+                FhirResponse fhirResponse = new();
+                ProcessRequest request = JsonConvert.DeserializeObject<ProcessRequest>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
                 var requestBody = System.Text.Encoding.Default.GetString(Convert.FromBase64String(request.FileList));
                 FhirInput fhirInputs = JsonConvert.DeserializeObject<FhirInput>(requestBody);
                 if (fhirInputs != null && fhirInputs.sortedHL7files.Count > 0)
                 {
-                    BlobContainerClient blobContainer = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FhirJsonContainer);
-                    //var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
-                    FhirResponse fhirReponse = new();
-                    var take = request.BatchLimit;
-                    var skip = (request.CurrentIndex * request.BatchLimit);
-                    int i = 0;
-                    foreach (var item in fhirInputs.sortedHL7files.Skip(skip).Take(take))
+                    if (request.FileProcessInSequence)
                     {
-                        // _minRetry = 1;
-                        var hl7JsonFile = Path.GetFileNameWithoutExtension(item.HL7FileName) + ".json";
-                        BlobClient blobClient = blobContainer.GetBlobClient(hl7JsonFile);
-                        if (blobClient != null && await blobClient.ExistsAsync())
-                        {
-                            FhirDetails fhirDetails = new();
-                            var blobData = await blobClient.OpenReadAsync();
-
-                            if (request.isFilesSkipped || isFilesSkipped)
-                            {
-                                var list = fhirInputs.sortedHL7files.SkipWhile(obj => obj.HL7FileName == item.HL7FileName).Skip(i).ToList();
-                                UploadSkippedFile(list, ref fhirReponse);
-
-                                var skippedFileResponse = httpRequestData.CreateResponse(HttpStatusCode.OK);
-                                skippedFileResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(fhirReponse)));
-                                return await Task.FromResult(skippedFileResponse);
-                            }
-                            else
-                            {
-                                using (var streamReader = new StreamReader(blobData))
-                                {
-                                    fhirDetails = JsonConvert.DeserializeObject<FhirDetails>(await streamReader.ReadToEndAsync());
-                                }
-                                if (fhirDetails.HL7Conversion)
-                                {
-                                    var result = await ProcessFhirRequest(fhirDetails, fhirInputs.proceedOnError);
-                                    if (result != null && result.StatusCode != 200)
-                                    {
-                                        fhirReponse.response.Add(result);
-                                    }
-                                    fhirReponse.IsFileSkipped = isFilesSkipped;
-                                }
-                                i++;
-                            }
-                            //await blobContainer.DeleteBlobAsync(hl7JsonFile);
-                        }
-
+                        _logger?.LogInformation($"Porcess data in sequence start at {start.ToString("yyyyMMdd HH:mm:ss")}");
+                        fhirResponse = await ProcessDataInSequence(fhirInputs, request);
+                        _logger?.LogInformation($"Porcess data in sequence end at {DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
                     }
-
+                    else
+                    {
+                        _logger?.LogInformation($"Porcess data in batch start at {start}");
+                        fhirResponse = await ProcessDataInBatch(fhirInputs, request);
+                        _logger?.LogInformation($"Porcess data in batch start at {DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+                    }
                     var response = httpRequestData.CreateResponse(HttpStatusCode.OK);
-                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(fhirReponse)));
+                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(fhirResponse)));
                     return await Task.FromResult(response);
                 }
                 else
@@ -125,6 +92,95 @@ namespace UploadFhirJson.ProcessFhir
             }
         }
 
+
+        private async Task<FhirResponse> ProcessDataInSequence(FhirInput fhirInput, ProcessRequest request)
+        {
+
+            BlobContainerClient blobContainer = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FhirJsonContainer);
+            //var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
+            FhirResponse fhirReponse = new();
+            var take = request.BatchLimit;
+            var skip = (request.CurrentIndex * request.BatchLimit);
+            int i = 0;
+            foreach (var item in fhirInput.sortedHL7files.Skip(skip).Take(take))
+            {
+                // _minRetry = 1;
+                var hl7JsonFile = Path.GetFileNameWithoutExtension(item.HL7FileName) + ".json";
+                BlobClient blobClient = blobContainer.GetBlobClient(hl7JsonFile);
+                if (blobClient != null && await blobClient.ExistsAsync())
+                {
+                    FhirDetails fhirDetails = new();
+                    var blobData = await blobClient.OpenReadAsync();
+
+                    if (request.isFilesSkipped || isFilesSkipped)
+                    {
+                        var list = fhirInput.sortedHL7files.SkipWhile(obj => obj.HL7FileName == item.HL7FileName).Skip(i).ToList();
+                        UploadSkippedFile(list, ref fhirReponse);
+                        return await Task.FromResult(fhirReponse);
+                    }
+                    else
+                    {
+                        using (var streamReader = new StreamReader(blobData))
+                        {
+                            fhirDetails = JsonConvert.DeserializeObject<FhirDetails>(await streamReader.ReadToEndAsync());
+                        }
+                        if (fhirDetails.HL7Conversion)
+                        {
+                            var result = await ProcessFhirRequest(fhirDetails, fhirInput.proceedOnError);
+                            if (result != null && result.StatusCode != 200)
+                            {
+                                fhirReponse.response.Add(result);
+                            }
+                            fhirReponse.IsFileSkipped = isFilesSkipped;
+                        }
+                        i++;
+                    }
+                }
+            }
+
+            return await Task.FromResult(fhirReponse);
+        }
+
+        private async Task<FhirResponse> ProcessDataInBatch(FhirInput fhirInput, ProcessRequest request)
+        {
+
+            BlobContainerClient blobContainer = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FhirJsonContainer);
+            //var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
+            FhirResponse fhirReponse = new();
+            var take = request.BatchLimit;
+            var skip = (request.CurrentIndex * request.BatchLimit);
+            //int i = 0;
+            ParallelOptions parallelOptions = new();
+            parallelOptions.MaxDegreeOfParallelism = request.BatchLimit;
+            var fhirList = fhirInput.sortedHL7files.Skip(skip).Take(take);
+            await Parallel.ForEachAsync(fhirList, parallelOptions, async (hl7FileName, CancellationToken) =>
+            {
+                var hl7JsonFile = Path.GetFileNameWithoutExtension(hl7FileName.HL7FileName) + ".json";
+                BlobClient blobClient = blobContainer.GetBlobClient(hl7JsonFile);
+                if (blobClient != null && await blobClient.ExistsAsync())
+                {
+                    FhirDetails fhirDetails = new();
+                    var blobData = await blobClient.OpenReadAsync();
+
+                    using (var streamReader = new StreamReader(blobData))
+                    {
+                        fhirDetails = JsonConvert.DeserializeObject<FhirDetails>(await streamReader.ReadToEndAsync());
+                    }
+                    if (fhirDetails.HL7Conversion)
+                    {
+                        var result = await ProcessFhirRequest(fhirDetails, fhirInput.proceedOnError);
+                        if (result != null && result.StatusCode != 200)
+                        {
+                            fhirReponse.response.Add(result);
+                        }
+                        fhirReponse.IsFileSkipped = isFilesSkipped;
+                    }
+                }
+            });
+
+            return await Task.FromResult(fhirReponse);
+        }
+
         /// <summary>
         /// Processed the fhir json data to fhir server.
         /// </summary>
@@ -133,6 +189,7 @@ namespace UploadFhirJson.ProcessFhir
         /// <returns>Response</returns>
         private async Task<Response> ProcessFhirRequest(FhirDetails fhirInput, bool proceedOnError)
         {
+            DateTime start = DateTime.Now;
             Response fhirResponse = new();
             HttpResponseMessage httpResponseMessage = new();
             if (fhirInput != null)
@@ -144,7 +201,17 @@ namespace UploadFhirJson.ProcessFhir
                     _logger?.LogInformation($"sending fhir data to fhir server.");
                     if (!string.IsNullOrEmpty(requestBody))
                     {
-                        httpResponseMessage = await _fhirClient.Send(requestBody);
+                        try
+                        {
+                            httpResponseMessage = await _fhirClient.Send(requestBody, fhirInput.HL7FileName);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogInformation($"Error while sending bundle to fhir server with exception:{ex.Message}");
+                            _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+                        }
+
                         var responseString = await httpResponseMessage.Content.ReadAsStringAsync() ?? "{}";
                         _logger?.LogInformation($"Received response from fhir server.");
 

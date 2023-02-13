@@ -18,7 +18,6 @@ namespace UploadFhirJson.FhirClient
         private readonly ILogger _logger;
         private readonly ServiceConfiguration _serviceConfiguration;
         private string cacheToken => "authToken";
-        private readonly HttpClient client;
         private static readonly HttpStatusCode[] httpStatusCodesWorthRetrying = {
             HttpStatusCode.RequestTimeout, // 408
             HttpStatusCode.InternalServerError, // 500
@@ -35,8 +34,6 @@ namespace UploadFhirJson.FhirClient
             _memoryCache = memoryCache;
             _logger = logger;
             _serviceConfiguration = serviceConfiguration;
-            client = _httpClient.CreateClient();
-            client.BaseAddress = new Uri(_serviceConfiguration.FhirURL);
         }
 
         private async Task<string> FetchToken(string baseAddress)
@@ -51,33 +48,57 @@ namespace UploadFhirJson.FhirClient
             return token.Token;
         }
 
-        public async Task<HttpResponseMessage> Send(string reqBody)
+        public async Task<HttpResponseMessage> Send(string reqBody, string hl7FileName)
         {
-            _logger.LogInformation("Started calling fhir server");
-            string cacheToken = await GetTokenfromCache();
-            var accessToken = cacheToken ?? await FetchToken(client.BaseAddress.ToString());
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-            var content = new StringContent(reqBody, Encoding.UTF8, "application/json");
-
-            var retryPolicy = Policy
+            HttpResponseMessage _fhirResponse = new();
+            try
+            {
+                string cacheToken = await GetTokenfromCache(); HttpClient client;
+                client = _httpClient == null ? new HttpClient() : _httpClient.CreateClient();
+                client.BaseAddress = new Uri(_serviceConfiguration.FhirURL); var accessToken = cacheToken ?? await FetchToken(client.BaseAddress.ToString());
+                if (!client.DefaultRequestHeaders.Contains("Authorization"))
+                {
+                    Object lockobj = new(); lock (lockobj)
+                    {
+                        client.DefaultRequestHeaders.Clear();
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Remove("Authorization");
+                        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+                    }
+                }
+                var content = new StringContent(reqBody, Encoding.UTF8, "application/json");
+                var retryPolicy = Policy
                 .Handle<HttpRequestException>()
                 .OrResult<HttpResponseMessage>(r => httpStatusCodesWorthRetrying.Contains(r.StatusCode))
                 .WaitAndRetryAsync(3, retryAttempt =>
-                   TimeSpan.FromMilliseconds(5000), (result, timeSpan, retryCount, context) =>
-                   {
-                       _logger.LogWarning($"FHIR Request failed on a retryable status...Waiting {timeSpan} before next retry. Attempt {retryCount}");
-                   }
+                TimeSpan.FromMilliseconds(15000), (result, timeSpan, retryCount, context) =>
+                {
+                    if (result != null && result.Result != null)
+                    {
+                        _logger.LogWarning($"hl7File:{hl7FileName} FHIR Request failed...Waiting {timeSpan} before next retry. Attempt {retryCount} with Status code: {(int)result.Result.StatusCode},at time:{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"hl7File:{hl7FileName} FHIR Request failed...Waiting {timeSpan} before next retry. Attempt {retryCount}, at time:{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+                    }
+                }
                 );
-
-            HttpResponseMessage _fhirResponse =
-            await retryPolicy.ExecuteAsync(async () =>
+                _logger.LogWarning($"hl7File: {hl7FileName} FHIR Request start at time: {DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}"); _fhirResponse =
+                await retryPolicy.ExecuteAsync(async () =>
+                {
+                    var response = await client.PostAsync("", content);
+                    _logger.LogWarning($"hl7File: {hl7FileName} FHIR Response with status code:{(int)response.StatusCode} at time:{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+                    return response;
+                });
+                _logger.LogWarning($"hl7File: {hl7FileName} FHIR Response end with status code:{_fhirResponse.StatusCode} at time:{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+            }
+            catch (Exception ex)
             {
-                return await client.PostAsync("", content);
-
-            });
-            
+                _logger.LogError(ex, $"Error while sending Fhir request to Converter for hl7file: {hl7FileName} at time:{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")}");
+                _fhirResponse.StatusCode = (HttpStatusCode)500;
+                _fhirResponse.Content = new StringContent(ex.Message);
+                return _fhirResponse;
+            }
             return _fhirResponse;
         }
 
