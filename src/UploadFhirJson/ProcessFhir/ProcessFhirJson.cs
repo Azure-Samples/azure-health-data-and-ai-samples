@@ -14,13 +14,14 @@ namespace UploadFhirJson.ProcessFhir
 {
     public class ProcessFhirJson : IProcessFhirJson
     {
-        public ProcessFhirJson(BlobConfiguration blobConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
+        public ProcessFhirJson(BlobConfiguration blobConfiguration, AppConfiguration appConfiguration, IFhirClient fhirClient, TelemetryClient telemetryClient = null, ILogger<ProcessFhirJson> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _telemetryClient = telemetryClient;
             _logger = logger;
             _fhirClient = fhirClient;
             _blobConfiguration = blobConfiguration;
+            _appConfiguration = appConfiguration;
         }
 
         private readonly string _id;
@@ -28,9 +29,13 @@ namespace UploadFhirJson.ProcessFhir
         private readonly BlobConfiguration _blobConfiguration;
         private readonly IFhirClient _fhirClient;
         private readonly ILogger _logger;
+        private readonly AppConfiguration _appConfiguration;
         public string Id => _id;
         public string Name => "ProcessFhirJson";
         public bool isFilesSkipped = false;
+        //int _minRetry = 1;
+        //int _maxRetry = 3;
+
 
         /// <summary>
         /// This Method will read the incoming request body, parse it and processed the data to fhir server.
@@ -57,6 +62,7 @@ namespace UploadFhirJson.ProcessFhir
                     int i = 0;
                     foreach (var item in fhirInputs.sortedHL7files.Skip(skip).Take(take))
                     {
+                        // _minRetry = 1;
                         var hl7JsonFile = Path.GetFileNameWithoutExtension(item.HL7FileName) + ".json";
                         BlobClient blobClient = blobContainer.GetBlobClient(hl7JsonFile);
                         if (blobClient != null && await blobClient.ExistsAsync())
@@ -141,12 +147,13 @@ namespace UploadFhirJson.ProcessFhir
                         httpResponseMessage = await _fhirClient.Send(requestBody);
                         var responseString = await httpResponseMessage.Content.ReadAsStringAsync() ?? "{}";
                         _logger?.LogInformation($"Received response from fhir server.");
+
                         if (httpResponseMessage.IsSuccessStatusCode)
                         {
                             _logger?.LogInformation($"Fhir server response {(int)httpResponseMessage.StatusCode}");
                             fhirResponse.StatusCode = (int)httpResponseMessage.StatusCode;
                             fhirResponse.FileName = fhirInput.HL7FileName;
-                            await UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.ProcessedBlobContainer);
+                            UploadToSuccessBlob(fhirInput.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.ProcessedBlobContainer);
                         }
                         else
                         {
@@ -155,7 +162,7 @@ namespace UploadFhirJson.ProcessFhir
                             fhirResponse.StatusCode = (int)httpResponseMessage.StatusCode;
                             fhirResponse.FileName = fhirInput.HL7FileName;
                             fhirResponse.Error = responseString;
-                            await UploadToFailBlob(fhirInput.HL7FileName, requestBody, _blobConfiguration.ConvertedContainer, _blobConfiguration.HL7FailedBlob);
+                            UploadToFailBlob(fhirInput.HL7FileName, requestBody, _blobConfiguration.ConvertedContainer, _blobConfiguration.HL7FailedBlob);
 
                         }
                     }
@@ -187,7 +194,7 @@ namespace UploadFhirJson.ProcessFhir
         {
             foreach (var item in fileList)
             {
-                _ = UploadToSuccessBlob(item.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.SkippedBlobContainer);
+                UploadToSuccessBlob(item.HL7FileName, _blobConfiguration.ConvertedContainer, _blobConfiguration.SkippedBlobContainer);
                 Response response = new();
                 response.FileName = item.HL7FileName;
                 response.StatusCode = (int)HttpStatusCode.FailedDependency;
@@ -203,7 +210,7 @@ namespace UploadFhirJson.ProcessFhir
         /// <param name="soruceBlobName"></param>
         /// <param name="targetBloblName"></param>
         /// <returns></returns>
-        private async Task UploadToSuccessBlob(string fileName, string soruceBlobName, string targetBloblName)
+        private void UploadToSuccessBlob(string fileName, string soruceBlobName, string targetBloblName)
         {
             _logger?.LogInformation($"UploadToSuccessBlob :Start uploading {fileName} ");
             BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
@@ -217,11 +224,11 @@ namespace UploadFhirJson.ProcessFhir
             //BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
             try
             {
-                if (sourceBlobClient != null && await sourceBlobClient.ExistsAsync())
+                if (sourceBlobClient != null && sourceBlobClient.Exists())
                 {
-                    var copy = await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
-                    await copy.WaitForCompletionAsync();
-                    await sourceBlobClient.DeleteAsync();
+                    var copy = targetBlobClient.StartCopyFromUri(sourceBlobClient.Uri);
+                    copy.WaitForCompletion();
+                    sourceBlobClient.Delete();
                     _logger?.LogInformation($"UploadToSuccessBlob : Blob uploaded to {targetBloblName} and deleted from {soruceBlobName} ");
                 }
                 else
@@ -247,7 +254,7 @@ namespace UploadFhirJson.ProcessFhir
         /// <param name="targetBloblName"></param>
         /// <returns></returns>      
 
-        private async Task UploadToFailBlob(string fileName, string fileData, string soruceBlobName, string targetBloblName)
+        private void UploadToFailBlob(string fileName, string fileData, string soruceBlobName, string targetBloblName)
         {
             BlobContainerClient sourceClient = new(_blobConfiguration.BlobConnectionString, soruceBlobName);
             BlobContainerClient targetClient = new(_blobConfiguration.BlobConnectionString, _blobConfiguration.FailedBlobContainer);
@@ -261,20 +268,20 @@ namespace UploadFhirJson.ProcessFhir
 
             try
             {
-                if (sourceBlobClient != null && await sourceBlobClient.ExistsAsync())
+                if (sourceBlobClient != null && sourceBlobClient.Exists())
                 {
-                    var copy = await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
-                    await copy.WaitForCompletionAsync();
+                    var copy = targetBlobClient.StartCopyFromUri(sourceBlobClient.Uri);
+                    copy.WaitForCompletion();
                     if (!string.IsNullOrEmpty(fileData))
                     {
                         _logger?.LogInformation($"UploadToFailBlob :Reading Memory Stream data to {fileName} ");
                         var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(fileData));
-                        await targetClient.UploadBlobAsync(_blobConfiguration.FhirFailedBlob + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json", memoryStream);
+                        targetClient.UploadBlob(_blobConfiguration.FhirFailedBlob + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json", memoryStream);
                         memoryStream.Close();
-                        await memoryStream.DisposeAsync();
+                        memoryStream.Dispose();
                         _logger?.LogInformation($"UploadToFailBlob :Uploaded Memory Stream data to {fileName} ");
                     }
-                    await sourceBlobClient.DeleteAsync();
+                    sourceBlobClient.Delete();
                     _logger?.LogInformation($"UploadToFailBlob : Blob uploaded to {targetBloblName} and deleted from {soruceBlobName} ");
                 }
                 else
