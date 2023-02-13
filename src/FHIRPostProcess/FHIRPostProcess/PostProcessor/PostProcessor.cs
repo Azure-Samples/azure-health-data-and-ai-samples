@@ -17,7 +17,7 @@ namespace FHIRPostProcess.PostProcessor
     public class PostProcess : IPostProcess
     {
 
-        public PostProcess(BlobConfiguration blobConfiguration, FhirJsonParser fhirJsonParser, BlobServiceClient blobServiceClient,TelemetryClient telemetryClient = null, ILogger<PostProcess> logger = null)
+        public PostProcess(BlobConfiguration blobConfiguration, FhirJsonParser fhirJsonParser, BlobServiceClient blobServiceClient, TelemetryClient telemetryClient = null, ILogger<PostProcess> logger = null)
         {
             _id = Guid.NewGuid().ToString();
             _logger = logger;
@@ -33,7 +33,7 @@ namespace FHIRPostProcess.PostProcessor
         private readonly FhirJsonParser _fhirJsonParser;
         private readonly BlobConfiguration _blobConfiguration;
         private readonly BlobServiceClient _blobServiceClient;
-  
+
         public string Id => _id;
         public string Name => "PostProcess";
         private readonly DateTime start = DateTime.Now;
@@ -50,7 +50,7 @@ namespace FHIRPostProcess.PostProcessor
 
                 fHIRPostProcessInput = JsonConvert.DeserializeObject<FHIRPostProcessInput>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
                 var hl7FilesArray = System.Text.Encoding.Default.GetString(Convert.FromBase64String(fHIRPostProcessInput.Hl7FilesList));
-                
+
                 if (!string.IsNullOrEmpty(hl7FilesArray))
                 {
 
@@ -91,7 +91,7 @@ namespace FHIRPostProcess.PostProcessor
                                     {
                                         fhirJson = await streamReader.ReadToEndAsync();
                                     }
-                                    
+
 
 
                                     _logger?.LogInformation($"Process end for file {Hl7File.HL7FileName} blob read.");
@@ -109,22 +109,14 @@ namespace FHIRPostProcess.PostProcessor
                                             bundleResource.Type = Bundle.BundleType.Batch;
                                         }
 
-                                        var resourceList = bundleResource.Entry.ToList();
-                                        if (resourceList != null && resourceList.Count > 0)
+
+                                        if (bundleResource != null && bundleResource.Entry.Count > 0)
                                         {
-                                            foreach (var e in resourceList)
-                                            {
-                                                var resource = e.Resource;
-                                                var isEmpty = IsEmptyResource(resource);
-                                                var isAbsent = IsIdAbsentResource(resource);
-                                                if (isEmpty || isAbsent)
-                                                {
-                                                    //remove empty resources from the Fhir Bundle
-                                                    bundleResource.Entry.Remove(e);
-                                                }
-                                            }
+                                            bundleResource.Entry.RemoveAll(e => IsEmptyResource(e.Resource) || IsIdAbsentResource(e.Resource));
                                         }
+
                                         var postProcessBundlejson = bundleResource.ToJson();
+
                                         _logger?.LogInformation($"post processing performed for file {Hl7File.HL7FileName}.");
                                         postProcessBundle = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(postProcessBundlejson));
 
