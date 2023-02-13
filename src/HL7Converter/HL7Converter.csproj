@@ -15,6 +15,8 @@
 	  <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
 	  <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
@@ -22,6 +24,7 @@
 	  <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.9.0" />
 	  <PackageReference Include="DotNetEnv " Version="2.3.0" />
 	  <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.0" />
+	  <PackageReference Include="Polly" Version="7.2.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
