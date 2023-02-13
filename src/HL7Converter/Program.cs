@@ -1,4 +1,5 @@
-﻿using HL7Converter.Configuration;
+﻿using HL7Converter.Caching;
+using HL7Converter.Configuration;
 using HL7Converter.FhirClient;
 using HL7Converter.ProcessConverter;
 using Microsoft.ApplicationInsights;
@@ -48,6 +49,7 @@ using IHost host = new HostBuilder()
             ConvertedContainer = config.ConvertedContainer,
             ValidatedContainer = config.ValidatedContainer,
             ConversionfailContainer = config.ConversionfailContainer,
+            Hl7ConverterJsonContainer = config.Hl7ConverterJsonContainer,
             SkippedBlobContainer = config.SkippedBlobContainer
         };
 
@@ -62,15 +64,17 @@ using IHost host = new HostBuilder()
 
         services.AddTransient<IConverter, Converter>();
 
-        services.AddHttpClient<IFhirClient, FhirClient>(httpClient =>
-        {
-            httpClient.BaseAddress = new Uri(config.FhirURL);
-        });
-
         services.AddAzureClients(clientBuilder =>
         {
             clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
         });
+
+        services.AddMemoryCache();
+        services.AddScoped<IAuthTokenCache, AuthTokenCache>();
+
+        services.AddScoped<IFhirClient, FhirClient>();
+        services.AddSingleton(config);
+        services.AddHttpClient();
 
     })
      .ConfigureLogging(e =>

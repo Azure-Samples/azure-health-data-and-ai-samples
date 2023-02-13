@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HL7Converter.Configuration
+namespace FHIRPostProcess.Model
 {
-    public class AppConfiguration
+    public class Hl7File
     {
-        public string HttpFailStatusCodes { get; set; }     
+        public string HL7FileName { get; set; }
+
     }
 }

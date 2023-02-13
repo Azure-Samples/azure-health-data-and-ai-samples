@@ -36,110 +36,131 @@ namespace HL7Converter.ProcessConverter
         public string Id => _id;
         public string Name => "HL7Converter";
 
-      
+
         public async Task<HttpResponseData> Execute(HttpRequestData httpRequestData)
         {
             DateTime start = DateTime.Now;
+            string hl7ConverterRequestTemplate = "{\"parameter\":[{\"name\":\"inputData\",\"valueString\":\"\"},{\"name\":\"inputDataType\",\"valueString\":\"Hl7v2\"},{\"name\":\"templateCollectionReference\",\"valueString\":\"microsofthealth/fhirconverter:default\"},{\"name\":\"rootTemplate\",\"valueString\":\"\"}],\"resourceType\":\"Parameters\"}";
             HttpResponseMessage httpResponseMessage = new();
             try
             {
-                HL7Input hl7Input = JsonConvert.DeserializeObject<HL7Input>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
-                if (hl7Input != null && !string.IsNullOrEmpty(hl7Input.HL7FileName) && !string.IsNullOrEmpty(hl7Input.ConversionBody))
+                _logger?.LogInformation($"hl7Converter Function start"); 
+
+                HL7ConverterInput hL7ConverterInput = JsonConvert.DeserializeObject<HL7ConverterInput>(await new StreamReader(httpRequestData.Body).ReadToEndAsync());
+                var hl7FilesArray = System.Text.Encoding.Default.GetString(Convert.FromBase64String(hL7ConverterInput.Hl7FileList));
+                if(!string.IsNullOrEmpty(hl7FilesArray))
                 {
-                    
-                    _logger?.LogInformation($"Process start for file {hl7Input.HL7FileName} blob read.");
-                    string hL7fileContent = string.Empty;
-                    var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.ValidatedContainer);
-                    BlobClient blobClient = blobContainer.GetBlobClient(hl7Input.HL7FileName);
+                    List<Hl7File> hl7FilesList = JsonConvert.DeserializeObject<List<Hl7File>>(hl7FilesArray);
 
-                    if (blobClient != null && await blobClient.ExistsAsync())
+                    if (hl7FilesList != null && hl7FilesList.Count > 0)
                     {
-                        var blobData = await blobClient.OpenReadAsync();
-                        using (var streamReader = new StreamReader(blobData))
+
+                        _logger?.LogInformation($"Batch count with Skip: {hL7ConverterInput.Skip} and Take: {hL7ConverterInput.Take}");
+
+                        var hl7FileList = hl7FilesList.Skip(hL7ConverterInput.Skip).Take(hL7ConverterInput.Take).ToList();
+
+                        ParallelOptions parallelOptions = new();
+                        parallelOptions.MaxDegreeOfParallelism = hL7ConverterInput.Take;
+
+                        await Parallel.ForEachAsync(hl7FileList, parallelOptions, async (Hl7File, CancellationToken) =>
                         {
-                            hL7fileContent = await streamReader.ReadToEndAsync();
-                        }
-
-
-                        _logger?.LogInformation($"Process end for file {hl7Input.HL7FileName} blob read.");
-
-                        if (!string.IsNullOrEmpty(hL7fileContent))
-                        {
-
-                            string reqJson = System.Text.Encoding.Default.GetString(Convert.FromBase64String(hl7Input.ConversionBody));
-                            JObject jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(reqJson) as JObject;
-
-                            jObject["parameter"][0]["valueString"] = hL7fileContent;
-
-                            string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
-
-                            _logger?.LogInformation($"Processing {hl7Input.HL7FileName} file to fhir server.");
-                            httpResponseMessage = await _fhirClient.Send(requestBody);
-                            var responseString = await httpResponseMessage.Content.ReadAsStringAsync() ?? "{}";
-                            if (httpResponseMessage.IsSuccessStatusCode)
+                            if (Hl7File != null && Hl7File.HL7FileName != String.Empty && Hl7File.HL7FileType != String.Empty)
                             {
-                                _logger?.LogInformation($"Fhir request completed successfully with status code {(int)httpResponseMessage.StatusCode} and {httpResponseMessage.ReasonPhrase} for file {hl7Input.HL7FileName}.");
-                                await UploadToBlob(hl7Input.HL7FileName, _blobConfiguration.ValidatedContainer, _blobConfiguration.ConvertedContainer);
-                                var response = httpRequestData.CreateResponse(httpResponseMessage.StatusCode);
-                                response.Body = new MemoryStream(Encoding.UTF8.GetBytes(responseString));
-                                return await Task.FromResult(response);
-                            }
-                            else
-                            {
-                                _logger?.LogInformation($"Error from Fhir server with status code {(int)httpResponseMessage.StatusCode} and {httpResponseMessage.ReasonPhrase} for file {hl7Input.HL7FileName}");
-                                _logger?.LogInformation("{Name}-{Id} Error from Fhir server.", Name, Id);
-                                _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-  
-                                var isHttpRetryStatusCode = _appConfiguration.HttpFailStatusCodes.Split(',').Any(x => x.Trim() == ((int)httpResponseMessage.StatusCode).ToString());
 
-                                _logger?.LogInformation($"failureCode check result  = {isHttpRetryStatusCode} for file {hl7Input.HL7FileName}");
+                                string hL7fileContent = string.Empty;
+                                var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.ValidatedContainer);
+                                BlobClient blobClient = blobContainer.GetBlobClient(Hl7File.HL7FileName);
 
-                                if (!isHttpRetryStatusCode)
+                                if (blobClient != null && await blobClient.ExistsAsync())
                                 {
-                                    if (hl7Input.ProceedOnError == true)
+                                    var blobData = await blobClient.OpenReadAsync();
+                                    using (var streamReader = new StreamReader(blobData))
                                     {
-                                        await UploadToBlob(hl7Input.HL7FileName, _blobConfiguration.ValidatedContainer, _blobConfiguration.ConversionfailContainer);
+                                        hL7fileContent = await streamReader.ReadToEndAsync();
+                                    }
+
+                                    if (!string.IsNullOrEmpty(hL7fileContent))
+                                    {
+
+                                        JObject jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(hl7ConverterRequestTemplate) as JObject;
+
+                                        jObject["parameter"][0]["valueString"] = hL7fileContent;
+                                        jObject["parameter"][3]["valueString"] = Hl7File.HL7FileType;
+
+                                        string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
+
+                                        try
+                                        {
+
+                                            _logger?.LogInformation($"Processing {Hl7File.HL7FileName} file to fhir server.");
+                                            httpResponseMessage = await _fhirClient.Send(requestBody, Hl7File.HL7FileName);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogInformation($"Error while sending Fhir request to Converter with exception:{ex.Message}");
+                                            _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+
+                                        }
+
+
+                                        var responseString = await httpResponseMessage.Content.ReadAsStringAsync() ?? "{}";
+                                        if (httpResponseMessage.IsSuccessStatusCode)
+                                        {
+                                            _logger?.LogInformation($"Fhir request completed successfully with status code {(int)httpResponseMessage.StatusCode} and {httpResponseMessage.ReasonPhrase} for file {Hl7File.HL7FileName}.");
+                                            await UploadToBlob(Hl7File.HL7FileName, _blobConfiguration.ValidatedContainer, _blobConfiguration.ConvertedContainer);
+
+                                            var validatedContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.Hl7ConverterJsonContainer);
+                                            var fhirBundleJson = new MemoryStream(Encoding.UTF8.GetBytes(responseString));
+                                            string fhirJsonFileName = Path.GetFileNameWithoutExtension(Hl7File.HL7FileName) + ".json";
+
+                                            if (!await validatedContainer.GetBlobClient(fhirJsonFileName).ExistsAsync())
+                                            {
+                                                await validatedContainer.UploadBlobAsync(fhirJsonFileName, fhirBundleJson);
+                                                fhirBundleJson.Close();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _logger?.LogInformation($"Error from Fhir server with status code {(int)httpResponseMessage.StatusCode} and {httpResponseMessage.ReasonPhrase} for file {Hl7File.HL7FileName}");
+                                            _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+
+                                            var isHttpRetryStatusCode = _appConfiguration.HttpFailStatusCodes.Split(',').Any(x => x.Trim() == ((int)httpResponseMessage.StatusCode).ToString());
+
+                                            _logger?.LogInformation($"failureCode check result  = {isHttpRetryStatusCode} for file {Hl7File.HL7FileName}");
+
+                                            await UploadToBlob(Hl7File.HL7FileName, _blobConfiguration.ValidatedContainer, _blobConfiguration.ConversionfailContainer);
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _logger?.LogInformation($"content not found for file {Hl7File.HL7FileName}.");
+
                                     }
                                 }
-
-                                var response = httpRequestData.CreateResponse(httpResponseMessage.StatusCode);
-                                response.Body = new MemoryStream(Encoding.UTF8.GetBytes(responseString));
-                                return await Task.FromResult(response);
                             }
-                        }
-                        else
-                        {
-                            _logger?.LogInformation("{Name}-{Id} No content found in HL7 File.", Name, Id);
-                            _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                            var response = httpRequestData.CreateResponse(HttpStatusCode.InternalServerError);
-                            response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"No content found in HL7 File."));
-                            return await Task.FromResult(response);
-                        }
-                    }
-                    else
-                    {
-                        _logger?.LogInformation("{Name}-{Id} HL7 File Not found in a Container or alreday Processed.", Name, Id);
-                        _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                        var response = httpRequestData.CreateResponse(HttpStatusCode.InternalServerError);
-                        response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"HL7 File Not found in a Container or already Processed."));
-                        return await Task.FromResult(response);
+                        });
+
+
+                        var hl7ConverterResponse = httpRequestData.CreateResponse(HttpStatusCode.OK);
+                        hl7ConverterResponse.Body = new MemoryStream(Encoding.UTF8.GetBytes($"Hl7 Conversion successful"));
+                        return await Task.FromResult(hl7ConverterResponse);
                     }
                 }
-                else
-                {
-                    _logger?.LogInformation("{Name}-{Id} No content found in incoming request.", Name, Id);
-                    _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
-                    var response = httpRequestData.CreateResponse(HttpStatusCode.InternalServerError);
-                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"No content found in incoming request."));
-                    return await Task.FromResult(response);
-                }
+
+                _logger?.LogInformation("{Name}-{Id} No content found in incoming request.", Name, Id);
+                _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
+                var response = httpRequestData.CreateResponse(HttpStatusCode.InternalServerError);
+                response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"No content found in incoming request."));
+                return await Task.FromResult(response);
+
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "{Name}-{Id} Error while sending Fhir data to server.", Name, Id);
+                _logger?.LogError(ex, "{Name}-{Id} Error while executing HL7Convereter Function App with exception", Name, Id);
                 _telemetryClient?.TrackMetric(new MetricTelemetry($"{Name}-{Id}-Error", TimeSpan.FromTicks(DateTime.Now.Ticks - start.Ticks).TotalMilliseconds));
                 var response = httpRequestData.CreateResponse(HttpStatusCode.InternalServerError);
-                response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"Error while sending Fhir data to server :{(ex.InnerException != null ? ex.InnerException : ex.Message)}"));
+                response.Body = new MemoryStream(Encoding.UTF8.GetBytes($"Error while executing HL7Convereter Function app with exception :{(ex.InnerException != null ? ex.InnerException : ex.Message)}"));
                 return await Task.FromResult(response);
             }
         }
@@ -150,8 +171,12 @@ namespace HL7Converter.ProcessConverter
             var targetClient = _blobServiceClient.GetBlobContainerClient(targetBloblName);
             BlobClient sourceBlobClient = sourceClient.GetBlobClient(fileName);
             BlobClient targetBlobClient = targetClient.GetBlobClient(fileName);
-            await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
-            await sourceBlobClient.DeleteAsync();
+            if (await sourceBlobClient.ExistsAsync() && !await targetBlobClient.ExistsAsync())
+            {
+                await targetBlobClient.StartCopyFromUriAsync(sourceBlobClient.Uri);
+                await sourceBlobClient.DeleteAsync();
+            }
+
         }
     }
 }

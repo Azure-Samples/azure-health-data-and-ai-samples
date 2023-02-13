@@ -1,6 +1,6 @@
 ﻿namespace FHIRPostProcess.Configuration
 {
-    public class PostProcessConfiguration
+    public class PostProcessConfiguration : BlobConfiguration
     {
         public string AppInsightConnectionstring { get; set; }
     }

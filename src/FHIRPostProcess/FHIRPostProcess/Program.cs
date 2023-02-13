@@ -3,6 +3,7 @@ using FHIRPostProcess.PostProcessor;
 using Hl7.Fhir.Serialization;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,7 +42,17 @@ using IHost host = new HostBuilder()
             });
             services.AddTransient<TelemetryClient>();
         }
+
+        BlobConfiguration blobConfig = new()
+        {
+            BlobConnectionString = config.BlobConnectionString,
+            Hl7ConverterJsonContainer = config.Hl7ConverterJsonContainer,
+            Hl7PostProcessContainer = config.Hl7PostProcessContainer
+        };
+
+        services.AddSingleton(blobConfig);
         services.AddTransient<IPostProcess, PostProcess>();
+        
 
         FhirJsonParser _parser = new();
         //change the parser settings to skip validations
@@ -50,6 +61,11 @@ using IHost host = new HostBuilder()
         _parser.Settings.PermissiveParsing = true;
 
         services.AddSingleton(_parser);
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(config.BlobConnectionString);
+        });
 
     })
     .ConfigureLogging(e =>
