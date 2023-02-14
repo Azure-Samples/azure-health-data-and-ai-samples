@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.9.1.41621",
-      "templateHash": "11669071260106940001"
+      "version": "0.14.46.61228",
+      "templateHash": "11832585292371023058"
     }
   },
   "parameters": {
@@ -64,8 +64,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "14879526342839490377"
+              "version": "0.14.46.61228",
+              "templateHash": "206389823209246221"
             }
           },
           "parameters": {
@@ -92,7 +92,7 @@
               "name": "[guid(variables('ownerRoleDefId'), resourceGroup().id)]",
               "properties": {
                 "principalType": "ServicePrincipal",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))).principalId]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2018-11-30').principalId]",
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('ownerRoleDefId'))]"
               },
               "dependsOn": [
@@ -107,11 +107,11 @@
             },
             "identityClientId": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))).clientId]"
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2018-11-30').clientId]"
             },
             "identityPrincipalId": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))).principalId]"
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2018-11-30').principalId]"
             }
           }
         }
@@ -146,7 +146,7 @@
             "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('managedResourceGroupName'))]"
           },
           "identity": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity')).outputs.identityId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity'), '2020-10-01').outputs.identityId.value]"
           },
           "storageName": {
             "value": "[variables('datalakeName')]"
@@ -158,8 +158,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "1554290570023698522"
+              "version": "0.14.46.61228",
+              "templateHash": "15551883236639452249"
             }
           },
           "parameters": {
@@ -258,7 +258,7 @@
                 "environmentVariables": [
                   {
                     "name": "ADB_WORKSPACE_URL",
-                    "value": "[reference(resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName'))).workspaceUrl]"
+                    "value": "[reference(resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName')), '2022-04-01-preview').workspaceUrl]"
                   },
                   {
                     "name": "ADB_WORKSPACE_ID",
@@ -299,7 +299,7 @@
             },
             "databricksWorkspaceUrl": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName'))).workspaceUrl]"
+              "value": "[reference(resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName')), '2022-04-01-preview').workspaceUrl]"
             }
           }
         }
@@ -335,7 +335,7 @@
             "value": "[variables('resourceTags')]"
           },
           "logAnalyticsWorkspaceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('loganalytics-{0}', variables('name')))).outputs.loagAnalyticsId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('loganalytics-{0}', variables('name'))), '2020-10-01').outputs.loagAnalyticsId.value]"
           }
         },
         "template": {
@@ -344,8 +344,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "5509843374808145294"
+              "version": "0.14.46.61228",
+              "templateHash": "327621804089650279"
             }
           },
           "parameters": {
@@ -406,7 +406,7 @@
             {
               "type": "Microsoft.Insights/diagnosticSettings",
               "apiVersion": "2021-05-01-preview",
-              "scope": "[format('Microsoft.HealthcareApis/workspaces/{0}/fhirservices/{1}', split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[1])]",
+              "scope": "[format('Microsoft.HealthcareApis/workspaces/{0}/fhirservices/{1}', parameters('workspaceName'), parameters('fhirServiceName'))]",
               "name": "[parameters('fhirServiceName')]",
               "properties": {
                 "workspaceId": "[parameters('logAnalyticsWorkspaceId')]",
@@ -432,14 +432,14 @@
                 ]
               },
               "dependsOn": [
-                "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[1])]"
+                "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', parameters('workspaceName'), parameters('fhirServiceName'))]"
               ]
             }
           ],
           "outputs": {
             "fhirId": {
               "type": "string",
-              "value": "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', parameters('workspaceName'), parameters('fhirServiceName')), '/')[1])]"
+              "value": "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', parameters('workspaceName'), parameters('fhirServiceName'))]"
             },
             "fhirServiceUrl": {
               "type": "string",
@@ -475,7 +475,7 @@
             "value": "[parameters('resourceLocation')]"
           },
           "identity": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity')).outputs.identityId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity'), '2020-10-01').outputs.identityId.value]"
           },
           "storageName": {
             "value": "[variables('datalakeName')]"
@@ -487,8 +487,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "16770650180247067614"
+              "version": "0.14.46.61228",
+              "templateHash": "15168818731691290856"
             }
           },
           "parameters": {
@@ -590,8 +590,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "18288335809534079945"
+              "version": "0.14.46.61228",
+              "templateHash": "6549011474576527119"
             }
           },
           "parameters": {
@@ -695,8 +695,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "946397538494113314"
+              "version": "0.14.46.61228",
+              "templateHash": "5750837554987563958"
             }
           },
           "parameters": {
@@ -781,7 +781,7 @@
             "value": "[variables('resourceTags')]"
           },
           "logAnalyticsWorkspaceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('loganalytics-{0}', variables('name')))).outputs.loagAnalyticsId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('loganalytics-{0}', variables('name'))), '2020-10-01').outputs.loagAnalyticsId.value]"
           }
         },
         "template": {
@@ -790,8 +790,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "1494508608762548696"
+              "version": "0.14.46.61228",
+              "templateHash": "4003149854905589546"
             }
           },
           "parameters": {
@@ -858,7 +858,7 @@
             },
             "packageUrl": {
               "type": "string",
-              "defaultValue": "https://fhiranalyticspipeline.blob.core.windows.net/builds/Microsoft.Health.Fhir.Synapse.FunctionApp.zip",
+              "defaultValue": "https://github.com/microsoft/FHIR-Analytics-Pipelines/releases/download/v0.6.0/Microsoft.Health.Fhir.Synapse.FunctionApp.zip",
               "metadata": {
                 "description": "The fhir-to-synapse pipeline package url."
               }
@@ -877,6 +877,46 @@
           },
           "resources": [
             {
+              "type": "Microsoft.Web/sites/config",
+              "apiVersion": "2020-12-01",
+              "name": "[format('{0}/{1}', variables('functionAppName'), 'appsettings')]",
+              "properties": {
+                "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]",
+                "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]",
+                "WEBSITE_CONTENTSHARE": "[toLower(variables('functionAppName'))]",
+                "FUNCTIONS_EXTENSION_VERSION": "~4",
+                "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+                "LD_LIBRARY_PATH": "/home/site/wwwroot",
+                "WEBSITE_RUN_FROM_PACKAGE": "[parameters('packageUrl')]",
+                "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02-preview').InstrumentationKey]",
+                "APPLICATIONINSIGHTS_CONNECTION_STRING": "[format('InstrumentationKey={0}', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02-preview').InstrumentationKey)]",
+                "job__jobInfoQueueName": "[format('{0}jobinfoqueue', parameters('name'))]",
+                "job__jobInfoTableName": "[format('{0}jobinfotable', parameters('name'))]",
+                "job__metadataTableName": "[format('{0}metadatatable', parameters('name'))]",
+                "job__maxRunningJobCount": "3",
+                "job__containerName": "[parameters('containerName')]",
+                "job__startTime": "[parameters('dataStart')]",
+                "job__endTime": "[parameters('dataEnd')]",
+                "job__tableUrl": "[format('https://{0}.table.{1}', parameters('storageAccountName'), environment().suffixes.storage)]",
+                "job__queueUrl": "[format('https://{0}.queue.{1}', parameters('storageAccountName'), environment().suffixes.storage)]",
+                "dataLakeStore__storageUrl": "[format('https://{0}.blob.{1}', parameters('storageAccountName'), environment().suffixes.storage)]",
+                "filter__filterScope": "System",
+                "filter__enableExternalFilter": "false",
+                "filter__filterImageReference": "",
+                "filter__groupId": "",
+                "filter__requiredTypes": "",
+                "filter__typeFilters": "",
+                "schema__enableCustomizedSchema": "false",
+                "fhirServer__serverUrl": "[parameters('fhirServiceUrl')]",
+                "fhirServer__version": "[parameters('fhirVersion')]",
+                "fhirServer__authentication": "ManagedIdentity"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+              ]
+            },
+            {
               "type": "Microsoft.Web/serverfarms",
               "apiVersion": "2022-03-01",
               "name": "[variables('hostingPlanName')]",
@@ -887,6 +927,7 @@
                 "name": "EP3"
               },
               "properties": {
+                "reserved": true,
                 "elasticScaleEnabled": true
               },
               "metadata": {
@@ -902,10 +943,12 @@
               "identity": {
                 "type": "SystemAssigned"
               },
-              "kind": "functionapp",
+              "kind": "functionapp,linux",
               "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "reserved": true,
                 "siteConfig": {
+                  "linuxFxVersion": "dotnet-isolated|6.0",
                   "use32BitWorkerProcess": false
                 }
               },
@@ -914,54 +957,6 @@
               ],
               "metadata": {
                 "description": "Function app for FHIR to Analytics pipeline"
-              }
-            },
-            {
-              "type": "Microsoft.Web/sites/config",
-              "apiVersion": "2020-12-01",
-              "name": "[format('{0}/{1}', variables('functionAppName'), 'appsettings')]",
-              "properties": {
-                "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]",
-                "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]",
-                "WEBSITE_CONTENTSHARE": "[toLower(variables('functionAppName'))]",
-                "FUNCTIONS_EXTENSION_VERSION": "~2",
-                "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-                "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey]",
-                "APPLICATIONINSIGHTS_CONNECTION_STRING": "[format('InstrumentationKey={0}', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey)]",
-                "job__containerName": "[parameters('containerName')]",
-                "job__startTime": "[parameters('dataStart')]",
-                "job__endTime": "[parameters('dataEnd')]",
-                "filter__filterScope": "System",
-                "filter__groupId": "",
-                "filter__requiredTypes": "",
-                "filter__typeFilters": "",
-                "schema__enableCustomizedSchema": "false",
-                "dataLakeStore__storageUrl": "[format('https://{0}.blob.{1}', parameters('storageAccountName'), environment().suffixes.storage)]",
-                "fhirServer__serverUrl": "[parameters('fhirServiceUrl')]",
-                "fhirServer__version": "[parameters('fhirVersion')]",
-                "fhirServer__authentication": "ManagedIdentity"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
-              ],
-              "metadata": {
-                "description": "FHIR to Datalake function all settings"
-              }
-            },
-            {
-              "type": "Microsoft.Web/sites/extensions",
-              "apiVersion": "2022-03-01",
-              "name": "[format('{0}/{1}', variables('functionAppName'), 'MSDeploy')]",
-              "properties": {
-                "packageUri": "[parameters('packageUrl')]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]",
-                "[resourceId('Microsoft.Web/sites/config', variables('functionAppName'), 'appsettings')]"
-              ],
-              "metadata": {
-                "description": "Deploy the FHIR to Analytics function app code to the function app"
               }
             },
             {
@@ -994,7 +989,7 @@
             },
             "hostName": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName'))).defaultHostName]"
+              "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2022-03-01').defaultHostName]"
             }
           }
         }
@@ -1019,13 +1014,13 @@
         "mode": "Incremental",
         "parameters": {
           "resourceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ahds-with-fhir-{0}', variables('ahdsWorkspaceName')))).outputs.fhirId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ahds-with-fhir-{0}', variables('ahdsWorkspaceName'))), '2020-10-01').outputs.fhirId.value]"
           },
           "roleId": {
             "value": "5a1fc7df-4bf1-4951-a576-89034ee01acd"
           },
           "principalId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name')))).outputs.functionAppPrincipalId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name'))), '2020-10-01').outputs.functionAppPrincipalId.value]"
           }
         },
         "template": {
@@ -1034,8 +1029,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "9148056260549200273"
+              "version": "0.14.46.61228",
+              "templateHash": "7342024819275949466"
             }
           },
           "parameters": {
@@ -1086,13 +1081,13 @@
         "mode": "Incremental",
         "parameters": {
           "resourceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ahds-with-fhir-{0}', variables('ahdsWorkspaceName')))).outputs.fhirId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ahds-with-fhir-{0}', variables('ahdsWorkspaceName'))), '2020-10-01').outputs.fhirId.value]"
           },
           "roleId": {
             "value": "5a1fc7df-4bf1-4951-a576-89034ee01acd"
           },
           "principalId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity')).outputs.identityPrincipalId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ManagedIdentity'), '2020-10-01').outputs.identityPrincipalId.value]"
           }
         },
         "template": {
@@ -1101,8 +1096,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "9148056260549200273"
+              "version": "0.14.46.61228",
+              "templateHash": "7342024819275949466"
             }
           },
           "parameters": {
@@ -1145,7 +1140,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "name": "storageIdentity-function",
+      "name": "storageBlobIdentity-function",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -1153,13 +1148,13 @@
         "mode": "Incremental",
         "parameters": {
           "resourceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName')))).outputs.storage_account_id.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName'))), '2020-10-01').outputs.storage_account_id.value]"
           },
           "roleId": {
             "value": "ba92f5b4-2d11-453d-a403-e96b0029c9fe"
           },
           "principalId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name')))).outputs.functionAppPrincipalId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name'))), '2020-10-01').outputs.functionAppPrincipalId.value]"
           }
         },
         "template": {
@@ -1168,8 +1163,142 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.9.1.41621",
-              "templateHash": "9148056260549200273"
+              "version": "0.14.46.61228",
+              "templateHash": "7342024819275949466"
+            }
+          },
+          "parameters": {
+            "resourceId": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "principalId": {
+              "type": "string"
+            },
+            "principalType": {
+              "type": "string",
+              "defaultValue": "ServicePrincipal"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('resourceId'), parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId'))]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name')))]",
+        "[resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName')))]"
+      ],
+      "metadata": {
+        "description": "Setup identity connection between FHIR and the function app"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "storageQueueIdentity-function",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "resourceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName'))), '2020-10-01').outputs.storage_account_id.value]"
+          },
+          "roleId": {
+            "value": "974c5e8b-45b9-4653-ba55-5f855dd0fb88"
+          },
+          "principalId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name'))), '2020-10-01').outputs.functionAppPrincipalId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.46.61228",
+              "templateHash": "7342024819275949466"
+            }
+          },
+          "parameters": {
+            "resourceId": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "principalId": {
+              "type": "string"
+            },
+            "principalType": {
+              "type": "string",
+              "defaultValue": "ServicePrincipal"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('resourceId'), parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId'))]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name')))]",
+        "[resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName')))]"
+      ],
+      "metadata": {
+        "description": "Setup identity connection between FHIR and the function app"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "storageTableIdentity-function",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "resourceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('datalake-{0}', variables('datalakeName'))), '2020-10-01').outputs.storage_account_id.value]"
+          },
+          "roleId": {
+            "value": "0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3"
+          },
+          "principalId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('fhirtoanalyticsfunction-{0}', variables('name'))), '2020-10-01').outputs.functionAppPrincipalId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.46.61228",
+              "templateHash": "7342024819275949466"
             }
           },
           "parameters": {
