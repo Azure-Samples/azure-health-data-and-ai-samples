@@ -16,7 +16,8 @@ resource healthWorkspace 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview
 }
 
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-preview' = {
-  name: '${workspaceName}/${fhirServiceName}'
+  parent: healthWorkspace
+  name: fhirServiceName
   location: location
   kind: 'fhir-R4'
 
@@ -33,10 +34,6 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-previ
   }
 
   tags: tags
-
-  dependsOn: [
-    healthWorkspace
-  ]
 }
 
 // network security group diagnostic setting

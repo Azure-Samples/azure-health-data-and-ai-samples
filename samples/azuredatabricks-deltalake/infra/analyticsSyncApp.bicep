@@ -22,7 +22,7 @@ param dataEnd string = ''
 param containerName string = 'fhir'
 @description('The fhir-to-synapse pipeline package url.')
 #disable-next-line no-hardcoded-env-urls
-param packageUrl string = 'https://github.com/microsoft/FHIR-Analytics-Pipelines/releases/download/v0.4.1/Microsoft.Health.Fhir.Synapse.FunctionApp.zip'
+param packageUrl string = 'https://github.com/microsoft/FHIR-Analytics-Pipelines/releases/download/v0.6.0/Microsoft.Health.Fhir.Synapse.FunctionApp.zip'
 @description('Log Analytics workspace resource id for linking to Application Insights.')
 param logAnalyticsWorkspaceId string
 
@@ -42,6 +42,7 @@ resource functionHostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
     name: 'EP3'
   }
   properties: {
+    reserved: true
     elasticScaleEnabled: true
   }
 }
@@ -55,52 +56,50 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   identity: {
     type: 'SystemAssigned'
   }
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   properties: {
     serverFarmId: functionHostingPlan.id
+    reserved: true
     siteConfig: {
+      linuxFxVersion: 'dotnet-isolated|6.0'
       use32BitWorkerProcess: false
     }
   }
-}
 
-@description('FHIR to Datalake function all settings')
-resource functionAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
-  name: 'appsettings'
-  parent: functionApp
-  properties: {
-    AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${functionStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(functionStorageAccount.id, '2019-06-01').keys[0].value}'
-    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: 'DefaultEndpointsProtocol=https;AccountName=${functionStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(functionStorageAccount.id, '2019-06-01').keys[0].value}'
-    WEBSITE_CONTENTSHARE: toLower(functionAppName)
-    FUNCTIONS_EXTENSION_VERSION: '~2'
-    FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
-    APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.properties.InstrumentationKey
-    APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
-    job__containerName: containerName
-    job__startTime: dataStart
-    job__endTime: dataEnd
-    filter__filterScope: 'System'
-    filter__groupId: ''
-    filter__requiredTypes: ''
-    filter__typeFilters: ''
-    schema__enableCustomizedSchema: 'false'
-    dataLakeStore__storageUrl: 'https://${functionStorageAccount.name}.blob.${environment().suffixes.storage}'
-    fhirServer__serverUrl: fhirServiceUrl
-    fhirServer__version: fhirVersion
-    fhirServer__authentication: 'ManagedIdentity'
+  resource functionAppSettings 'config@2020-12-01' = {
+    name: 'appsettings'
+    properties: {
+      AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${functionStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(functionStorageAccount.id, '2019-06-01').keys[0].value}'
+      WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: 'DefaultEndpointsProtocol=https;AccountName=${functionStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(functionStorageAccount.id, '2019-06-01').keys[0].value}'
+      WEBSITE_CONTENTSHARE: toLower(functionAppName)
+      FUNCTIONS_EXTENSION_VERSION: '~4'
+      FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
+      LD_LIBRARY_PATH: '/home/site/wwwroot'
+      WEBSITE_RUN_FROM_PACKAGE: packageUrl
+      APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.properties.InstrumentationKey
+      APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
+      job__jobInfoQueueName: '${functionAppName}jobinfoqueue'
+      job__jobInfoTableName: '${functionAppName}jobinfotable'
+      job__metadataTableName: '${functionAppName}metadatatable'
+      job__maxRunningJobCount: '3'
+      job__containerName: containerName
+      job__startTime: dataStart
+      job__endTime: dataEnd
+      job__tableUrl: 'https://${functionStorageAccount.name}.table.${environment().suffixes.storage}'
+      job__queueUrl: 'https://${functionStorageAccount.name}.queue.${environment().suffixes.storage}'
+      dataLakeStore__storageUrl: 'https://${functionStorageAccount.name}.blob.${environment().suffixes.storage}'
+      filter__filterScope: 'System'
+      filter__enableExternalFilter: 'false'
+      filter__filterImageReference: ''
+      filter__groupId: ''
+      filter__requiredTypes: ''
+      filter__typeFilters: ''
+      schema__enableCustomizedSchema: 'false'
+      fhirServer__serverUrl: fhirServiceUrl
+      fhirServer__version: fhirVersion
+      fhirServer__authentication: 'ManagedIdentity'
+    }
   }
-}
-
-
-@description('Deploy the FHIR to Analytics function app code to the function app')
-resource fhirToAnalyticsMsDeploy 'Microsoft.Web/sites/Extensions@2022-03-01' = {
-  parent: functionApp
-  name: 'MSDeploy'
-  properties: {
-    packageUri: packageUrl
-  }
-
-  dependsOn: [ functionAppSettings ]
 }
 
 var appInsightsName = '${name}-ai'

@@ -130,8 +130,8 @@ module deploymment_script_role_assignment_template './roleAssignment.bicep'= {
 }
 
 @description('Setup identity connection between FHIR and the function app')
-module functionStorageIdentity './roleAssignment.bicep'= {
-  name: 'storageIdentity-function'
+module functionStorageBlobIdentity './roleAssignment.bicep'= {
+  name: 'storageBlobIdentity-function'
   params: {
     resourceId: datalake_template.outputs.storage_account_id
     roleId: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
@@ -139,4 +139,22 @@ module functionStorageIdentity './roleAssignment.bicep'= {
   }
 }
 
+@description('Setup identity connection between FHIR and the function app')
+module functionStorageQueueIdentity './roleAssignment.bicep'= {
+  name: 'storageQueueIdentity-function'
+  params: {
+    resourceId: datalake_template.outputs.storage_account_id
+    roleId: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+    principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
+  }
+}
 
+@description('Setup identity connection between FHIR and the function app')
+module functionStorageTableIdentity './roleAssignment.bicep'= {
+  name: 'storageTableIdentity-function'
+  params: {
+    resourceId: datalake_template.outputs.storage_account_id
+    roleId: '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3'
+    principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
+  }
+}
