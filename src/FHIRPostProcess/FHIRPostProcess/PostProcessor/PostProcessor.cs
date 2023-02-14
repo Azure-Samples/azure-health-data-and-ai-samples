@@ -69,6 +69,8 @@ namespace FHIRPostProcess.PostProcessor
                         var fhirBundleType = fHIRPostProcessInput.FhirBundleType;
                         fHIRPostProcessInput = null;
 
+                        var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.Hl7ConverterJsonContainer);
+
                         await Parallel.ForEachAsync(hl7FileList, parallelOptions, async (Hl7File, CancellationToken) =>
                         {
                             if (Hl7File != null && Hl7File.HL7FileName != String.Empty)
@@ -80,7 +82,7 @@ namespace FHIRPostProcess.PostProcessor
                                 string postProcessBundle = string.Empty;
 
 
-                                var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.Hl7ConverterJsonContainer);
+                                
                                 fhirJsonFileName = Path.GetFileNameWithoutExtension(Hl7File.HL7FileName) + ".json";
                                 BlobClient blobClient = blobContainer.GetBlobClient(fhirJsonFileName);
 
