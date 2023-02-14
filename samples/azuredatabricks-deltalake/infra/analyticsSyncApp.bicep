@@ -78,9 +78,9 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
       WEBSITE_RUN_FROM_PACKAGE: packageUrl
       APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.properties.InstrumentationKey
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
-      job__jobInfoQueueName: '${functionAppName}jobinfoqueue'
-      job__jobInfoTableName: '${functionAppName}jobinfotable'
-      job__metadataTableName: '${functionAppName}metadatatable'
+      job__jobInfoQueueName: '${name}jobinfoqueue'
+      job__jobInfoTableName: '${name}jobinfotable'
+      job__metadataTableName: '${name}metadatatable'
       job__maxRunningJobCount: '3'
       job__containerName: containerName
       job__startTime: dataStart
