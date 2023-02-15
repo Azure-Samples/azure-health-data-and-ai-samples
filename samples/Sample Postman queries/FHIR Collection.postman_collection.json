@@ -130,6 +130,7 @@
 								"exec": [
 									"if(pm.response.code == \"200\")\r",
 									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
 									"    postman.setEnvironmentVariable(\"patientId\", jsonData.entry[1].resource.id);\r",
 									"    postman.setEnvironmentVariable(\"practitionerId\", jsonData.entry[7].resource.id);\r",
 									"    postman.setEnvironmentVariable(\"organizationId\", jsonData.entry[8].resource.id);\r",
