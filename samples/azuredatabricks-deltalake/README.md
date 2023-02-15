@@ -18,7 +18,7 @@ For this sample, we will be building a simple Lakehouse exploring a single use c
 
 Click the button below to launch Azure and deploy this sample. Open it in a new tab so you can keep referencing this readme.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fazure-health-data-services-samples%2Fazuredatabricks-deltalake%2Fsamples%2Fazuredatabricks-deltalake%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fazure-health-data-services-samples%2Fmain%2Fsamples%2Fazuredatabricks-deltalake%2Finfra%2Fazuredeploy.json)
 
 
 ## Looking around at what we deployed
