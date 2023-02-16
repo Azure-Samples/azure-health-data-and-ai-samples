@@ -9,4 +9,4 @@ This project provides samples outlining example implementations of use cases to 
 
 |Sample|Description|
 | --- | --- |
-| [Sample API-for-FHIR-to-API-for-FHIR](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization) | Sample app that shows how to move data from Azure API for FHIR to another Azure API for FHIR server. |
+| [Sample API-for-FHIR-to-API-for-FHIR](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/snarang/fhir2fhir/samples/FHIR-to-FHIR/API-for-FHIR-to-API-for-FHIR) | Sample app that shows how to move data from Azure API for FHIR to another Azure API for FHIR server. |
