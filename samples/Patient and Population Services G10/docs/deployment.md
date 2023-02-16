@@ -186,6 +186,59 @@ The EHR Launch application is a standard confidential client application which l
 ![](./images/deployment/5_ehr_confidental_app_scopes.png)
 </details>
 
+#### SMART FHIRUser Custom Claim
+
+#### Prerequisites
+
+You must have rights to administer claims policy in your Azure Active Directory Tenant and read/write permissions for user profiles in order to proceed.
+
+- Launch Powershell with Administrator privileges
+- [Install Azure Active Directory PowerShell for Graph Preview](https://learn.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0)
+- [Install Microsoft Graph PowerShell SDK](https://learn.microsoft.com/en-us/powershell/microsoftgraph/installation?view=graph-powershell-1.0)
+- Create the custom claim fhirUser for the OAuth id_token by using the onPremisesExtensionAttribute to store the mapping. This example will use onPremisesExtensionAttribute extensionAttribute1 to store the FHIR resource Id of the user. Run the `Set-AADClaimsPolicy.ps1` script in the [scripts](./scripts) folder.
+
+```powershell
+.\Set-AADClaimsPolicy.ps1 -TenantId xxxxxxxx-xxxx-xxxx-xxxx -ExtensionAttributeName extensionAttribute1
+
+```
+
+- In the PowerShell terminal run `Get-AzureADPolicy -All:$true1` to verify that the new claims policy was  created. Copy the Id of the newly created claims policy.
+
+```powershell
+Get-AzADServicePrincipal -DisplayName Name-of-your-app-registration
+```
+
+- Get the `ObjectId` of the enterprise application of your Azure App Registration you created in Section 3 above.
+
+- Associate your Custom Claim with an Azure App Registration using the App Registration Principal Id and Claims Policy Object Id.
+
+```powershell
+Add-AzureADServicePrincipalPolicy -Id Enterprise Application Object Id -RefObjectId Claims Policy ObjectId
+```
+
+- To assign a FHIR patient to an Azure AD User custom claim. Run the following in a PowerShell terminal replacing Your-Tenant-Id with your actual Azure TenantId. The ExtensionAttributeName used (eg: extensionAttribute1), and the fhirID of the patient that this policy will apply to.
+
+```powershell
+Import-Module Microsoft.Graph.Users
+
+Select-MgProfile -Name "beta"
+
+$scopes = @(
+"User.ReadWrite.All"
+"Directory.ReadWrite.All"
+)
+
+Connect-MgGraph -TenantId Your-Tenant-Id -ContextScope Process -Scopes $scopes
+
+$params = @{
+  OnPremisesExtensionAttributes = @{
+    Your-Extension-Attribute-Name = "selected-patient-fhir-id"
+  }
+}
+
+Update-MgUser -UserId Your-Enterprise-Application-ObjectId -BodyParameter $params
+```
+
 ### Backend Service Client Application
 
 Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
