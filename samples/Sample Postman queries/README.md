@@ -94,10 +94,18 @@ __Note:__ Access tokens expire after 60 minutes. To obtain a token refresh, simp
 
 ## Step 4 - Query FHIR service with Postman 
 
-1. Try `GET List All Patients` under `Common Queries` folder in the `FHIR Collection` collection and press **Send**. If the response is as shown below, this means you successfully obtained a list of all `Patient` resources stored in the FHIR service database. This means your setup is functional.
+1. Try `GET List All Patients` under `Common Queries` folder in the `FHIR Collection` collection and press **Send**. If the response is as shown below, with status "200 Ok" and resourceType as "Bundle", this means you successfully obtained a list of all `Patient` resources stored in the FHIR service database.
+
+If there aren't any `Patient` resources in Fhir service, you will get and empty bundle in response as shown below.
+
+<img src="./images/EmptyFhirPatientResponse.png" height="428">
+
+If there are `Patient` resources in Fhir service, you will see Bundle with an array named "entry" in response with list of `Patient` resources as shown in two images below. 
 
 <img src="./images/ListPatients.png" height="428">
+<img src="./images/ListPatients2.png" height="428">
 
+Any of the above response means that your setup is functional.
 
 2. Now we will create a [bundle](https://www.hl7.org/fhir/bundle.html) of resources by posting a `Bundle` to the FHIR service. Under the `Create Starter Bundle` folder, click on ```POST Create Resources Bundle (Multiple resources)``` and press **Send**. If the response matches the following, this means you successfully created multiple resources included in a bundle.
 This bundle contains `Patient`, `Practitioner`, `Organization`, `Location`, `PractitionerRole`, `Encounter`, `Observation`, `Condition`, `Procedure`, `Group`, `Device`, `RelatedPerson` and `ServiceRequest`. These resources will be used as references for creating other resources in the later steps of this tutorial which depend on them. The environment variables for Ids of these resources will be updated.
