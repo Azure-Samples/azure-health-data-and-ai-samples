@@ -23,7 +23,12 @@ This will focus on how to configure destination FHIR server and FHIR Bulk Loader
     - Default limit is 15.
     - If user is getting more error for 429's(Throttled) while importing data to FHIR server they can increase the same by opening the Azure support ticket.
 
-**NOTE** : All requirements can be put into a single support ticket. No need to open separate ticket for each configuration settings.
+### Suggested Configuration
+Below configration tested for 800 GB NDJson data
+1. Enable Autoscaling for RUs
+2. RUs range from 100k to 1M
+3. Fixed Number of Nodes : 10 (Autoscale happen as per the load).
+4. Throttling concurrency limit to 45.
 
 # FHIR Bulk Loader Application.
 1. App Service Plan
@@ -41,7 +46,7 @@ This will focus on how to configure destination FHIR server and FHIR Bulk Loader
 
         ![App Config](images/App_config.png)
 
-        3. Add the below name and value as per the requirement in the setting and click ok.
+        3. Add the FBI-MAXRESOURCESPERBUNDLE name and value as per the requirement in the setting and click ok.
 
         ![App setting](images/App_setting.png)
 
@@ -50,3 +55,10 @@ This will focus on how to configure destination FHIR server and FHIR Bulk Loader
         ![save](images/save.png)
 
     **NOTE**: When we change this configuration, the number of bundle files will be created accordingly and the user can manage the size of each bundle using this setting.
+
+### Suggested Configuration
+Below configration tested for 800 GB NDJson data
+1. App Service Plan : P2
+2. Number of Instance : 20
+3. Number of resources per bundle file : 100\
+FBI-MAXRESOURCESPERBUNDLE : 100
