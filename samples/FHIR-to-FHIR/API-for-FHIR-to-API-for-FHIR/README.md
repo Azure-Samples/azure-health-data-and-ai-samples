@@ -3,6 +3,10 @@
 This sample will focus on how to move FHIR data from one Azure API for FHIR server to another Azure API for FHIR server. This sample app utilizes [$export](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) (which allows you to filter and export certain data according to your [query](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters)) to export data from FHIR, and [FHIR Loader](https://github.com/microsoft/fhir-loader) to import to FHIR. 
 Note: This tutorial does not apply for the new Azure Health Data Services FHIR service. For more information on the different FHIR capabilities from Microsoft, see [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview#fhir-platforms-from-microsoft).
 
+# Architecture Overview
+
+![Architecture](docs/images/Architecture.png)
+
 # Prerequisites needed
 1.	Microsoft work or school account
 2.	Two Azure API for FHIR instances.
@@ -95,7 +99,3 @@ During the entire data movement error might occur. It can be during export data 
 
 To handle errors that occurred during the process. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/FHIR-to-FHIR/API-for-FHIR-to-API-for-FHIR/docs/Error_Handling.md).
 
-
-# Architecture Overview
-
-*Coming Soon !!*

@@ -38,4 +38,7 @@ Once the data is copied to 'ndjson' destination container, FHIR Bulk loader star
         - When Bundle file failed to process. The FHIR Bulk loader will move the file to 'bundleserr' container with the details.
         - User can access these files and make required changes and re-pushed the files to 'bundle' container manually.
         
-        **NOTE** : There are cases when we get error from FHIR server like internal server error(500) or throttled(429). For such case user can manually re-pushed the files to 'bundle' container manually without making changes in file(but need to change file type from error to json before pushing)
+        **NOTE** : 
+        1. There are cases when we get error from FHIR server like internal server error(500) or throttled(429). For such case user can manually re-pushed the files to 'bundle' container manually without making changes in file.
+        2. When user need to re-push the files they need to change file type from error to json.
+
