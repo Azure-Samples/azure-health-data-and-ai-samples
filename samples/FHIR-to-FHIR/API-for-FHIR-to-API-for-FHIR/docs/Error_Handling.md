@@ -4,7 +4,7 @@ This will focus on how to handle the error during the data movement process.
 
 # Export data
 1. Export error.
-    - User can go thorugh the [troubleshoot section](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data) to handle issue on exporting the data.
+    - User can go through the [troubleshoot section](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/export-data) to handle issue on exporting the data.
 2. Check export status.
     - User can fetch the URL for the export data and check the status.
     - Below are the steps:
@@ -20,7 +20,7 @@ This will focus on how to handle the error during the data movement process.
 1. Script execution failure.
     - Common error:
 
-        - User not logged to correct tenant.
+        - User not logged in to correct tenant.
         - User not passing correct HTTP URL of source and destination container while executing the script
         - User not having correct storage permission to perform copy operation.
 
@@ -28,14 +28,14 @@ This will focus on how to handle the error during the data movement process.
 
 
 # FHIR Bulk Loader
-Once the data copied to 'ndjson' destination container, FHIR Bulk loader start the process.
+Once the data is copied to 'ndjson' destination container, FHIR Bulk loader starts the process.
 
 - User can get the details for the error
     1. NDJSON error:
         - When NDJSON file failed to process. The FHIR Bulk loader will move the file to 'ndjsonerr' container with the details.
-        - User can access these file and make required changes and re-pushed the files to 'ndjson' container manually.
+        - User can access these files and make required changes and re-pushed the files to 'ndjson' container manually.
     2. Bundle error:
         - When Bundle file failed to process. The FHIR Bulk loader will move the file to 'bundleserr' container with the details.
-        - User can access these file and make required changes and re-pushed the files to 'bundle' container manually.
+        - User can access these files and make required changes and re-pushed the files to 'bundle' container manually.
         
-        **NOTE** : There are cases when we get error from fhir server like internal server error(500) or throttled(429). For such case user can manually re-pushed the files to 'bundle' container manually without making changes in file(but need to change file type from error to json before pushing)
+        **NOTE** : There are cases when we get error from FHIR server like internal server error(500) or throttled(429). For such case user can manually re-pushed the files to 'bundle' container manually without making changes in file(but need to change file type from error to json before pushing)
