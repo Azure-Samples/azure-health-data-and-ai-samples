@@ -51,11 +51,7 @@ function New-CopyProcess {
         return $true
     }
     catch {
-        Write-Host "Encounter error while copying files" -ForegroundColor Red   
-
-        ## Adding output to log file
-        Add-content $Logfile -value $_
-
+        Write-Host "Encounter error while copying files" -ForegroundColor Red
         throw
     }
       
