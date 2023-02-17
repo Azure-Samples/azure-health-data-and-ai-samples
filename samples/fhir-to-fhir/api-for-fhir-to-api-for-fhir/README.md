@@ -91,11 +91,11 @@ To move data from one FHIR server to another, we can configure settings for dest
 
 We can configure settings for FHIR loader Application according to the data it needs to process such as number of resources per bundle files or App service plan and instance nodes required during process.
 
-To make FHIR server and FHIR Bulk Loader App setting configured. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/FHIR-to-FHIR/API-for-FHIR-to-API-for-FHIR/docs/Server_%26_App_Config.md).
+To make FHIR server and FHIR Bulk Loader App setting configured. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md).
 
 # Error handling
 
 During the entire data movement error might occur. It can be during export data or copying the data to destination account or error while importing data in FHIR Bulk Loader.
 
-To handle errors that occurred during the process. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/FHIR-to-FHIR/API-for-FHIR-to-API-for-FHIR/docs/Error_Handling.md).
+To handle errors that occurred during the process. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md).
 
