@@ -18,7 +18,7 @@ First, convert your FHIR data into Parquet files and store them in Azure Data La
 - If you have already converted your FHIR data into Parquet files with the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md), or you are coming from the analytics connector private preview, please move on to "Stage 2: Create external tables and views".
 
 ## Option B: Using provided sample data
-If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data) to create a Data Lake and copy our sample Parquet files inside. Please note that this only copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
+If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data) to create a Data Lake and copy our sample Parquet files inside. Please note that this only copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
 
 
 # Stage 2: Create external tables and views
@@ -27,7 +27,7 @@ Next, create external tables and views from the Parquet files.
 If you have already used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or the analytics connector private preview to convert FHIR data to Parquet files, please follow steps 4 - 7 [here](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to create the external tables and views. Note that if you do not already have a Synapse workspace, you will need to create a Synapse workspace in Azure Portal before proceeding. Once you have completed those steps, please move on to "Stage 3: Query and Visualize".
 
 ## Option B: Using provided sample data 
-If you are using provided Parquet sample files to run this sample, please follow steps in "Stage 2" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#stage-2-create-external-tables-and-views-option-b-using-provided-sample-data)
+If you are using provided Parquet sample files to run this sample, please follow steps in "Stage 2" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-2-create-external-tables-and-views-option-b-using-provided-sample-data)
 
 
 # Stage 3: Query and Visualize
@@ -47,22 +47,22 @@ Note: This is a simple, basic example to demonstrate capabilities of the FHIR an
 ## Query: Setting up Database from SQL Server Management Studio
 
 ### Option A: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview
-If you used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or the analytics connector private preview to convert FHIR data to Parquet files, upload the stored procedures file (..azure-health-data-services-samples/samples/Analytics Visualization/scripts/sql/Stored_Procedure) to your database in Microsoft SQL Server Management Studio. 
+If you used the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) or the analytics connector private preview to convert FHIR data to Parquet files, upload the stored procedures file (..azure-health-data-services-samples/samples/analytics-visualization/scripts/sql/Stored_Procedure) to your database in Microsoft SQL Server Management Studio. 
 
-More detailed instructions on how to use Microsoft SQL Server Management Studio and uploading the stored procedures can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#uploading-stored-procedures-for-querying)
+More detailed instructions on how to use Microsoft SQL Server Management Studio and uploading the stored procedures can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#uploading-stored-procedures-for-querying)
  
 
 ###  Option B: Using provided sample data 
 If you are using provided Parquet sample files to run this sample, the stored procedure was already created from the Bicep template and is available in the database.
 
-If you would like to explore (view/edit) the stored procedure in Microsoft SQL Server Management Studio, detailed instructions can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#connecting-to-microsoft-sql-server-management-studio) to connect to the database using the “Serverless SQL endpoint”.
+If you would like to explore (view/edit) the stored procedure in Microsoft SQL Server Management Studio, detailed instructions can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#connecting-to-microsoft-sql-server-management-studio) to connect to the database using the “Serverless SQL endpoint”.
 
 
 ## Visualize: Checking and editing the dashboard in Power BI desktop application
 
-1. Open the “BCS_Compliance_Dashboard.pbix” file at (../azure-health-data-services-samples/samples/Analytics Visualization/powerbiReport)in Power BI Desktop application. 
+1. Open the “BCS_Compliance_Dashboard.pbix” file at (../azure-health-data-services-samples/samples/analytics-visualization/powerbiReport)in Power BI Desktop application. 
 
-2. The charts get data from the "ComplianceData" table. See the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#navigating-the-compliancedata-table) for more details on navigating the ComplianceData table. 
+2. The charts get data from the "ComplianceData" table. See the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#navigating-the-compliancedata-table) for more details on navigating the ComplianceData table. 
 
 ### Change the serverless SQL endpoint to your endpoint
 This example PowerBI is currently connected to an example endpoint. In this step, you will change the endpoint to your serverless SQL endpoint that you created above.
@@ -77,8 +77,8 @@ This example PowerBI is currently connected to an example endpoint. In this step
 
 
 ### Editing the query to change measurement period date range in parameters
-In this query editor, you can also change the measurement period date range. If you'd like detailed instructions on how to do this, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#editing-the-query-to-change-measurement-period-date-range-in-parameters).
+In this query editor, you can also change the measurement period date range. If you'd like detailed instructions on how to do this, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#editing-the-query-to-change-measurement-period-date-range-in-parameters).
 
 
 ### Publish the dashboard in Power BI Service
-Finally, publish the dashboard to PowerBI service and view. For detailed instructions, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/Analytics%20Visualization/docs/Appendix.md#publish-the-dashboard-in-powerbi-service).
+Finally, publish the dashboard to PowerBI service and view. For detailed instructions, follow the Appendix [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#publish-the-dashboard-in-powerbi-service).
