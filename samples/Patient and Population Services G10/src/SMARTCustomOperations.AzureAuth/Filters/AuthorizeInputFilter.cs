@@ -76,15 +76,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-            // Verify audience
-            if (!launchContext.IsValidAudience(_configuration.Audience!))
-            {
-                // default error event in WebPipeline.cs of toolkit
-                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new ArgumentException($"Audience does not match configuration. {JsonSerializer.Serialize(launchContext)}"), code: HttpStatusCode.BadRequest);
-                OnFilterError?.Invoke(this, error);
-                return context.SetContextErrorBody(error, _configuration.Debug);
-            }
-
             // Build the aad authorize url
             var authUrl = "https://login.microsoftonline.com";
             var authPath = $"{_configuration.TenantId}/oauth2/v2.0/authorize";
