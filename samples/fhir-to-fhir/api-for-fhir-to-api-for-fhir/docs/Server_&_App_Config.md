@@ -1,27 +1,27 @@
-# FHIR server(Destination) and FHIR Bulk Loader App configuration.
+# Destination FHIR Server and FHIR Bulk Loader App configuration
 
-This will focus on how to configure destination FHIR server and FHIR Bulk Loader Application settings.
+This appendix will focus on how to configure destination FHIR server and FHIR Bulk Loader Application settings.
 
 # Destination FHIR server.
 
 1. Enable Autoscaling
     - Please follow [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/autoscale-azure-api-fhir) to enable autoscaling and to estimate throughput RUs required.
 
-    **NOTE** : Need to open Azure support ticket to enable autoscaling for RU's.
+    **NOTE** : You will need to open an Azure support ticket to enable autoscaling for RU's.
 2. Number of RUs
     - Please follow [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/configure-database) to configure the database RU's as per the data size. 
 
-     **NOTE** : If requirement for RU's is more than 100k, please open Azure support ticket.
+     **NOTE** : If requirement for RU's is more than 100k, please open an Azure support ticket. 
 
 3. Number of Nodes.
     - Default number of nodes per FHIR server is 2. 
     - This will auto scale as per the load on FHIR server.
     
-    **NOTE** : User can increase the default number of node per FHIR server by opening Azure support ticket.
+    **NOTE** : You can request an increase in the default number of node per FHIR server by opening Azure support ticket. You may include request for RU, nodes, and throttling limits on the same ticket. 
 
 4. Throttling Concurrency Limit.
     - Default limit is 15.
-    - If user is getting more error for 429's(Throttled) while importing data to FHIR server they can increase the same by opening the Azure support ticket.
+    - If you are getting more errors for 429's(Throttled) while importing data to FHIR server, you can increase the throttling concurrency limit by opening the Azure support ticket. You may include request for RU, nodes, and throttling limits on the same ticket. 
 
 ### Suggested Configuration
 Below configration tested for 800 GB NDJson data
@@ -54,7 +54,7 @@ Below configration tested for 800 GB NDJson data
 
         ![save](images/save.png)
 
-    **NOTE**: When we change this configuration, the number of bundle files will be created accordingly and the user can manage the size of each bundle using this setting.
+    **NOTE**: When you change this configuration, the number of bundle files will be created accordingly and you can manage the size of each bundle using this setting.
 
 ### Suggested Configuration
 Below configration tested for 800 GB NDJson data
