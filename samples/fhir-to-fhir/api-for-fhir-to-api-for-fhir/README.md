@@ -1,7 +1,7 @@
 # FHIR-to-FHIR Data Movement: Moving data from one Azure API for FHIR server to another.
 
-This sample will focus on how to move FHIR data from one Azure API for FHIR server to another Azure API for FHIR server. This sample app utilizes [$export](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) (which allows you to filter and export certain data according to your [query](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters)) to export data from FHIR, and [FHIR Loader](https://github.com/microsoft/fhir-loader) to import to FHIR. 
-Note: This tutorial does not apply for the new Azure Health Data Services FHIR service. For more information on the different FHIR capabilities from Microsoft, see [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview#fhir-platforms-from-microsoft).
+This sample will focus on how to move FHIR data from one Azure API for FHIR server to another Azure API for FHIR server. This sample app utilizes [$export](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) (which allows you to filter and export certain data according to your [query](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters)) to export data from a source Azure API for FHIR server, and [FHIR Loader](https://github.com/microsoft/fhir-loader) to import to the destination Azure API for FHIR server. 
+Note: This tutorial is only for Azure API for FHIR and does not apply for the new Azure Health Data Services FHIR service. For more information on the different FHIR capabilities from Microsoft, see [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview#fhir-platforms-from-microsoft).
 
 # Architecture Overview
 
@@ -85,17 +85,17 @@ Note: This tutorial does not apply for the new Azure Health Data Services FHIR s
 		- It logs the output of copy operation performed during script execution.
 		- For every execution of PowerShell script new logs will be created under the folder "API-for-FHIR-to-API-for-FHIR\scripts\logfiles".
 
-# FHIR server(Destination) and FHIR Bulk Loader App configuration.
+# Destination FHIR server and FHIR Bulk Loader App configuration.
 
-To move data from one FHIR server to another, we can configure settings for destination FHIR server as per the data we need to move, like number of RUs and nodes needed for the FHIR server.
+To move data from one FHIR server to another, we can configure settings for destination FHIR server as per the data we need to move, for example the number of RUs and nodes needed for the FHIR server.
 
-We can configure settings for FHIR loader Application according to the data it needs to process such as number of resources per bundle files or App service plan and instance nodes required during process.
+We can configure settings for the FHIR Loader application according to the data it needs to process, such as number of resources per bundle files or App service plan and instance nodes required during process.
 
-To make FHIR server and FHIR Bulk Loader App setting configured. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md).
+To make FHIR server and FHIR Bulk Loader App setting configurations, please follow these [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md).
 
 # Error handling
 
-During the entire data movement error might occur. It can be during export data or copying the data to destination account or error while importing data in FHIR Bulk Loader.
+During the data movement, errors might occur. It can be during exporting data or copying the data to destination account, or errors while importing data in FHIR Bulk Loader.
 
-To handle errors that occurred during the process. Please follow [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md).
+To handle errors that occurr during the process, please follow these [steps](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/snarang/fhir2fhir/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md).
 
