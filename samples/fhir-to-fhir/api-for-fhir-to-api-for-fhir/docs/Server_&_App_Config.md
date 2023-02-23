@@ -4,31 +4,34 @@ This appendix will focus on how to configure destination FHIR server and FHIR Bu
 
 # Destination FHIR server.
 
-1. Enable Autoscaling
-    - Please follow [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/autoscale-azure-api-fhir) to enable autoscaling and to estimate throughput RUs required.
-
-    **NOTE** : You will need to open an Azure support ticket to enable autoscaling for RU's.
-2. Number of RUs
+1. Configure Number of RU’s for throughput
     - Please follow [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/configure-database) to configure the database RU's as per the data size. 
 
-     **NOTE** : If requirement for RU's is more than 100k, please open an Azure support ticket. 
+     **NOTE** : If requirement for RU's is more than 100k, please open an Azure support ticket.
+
+2. Enable Auto scale for throughput
+    - Please follow [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/autoscale-azure-api-fhir) to enable autoscaling and to estimate throughput RUs required.
+
+    **NOTE** : You will need to open an Azure support ticket to enable autoscaling for RU's. 
 
 3. Number of Nodes.
     - Default number of nodes per FHIR server is 2. 
     - This will auto scale as per the load on FHIR server.
     
-    **NOTE** : You can request an increase in the default number of node per FHIR server by opening Azure support ticket. You may include request for RU, nodes, and throttling limits on the same ticket. 
+    **NOTE** : You can request an increase in the default number of node per FHIR server by opening Azure support ticket. 
 
 4. Throttling Concurrency Limit.
     - Default limit is 15.
     - If you are getting more errors for 429's(Throttled) while importing data to FHIR server, you can increase the throttling concurrency limit by opening the Azure support ticket. You may include request for RU, nodes, and throttling limits on the same ticket. 
 
-### Suggested Configuration
-Below configration tested for 800 GB NDJson data
+### Tested Configuration
+Below configration tested on 02/2023 for 800 GB NDJson data
 1. Enable Autoscaling for RUs
 2. RUs range from 100k to 1M
 3. Fixed Number of Nodes : 10 (Autoscale happen as per the load).
 4. Throttling concurrency limit to 45.
+
+The Process took 16 hours to import the NDJSON data.
 
 # FHIR Bulk Loader Application.
 1. App Service Plan
@@ -56,9 +59,11 @@ Below configration tested for 800 GB NDJson data
 
     **NOTE**: When you change this configuration, the number of bundle files will be created accordingly and you can manage the size of each bundle using this setting.
 
-### Suggested Configuration
-Below configration tested for 800 GB NDJson data
+### Tested Configuration
+Below configration tested on 02/2023 for 800 GB NDJson data
 1. App Service Plan : P2
 2. Number of Instance : 20
 3. Number of resources per bundle file : 100\
 FBI-MAXRESOURCESPERBUNDLE : 100
+
+The Process took 16 hours to import the NDJSON data.
