@@ -30,7 +30,7 @@ This project provides samples outlining example implementations of various use c
 ### Analytics and machine learning
 |Sample|Description|
 | --- | --- |
-| [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
+| [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/analytics-visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
 
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 |Sample|Description|
