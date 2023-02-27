@@ -40,6 +40,8 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 		``` PowerShell
 		GET https://<<Source FHIR Server URL>>/<RESOURCE NAME>/$export?_container=<<CONTAINER NAME>>
 		```
+		**NOTE** : Execute the export jobs in parallel. Keep the job IDs to check the execution status for each export job.
+
 	- The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
 	- The exported data will be in the format of NDJSON files that are stored in a new container which was created during the export configuration process.
 
@@ -67,7 +69,7 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 			```Powershell
 			azcopy login --tenant-id 'xxxx-xxxx-xxxx-xxxx'  
 			```
-		4. Browse to the scripts folder under this path (..\FHIR-to-FHIR\API-for-FHIR-to-API-for-FHIR\scripts).
+		4. Browse to the scripts folder under this path (..\fhir-to-fhir\api-for-fhir-to-api-for-fhir\scripts).
 
 		5. Run the following PowerShell script. 
 			```Powershell
@@ -84,9 +86,9 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 			```
 	- Logging
 		- During the PowerShell script execution, log files will be created under the location : 
-			- ..\FHIR-to-FHIR\API-for-FHIR-to-API-for-FHIR\scripts\logfiles.
+			- ..\fhir-to-fhir\api-for-fhir-to-api-for-fhir\scripts\logfiles.
 		- It logs the output of copy operation performed during script execution.
-		- For every execution of PowerShell script new logs will be created under the folder "API-for-FHIR-to-API-for-FHIR\scripts\logfiles".
+		- For every execution of PowerShell script new logs will be created under the folder "api-for-fhir-to-api-for-fhir\scripts\logfiles".
 
 # Destination FHIR server and FHIR Bulk Loader App configuration.
 
