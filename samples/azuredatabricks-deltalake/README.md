@@ -21,7 +21,7 @@ Click the button below to launch Azure and deploy this sample. Open it in a new 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fazure-health-data-services-samples%2Fmain%2Fsamples%2Fazuredatabricks-deltalake%2Finfra%2Fazuredeploy.json)
 
 
-## Looking around at what we deployed
+## Sample components
 
 This sample will deploy the following components:
 
@@ -36,13 +36,13 @@ This sample will deploy the following components:
 - Script to load sample data into the FHIR Service from Synthea
 
 
-## Watch data flow through the sample
+## Data flow through the sample
 
 To test out this sample, launch the Azure Databricks workspace you just deployed. Go to the Delta Live Tables area of Azure Databricks and start the pipeline there. The pipeline will take about 5 minutes to spin up a cluster and execute
 
 ![How to run the deployed pipeline](./docs/run-pipeline-in-databricks.gif)
 
-## Explain the sample
+## Sample overview
 
 This sample touches on one small, core area that you would need to repeat for other entities in your data. The core concepts are:
 
@@ -66,23 +66,23 @@ A medallion architecture is a data design pattern used to logically organize dat
 
 *Source: [Databricks](https://www.databricks.com/glossary/medallion-architecture)*
 
-### Bronze Layer
+#### Bronze Layer
 
 For FHIR data in our sample, the bronze layer is a copy of files extracted from FHIR with the FHIR to Data Lake Azure Function. The bronze layer is a landing zone and should be as close to the format of your source systems as possible. Once this data is moved successfully to bronze and you are confident in your Delta Lake deployment, you can begin to delete the data in this Data Lake path once it is moved to bronze.
 
 You can see more details about the initial copy to bronze [in this notebook](./notebooks/Creating%20a%20Patient%20Delta%20Table%20with%20Auto%20Loader.ipynb)
 
-### Silver Layer
+#### Silver Layer
 
 The silver layer is a collection of entity based tables that are transformed from bronze into core tables that apply across your business. These are called "cleansed and conformed" tables. We recommend that you flatten the data in these tables as much as you can to simplify connecting downstream applications directly to your silver layer (like PowerBI). FHIR data is heavily nested and it's best to incur the complexity of this transformation once in your data platform. More than flattening, your silver layer should have data elements that map to your business entities. For example, you may have column for your EMPI (enterprise master patient id) that is a flattened, filtered result from the identifier element on the patient resource.
 
-### Gold Layer
+#### Gold Layer
 
 Finally, the gold layer should house use-case specific, curated business-level tables. These are generally created per each application or application group and are targeted specifically at the query and data access patterns. The data here is generally de-normalized and optimized for reads. Applications can also pull data from the silver layer when it makes sense, but if this logic gets too complex or you are computing aggregates, a gold level table may be right for the scenario. Generally the gold layer data has a loss of record level fidelity from the silver layer.
 
 ![](./docs/medallion.png)
 
-## Using this in your own environment
+## Next steps: using this in your own environment
 
 To use this sample in your own production environment, we recommend that you look into Databricks best practices, especially around testing your code, extracing common functionality, CI/CD, monitoring, and alerting. For more details, please check out the links below.
 
