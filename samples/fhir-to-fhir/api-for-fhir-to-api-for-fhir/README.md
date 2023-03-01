@@ -33,14 +33,16 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 	- Follow steps [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/configure-export-data) to configure export on Azure API for FHIR server.
 	- Once the export configuration is setup, run the export command on Azure API for FHIR server.
 	Follow the [steps](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) to run the export command.\
-	**Examples**:
+	**Examples**:  
+		If you'd like to run a system export:
 		``` PowerShell
 		GET https://<<Source FHIR Server URL>>/$export?_container=<<CONTAINER NAME>>
 		```
+		If you'd like to export per resource:
 		``` PowerShell
-		GET https://<<Source FHIR Server URL>>/<RESOURCE NAME>/$export?_container=<<CONTAINER NAME>>
+		GET https://<<Source FHIR Server URL>>/$export?_container=<<CONTAINER NAME>>&_type=<<RESOURCE TYPE>>
 		```
-		**NOTE** : Execute the export jobs in parallel. Keep the job IDs to check the execution status for each export job.
+		**NOTE** : If you export per resource, you will need to manually run the above command once per resource type. Execute the export jobs in parallel to minimize wait times, and note down the job IDs to check the execution status for each export job.
 
 	- The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
 	- The exported data will be in the format of NDJSON files that are stored in a new container which was created during the export configuration process.
