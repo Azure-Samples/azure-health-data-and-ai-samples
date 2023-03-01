@@ -41,7 +41,7 @@ resource synapseworkspace 'Microsoft.Synapse/workspaces@2020-12-01' = {
   properties: {
     defaultDataLakeStorage: {
       accountUrl: 'https://${StorageAccount.name}.dfs.core.windows.net'
-      filesystem: filesystem.name
+      filesystem: filesystemName
     }
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
