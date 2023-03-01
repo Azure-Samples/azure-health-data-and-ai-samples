@@ -9,4 +9,4 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [Sample for copying data from API for FHIR to API for FHIR](samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/) | Sample app that shows how to copy data from one Azure API for FHIR to another Azure API for FHIR server. |
+| [Sample for copying data from API for FHIR to API for FHIR](api-for-fhir-to-api-for-fhir) | Sample app that shows how to copy data from one Azure API for FHIR to another Azure API for FHIR server. |
