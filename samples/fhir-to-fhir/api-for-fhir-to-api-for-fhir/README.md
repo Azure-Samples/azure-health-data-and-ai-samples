@@ -1,4 +1,4 @@
-#Copying Data from one Azure API for FHIR server to another Azure API for FHIR server
+# Copying Data from one Azure API for FHIR server to another Azure API for FHIR server
 
 This sample will focus on how to copy FHIR data from one Azure API for FHIR server to another Azure API for FHIR server. This sample app utilizes [$export](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) (which allows you to filter and export certain data according to your [query](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters)) to export data from a source Azure API for FHIR server, and [FHIR Loader](https://github.com/microsoft/fhir-loader) to import to the destination Azure API for FHIR server. 
 Note: This tutorial is only for Azure API for FHIR and does not apply for the new Azure Health Data Services FHIR service. For more information on the different FHIR capabilities from Microsoft, see [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview#fhir-platforms-from-microsoft).
