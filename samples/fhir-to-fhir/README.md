@@ -1,5 +1,5 @@
-# FHIR-to-FHIR Samples Repo
-The FHIR-to-FHIR Samples Repo is a set of sample apps and sample code provided to help you get started with copying data from one FHIR server to another FHIR server. 
+# FHIR-to-FHIR samples collection
+The FHIR-to-FHIR samples collection is a set of sample apps and sample code provided to help you get started with copying data from one FHIR server to another FHIR server. 
 
 ## Samples
 
