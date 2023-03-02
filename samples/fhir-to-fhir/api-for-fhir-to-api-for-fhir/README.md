@@ -42,7 +42,7 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 		``` PowerShell
 		GET https://<<Source FHIR Server URL>>/$export?_container=<<CONTAINER NAME>>&_type=<<RESOURCE TYPE>>
 		```
-		**NOTE** : If you export per resource, you will need to manually run the above command once per resource type. Execute the export jobs in parallel to minimize wait times, and note down the job IDs to check the execution status for each export job.
+		**NOTE** : If you export per resource, you will need to manually run the above command once per resource type. Execute the export jobs in parallel to minimize wait times, and note down the job IDs to check the execution status for each export job. You can check the $export operation status through the URL in the Content-Location header that's returned in the FHIR service response.
 
 	- The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
 	- The exported data will be in the format of NDJSON files that are stored in a new container which was created during the export configuration process.
