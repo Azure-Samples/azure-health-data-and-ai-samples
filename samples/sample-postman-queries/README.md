@@ -19,8 +19,26 @@ The queries in this collection are categorized into folders as below:
 - `Include and Reverse Include Search` - This folder has queries with `_include` and `_revinclude` parameters, to fetch resources related to the search results (e.g., `Patient` resources associated with an `Encounter` search). More details on inclusions can be found on the [FHIR Search Page](https://www.hl7.org/fhir/search.html#return).
 - `Custom Search (Create and Use custom SearchParameter)`  - This folder has queries related to custom search, here we create a new `SearchParameter` resource, run the reindex operation (`$reindex`), and use the newly created `SearchParameter`. More details about custom search could be found in [Microsoft Learn](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/how-to-do-custom-search).
 - List of alphabetically sorted, resource specific folders for resource specific queries for CRUD operations.
-
-
+- For resource search we have included search queries with multiple Ids, combination of multiple search parameters to find matching resources.
+- Below search parameters which are supported in US Core profile are also available under specific resource folders:
+  - CareTeam - Role
+  - Encounter - DischargeDisposition
+  - Condition - AssertedDate
+  - Patient - GenderIdentity
+  - Goal - Description
+  - ServiceRequest - Authored
+ - Examples of some search paremeters combinations from US Core/IPS(International Patient Summary)/IPA(International Patient Access) as listed below:
+    - Careplan - patient+category+status+date 
+    - Encounter - patient+location, date+patient, patient+status
+    - Condition - patient+category+encounter, patient+recorded-date, patient+onset-date, patient+category+clinical-status
+    - Patient - race & ethnicity, family+gender, birthdate+family, birthdate+name, gender+name
+    - Allergy Intolerance – patient+clinical-status 
+    - Observation - patient+category+status, patient+code+date 
+    - Procedure - patient+code+date
+    - MedicationRequest - patient+code+date
+    - DiagnosticReport - patient+category+date, patient+code+date 
+    - Goal - patient+target-date, patient+lifecycle-status 
+    - Service Request - patient+category+authored, patient+status, patient+category 
  
 
 ## Getting started
