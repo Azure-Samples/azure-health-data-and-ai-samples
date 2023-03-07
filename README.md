@@ -39,13 +39,13 @@ This project provides samples outlining example implementations of various use c
 ### Sample transactions
 |Sample|Description|
 | --- | --- |
-| [Sample Postman queries](samples/sample-postman-queries) | Starter Postman collection of common Postman queries used to query FHIR data.|
+| [Sample Postman queries](samples/sample-postman-queries) | Learn how to interact with FHIR data using Postman with this starter Postman collection of common Postman queries used to query FHIR server, including FHIR searches, creating, reading, updating, and deleting requests for FHIR resources, and other operations.|
 
 ### Analytics and machine learning
 |Sample|Description|
 | --- | --- |
 | [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](samples/analytics-visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
-| [Integrate Azure Health Data Services FHIR data with Delta Lake on Azure Databricks](samples/azuredatabricks-deltalake/) | Sample demonstrates how to automatically connect data from the FHIR Service into your Azure Databricks Delta Lake using the Analytics Connector. |
+| [Integrate Azure Health Data Services FHIR data with Delta Lake on Azure Databricks](samples/azuredatabricks-deltalake/) | Learn how to use Azure Databricks with Azure Health Data Services. Sample demonstrates how to automatically connect data from the FHIR Service into analytics platforms on Azure Databricks Delta Lake using the Analytics Connector. |
 
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 |Sample|Description|
