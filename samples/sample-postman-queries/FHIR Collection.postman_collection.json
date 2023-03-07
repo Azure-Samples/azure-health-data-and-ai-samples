@@ -4236,7 +4236,7 @@
 									},
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4278,7 +4278,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4326,7 +4326,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4359,7 +4359,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4393,7 +4393,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4432,7 +4432,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4471,7 +4471,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4510,7 +4510,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4549,7 +4549,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4588,7 +4588,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4627,7 +4627,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4666,7 +4666,7 @@
 								"header": [
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
@@ -4716,7 +4716,7 @@
 									},
 									{
 										"key": "User-Agent",
-										"value": "postman-collection-sample",
+										"value": "{{userAgentValue}}",
 										"type": "default"
 									}
 								],
