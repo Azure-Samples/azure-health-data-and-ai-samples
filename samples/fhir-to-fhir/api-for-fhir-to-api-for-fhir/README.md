@@ -135,21 +135,6 @@ During the data movement, errors might occur. It can be during exporting data or
 
 To handle errors that occurr during the process, please follow these [steps](docs/Error_Handling.md).
 
-# Resource Cleanup
-
-- Once the data is moved to destination Azure API for FHIR server following steps can be performed.
-	- Delete the Source Azure API for FHIR server once the data movement is verified.
-	- Delete the container where the export is done.
-	- Delete the copied data to the destination storage account.
-
-	Run the below command on Azure Cloud Shell to delete all blob from specific container.
-	```PowerShell
-	az storage blob delete-batch --source "<<CONTAINER_NAME>>" --account-name "<<STORAGE_ACCOUNT_NAME>>" --pattern *
-	```
-	|Parameter   | Description   |
-	|---|---|
-	| CONTAINER_NAME | Container Name from where the data need to be removed. |
-	| STORAGE_ACCOUNT_NAME | Storage account name where the Container is present. 
 
 
 
