@@ -19,13 +19,13 @@ param principalId string = ''
 // start required API gateway parameters
 
 @description('Name of the owner of the API Management resource')
-param apimPublisherName string = 'Test Name'
+param apimPublisherName string
 
 @description('Email of the owner of the API Management resource')
-param apimPublisherEmail string = 'test@test.com'
+param apimPublisherEmail string
 
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
-param contextAadApplicationId string = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
+param contextAadApplicationId string
 
 // end user required API gateway parameters
 
@@ -264,9 +264,9 @@ module contextStaticWebApp './app/contextApp.bicep' = {
 // These map to user secrets for local execution of the program
 output LOCATION string = location
 output FhirServerUrl string = fhirUrl
-// output ExportStorageAccountUrl string = template.outputs.ExportStorageAccountUrl
-// output ApiManagementHostName string = template.outputs.ApiManagementHostName
-// output BackendServiceKeyVaultStore string = template.outputs.BackendServiceKeyVaultStore
+output ExportStorageAccountUrl string = 'https://${exportStoreName}.blob.${environment().suffixes.storage}'
+output ApiManagementHostName string = apim.outputs.apimHostName
+output BackendServiceKeyVaultStore string = backendServiceVaultName
 output Audience string = authCustomOperation.outputs.authCustomOperationAudience
 output TenantId string = tenantId
 
