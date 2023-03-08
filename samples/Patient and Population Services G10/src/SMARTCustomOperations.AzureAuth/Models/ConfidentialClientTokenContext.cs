@@ -55,7 +55,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
             formValues.Add(new KeyValuePair<string, string>("redirect_uri", RedirectUri.ToString()));
             formValues.Add(new KeyValuePair<string, string>("client_id", ClientId));
             formValues.Add(new KeyValuePair<string, string>("client_secret", ClientSecret));
-            if (CodeVerifier is not null)
+
+            if (!String.IsNullOrEmpty(CodeVerifier))
             {
                 formValues.Add(new KeyValuePair<string, string>("code_verifier", CodeVerifier));
             }

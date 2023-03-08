@@ -74,15 +74,23 @@ namespace SMARTCustomOperations.AzureAuth.Models
             queryStringParams.Add($"scope={HttpUtility.UrlEncode(Scope)}");
             queryStringParams.Add($"state={HttpUtility.UrlEncode(State)}");
             queryStringParams.Add($"aud={HttpUtility.UrlEncode(Audience)}");
-            queryStringParams.Add($"code_challenge={HttpUtility.UrlEncode(CodeChallenge)}");
-            queryStringParams.Add($"code_challenge_method={HttpUtility.UrlEncode(CodeChallengeMethod)}");
 
-            if (Prompt is not null)
+            if (!String.IsNullOrEmpty(CodeChallenge))
+            {
+                queryStringParams.Add($"code_challenge={HttpUtility.UrlEncode(CodeChallenge)}");
+            }
+
+            if (!String.IsNullOrEmpty(CodeChallengeMethod))
+            {
+                queryStringParams.Add($"code_challenge_method={HttpUtility.UrlEncode(CodeChallengeMethod)}");
+            }
+
+            if (!String.IsNullOrEmpty(Prompt))
             {
                 queryStringParams.Add($"prompt={Prompt}");
             }
 
-            if (LoginHint is not null)
+            if (!String.IsNullOrEmpty(LoginHint))
             {
                 queryStringParams.Add($"login_hint={LoginHint}");
             }

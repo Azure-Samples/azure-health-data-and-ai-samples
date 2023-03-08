@@ -86,12 +86,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             context.StatusCode = HttpStatusCode.Redirect;
             context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
 
-            // Origin is only needed for PKCE
-            if (launchContext.CodeChallengeMethod is not null)
-            {
-                context.Headers.Add(new HeaderNameValuePair("Origin", "http://localhost", CustomHeaderType.ResponseStatic));
-            }
-
             context.Request.RequestUri = new Uri(newRedirectUrl);
 
             await Task.CompletedTask;
