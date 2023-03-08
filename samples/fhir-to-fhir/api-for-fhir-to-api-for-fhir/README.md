@@ -3,7 +3,7 @@
 This sample will focus on how to copy FHIR data from one Azure API for FHIR server to another Azure API for FHIR server. This sample app utilizes [$export](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data) (which allows you to filter and export certain data according to your [query](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters)) to export data from a source Azure API for FHIR server, and [FHIR Loader](https://github.com/microsoft/fhir-loader) to import to the destination Azure API for FHIR server. 
 Note: This tutorial is only for Azure API for FHIR and does not apply for the new Azure Health Data Services FHIR service. For more information on the different FHIR capabilities from Microsoft, see [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview#fhir-platforms-from-microsoft).
 
-# Architecture Overview
+## Architecture Overview
 
 ![Architecture](docs/images/Architecture.png)
 
@@ -20,7 +20,7 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 			```PowerShell
 			https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/
 			```
-# Deployment
+## Deployment
 1. Deploy the FHIR Bulk Loader. Go to [FHIR Bulk Loader](https://github.com/microsoft/fhir-loader) and follow the [deployment steps](https://github.com/microsoft/fhir-loader#deployment).
 
 	**NOTE**: Pass the **destination** Azure API for FHIR server details while deploying the FHIR Bulk Loader
@@ -56,13 +56,13 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 
 	4. If you export per resource, you will need to manually run the above command once per resource type. Execute the export jobs in parallel to minimize wait times, and note down the job IDs to check the execution status for each export job. 
 	
-	5. You can check the $export operation status through the URL in the Content-Location header (these are Job IDs) that's returned in the FHIR service response.
+	5. You can check the $export operation status through the URL in the Content-Location header (these are Job IDs) that is returned in the FHIR service response.
 
 		**Examples**:
 		```PowerShell
 		GET https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/123456789
 		```
-		It will give type, URL and count of the resources exported. Note down the exported FHIR resource count as it will useful in data movement verification step.
+		It will give type, URL and count of the resources exported. Note down the exported FHIR resource count as it will be useful in data movement verification step later.
 	6. The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
 	7. The exported data will be in the format of NDJSON files that are stored in a new container which was created during the export configuration process.
 
@@ -122,20 +122,8 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 		- It logs the output of copy operation performed during script execution.
 		- For every execution of PowerShell script new logs will be created under the folder "api-for-fhir-to-api-for-fhir\scripts\logfiles".
 
-# Data Movement Verification
 
-This steps will help you to check the successful completion of the data movement from source Azure API for FHIR server to empty destination Azure API for FHIR server.\
-You can verify the data movement once the FHIR bulk loader completed the processing of files.
-
-- If the data movement is done on empty destination Azure API for FHIR server, please follow below steps to verify the data movement completed successfully.
-	- Get the count of each exported FHIR resource count. You have noted the value in step 5 of : **Export data from the **source** Azure API for FHIR server.**
-	- Now run below command to check the resource count on destination Azure API for FHIR server.
-		```PowerShell
-		GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
-		```
-	- Compare the count with exported FHIR resource count.
-
-# Destination FHIR server and FHIR Bulk Loader App configuration.
+## Destination FHIR server and FHIR Bulk Loader App configuration.
 
 To move data from one FHIR server to another, we can configure settings for destination FHIR server as per the data we need to move, for example the number of RUs and nodes needed for the FHIR server.
 
@@ -143,16 +131,30 @@ We can configure settings for the FHIR Loader application according to the data 
 
 To make FHIR server and FHIR Bulk Loader App setting configurations, please follow these [steps](docs/Server_%26_App_Config.md).
 
-# Error handling
+
+## Error handling
 
 During the data movement, errors might occur. It can be during exporting data or copying the data to destination account, or errors while importing data in FHIR Bulk Loader.
 
 To handle errors that occurr during the process, please follow these [steps](docs/Error_Handling.md).
 
-# Resource Cleanup
+## Data Movement Verification
 
-This step will help you to cleanup the resources to stop the incurring cost. 
-- Once the data is moved to destination Azure API for FHIR server and verification is done, following steps can be performed.
+If you'd like to verify that all of your exported FHIR data was successfully imported into the new FHIR server, follow these steps. This verification will only work if the destination Azure API for FHIR server was initially empty. 
+
+You can verify the data movement once the FHIR bulk loader completes the processing of files.
+
+	- Get the count of each exported FHIR resource count. You have noted the value in step 5 of : **Export data from the **source** Azure API for FHIR server.**
+	- Now run below command to check the resource count on destination Azure API for FHIR server.
+		```PowerShell
+		GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
+		```
+	- Compare the count with exported FHIR resource count to make sure that they match.
+
+## Resource Cleanup
+
+If you'd like to delete the resources that were successfully copied over from the old FHIR server as well as from the intermediate storage containers that were created during this process, follow these steps:
+- Note: Please verify that all your data moved over (See above section "Data Movement Verification" before deleting the old resources. 
 	- Delete the Source Azure API for FHIR server once the data movement is verified.
 	- Delete the container where the export is done.
 	- Delete the copied data to the destination storage account.
