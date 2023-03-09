@@ -60,7 +60,7 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 
 		**Examples**:
 		```PowerShell
-		GET https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/123456789
+		GET https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/<<JOB_ID>>
 		```
 		It will give type, URL and count of the resources exported. Note down the exported FHIR resource count as it will be useful in data movement verification step later.
 	6. The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
@@ -142,14 +142,14 @@ To handle errors that occurr during the process, please follow these [steps](doc
 
 If you'd like to verify that all of your exported FHIR data was successfully imported into the new FHIR server, follow these steps. This verification will only work if the destination Azure API for FHIR server was initially empty. 
 
-You can verify the data movement once the FHIR bulk loader completes the processing of files.
-
-	- Get the count of each exported FHIR resource count. You have noted the value in step 5 of : **Export data from the **source** Azure API for FHIR server.**
-	- Now run below command to check the resource count on destination Azure API for FHIR server.
-		```PowerShell
-		GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
-		```
-	- Compare the count with exported FHIR resource count to make sure that they match.
+All files should be processed from 'bundles' and 'ndjson' containers in the storage account linked to the FHIR bulk loader once it completes the process.
+	
+- Get the count of each exported FHIR resource count. You have noted the value in step 5 of : **Export data from the **source** Azure API for FHIR server.**
+- Now run below command to check the resource count on destination Azure API for FHIR server.
+	```PowerShell
+	GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
+	```
+- Compare the count with exported FHIR resource count to make sure that they match.
 
 ## Resource Cleanup
 
