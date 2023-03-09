@@ -142,7 +142,7 @@ To handle errors that occurr during the process, please follow these [steps](doc
 
 If you'd like to verify that all of your exported FHIR data was successfully imported into the new FHIR server, follow these steps. This verification will only work if the destination Azure API for FHIR server was initially empty. 
 
-All files should be processed from 'bundles' and 'ndjson' containers in the storage account linked to the FHIR bulk loader once it completes the process.
+All files should be processed from 'bundles' and 'ndjson' containers in the storage account linked to the FHIR bulk loader once loader completes the process.
 	
 - Get the count of each exported FHIR resource count. You have noted the value in step 5 of : **Export data from the **source** Azure API for FHIR server.**
 - Now run below command to check the resource count on destination Azure API for FHIR server.
@@ -150,6 +150,8 @@ All files should be processed from 'bundles' and 'ndjson' containers in the stor
 	GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
 	```
 - Compare the count with exported FHIR resource count to make sure that they match.
+
+**NOTE** : Destination FHIR Server should not be used by any other applications OR users till the FHIR loader completes process as it will lead to miscount of the resources. 
 
 ## Resource Cleanup
 
