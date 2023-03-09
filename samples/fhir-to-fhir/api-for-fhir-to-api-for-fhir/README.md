@@ -56,9 +56,13 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 
 	4. If you export per resource, you will need to manually run the above command once per resource type. Execute the export jobs in parallel to minimize wait times, and note down the job IDs to check the execution status for each export job. 
 	
-	5. You can check the $export operation status through the URL in the Content-Location header (these are Job IDs) that is returned in the FHIR service response.
+	5. You can check the $export operation status through the URL in the Content-Location header that is returned in the FHIR service response. It will look something like this:
+	
+		```PowerShell
+		https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/<<JOB_ID>>
+		```
 
-		**Examples**:
+		You can then use Postman to GET the $export operation status, for example:
 		```PowerShell
 		GET https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/<<JOB_ID>>
 		```
