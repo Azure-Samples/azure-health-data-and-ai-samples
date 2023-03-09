@@ -220,12 +220,18 @@ Azure Active Directory does not support RSA384 and/or ES384 which is required by
 
 </details>
 
-## 6. Add sample data and profiles
+## 6. Add sample data and US Core resources
 
-In order to test this sample, you will need to load sample data and profiles. Inferno requires the loading of US Core and some sample data with conforming data. Your FHIR Service will need to have compliant data to pass the compliance test.
+The Inferno (g)(10) suite requires both the US Core profile and data to be loaded in order to pass the test. 
 
-For more information on loading profiles, check out the [FHIR Loader Tool for US Core](https://github.com/microsoft/fhir-loader/blob/fhir-loader-cli/src/FhirLoader.Tool/uscore_README.md)
+We have created a Powershell script that will load US Core artifacts and test data quickly for testing. Open [this script](../scripts/Load-ProfilesData.ps1), change the variables at the top, and execute.
 
-We have created some sample data that can be deployed. Check out [this directory](../../../docs/rest/Inferno/).
+### Loading the US Core resources
 
-Or to quickly load data for testing, you can use [this script](../scripts/Load-ProfilesData.ps1) with some modification.
+Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
+
+### Loading Data
+
+Passing Inferno (g)(10) may require loading of real data from your application. To quickly test this solution, you can load some sample data.
+
+We have created a bundle containing all the needed resources to pass the Inferno test. This can be found [here](https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json). Postman or another REST client can be used to load this file.

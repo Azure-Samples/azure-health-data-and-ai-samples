@@ -60,9 +60,6 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.UseAzureFunctionPipeline();
 
-                    services.UseCustomHeaders();
-                    services.AddCustomHeader("Origin", "http://localhost", CustomHeaderType.RequestStatic);
-
                     services.AddSingleton<AzureAuthOperationsConfig>(config);
 
                     services.AddInputFilter(typeof(AuthorizeInputFilter));
