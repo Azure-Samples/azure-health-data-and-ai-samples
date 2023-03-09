@@ -167,18 +167,6 @@ module exportCustomOperation './app/exportCustomOperation.bicep' = {
   }
 }
 
-// #TODO - remove once SMART Scopes are properly working
-@description('Setup identity connection between FHIR and the function app')
-module functionFhirIdentity './core/identity.bicep'= {
-  name: 'fhirIdentity-function-contributor'
-  scope: rg
-  params: {
-    fhirId: fhir.outputs.fhirId
-    principalId: authCustomOperation.outputs.functionAppPrincipalId
-    roleType: 'fhirContributor'
-  }
-}
-
 @description('Setup identity connection between FHIR and the given contributors')
 module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirContrib'
