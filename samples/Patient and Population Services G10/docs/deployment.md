@@ -7,7 +7,6 @@ This document will guide you through the steps needed for deploying this sample.
 Before deploying this sample, you will need to install some Azure tools **and** ensure you have administrator access to an Azure subscription / tenant.
 
 - Make sure you have the pre-requisites applications installed on your computer.
-  - Azure CLI: Please install this via [the instructions here](https://learn.microsoft.com/cli/azure/install-azure-cli)
   - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
   - Visual Studio or Visual Studio Code (for debugging the sample code).
   - NPM (for debugging sample).
@@ -53,8 +52,8 @@ Before deployment, lets look at the configuration needed to deploying this sampl
   - `apimPublisherEmail`: Sample owner email address.
   - `contextAadApplicationId`: Client ID from step 2.
 - Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
-- Login with the Azure CLI. Specify the tenant if you have more than one.
-  - `az login` or `az login -t <tenant-id>`.
+- Login with the Azure Developer CLI. Specify the tenant if you have more than one.
+  - `azd login` or `azd login --tenant-id <tenant-id>`.
 - Run the `azd up` command from this directory. Enter:
   - Environment Name: Prefix for the resource group that will be created to hold all Azure resources ([see more details](https://learn.microsoft.com/azure/developer/azure-developer-cli/faq#what-is-an-environment-name)). Must be all lowercase.
     - You can always create a new environment with `azd env new`.
