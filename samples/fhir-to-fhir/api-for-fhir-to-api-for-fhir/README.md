@@ -66,7 +66,12 @@ Note: This tutorial is only for Azure API for FHIR and does not apply for the ne
 		```PowerShell
 		GET https://<<SOURCE_ACCOUNT_NAME>>.azurehealthcareapis.com/_operations/export/<<JOB_ID>>
 		```
+		If the Status return is 202 Accepted, it means the export job is in progress and you can check the files are being created in the container.
+
+		If the status return is 200 Completed, it means the export job is completed. All the requested data is been exported to the container.\
 		It will give type, URL and count of the resources exported. Note down the exported FHIR resource count as it will be useful in data movement verification step later.
+
+		More details on [Bulk Data Status request](https://hl7.org/fhir/uv/bulkdata/export/index.html#bulk-data-status-request).
 	6. The instructions also list [query parameters](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/export-data#query-parameters) that can be used to filter what data gets exported.
 	7. The exported data will be in the format of NDJSON files that are stored in a new container which was created during the export configuration process.
 
@@ -152,6 +157,10 @@ All files should be processed from 'bundles' and 'ndjson' containers in the stor
 - Now run below command to check the resource count on destination Azure API for FHIR server.
 	```PowerShell
 	GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/<<RESOURCE_NAME>>?_summary=count
+	```
+	If you have done the export on system level run the below command to check the total resource count on destination Azure API for FHIR server.
+	```PowerShell
+	GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/?_summary=count
 	```
 - Compare the count with exported FHIR resource count to make sure that they match.
 
