@@ -33,7 +33,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [Copy data from one Azure API for FHIR server to another API for FHIR server](samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir) | Sample app for copying data from one Azure API for FHIR server to another Azure API for FHIR server. |
+| [Migrate data from one Azure API for FHIR server to another API for FHIR server](samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir) | Sample app for copying/migrating data from one Azure API for FHIR server to another Azure API for FHIR server. |
 
 
 ### Sample transactions
