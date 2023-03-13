@@ -236,7 +236,7 @@ $params = @{
   }
 }
 
-Update-MgUser -UserId Your-Enterprise-Application-ObjectId -BodyParameter $params
+Update-MgUser -UserId Your-User-ID -BodyParameter $params
 ```
 
 ### Backend Service Client Application
