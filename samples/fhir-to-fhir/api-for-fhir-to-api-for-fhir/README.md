@@ -154,7 +154,7 @@ If you'd like to verify that all of your exported FHIR data was successfully imp
 All files should be processed from 'bundles' and 'ndjson' containers in the storage account linked to the FHIR bulk loader once loader completes the process.
 	
 - Get the exported FHIR resource count(s). You have noted the value(s) in step 5 of : **Export data from the **source** Azure API for FHIR server.**
-- Now run the below command to check the resource count on destination Azure API for FHIR server.
+- Now run the below command to check the resource count on destination Azure API for FHIR server.  
 	If you have done the export on system level run the below command to check the total resource count on destination Azure API for FHIR server.
 	```PowerShell
 	GET https://<<DESTINATION_ACCOUNT_NAME>>.azurehealthcareapis.com/?_summary=count
