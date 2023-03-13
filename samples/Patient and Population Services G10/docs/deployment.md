@@ -7,7 +7,6 @@ This document will guide you through the steps needed for deploying this sample.
 Before deploying this sample, you will need to install some Azure tools **and** ensure you have administrator access to an Azure subscription / tenant.
 
 - Make sure you have the pre-requisites applications installed on your computer.
-  - Azure CLI: Please install this via [the instructions here](https://learn.microsoft.com/cli/azure/install-azure-cli)
   - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
   - Visual Studio or Visual Studio Code (for debugging the sample code).
   - NPM (for debugging sample).
@@ -53,8 +52,8 @@ Before deployment, lets look at the configuration needed to deploying this sampl
   - `apimPublisherEmail`: Sample owner email address.
   - `contextAadApplicationId`: Client ID from step 2.
 - Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
-- Login with the Azure CLI. Specify the tenant if you have more than one.
-  - `az login` or `az login -t <tenant-id>`.
+- Login with the Azure Developer CLI. Specify the tenant if you have more than one.
+  - `azd login` or `azd login --tenant-id <tenant-id>`.
 - Run the `azd up` command from this directory. Enter:
   - Environment Name: Prefix for the resource group that will be created to hold all Azure resources ([see more details](https://learn.microsoft.com/azure/developer/azure-developer-cli/faq#what-is-an-environment-name)). Must be all lowercase.
     - You can always create a new environment with `azd env new`.
@@ -273,12 +272,18 @@ Azure Active Directory does not support RSA384 and/or ES384 which is required by
 
 </details>
 
-## 6. Add sample data and profiles
+## 6. Add sample data and US Core resources
 
-In order to test this sample, you will need to load sample data and profiles. Inferno requires the loading of US Core and some sample data with conforming data. Your FHIR Service will need to have compliant data to pass the compliance test.
+The Inferno (g)(10) suite requires both the US Core profile and data to be loaded in order to pass the test. 
 
-For more information on loading profiles, check out the [FHIR Loader Tool for US Core](https://github.com/microsoft/fhir-loader/blob/fhir-loader-cli/src/FhirLoader.Tool/uscore_README.md)
+We have created a Powershell script that will load US Core artifacts and test data quickly for testing. Open [this script](../scripts/Load-ProfilesData.ps1), change the variables at the top, and execute.
 
-We have created some sample data that can be deployed. Check out [this directory](../../../docs/rest/Inferno/).
+### Loading the US Core resources
 
-Or to quickly load data for testing, you can use [this script](../scripts/Load-ProfilesData.ps1) with some modification.
+Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
+
+### Loading Data
+
+Passing Inferno (g)(10) may require loading of real data from your application. To quickly test this solution, you can load some sample data.
+
+We have created a bundle containing all the needed resources to pass the Inferno test. This can be found [here](https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json). Postman or another REST client can be used to load this file.

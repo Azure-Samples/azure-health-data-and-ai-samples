@@ -90,10 +90,10 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 context.Request.Content = tokenContext.ToFormUrlEncodedContent();
             }
 
-            // TODO - change to "NeedsOrigin" on base token class.
-            if (requestData.AllKeys.Contains("code_verifier") && tokenContext.GetType() == typeof(PublicClientTokenContext))
+            // Origin header needed for clients using PKCE without a secret (SPA).
+            if (requestData.AllKeys.Contains("code_verifier") && !requestData.AllKeys.Contains("client_secret"))
             {
-                context.Headers.Add(new HeaderNameValuePair("Origin", "http://localhost", CustomHeaderType.RequestStatic));
+                context.Headers.Add(new HeaderNameValuePair("Origin", $"https://{_configuration.ApiManagementHostName}", CustomHeaderType.RequestStatic));
             }
 
             return context;

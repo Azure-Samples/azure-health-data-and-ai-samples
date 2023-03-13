@@ -15,29 +15,13 @@ This project provides samples outlining example implementations of various use c
 | [Sample HL7v2 Data Ingestion Pipeline]() | Sample app that shows how to ingest HL7v2 data into FHIR server, including conversion and validation. |
 
 
-### Sample transactions
-|Sample|Description|
-| --- | --- |
-| [Example Postman queries *(coming soon)*]() | Postman collection of common Postman queries used to query FHIR data.|
 
 ### Analytics and machine learning
 |Sample|Description|
 | --- | --- |
 | FHIR Delta Lake with Databricks | End-to-end sample showing data from FHIR Service into Databricks Delta Lake Bronze, Silver, and Gold Levels |
 | PowerBI Dashboard using Analytics pipelines | Sample showing how to query FHIR data in Parquet file format (in Azure Data LAke) and Serverless SQL tables to calculate digital quality measures and visualize stratified measure data in PowerBI.|
---->
 
-### Analytics and machine learning
-|Sample|Description|
-| --- | --- |
-| [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Analytics%20Visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
-
-### Patient and population services (g)(10) (including SMART on FHIR) sample
-|Sample|Description|
-| --- | --- |
-| [Patient and Population Services (g)(10) (including SMART on FHIR) sample](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Patient%20and%20Population%20Services%20G10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
-
-<!---
 ### Other integrations
 |Sample|Description|
 | --- | --- |
@@ -45,8 +29,32 @@ This project provides samples outlining example implementations of various use c
 
 --->
 
+### Data ingestion
 
- 
+|Sample|Description|
+| --- | --- |
+| [Migrate data from one Azure API for FHIR server to another API for FHIR server](samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir) | Sample app for copying/migrating data from one Azure API for FHIR server to another Azure API for FHIR server. |
+
+
+### Sample transactions
+|Sample|Description|
+| --- | --- |
+| [Sample Postman queries](samples/sample-postman-queries) | Learn how to interact with FHIR data using Postman with this starter Postman collection of common Postman queries used to query FHIR server, including FHIR searches, creating, reading, updating, and deleting requests for FHIR resources, and other operations.|
+
+### Analytics and machine learning
+|Sample|Description|
+| --- | --- |
+| [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](samples/analytics-visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
+| [Integrate Azure Health Data Services FHIR data with Delta Lake on Azure Databricks](samples/azuredatabricks-deltalake/) | Learn how to use Azure Databricks with Azure Health Data Services. Sample demonstrates how to automatically connect data from the FHIR Service into analytics platforms on Azure Databricks Delta Lake using the Analytics Connector. |
+
+### Patient and population services (g)(10) (including SMART on FHIR) sample
+|Sample|Description|
+| --- | --- |
+| [Patient and Population Services (g)(10) (including SMART on FHIR) sample](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Patient%20and%20Population%20Services%20G10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
+
+
+
+
 
 NOTE: These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data. 
 
