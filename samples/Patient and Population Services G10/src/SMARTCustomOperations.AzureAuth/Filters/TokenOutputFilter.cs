@@ -88,11 +88,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                     var fhirUser = id_token.Claims.First(x => x.Type == "fhirUser");
                     if (fhirUser is not null)
                     {
-                        if (fhirUser.Value.Split('/').First().Equals("Patient", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            var fhirUserValue = fhirUser.Value.Split('/').Last();
-                            tokenResponse["patient"] = fhirUserValue;
-                        }
                         context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={fhirUser.Value}; path=/; secure; HttpOnly", CustomHeaderType.ResponseStatic));
                         context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
                     }
@@ -102,12 +97,35 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 }
             }
 
+            // BEGIN OVERRIDE - TODO remove as it's temp until we get fhirUser claim
+
+            /*try
+            {
+                if (!context.IsFatal && context.StatusCode == (HttpStatusCode)200 && tokenResponse.ContainsKey("access_token"))
+                {
+                    _logger.LogInformation("Attempting to override the access token with MSI...");
+                    var token = await GetOverrideAccessToken(_configuration.FhirServerUrl!, _configuration.TenantId!);
+                    tokenResponse["access_token"] = token.Token;
+                    _logger.LogInformation("Access token overridden with {Token}", tokenResponse["access_token"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not get token override. {Message}", ex.Message);
+            }*/
+
+            // END OVERRIDE
+
             context.ContentString = tokenResponse.ToString();
+
+            // context.Headers.Add(new HeaderNameValuePair("Content-Type", "application/json", CustomHeaderType.ResponseStatic));
+
             context.Headers.Add(new HeaderNameValuePair("Cache-Control", "no-store", CustomHeaderType.ResponseStatic));
             context.Headers.Add(new HeaderNameValuePair("Pragma", "no-cache", CustomHeaderType.ResponseStatic));
 
             // Stop compiler warning
             await Task.CompletedTask;
+
             return context;
         }
 
