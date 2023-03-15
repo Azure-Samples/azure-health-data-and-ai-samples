@@ -88,8 +88,11 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                     var fhirUser = id_token.Claims.First(x => x.Type == "fhirUser");
                     if (fhirUser is not null)
                     {
-                        var fhirUserValue = fhirUser.Value.Split('/').Last();
-                        tokenResponse["patient"] = fhirUserValue;                    
+                        if (fhirUser.Value.Split('/').First().Equals("Patient", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            var fhirUserValue = fhirUser.Value.Split('/').Last();
+                            tokenResponse["patient"] = fhirUserValue;
+                        }
                         context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={fhirUser.Value}; path=/; secure; HttpOnly", CustomHeaderType.ResponseStatic));
                         context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
                     }
