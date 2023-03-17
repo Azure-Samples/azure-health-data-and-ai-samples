@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Durable_Fuc": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7109",
+      "launchBrowser": false
+    }
+  }
+}

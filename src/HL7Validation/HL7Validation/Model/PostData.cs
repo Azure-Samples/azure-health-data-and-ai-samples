@@ -1,10 +1,9 @@
 ﻿
-namespace HL7Validation.Model
+namespace Hl7Validation.Model
 {
     public class PostData
     {
         public string ContainerName { get; set; }
-
-        public bool proceedOnError { get; set; }
+        public bool ProceedOnError { get; set; }
     }
 }

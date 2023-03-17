@@ -1,29 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<IsPackable>false</IsPackable>
-		<TargetFramework>net6.0</TargetFramework>
-		<LangVersion>preview</LangVersion>
+		<TargetFramework>net7.0</TargetFramework>
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<OutputType>Exe</OutputType>
-		<UserSecretsId>37a54202-139d-4c9e-97bc-8e044501642c</UserSecretsId>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>b361c4ad-703b-4f38-8124-68442db02a96</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="HL7Validation.Test\**" />
+	  <EmbeddedResource Remove="HL7Validation.Test\**" />
+	  <None Remove="HL7Validation.Test\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.Identity" Version="1.8.2" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.15.0" />
+		<PackageReference Include="Microsoft.Azure.EventGrid" Version="3.2.1" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.10.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.DurableTask" Version="1.0.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" OutputItemType="Analyzer" />
+		<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.9.1" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.8.0" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="DotNetEnv " Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.0" />
 		<PackageReference Include="nhapi" Version="3.1.1" />
+		
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="host.json">
@@ -33,5 +42,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
 	</ItemGroup>
 </Project>

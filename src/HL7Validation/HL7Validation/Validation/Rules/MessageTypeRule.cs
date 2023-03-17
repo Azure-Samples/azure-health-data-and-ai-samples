@@ -4,7 +4,7 @@ using NHapi.Base.Util;
 using NHapi.Base.Validation;
 using System.Text.RegularExpressions;
 
-namespace HL7Validation.CustomValidation.Rules
+namespace Hl7Validation.CustomValidation.Rules
 {
     public class MessageTypeRule : IMessageRule
     {

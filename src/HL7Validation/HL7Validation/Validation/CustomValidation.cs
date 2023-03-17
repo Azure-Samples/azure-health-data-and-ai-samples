@@ -1,9 +1,9 @@
-﻿using HL7Validation.CustomValidation.Rules;
+﻿using Hl7Validation.CustomValidation.Rules;
 using NHapi.Base.Validation.Implementation;
 
-namespace HL7Validation.Validation
+namespace Hl7Validation.Validation
 {
-    internal sealed class CustomValidation : StrictValidation
+    public class CustomValidation : StrictValidation
     {
         public CustomValidation()
         {

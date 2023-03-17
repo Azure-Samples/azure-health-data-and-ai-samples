@@ -1,5 +1,5 @@
-﻿using HL7Validation.Configuration;
-using HL7Validation.ValidateMessage;
+using Hl7Validation.Configuration;
+using Hl7Validation.ValidateMessage;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Azure;
@@ -48,12 +48,19 @@ using IHost host = new HostBuilder()
         {
             BlobConnectionString = config.BlobConnectionString,
             ValidatedBlobContainer = config.ValidatedBlobContainer,
-            Hl7validationfailBlobContainer = config.Hl7validationfailBlobContainer
+            Hl7validationfailBlobContainer = config.Hl7validationfailBlobContainer,
+            Hl7skippedContainer = config.Hl7skippedContainer,
+        };
+
+        AppConfiguration appConfiguration = new()
+        {
+            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
         };
 
         services.AddSingleton(blobConfig);
+        services.AddSingleton(appConfiguration);
         services.AddTransient<IValidateHL7Message, ValidateHL7Message>();
-        var parser = new PipeParser { ValidationContext = new HL7Validation.Validation.CustomValidation() };
+        var parser = new PipeParser { ValidationContext = new Hl7Validation.Validation.CustomValidation() };
         services.AddSingleton(parser);
 
         services.AddAzureClients(clientBuilder =>

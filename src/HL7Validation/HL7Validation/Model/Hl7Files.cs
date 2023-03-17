@@ -1,4 +1,4 @@
-﻿namespace HL7Validation.Model
+﻿namespace Hl7Validation.Model
 {
     public class Hl7Files
     {

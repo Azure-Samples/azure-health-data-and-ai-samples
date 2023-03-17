@@ -1,4 +1,4 @@
-﻿using FHIRPostProcess.Configuration;
+using FHIRPostProcess.Configuration;
 using FHIRPostProcess.PostProcessor;
 using Hl7.Fhir.Serialization;
 using Microsoft.ApplicationInsights;
@@ -47,12 +47,19 @@ using IHost host = new HostBuilder()
         {
             BlobConnectionString = config.BlobConnectionString,
             Hl7ConverterJsonContainer = config.Hl7ConverterJsonContainer,
-            Hl7PostProcessContainer = config.Hl7PostProcessContainer
+            Hl7PostProcessContainer = config.Hl7PostProcessContainer,
+            ValidatedContainer = config.ValidatedContainer,
         };
 
         services.AddSingleton(blobConfig);
         services.AddTransient<IPostProcess, PostProcess>();
-        
+
+        AppConfiguration appConfig = new()
+        {            
+            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+        };
+        services.AddSingleton(appConfig);
+
 
         FhirJsonParser _parser = new();
         //change the parser settings to skip validations
