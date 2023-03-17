@@ -1,0 +1,564 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.12.40.16777",
+      "templateHash": "14966143453279534620"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specifies the location for resources."
+      }
+    },
+    "workspace_name": {
+      "type": "string",
+      "defaultValue": "[format('workspace{0}', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Name of the AHDS workspace. This will appear in the API URL."
+      }
+    },
+    "dicom_service_name": {
+      "type": "string",
+      "defaultValue": "[format('dicom{0}', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Name of the AHDS DICOM service. This will appear in the API URL."
+      }
+    },
+    "fhir_service_name": {
+      "type": "string",
+      "defaultValue": "[format('fhir{0}', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Name of the AHDS FHIR service. This will appear in the API URL."
+      }
+    },
+    "should_deploy_fhir": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Should deploy FHIR"
+      }
+    },
+    "should_deploy_dicom": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Should deploy DICOM"
+      }
+    },
+    "aadTenantId": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Your existing Azure AD tenant ID (format: 72xxxxxf-xxxx-xxxx-xxxx-xxxxxxxxxxx)"
+      }
+    },
+    "applicationClientId": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Your existing Application (client) ID (format: 1f8xxxxx-dxxx-xxxx-xxxx-9exxxxxxxxxx)"
+      }
+    },
+    "applicationClientSecret": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Your existing Application (client) secret"
+      }
+    },
+    "dicom_principalId": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Object ID of the Principal of the Application - confusing - see https://github.com/Azure/terraform-azurerm-appgw-ingress-k8s-cluster/issues/1 "
+      }
+    },
+    "image": {
+      "type": "string",
+      "defaultValue": "stevenborg/meddream:latest",
+      "metadata": {
+        "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+      }
+    },
+    "port": {
+      "type": "int",
+      "defaultValue": 8080,
+      "metadata": {
+        "description": "Port to open on the container."
+      }
+    },
+    "cpuCores": {
+      "type": "int",
+      "defaultValue": 4,
+      "metadata": {
+        "description": "The number of CPU cores to allocate to the container. Must be an integer."
+      }
+    },
+    "memoryInGb": {
+      "type": "int",
+      "defaultValue": 16,
+      "metadata": {
+        "description": "The amount of memory to allocate to the container in gigabytes."
+      }
+    },
+    "should_add_dicom_app_registration": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Should add DICOM App Registration"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "ahds_deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "workspace_name": {
+            "value": "[parameters('workspace_name')]"
+          },
+          "dicom_service_name": {
+            "value": "[parameters('dicom_service_name')]"
+          },
+          "fhir_service_name": {
+            "value": "[parameters('fhir_service_name')]"
+          },
+          "should_deploy_dicom": {
+            "value": "[parameters('should_deploy_dicom')]"
+          },
+          "should_deploy_fhir": {
+            "value": "[parameters('should_deploy_fhir')]"
+          },
+          "dicom_principalId": {
+            "value": "[parameters('dicom_principalId')]"
+          },
+          "should_add_dicom_app_registration": {
+            "value": "[parameters('should_add_dicom_app_registration')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.12.40.16777",
+              "templateHash": "8937334676621070443"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Specifies the location for resources."
+              }
+            },
+            "workspace_name": {
+              "type": "string",
+              "defaultValue": "[format('workspace{0}', uniqueString(resourceGroup().id))]",
+              "metadata": {
+                "description": "Name of the AHDS workspace. This will appear in the API URL."
+              }
+            },
+            "dicom_service_name": {
+              "type": "string",
+              "defaultValue": "[format('dicom{0}', uniqueString(resourceGroup().id))]",
+              "metadata": {
+                "description": "Name of the AHDS DICOM service. This will appear in the API URL."
+              }
+            },
+            "fhir_service_name": {
+              "type": "string",
+              "defaultValue": "[format('fhir{0}', uniqueString(resourceGroup().id))]",
+              "metadata": {
+                "description": "Name of the AHDS FHIR service. This will appear in the API URL."
+              }
+            },
+            "should_deploy_fhir": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "Should deploy FHIR"
+              }
+            },
+            "should_deploy_dicom": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "Should deploy DICOM"
+              }
+            },
+            "should_add_dicom_app_registration": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "Should add DICOM App Registration"
+              }
+            },
+            "dicom_principalId": {
+              "type": "secureString",
+              "metadata": {
+                "description": "Object ID of the Principal of the Application - confusing - see https://github.com/Azure/terraform-azurerm-appgw-ingress-k8s-cluster/issues/1 "
+              }
+            }
+          },
+          "variables": {
+            "tenantId": "[tenant().tenantId]",
+            "loginURL": "[environment().authentication.loginEndpoint]",
+            "authority": "[format('{0}{1}', variables('loginURL'), variables('tenantId'))]",
+            "audience": "[format('https://{0}-{1}.fhir.azurehealthcareapis.com', parameters('workspace_name'), parameters('fhir_service_name'))]",
+            "dicom_roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '58a3b984-7adf-4c20-983a-32417c86fbc8')]"
+          },
+          "resources": [
+            {
+              "condition": "[parameters('should_deploy_dicom')]",
+              "type": "Microsoft.HealthcareApis/workspaces/dicomservices",
+              "apiVersion": "2022-06-01",
+              "name": "[format('{0}/{1}', parameters('workspace_name'), parameters('dicom_service_name'))]",
+              "location": "[parameters('location')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('workspace_name'))]"
+              ]
+            },
+            {
+              "condition": "[parameters('should_deploy_fhir')]",
+              "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
+              "apiVersion": "2022-06-01",
+              "name": "[format('{0}/{1}', parameters('workspace_name'), parameters('fhir_service_name'))]",
+              "location": "[parameters('location')]",
+              "kind": "fhir-R4",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "accessPolicies": [],
+                "authenticationConfiguration": {
+                  "authority": "[variables('authority')]",
+                  "audience": "[variables('audience')]",
+                  "smartProxyEnabled": false
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('workspace_name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.HealthcareApis/workspaces",
+              "apiVersion": "2022-06-01",
+              "name": "[parameters('workspace_name')]",
+              "location": "[parameters('location')]"
+            },
+            {
+              "condition": "[parameters('should_add_dicom_app_registration')]",
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.HealthcareApis/workspaces/{0}/dicomservices/{1}', parameters('workspace_name'), parameters('dicom_service_name'))]",
+              "name": "[guid(variables('dicom_roleDefinitionId'), parameters('dicom_principalId'), resourceGroup().id)]",
+              "properties": {
+                "roleDefinitionId": "[variables('dicom_roleDefinitionId')]",
+                "principalId": "[parameters('dicom_principalId')]",
+                "principalType": "ServicePrincipal"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', parameters('workspace_name'), parameters('dicom_service_name'))]",
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('workspace_name'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "workspace_name": {
+              "type": "string",
+              "value": "[parameters('workspace_name')]"
+            },
+            "dicom_service_name": {
+              "type": "string",
+              "value": "[parameters('dicom_service_name')]"
+            },
+            "fhir_service_name": {
+              "type": "string",
+              "value": "[parameters('fhir_service_name')]"
+            },
+            "dicom_uri": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', parameters('workspace_name'), parameters('dicom_service_name')), '2022-06-01').serviceUrl]"
+            },
+            "fhir_uri": {
+              "type": "string",
+              "value": "[variables('audience')]"
+            },
+            "fhir_deployed": {
+              "type": "bool",
+              "value": "[parameters('should_deploy_fhir')]"
+            },
+            "dicom_deployed": {
+              "type": "bool",
+              "value": "[parameters('should_deploy_dicom')]"
+            },
+            "tenantId": {
+              "type": "string",
+              "value": "[variables('tenantId')]"
+            },
+            "loginURL": {
+              "type": "string",
+              "value": "[variables('loginURL')]"
+            },
+            "myrolescope": {
+              "type": "string",
+              "value": "[reference(extensionResourceId(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', parameters('workspace_name'), parameters('dicom_service_name')), 'Microsoft.Authorization/roleAssignments', guid(variables('dicom_roleDefinitionId'), parameters('dicom_principalId'), resourceGroup().id)), '2022-04-01').scope]"
+            },
+            "myrolename": {
+              "type": "string",
+              "value": "[guid(variables('dicom_roleDefinitionId'), parameters('dicom_principalId'), resourceGroup().id)]"
+            },
+            "myroletype": {
+              "type": "string",
+              "value": "Microsoft.Authorization/roleAssignments"
+            },
+            "myroleid": {
+              "type": "string",
+              "value": "[extensionResourceId(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', parameters('workspace_name'), parameters('dicom_service_name')), 'Microsoft.Authorization/roleAssignments', guid(variables('dicom_roleDefinitionId'), parameters('dicom_principalId'), resourceGroup().id))]"
+            },
+            "myroleproperties": {
+              "type": "object",
+              "value": "[reference(extensionResourceId(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', parameters('workspace_name'), parameters('dicom_service_name')), 'Microsoft.Authorization/roleAssignments', guid(variables('dicom_roleDefinitionId'), parameters('dicom_principalId'), resourceGroup().id)), '2022-04-01')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "meddream_deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "applicationClientSecret": {
+            "value": "[parameters('applicationClientSecret')]"
+          },
+          "aadTenantId": {
+            "value": "[parameters('aadTenantId')]"
+          },
+          "applicationClientId": {
+            "value": "[parameters('applicationClientId')]"
+          },
+          "dicomServiceUrl": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ahds_deployment'), '2020-10-01').outputs.dicom_uri.value]"
+          },
+          "port": {
+            "value": "[parameters('port')]"
+          },
+          "cpuCores": {
+            "value": "[parameters('cpuCores')]"
+          },
+          "memoryInGb": {
+            "value": "[parameters('memoryInGb')]"
+          },
+          "image": {
+            "value": "[parameters('image')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.12.40.16777",
+              "templateHash": "5437803612649691245"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Specifies the location for resources."
+              }
+            },
+            "dicomServiceUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "Your existing DICOM service URL (format: https://yourworkspacename-yourdicomservicename.dicom.azurehealthcareapis.com)"
+              }
+            },
+            "aadTenantId": {
+              "type": "string",
+              "metadata": {
+                "description": "Your existing Azure AD tenant ID (format: 72xxxxxf-xxxx-xxxx-xxxx-xxxxxxxxxxx)"
+              }
+            },
+            "applicationClientId": {
+              "type": "string",
+              "metadata": {
+                "description": "Your existing Application (client) ID (format: 1f8xxxxx-dxxx-xxxx-xxxx-9exxxxxxxxxx)"
+              }
+            },
+            "applicationClientSecret": {
+              "type": "secureString",
+              "metadata": {
+                "description": "Your existing Application (client) secret"
+              }
+            },
+            "image": {
+              "type": "string",
+              "defaultValue": "stevenborg/meddream:latest",
+              "metadata": {
+                "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+              }
+            },
+            "port": {
+              "type": "int",
+              "defaultValue": 8080,
+              "metadata": {
+                "description": "Port to open on the container."
+              }
+            },
+            "cpuCores": {
+              "type": "int",
+              "defaultValue": 4,
+              "metadata": {
+                "description": "The number of CPU cores to allocate to the container. Must be an integer."
+              }
+            },
+            "memoryInGb": {
+              "type": "int",
+              "defaultValue": 16,
+              "metadata": {
+                "description": "The amount of memory to allocate to the container in gigabytes."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ContainerInstance/containerGroups",
+              "apiVersion": "2019-12-01",
+              "name": "meddreamContainerGroup",
+              "location": "[parameters('location')]",
+              "properties": {
+                "containers": [
+                  {
+                    "name": "meddream",
+                    "properties": {
+                      "image": "[parameters('image')]",
+                      "ports": [
+                        {
+                          "port": "[parameters('port')]",
+                          "protocol": "TCP"
+                        }
+                      ],
+                      "environmentVariables": [
+                        {
+                          "name": "integration",
+                          "value": "study"
+                        },
+                        {
+                          "name": "azuredicomurl",
+                          "value": "[parameters('dicomServiceUrl')]"
+                        },
+                        {
+                          "name": "azuretenantid",
+                          "secureValue": "[parameters('aadTenantId')]"
+                        },
+                        {
+                          "name": "azureappid",
+                          "secureValue": "[parameters('applicationClientId')]"
+                        },
+                        {
+                          "name": "azureappsecret",
+                          "secureValue": "[parameters('applicationClientSecret')]"
+                        }
+                      ],
+                      "resources": {
+                        "requests": {
+                          "cpu": "[parameters('cpuCores')]",
+                          "memoryInGB": "[parameters('memoryInGb')]"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "ipAddress": {
+                  "type": "Public",
+                  "ports": [
+                    {
+                      "port": "[parameters('port')]",
+                      "protocol": "TCP"
+                    }
+                  ]
+                },
+                "osType": "Linux",
+                "restartPolicy": "Always"
+              }
+            }
+          ],
+          "outputs": {
+            "meddreamIp": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', 'meddreamContainerGroup'), '2019-12-01').ipAddress.ip]"
+            },
+            "meddreamPort": {
+              "type": "array",
+              "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', 'meddreamContainerGroup'), '2019-12-01').ipAddress.ports]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'ahds_deployment')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "workspace_name": {
+      "type": "string",
+      "value": "[parameters('workspace_name')]"
+    },
+    "dicom_service_name": {
+      "type": "string",
+      "value": "[parameters('dicom_service_name')]"
+    },
+    "fhir_service_name": {
+      "type": "string",
+      "value": "[parameters('fhir_service_name')]"
+    },
+    "dicom_uri": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ahds_deployment'), '2020-10-01').outputs.dicom_uri.value]"
+    },
+    "fhir_uri": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ahds_deployment'), '2020-10-01').outputs.fhir_uri.value]"
+    },
+    "fhir_deployed": {
+      "type": "bool",
+      "value": "[parameters('should_deploy_fhir')]"
+    },
+    "dicom_deployed": {
+      "type": "bool",
+      "value": "[parameters('should_deploy_dicom')]"
+    },
+    "meddreamIp": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'meddream_deployment'), '2020-10-01').outputs.meddreamIp.value]"
+    }
+  }
+}
