@@ -42,8 +42,8 @@ Fill in required information in the template:
 5. Provide a user login name. (_student_ is used in the demo script.)
 6. Provide a globally unique name for the AHDS workspace (which will be part of the DICOM URL)
 7. Provide a DICOM service name (which need only be locally unique, but cannot be simply 'dicom')
-8. Enter the Tenant ID you captured earlier
-9. Enter the App Registration ID you captured earlier
+8. Enter the Directory (tenant) ID you captured earlier
+9. Enter the Application (client) ID you captured earlier
 10. Enter the App Client Secret you captured earlier
 11. Enter the Principal Object ID of the App Registration you captured earlier
 12. Click the `Review and Create` button
@@ -53,3 +53,6 @@ The Qvera QIE DICOM router requires a license key to run. A 90-day trial license
 
 ## Running the Demo
 Check out the [demo instructions](demo-instructions.md) for detailed steps to configure and try out the environment.  
+
+### A note on costs
+Note, the demo environment includes several VMs and other resources that can incur notable costs, on the order of $1/hour.  Stopping VMs while the demo is not in use is a way to reduce costs to a few dollars per day.  
