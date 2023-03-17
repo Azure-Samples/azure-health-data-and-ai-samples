@@ -30,12 +30,12 @@ The cloud infrastructure contains two additional systems that interact with the 
 2. Select **Resource Groups** from the Azure services menu.  
 3. Select the resource group that you selected in the deployment template.  
 4. The overview page lists all resources in the resource group.  Note the container instances for the applications listed above as well as additional storage and networking components needed to simulate the network. 
-![Resource Group overview](/demo-environment-images/resource-group.png)
+![Resource Group overview](./demo-environment-images/resource-group.png)
 5. Select the **jump-vm** virtual machine.  You will connect to this virtual machine to simulate viewing the PACS from within the network.
 6. Download the Remote Desktop RDP file.
     1. Select **Connect** under the Settings section.
     2. Change the **Port number** to **4545** and select **Download RDP file**.
-    ![Download RDP file](/demo-environment-images/download-rdp-file.png)
+    ![Download RDP file](./demo-environment-images/download-rdp-file.png)
     3. When the download is complete, open the **jump-vm.rdp** file to connect to the virtual machine.
 7. Log in to the virtual machine.
     1. In the Remote Desktop Connection dialog, dismiss any warnings and click **Connect**.
@@ -51,14 +51,14 @@ The cloud infrastructure contains two additional systems that interact with the 
     2. Enter "**student**" for both the username and password.
 10.	Browse to a series
     1. Select **All studies** to see the list of studies available in the PACS (Orthanc).
-    ![Orthanc all studies](/demo-environment-images/orthanc-all-studies.png)
+    ![Orthanc all studies](./demo-environment-images/orthanc-all-studies.png)
     2. Select a study from the list to view the study details.
-    ![Select a study](/demo-environment-images/select-study.png)
+    ![Select a study](./demo-environment-images/select-study.png)
     3. Select a series from the list to view the series details.
-    ![Select a series](/demo-environment-images/select-series.png)
+    ![Select a series](./demo-environment-images/select-series.png)
 11. Select the **Osimis Web Viewer** option to see the image.
 
-    ![Select Osimis Web Viewer](/demo-environment-images/pacs-viewer.png)
+    ![Select Osimis Web Viewer](./demo-environment-images/pacs-viewer.png)
 
 ## 🌟 Simulate a new study from a modality
 To simulate modalities that are producing new imaging studies, we will use a local script that sends DICOM data to the PACS.  These new studies are from November 2022.
@@ -73,15 +73,15 @@ Connecting the DICOM service to the existing network requires the configuration 
 3. When prompted, change the password to one you can remember.  
 4. After chaging the password, you will need to enter your license ID.  If you do not have one already, you can [get a trial license from Qvera](https://www.qvera.com/qie-registration-ent/).  
 5. When prompted, input the **License ID** and the **Activation code** and select **Get License**.
-    ![Get QIE license](/demo-environment-images/qie-license.png)
+    ![Get QIE license](./demo-environment-images/qie-license.png)
 6. Select **Save** on the License dialog and select **OK** on the About screen.
 7. Import the router configuration.  This configuration contains the default routing rules for the simulated network and some functions specific to the DICOM service.  
     1. From the top menu bar, select **Application `>` Import Configuration**.
-    ![Import configuration](/demo-environment-images/qie-import.png)
+    ![Import configuration](./demo-environment-images/qie-import.png)
     2. In the Open QIE Configuration File dialog, use the ellipsis (…) button to select the configuration file.  Browse to the desktop and select `qie_MicrosoftDICOM_20221123.qie`.  Select **Open** to open the config file.
     3. In the Import Configuration dialog, select the **checkbox next to the MicrosoftDICOM** zone to import all channels.
     4. Select the **Import Sample Messages** option and select **Import**.
-    ![Import sample messages](/demo-environment-images/import-dialog.png)
+    ![Import sample messages](./demo-environment-images/import-dialog.png)
 8. Before QIE can connect to the DICOM service, you will need to [register a client application with AAD](https://learn.microsoft.com/azure/healthcare-apis/dicom/dicom-register-application).  
     1. Go to the App registrations, add find the Azure API for DICOM. ![Add API Permissions](demo-environment-images/add-api-permission.png)
     2. Select DICOM.ReadWrite permissions and click Add permissions. ![Select DICOM.ReadWrite](demo-environment-images/add-dicom-read-write-permission.png)
@@ -154,14 +154,14 @@ With the router configuration complete, the routing capability can be used to se
 8. Select the **Channels** view and then select the **DIMSE to DICOMWEB** channel. 
 9. In the **Status** tab you will see a summary of the send operation.  The number of completed items will match the number of instances in the study sent to the DICOM service.  Any errors will also be listed.  Selecting a box will allow the detailed messages to be viewed.
 
-    ![Status tab](/demo-environment-images/status-tab.png)
+    ![Status tab](./demo-environment-images/status-tab.png)
 
 ## 🩻 View a study in the DICOM service using a ZFP viewer
 To view the studies sent to the DICOM service, you can use a zero footprint (ZFP) viewer.  For this workshop, the MedDream viewer has already been configured for you. 
 
 1. **Minimize** the Remote Desktop connection to the VM.  This will allow you to test accessing the images outside of the simulated on-prem network.  
 
-    ![Minimize VM](/demo-environment-images/minimize-vm.png)
+    ![Minimize VM](./demo-environment-images/minimize-vm.png)
 
 2. Navigate to MedDream.
     1. Open the Edge browser and navigate to http://portal.azure.com.  
@@ -172,11 +172,11 @@ To view the studies sent to the DICOM service, you can use a zero footprint (ZFP
 3.	Login using "**student**" as the username and password.
 4.	In the default view, all studies available in the DICOM service are listed.  Find the study sent from the PACS and **select** it to view on the web.  
 
-    ![Select study in MedDream](/demo-environment-images/select-study-meddream.png)
+    ![Select study in MedDream](./demo-environment-images/select-study-meddream.png)
 
 5. **Select** a series from the left menu or drag to the viewport to view it.
 
-    ![Select series in MedDream](/demo-environment-images/select-series-meddream.png)
+    ![Select series in MedDream](./demo-environment-images/select-series-meddream.png)
 
 ## 🌟 Simulate a new study from a modality, view it on the cloud
 Now that the DICOM router is configured, another simulation of a new study from a modality can be performed.  This time, the study will be routed to both the PACS and the DICOM service.
@@ -190,7 +190,7 @@ Now that the DICOM router is configured, another simulation of a new study from 
 ## 🔍 Search the cloud for historical priors
 Connecting the DICOM service to an on-prem PACS system provides value beyond just the ability to store imaging data in the cloud for backup and archival purposes.  In this section, you will learn how the DICOM service can act as an extension of the PACS.  To demonstrate this, we have pre-loaded the DICOM service with some historical patient data.
 
-![Search cloud diagram](/demo-environment-images/search-cloud.png)
+![Search cloud diagram](./demo-environment-images/search-cloud.png)
 
 ### 📦 Migrate historical priors from the archive
 1. On the desktop, locate the file named "**5-migrate-archive**".
@@ -202,15 +202,15 @@ Connecting the DICOM service to an on-prem PACS system provides value beyond jus
 1. Open the Edge browser and navigate to Orthanc, http://10.0.2.4:8042/
 2. Select the **Query/Retrieve** option from the upper right menu bar.
 
-    ![Query retrieve button](/demo-environment-images/query-retrieve.png)
+    ![Query retrieve button](./demo-environment-images/query-retrieve.png)
 
 3. Ensure QIETOAZURE is selected in the DICOM server box and select **Search studies**.  You can also narrow down your search by selecting a field of interest and entering in a value to search – for example, use the patient "Jule" again.
 
-    ![Search studies](/demo-environment-images/search-studies.png)
+    ![Search studies](./demo-environment-images/search-studies.png)
 
 4. Every sample patient has a prior that’s been preloaded into the DICOM service – **select the arrow** to the right of any of these studies.  For "Jule" select the study from 1994.
 
-    ![Select study from 1994](/demo-environment-images/study-1994.png)
+    ![Select study from 1994](./demo-environment-images/study-1994.png)
 
 5. Keep ORTHANC as the target and select **Retrieve**.
 6. Go back to the Orthanc home screen (select the **Lookup** option from the menu bar) and perform a local search to see the study is now available locally.  If you retrieved the study for Jule, there should now be three studies – the original available in the PACS (2011), the study created by the simulated modality (2022), and the prior retrieved from the DICOM service (1994).
@@ -220,34 +220,34 @@ A cloud-based medical imaging archive like the DICOM service provides unmatched 
 
 ### 🌐 Simulated internet connectivity outage
 
-![Simulated internet outage](/demo-environment-images/simulated-outage.png)
+![Simulated internet outage](./demo-environment-images/simulated-outage.png)
 
 1. Open the Edge browser and navigate to QIE, http://10.0.1.4:80
 2. Stop the channels processing DICOM DIMSE events. Under the MicrosoftDICOM zone, select **Channels**.  Select the two active channels (**DIMSE to DICOMWEB**, **DIMSE C-Move Processor**) and select **Stop** for each.
-    ![Stop channels](/demo-environment-images/stop-channels.png)
+    ![Stop channels](./demo-environment-images/stop-channels.png)
 
 3. Navigate to Orthanc, http://10.0.2.4:8042/
 4. Select the **Query/Retrieve** option from the upper right menu bar.
-    ![Query retrieve option](/demo-environment-images/query-retrieve.png)
+    ![Query retrieve option](./demo-environment-images/query-retrieve.png)
 5. Select **Search studies** to retrieve studies from the DICOM service.  The operation should result in an error as the C-FIND operation is unable to access the DICOM service.  This is expected in the outage scenario.
 6. Return to the Orthanc home screen and perform a local search to see that studies are still available locally.
 
 ### ❌ Simulated PACS outage
 In the event of an outage to a local system, such as the PACS, the DICOM service will provide access to imaging data that's been stored there.
 
-![Simulated PACS outage](/demo-environment-images/pacs-outage.png)
+![Simulated PACS outage](./demo-environment-images/pacs-outage.png)
 
 1. **Minimize** the Remote Desktop connection to the VM.  This will allow you to test accessing the images outside of the simulated on-prem network.  
-![Minimize virtual machine](/demo-environment-images/minimize-vm.png)
+![Minimize virtual machine](./demo-environment-images/minimize-vm.png)
 2. Navigate to the Azure portal, to https://portal.azure.com
 3. Browse to the resource group containing the demo environment.
 4. In the resource group, select the container that is running Orthanc, **contoso-orthanc-containergroup**.
-![Orthanc container group](/demo-environment-images/orthanc-container-group.png)
+![Orthanc container group](./demo-environment-images/orthanc-container-group.png)
 5. Select **Stop** to stop the container instance that is running Orthanc.  You can optionally reconnect to the VM to validate that Orthanc is no longer running.
-![Stop container group](/demo-environment-images/stop-container-group.png)
+![Stop container group](./demo-environment-images/stop-container-group.png)
 6. Navigate to medDream.
 7. In the default view, all studies available in the DICOM service are listed.  Find a study and **select** it to view on the web.  
-![Select study in MedDream](/demo-environment-images/select-study-meddream.png)
+![Select study in MedDream](./demo-environment-images/select-study-meddream.png)
 
 ## 📃 Summary
 As a quick recap, you learned the following:
