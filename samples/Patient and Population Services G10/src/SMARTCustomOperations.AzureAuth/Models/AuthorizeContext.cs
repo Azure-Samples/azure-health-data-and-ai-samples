@@ -55,7 +55,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public AuthorizeContext Translate(string fhirServerAud)
         {
-            //_audience = fhirServerAud;
+            _audience = fhirServerAud;
             _scope = Scope.ParseScope(fhirServerAud);
             return this;
         }
