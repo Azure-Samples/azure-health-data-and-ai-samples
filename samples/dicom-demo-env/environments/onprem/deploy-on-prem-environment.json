@@ -1,0 +1,1156 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.13.1.58284",
+      "templateHash": "3001120095262280472"
+    }
+  },
+  "parameters": {
+    "adminPassword": {
+      "type": "secureString",
+      "minLength": 12,
+      "metadata": {
+        "description": "Administrator Password for Orthanc."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "ContosoVnet",
+      "metadata": {
+        "description": "Subnet Name"
+      }
+    },
+    "adminLogin": {
+      "type": "string",
+      "defaultValue": "student",
+      "metadata": {
+        "description": "Login name for Jump VM and SQL."
+      }
+    },
+    "image": {
+      "type": "string",
+      "defaultValue": "qvera/qie:latest",
+      "metadata": {
+        "description": "Qvera QIE ontainer image to deploy."
+      }
+    },
+    "port": {
+      "type": "int",
+      "defaultValue": 80,
+      "metadata": {
+        "description": "Port to open on the container."
+      }
+    },
+    "qveraCpuCores": {
+      "type": "int",
+      "defaultValue": 4,
+      "metadata": {
+        "description": "The number of CPU cores to allocate to the container. Must be an integer."
+      }
+    },
+    "qveraMemoryInGb": {
+      "type": "int",
+      "defaultValue": 16,
+      "metadata": {
+        "description": "The amount of memory to allocate to the container in gigabytes."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS1_v2",
+      "allowedValues": [
+        "Standard_DS1_v2",
+        "Standard_D2s_v5"
+      ],
+      "metadata": {
+        "description": "Size of the virtual machine."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "jumpbox_deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "vnetName": {
+            "value": "[parameters('vnetName')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminLogin')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.13.1.58284",
+              "templateHash": "6818677686393135364"
+            }
+          },
+          "parameters": {
+            "adminUsername": {
+              "type": "string",
+              "defaultValue": "student",
+              "metadata": {
+                "description": "Username for the Virtual Machine."
+              }
+            },
+            "adminPassword": {
+              "type": "secureString",
+              "minLength": 12,
+              "metadata": {
+                "description": "Password for the Virtual Machine."
+              }
+            },
+            "dnsLabelPrefix": {
+              "type": "string",
+              "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+              "metadata": {
+                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+              }
+            },
+            "publicIpName": {
+              "type": "string",
+              "defaultValue": "myPublicIP",
+              "metadata": {
+                "description": "Name for the Public IP used to access the Virtual Machine."
+              }
+            },
+            "publicIPAllocationMethod": {
+              "type": "string",
+              "defaultValue": "Dynamic",
+              "allowedValues": [
+                "Dynamic",
+                "Static"
+              ],
+              "metadata": {
+                "description": "Allocation method for the Public IP used to access the Virtual Machine."
+              }
+            },
+            "publicIpSku": {
+              "type": "string",
+              "defaultValue": "Basic",
+              "allowedValues": [
+                "Basic",
+                "Standard"
+              ],
+              "metadata": {
+                "description": "SKU for the Public IP used to access the Virtual Machine."
+              }
+            },
+            "OsSku": {
+              "type": "string",
+              "defaultValue": "win10-21h2-pro-g2",
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+              }
+            },
+            "OsOffer": {
+              "type": "string",
+              "defaultValue": "Windows-10",
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+              }
+            },
+            "OsPublisher": {
+              "type": "string",
+              "defaultValue": "MicrosoftWindowsDesktop",
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+              }
+            },
+            "vmSize": {
+              "type": "string",
+              "defaultValue": "Standard_DS1_v2",
+              "allowedValues": [
+                "Standard_DS1_v2",
+                "Standard_D2s_v5"
+              ],
+              "metadata": {
+                "description": "Size of the virtual machine."
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location for all resources."
+              }
+            },
+            "vmName": {
+              "type": "string",
+              "defaultValue": "jump-vm",
+              "metadata": {
+                "description": "Name of the virtual machine."
+              }
+            },
+            "vnetName": {
+              "type": "string",
+              "defaultValue": "ContosoVnet",
+              "metadata": {
+                "description": "VNet name"
+              }
+            },
+            "vnetAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/16",
+              "metadata": {
+                "description": "Address prefix"
+              }
+            },
+            "subnet1Prefix": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/24",
+              "metadata": {
+                "description": "Subnet 1 Prefix"
+              }
+            },
+            "subnet1Name": {
+              "type": "string",
+              "defaultValue": "jumpSubnet",
+              "metadata": {
+                "description": "Subnet 1 Name"
+              }
+            }
+          },
+          "variables": {
+            "storageAccountName": "[format('bootdiags{0}', uniqueString(resourceGroup().id))]",
+            "nicName": "myVMNic",
+            "addressPrefix": "[parameters('vnetAddressPrefix')]",
+            "subnetName": "[parameters('subnet1Name')]",
+            "subnetPrefix": "[parameters('subnet1Prefix')]",
+            "networkSecurityGroupName": "default-NSG"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2021-04-01",
+              "name": "[variables('storageAccountName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "kind": "Storage"
+            },
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2021-02-01",
+              "name": "[parameters('publicIpName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('publicIpSku')]"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]",
+                "dnsSettings": {
+                  "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('networkSecurityGroupName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "securityRules": [
+                  {
+                    "name": "default-allow-4545",
+                    "properties": {
+                      "priority": 1000,
+                      "access": "Allow",
+                      "direction": "Inbound",
+                      "destinationPortRange": "4545",
+                      "protocol": "Tcp",
+                      "sourcePortRange": "*",
+                      "sourceAddressPrefix": "*",
+                      "destinationAddressPrefix": "*"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2021-02-01",
+              "name": "[parameters('vnetName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[variables('addressPrefix')]"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "[variables('subnetName')]",
+                    "properties": {
+                      "addressPrefix": "[variables('subnetPrefix')]",
+                      "networkSecurityGroup": {
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('nicName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
+                      },
+                      "subnet": {
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), variables('subnetName'))]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2021-03-01",
+              "name": "[parameters('vmName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('vmName')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[parameters('OsPublisher')]",
+                    "offer": "[parameters('OsOffer')]",
+                    "sku": "[parameters('OsSku')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "StandardSSD_LRS"
+                    }
+                  },
+                  "dataDisks": [
+                    {
+                      "diskSizeGB": 1023,
+                      "lun": 0,
+                      "createOption": "Empty"
+                    }
+                  ]
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2021-04-01').primaryEndpoints.blob]"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines/extensions",
+              "apiVersion": "2022-08-01",
+              "name": "[format('{0}/{1}', parameters('vmName'), 'runPowershellCommands')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "type": "CustomScriptExtension",
+                "publisher": "Microsoft.Compute",
+                "typeHandlerVersion": "1.10",
+                "settings": {
+                  "fileUris": [
+                    "https://raw.githubusercontent.com/StevenBorg/ahds_dicom_service_demos/main/demos/rsna/change-rdp-port.ps1",
+                    "https://raw.githubusercontent.com/StevenBorg/ahds_dicom_service_demos/main/demos/rsna/download-files.ps1",
+                    "https://raw.githubusercontent.com/StevenBorg/ahds_dicom_service_demos/main/demos/rsna/run-needed-powershell.ps1"
+                  ]
+                },
+                "protectedSettings": {
+                  "commandToExecute": "powershell ./run-needed-powershell.ps1"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName')), '2021-02-01').dnsSettings.fqdn]"
+            },
+            "vnetName": {
+              "type": "string",
+              "value": "[parameters('vnetName')]"
+            },
+            "vnetAddressPrefix": {
+              "type": "string",
+              "value": "[variables('addressPrefix')]"
+            },
+            "vnetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            },
+            "subnetName": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')), '2021-02-01').subnets[0].name]"
+            },
+            "subnetId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')), '2021-02-01').subnets[0].id]"
+            },
+            "subnetAddressPrefix": {
+              "type": "string",
+              "value": "[variables('subnetPrefix')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "qvera_subnet",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "vnetName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'jumpbox_deployment'), '2020-10-01').outputs.vnetName.value]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "adminLogin": {
+            "value": "[parameters('adminLogin')]"
+          },
+          "containerName": {
+            "value": "qie-container"
+          },
+          "cpuCores": {
+            "value": "[parameters('qveraCpuCores')]"
+          },
+          "memoryInGb": {
+            "value": "[parameters('qveraMemoryInGb')]"
+          },
+          "subnetName": {
+            "value": "qveraSubnet"
+          },
+          "subnetPrefix": {
+            "value": "10.0.1.0/24"
+          },
+          "image": {
+            "value": "[parameters('image')]"
+          },
+          "port": {
+            "value": "[parameters('port')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.13.1.58284",
+              "templateHash": "11497304868791872100"
+            }
+          },
+          "parameters": {
+            "adminPassword": {
+              "type": "secureString",
+              "minLength": 12,
+              "metadata": {
+                "description": "Admin password for SQL."
+              }
+            },
+            "adminLogin": {
+              "type": "string",
+              "defaultValue": "student",
+              "metadata": {
+                "description": "Log in name to use."
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location for all resources."
+              }
+            },
+            "vnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "Vnet Name"
+              }
+            },
+            "containerGroupName": {
+              "type": "string",
+              "defaultValue": "contoso-qvera-containergroup",
+              "metadata": {
+                "description": "Container group name"
+              }
+            },
+            "containerName": {
+              "type": "string",
+              "defaultValue": "qie-container",
+              "metadata": {
+                "description": "Container name"
+              }
+            },
+            "image": {
+              "type": "string",
+              "defaultValue": "qvera/qie:5.0.50",
+              "metadata": {
+                "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+              }
+            },
+            "port": {
+              "type": "int",
+              "defaultValue": 80,
+              "metadata": {
+                "description": "Port to open on the container."
+              }
+            },
+            "cpuCores": {
+              "type": "int",
+              "defaultValue": 4,
+              "metadata": {
+                "description": "The number of CPU cores to allocate to the container. Must be an integer."
+              }
+            },
+            "memoryInGb": {
+              "type": "int",
+              "defaultValue": 16,
+              "metadata": {
+                "description": "The amount of memory to allocate to the container in gigabytes."
+              }
+            },
+            "subnetPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.1.0/24",
+              "metadata": {
+                "description": "Subnet Prefix"
+              }
+            },
+            "subnetName": {
+              "type": "string",
+              "defaultValue": "qveraSubnet",
+              "metadata": {
+                "description": "Subnet Name"
+              }
+            }
+          },
+          "variables": {
+            "networkProfileName": "[format('{0}-networkProfile', parameters('subnetName'))]",
+            "interfaceConfigName": "[format('{0}-eth0', parameters('subnetName'))]",
+            "interfaceIpConfig": "[format('{0}-ipconfigprofile1', parameters('subnetName'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks/subnets",
+              "apiVersion": "2020-11-01",
+              "name": "[format('{0}/{1}', parameters('vnetName'), parameters('subnetName'))]",
+              "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "delegations": [
+                  {
+                    "name": "DelegationService",
+                    "properties": {
+                      "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkProfiles",
+              "apiVersion": "2020-11-01",
+              "name": "[variables('networkProfileName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "containerNetworkInterfaceConfigurations": [
+                  {
+                    "name": "[variables('interfaceConfigName')]",
+                    "properties": {
+                      "ipConfigurations": [
+                        {
+                          "name": "[variables('interfaceIpConfig')]",
+                          "properties": {
+                            "subnet": {
+                              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.ContainerInstance/containerGroups",
+              "apiVersion": "2019-12-01",
+              "name": "[parameters('containerGroupName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "containers": [
+                  {
+                    "name": "[parameters('containerName')]",
+                    "properties": {
+                      "image": "[parameters('image')]",
+                      "ports": [
+                        {
+                          "port": "[parameters('port')]",
+                          "protocol": "TCP"
+                        }
+                      ],
+                      "environmentVariables": [
+                        {
+                          "name": "JAVA_OPTIONS",
+                          "value": "-Xmx4096m"
+                        },
+                        {
+                          "name": "connection_driver",
+                          "value": "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                        },
+                        {
+                          "name": "connection_url",
+                          "value": "[format('jdbc:sqlserver://{0}.database.windows.net:1433;database=qie;integratedSecurity=false', reference(resourceId('Microsoft.Resources/deployments', 'sqldb'), '2020-10-01').outputs.sqlServerName.value)]"
+                        },
+                        {
+                          "name": "connection_username",
+                          "value": "[format('student@{0}', reference(resourceId('Microsoft.Resources/deployments', 'sqldb'), '2020-10-01').outputs.sqlServerName.value)]"
+                        },
+                        {
+                          "name": "connection_password",
+                          "value": "[parameters('adminPassword')]"
+                        },
+                        {
+                          "name": "hibernate_dialect",
+                          "value": "com.qvera.qie.persistence.SQLServer2019UnicodeDialect"
+                        }
+                      ],
+                      "volumeMounts": [
+                        {
+                          "name": "copygitrepo",
+                          "mountPath": "/tmp/database/"
+                        }
+                      ],
+                      "resources": {
+                        "requests": {
+                          "cpu": "[parameters('cpuCores')]",
+                          "memoryInGB": "[parameters('memoryInGb')]"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "volumes": [
+                  {
+                    "name": "copygitrepo",
+                    "gitRepo": {
+                      "repository": "https://github.com/StevenBorg/ahds_demo_config",
+                      "directory": "."
+                    }
+                  }
+                ],
+                "osType": "Linux",
+                "networkProfile": {
+                  "id": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+                },
+                "restartPolicy": "Always"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]",
+                "[resourceId('Microsoft.Resources/deployments', 'sqldb')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "sqldb",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "administratorLogin": {
+                    "value": "[parameters('adminLogin')]"
+                  },
+                  "administratorLoginPassword": {
+                    "value": "[parameters('adminPassword')]"
+                  },
+                  "sqlDBName": {
+                    "value": "qie"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.13.1.58284",
+                      "templateHash": "6159262612800187580"
+                    }
+                  },
+                  "parameters": {
+                    "serverName": {
+                      "type": "string",
+                      "defaultValue": "[uniqueString('sql', resourceGroup().id)]",
+                      "metadata": {
+                        "description": "The name of the SQL logical server."
+                      }
+                    },
+                    "sqlDBName": {
+                      "type": "string",
+                      "defaultValue": "qie",
+                      "metadata": {
+                        "description": "The name of the SQL Database."
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]",
+                      "metadata": {
+                        "description": "Location for all resources."
+                      }
+                    },
+                    "administratorLogin": {
+                      "type": "string",
+                      "defaultValue": "student",
+                      "metadata": {
+                        "description": "The administrator username of the SQL logical server."
+                      }
+                    },
+                    "administratorLoginPassword": {
+                      "type": "secureString",
+                      "metadata": {
+                        "description": "The administrator password of the SQL logical server."
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Sql/servers",
+                      "apiVersion": "2022-05-01-preview",
+                      "name": "[parameters('serverName')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "administratorLogin": "[parameters('administratorLogin')]",
+                        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                        "publicNetworkAccess": "Enabled"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Sql/servers/databases",
+                      "apiVersion": "2022-05-01-preview",
+                      "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+                      "location": "[parameters('location')]",
+                      "sku": {
+                        "name": "Standard",
+                        "tier": "Standard"
+                      },
+                      "properties": {},
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Sql/servers/firewallRules",
+                      "apiVersion": "2022-05-01-preview",
+                      "name": "[format('{0}/{1}', parameters('serverName'), 'allow_azure_services')]",
+                      "properties": {
+                        "endIpAddress": "0.0.0.0",
+                        "startIpAddress": "0.0.0.0"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "sqlServerName": {
+                      "type": "string",
+                      "value": "[parameters('serverName')]"
+                    },
+                    "sqlServerId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+                    },
+                    "dbName": {
+                      "type": "string",
+                      "value": "[parameters('sqlDBName')]"
+                    },
+                    "dbId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Sql/servers/databases', parameters('serverName'), parameters('sqlDBName'))]"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "subnetName": {
+              "type": "string",
+              "value": "[parameters('subnetName')]"
+            },
+            "subnetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "networkProfileName": {
+              "type": "string",
+              "value": "[variables('networkProfileName')]"
+            },
+            "networkProfileId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'jumpbox_deployment')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "orthanc_subnet",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "vnetName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'jumpbox_deployment'), '2020-10-01').outputs.vnetName.value]"
+          },
+          "containerName": {
+            "value": "orthanc-container"
+          },
+          "cpuCores": {
+            "value": 2
+          },
+          "memoryInGb": {
+            "value": 4
+          },
+          "subnetName": {
+            "value": "orthancSubnet"
+          },
+          "subnetPrefix": {
+            "value": "10.0.2.0/24"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.13.1.58284",
+              "templateHash": "8974945101473966743"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location for all resources."
+              }
+            },
+            "vnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "Vnet Name"
+              }
+            },
+            "containerGroupName": {
+              "type": "string",
+              "defaultValue": "contoso-orthanc-containergroup",
+              "metadata": {
+                "description": "Container group name"
+              }
+            },
+            "containerName": {
+              "type": "string",
+              "defaultValue": "orthanc-container",
+              "metadata": {
+                "description": "Container name"
+              }
+            },
+            "image": {
+              "type": "string",
+              "defaultValue": "osimis/orthanc:22.6.1-full",
+              "metadata": {
+                "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+              }
+            },
+            "port": {
+              "type": "int",
+              "defaultValue": 80,
+              "metadata": {
+                "description": "Port to open on the container."
+              }
+            },
+            "cpuCores": {
+              "type": "int",
+              "defaultValue": 2,
+              "metadata": {
+                "description": "The number of CPU cores to allocate to the container. Must be an integer."
+              }
+            },
+            "memoryInGb": {
+              "type": "int",
+              "defaultValue": 8,
+              "metadata": {
+                "description": "The amount of memory to allocate to the container in gigabytes."
+              }
+            },
+            "subnetPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.2.0/24",
+              "metadata": {
+                "description": "Subnet Prefix"
+              }
+            },
+            "subnetName": {
+              "type": "string",
+              "defaultValue": "orthancSubnet",
+              "metadata": {
+                "description": "Subnet Name"
+              }
+            }
+          },
+          "variables": {
+            "networkProfileName": "[format('{0}-networkProfile', parameters('subnetName'))]",
+            "interfaceConfigName": "[format('{0}-eth0', parameters('subnetName'))]",
+            "interfaceIpConfig": "[format('{0}-ipconfigprofile1', parameters('subnetName'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks/subnets",
+              "apiVersion": "2020-11-01",
+              "name": "[format('{0}/{1}', parameters('vnetName'), parameters('subnetName'))]",
+              "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "delegations": [
+                  {
+                    "name": "DelegationService",
+                    "properties": {
+                      "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkProfiles",
+              "apiVersion": "2020-11-01",
+              "name": "[variables('networkProfileName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "containerNetworkInterfaceConfigurations": [
+                  {
+                    "name": "[variables('interfaceConfigName')]",
+                    "properties": {
+                      "ipConfigurations": [
+                        {
+                          "name": "[variables('interfaceIpConfig')]",
+                          "properties": {
+                            "subnet": {
+                              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.ContainerInstance/containerGroups",
+              "apiVersion": "2019-12-01",
+              "name": "[parameters('containerGroupName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "containers": [
+                  {
+                    "name": "[parameters('containerName')]",
+                    "properties": {
+                      "image": "[parameters('image')]",
+                      "ports": [
+                        {
+                          "port": "[parameters('port')]",
+                          "protocol": "TCP"
+                        }
+                      ],
+                      "environmentVariables": [
+                        {
+                          "name": "ORTHANC__NAME",
+                          "value": "orthanc"
+                        },
+                        {
+                          "name": "ORTHANC__REGISTERED_USERS",
+                          "value": "{\"student\":\"student\"}"
+                        },
+                        {
+                          "name": "WVB_ENABLED",
+                          "value": "true"
+                        },
+                        {
+                          "name": "ORTHANC__DICOM_AET",
+                          "value": "ORTHANC"
+                        },
+                        {
+                          "name": "ORTHANC__DICOM_CHECK_CALLED_AET",
+                          "value": "false"
+                        },
+                        {
+                          "name": "ORTHANC__DICOM_PORT",
+                          "value": "4242"
+                        },
+                        {
+                          "name": "ORTHANC__DEFAULT_ENCODING",
+                          "value": "Latin1"
+                        },
+                        {
+                          "name": "ORTHANC__DICOM_MODALITIES",
+                          "value": "{ \"QIETOAZURE\" : [ \"QIETOAZURE\", \"10.0.1.4\", 4006 ] }"
+                        },
+                        {
+                          "name": "ORTHANC__DICOM_THREADS_COUNT",
+                          "value": "40"
+                        },
+                        {
+                          "name": "ORTHANC__CONCURRENT_JOBS",
+                          "value": "0"
+                        }
+                      ],
+                      "resources": {
+                        "requests": {
+                          "cpu": "[parameters('cpuCores')]",
+                          "memoryInGB": "[parameters('memoryInGb')]"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "osType": "Linux",
+                "networkProfile": {
+                  "id": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+                },
+                "restartPolicy": "Always"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "subnetName": {
+              "type": "string",
+              "value": "[parameters('subnetName')]"
+            },
+            "subnetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "networkProfileName": {
+              "type": "string",
+              "value": "[variables('networkProfileName')]"
+            },
+            "networkProfileId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'jumpbox_deployment')]",
+        "[resourceId('Microsoft.Resources/deployments', 'qvera_subnet')]"
+      ]
+    }
+  ]
+}
