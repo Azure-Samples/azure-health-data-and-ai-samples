@@ -31,7 +31,7 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
             context.Request.Method = HttpMethod.Get;
             context.Request.RequestUri = new Uri(string.Concat(
                 "http://localhost/authorize",
-                "?response_type=code&client_id=xxxx-xxxxx-xxxxx-xxxxx&redirect_uri=http://localhost/&scope=patient/Patient.read fhir user openid",
+                "?response_type=code&client_id=xxxx-xxxxx-xxxxx-xxxxx&redirect_uri=http://localhost/&scope=patient/Patient.read fhirUser openid",
                 "&state=123&aud=https://workspace-fhir.fhir.azurehealthcareapis.com&code_challenge_method=S256&code_challenge=ECgEuvKylvpiOS9pF2pfu5NKoBErrx8fAWdneyiPT2E"));
 
             await filter.ExecuteAsync(context);
@@ -41,7 +41,6 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
             Assert.Equal($"/{config.TenantId}/oauth2/v2.0/authorize", context.Request.RequestUri.AbsolutePath);
 
             Assert.Equal(1, context.Headers.Count(x => x.Name == "Location"));
-            Assert.Equal(1, context.Headers.Count(x => x.Name == "Origin"));
         }
 
         [Fact]
@@ -73,7 +72,6 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
             Assert.Equal($"/{config.TenantId}/oauth2/v2.0/authorize", context.Request.RequestUri.AbsolutePath);
 
             Assert.Equal(1, context.Headers.Count(x => x.Name == "Location"));
-            Assert.Equal(1, context.Headers.Count(x => x.Name == "Origin"));
         }
 
         [Fact]

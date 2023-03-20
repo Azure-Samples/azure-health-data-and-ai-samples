@@ -81,6 +81,17 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             if (!tokenResponse["id_token"]!.IsNullOrEmpty())
             {
+                // Add the openid scope
+                if (tokenResponse["scope"]!.IsNullOrEmpty())
+                {
+                    tokenResponse["scope"] = "openid";
+                }
+                else
+                {
+                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " openid";
+                }   
+
+                // Attempt to parse fhirUser
                 try
                 {
                     var handler = new JwtSecurityTokenHandler();
@@ -99,6 +110,19 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 }
                 catch (Exception ex) {
                     _logger.LogWarning("fhirUser not found in id_token");
+                }
+            }
+
+            if (!tokenResponse["refresh_token"]!.IsNullOrEmpty())
+            {
+                // Add the openid scope
+                if (tokenResponse["scope"]!.IsNullOrEmpty())
+                {
+                    tokenResponse["scope"] = "offline_access";
+                }
+                else
+                {
+                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " offline_access";
                 }
             }
 
