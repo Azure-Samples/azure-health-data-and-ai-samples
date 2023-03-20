@@ -185,6 +185,35 @@ The EHR Launch application is a standard confidential client application which l
 ![](./images/deployment/5_ehr_confidental_app_scopes.png)
 </details>
 
+### SMART fhirUser Custom Claim
+
+> **NOTE:** This example will only create a global fhirUser claim attached to the Confidential Client application registration. For users that reside in Active Directory, you may use [directory extension attributes](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-schema-extensions). If your users do not reside in Active Directory, you can create a [custom claims provider](https://learn.microsoft.com/en-us/azure/active-directory/develop/custom-extension-get-started?tabs=azure-portal) for user-level fhirUser claims.
+
+## Configure Custom Claim
+
+In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the Confidential Client application created previously. Next select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
+
+![Azure Portal image of custom attribute claims configuration screen](./images/deployment/1_attributes_claims.png)
+The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
+
+1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
+2. Click **Add New Claim**
+3. Name the claim **fhirUser**
+4. Select **Attribute** for Source
+5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/PatientA**
+6. Click **Save** to add the fhirUser claim
+
+![Azure Portal image of creating new custom claim](./images/deployment/2_add_fhiruser_claim2.png)
+
+## Modify Application Manifest
+
+For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
+
+1. In the Azure Portal in Azure Active Directory, select **App registrations**
+2. Select your App registration from the list
+3. Select **Manifest** from the left-hand menu
+4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**
+
 ### Backend Service Client Application
 
 Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
