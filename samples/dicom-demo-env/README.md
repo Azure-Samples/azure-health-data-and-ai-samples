@@ -31,7 +31,7 @@ You should now have several key pieces of data which will be used in the upcomin
 Creating the cloud and on-prem environments in Azure can be done in one of two ways. You can use the Bicep command line, which is easiest if you are running this repo multiple times for development. Or you can use the Azure Portal user experience, which is easiest for a one-off deployment. Both create identical environments.
 
 #### Deploy using the Azure Portal
-To use reasonable default values, simply click [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStevenBorg%2FRSNA-2022-Demo%2Fmain%2Fenvironments%2Fall-up-demo-deployment.json)
+To use reasonable default values, simply click [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStevenBorg%2FRSNA-2022-Demo%2Fmain%2Fenvironments%2Fall-up-demo-deployment.json)  You may want to open this link in a new window to follow along with the instructions.  
 
 Fill in required information in the template: 
 ![Steps to deploy using the Portal](readme-images/steps-deploy-full-infra-using-portal.png "Steps to deploy using the Portal")
