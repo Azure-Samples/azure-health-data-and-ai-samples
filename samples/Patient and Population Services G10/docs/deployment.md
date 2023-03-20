@@ -187,7 +187,7 @@ The EHR Launch application is a standard confidential client application which l
 
 ### SMART fhirUser Custom Claim
 
-> **NOTE:** This example will only create a global fhirUser claim attached to the Confidential Client application registration. You can create a [custom claims provider](https://learn.microsoft.com/en-us/azure/active-directory/develop/custom-extension-get-started?tabs=azure-portal) for user-level fhirUser claims.
+> **NOTE:** This example will only create a global fhirUser claim attached to the Confidential Client application registration. For users that reside in Active Directory, you may use [directory extension attributes](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-schema-extensions). If your users do not reside in Active Directory, you can create a [custom claims provider](https://learn.microsoft.com/en-us/azure/active-directory/develop/custom-extension-get-started?tabs=azure-portal) for user-level fhirUser claims.
 
 ## Configure Custom Claim
 
@@ -200,10 +200,10 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Attribute** for Source
-5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/1234-abcd**
+5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/PatientA**
 6. Click **Save** to add the fhirUser claim
 
-![Azure Portal image of creating new custom claim](./images/deployment/2_add_fhiruser_claim.png)
+![Azure Portal image of creating new custom claim](./images/deployment/2_add_fhiruser_claim2.png)
 
 ## Modify Application Manifest
 
