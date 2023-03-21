@@ -27,7 +27,7 @@ The queries in this collection are categorized into the folders listed below:
   - Patient - GenderIdentity
   - Goal - Description
   - ServiceRequest - Authored
- - Examples of some search paremeters combinations from US Core/IPS(International Patient Summary)/IPA(International Patient Access) as listed below:
+ - Examples of a few search parameter combinations from US Core/IPS(International Patient Summary)/IPA(International Patient Access) as listed below:
     - Careplan - patient+category+status+date 
     - Encounter - patient+location, date+patient, patient+status
     - Condition - patient+category+encounter, patient+recorded-date, patient+onset-date, patient+category+clinical-status
