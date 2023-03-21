@@ -55,8 +55,8 @@ using IHost host = new HostBuilder()
         services.AddTransient<IPostProcess, PostProcess>();
 
         AppConfiguration appConfig = new()
-        {            
-            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+        {
+            FHIRPostProcessMaxParallelism = config.FHIRPostProcessMaxParallelism,
         };
         services.AddSingleton(appConfig);
 

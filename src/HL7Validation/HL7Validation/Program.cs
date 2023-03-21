@@ -54,7 +54,7 @@ using IHost host = new HostBuilder()
 
         AppConfiguration appConfiguration = new()
         {
-            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+            Hl7validationMaxParallelism = config.Hl7validationMaxParallelism,
         };
 
         services.AddSingleton(blobConfig);

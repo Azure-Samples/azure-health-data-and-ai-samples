@@ -53,7 +53,7 @@ using IHost host = new HostBuilder()
 
         AppConfiguration appConfiguration = new()
         {
-            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+            HL7SequencingMaxParallelism = config.HL7SequencingMaxParallelism,
         };
 
 

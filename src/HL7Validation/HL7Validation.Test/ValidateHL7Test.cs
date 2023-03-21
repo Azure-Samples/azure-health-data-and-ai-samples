@@ -49,7 +49,7 @@ namespace HL7Validation.Test
 
                 appConfiguration = new()
                 {
-                    MaxDegreeOfParallelism = config.MaxDegreeOfParallelism
+                    Hl7validationMaxParallelism = config.Hl7validationMaxParallelism
                 };
 
                 parser = new PipeParser { ValidationContext = new Hl7Validation.Validation.CustomValidation() };

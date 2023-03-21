@@ -12,7 +12,7 @@
 
         public string Hl7skippedContainer { get; set; }
 
-        public int MaxDegreeOfParallelism { get; set; }
+        public int Hl7validationMaxParallelism { get; set; }
 
     }
 }

@@ -48,7 +48,7 @@ namespace HL7Sequencing.Test
 
                 appConfiguration = new()
                 {
-                    MaxDegreeOfParallelism = config.MaxDegreeOfParallelism
+                    HL7SequencingMaxParallelism = config.HL7SequencingMaxParallelism
                 };
 
                 parser = new PipeParser();

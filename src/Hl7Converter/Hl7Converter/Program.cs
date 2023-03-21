@@ -56,7 +56,7 @@ using IHost host = new HostBuilder()
         AppConfiguration appConfig = new()
         {
             HttpFailStatusCodes = config.HttpFailStatusCodes,
-            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+            HL7ConverterMaxParallelism = config.HL7ConverterMaxParallelism,
         };
 
 

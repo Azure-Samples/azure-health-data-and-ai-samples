@@ -56,7 +56,7 @@ namespace HL7Converter.Test
                 appConfig = new()
                 {
                     HttpFailStatusCodes = config.HttpFailStatusCodes,
-                    MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+                    HL7ConverterMaxParallelism = config.HL7ConverterMaxParallelism,
                 };
 
 

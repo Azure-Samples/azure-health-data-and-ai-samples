@@ -8,7 +8,7 @@
 
         public string HttpFailStatusCodes { get; set; }
 
-        public int MaxDegreeOfParallelism { get; set; }
+        public int HL7ConverterMaxParallelism { get; set; }
 
     }
 }

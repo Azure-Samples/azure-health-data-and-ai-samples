@@ -75,7 +75,7 @@ namespace HL7Converter.ProcessConverter
                         if (hl7FilesList != null && hl7FilesList.Count > 0)
                         {
                             _logger?.LogInformation($"Hl7 files present for conversion");
-                            int maxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+                            int maxDegreeOfParallelism = _appConfiguration.HL7ConverterMaxParallelism;
                             int totalFileCount = 0;
                             DateTime increaseTwoMinute = DateTime.Now.AddMinutes(2);
 

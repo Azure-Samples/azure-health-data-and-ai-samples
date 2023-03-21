@@ -56,7 +56,7 @@ namespace FHIRPostProcess.PostProcessor
                     var fhirBundleType = orchestrationInput.FhirBundleType;
 
                     ParallelOptions parallelOptions = new();
-                    parallelOptions.MaxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+                    parallelOptions.MaxDegreeOfParallelism = _appConfiguration.FHIRPostProcessMaxParallelism;
 
                     var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.Hl7ConverterJsonContainer);
                     _logger?.LogInformation($"Post processing function start at:{DateTime.Now.ToString("yyyyMMdd hh:mm:ss")}");

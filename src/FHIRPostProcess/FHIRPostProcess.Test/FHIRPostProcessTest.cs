@@ -50,7 +50,7 @@ namespace FHIRPostProcess.Test
 
                 appConfig = new()
                 {
-                    MaxDegreeOfParallelism = config.MaxDegreeOfParallelism,
+                    FHIRPostProcessMaxParallelism = config.FHIRPostProcessMaxParallelism,
                 };
 
                  parser = new();

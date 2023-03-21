@@ -57,7 +57,7 @@ namespace UploadFhirJson.Test
                 appConfiguration = new()
                 {
                     HttpFailStatusCodes = config.HttpFailStatusCodes,
-                    MaxDegreeOfParallelism = config.MaxDegreeOfParallelism
+                    UploadFhirJsonMaxParallelism = config.UploadFhirJsonMaxParallelism
 
                 };
 

@@ -10,7 +10,7 @@
 
         public string Hl7ResynchronizationContainer { get; set; }
 
-        public int MaxDegreeOfParallelism { get; set; }
+        public int HL7SequencingMaxParallelism { get; set; }
 
         public string Hl7skippedContainer { get; set; }
     }

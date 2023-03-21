@@ -3,6 +3,6 @@ namespace Hl7Validation.Configuration
 {
     public class AppConfiguration
     {
-        public int MaxDegreeOfParallelism { get; set; }
+        public int Hl7validationMaxParallelism { get; set; }
     }
 }

@@ -55,7 +55,7 @@ namespace Hl7Validation.ValidateMessage
                     postData = JsonConvert.DeserializeObject<PostData>(request);
 
                     var blobContainer = _blobServiceClient.GetBlobContainerClient(postData.ContainerName);
-                    maxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+                    maxDegreeOfParallelism = _appConfiguration.Hl7validationMaxParallelism;
                     hl7FileContainer = postData.ContainerName;
                     Object listLock = new();
                     List<Hl7Files> validatedHl7Files = new();

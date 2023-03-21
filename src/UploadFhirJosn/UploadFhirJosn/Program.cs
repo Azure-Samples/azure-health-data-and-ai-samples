@@ -63,7 +63,7 @@ using IHost host = new HostBuilder()
         AppConfiguration appConfiguration = new()
         {
             HttpFailStatusCodes = config.HttpFailStatusCodes,
-            MaxDegreeOfParallelism = config.MaxDegreeOfParallelism
+            UploadFhirJsonMaxParallelism = config.UploadFhirJsonMaxParallelism
 
         };
         services.AddSingleton(appConfiguration);

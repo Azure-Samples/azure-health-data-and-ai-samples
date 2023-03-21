@@ -81,7 +81,7 @@ namespace HL7Sequencing.Sequencing
                             {
                                 //_logger?.LogInformation($"Hl7Files count: {hl7FilesList.Count}");
 
-                                maxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+                                maxDegreeOfParallelism = _appConfiguration.HL7SequencingMaxParallelism;
 
                                 ParallelOptions parallelOptions = new();
                                 parallelOptions.MaxDegreeOfParallelism = maxDegreeOfParallelism;

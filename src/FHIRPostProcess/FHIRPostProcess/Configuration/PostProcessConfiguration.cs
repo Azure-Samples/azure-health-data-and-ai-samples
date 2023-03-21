@@ -4,6 +4,6 @@
     {
         public string AppInsightConnectionstring { get; set; }
 
-        public int MaxDegreeOfParallelism { get; set; }
+        public int FHIRPostProcessMaxParallelism { get; set; }
     }
 }

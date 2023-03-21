@@ -10,6 +10,6 @@ namespace UploadFhirJson.Configuration
     {
         public string HttpFailStatusCodes { get; set; }
 
-        public int MaxDegreeOfParallelism { get; set; }
+        public int UploadFhirJsonMaxParallelism { get; set; }
     }
 }

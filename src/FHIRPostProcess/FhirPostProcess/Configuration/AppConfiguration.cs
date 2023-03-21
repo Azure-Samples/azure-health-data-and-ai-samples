@@ -8,6 +8,6 @@ namespace FHIRPostProcess.Configuration
 {
     public class AppConfiguration
     {
-        public int MaxDegreeOfParallelism { get; set; }
+        public int FHIRPostProcessMaxParallelism { get; set; }
     }
 }

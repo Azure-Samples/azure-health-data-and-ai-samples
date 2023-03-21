@@ -120,7 +120,7 @@ namespace UploadFhirJson.ProcessFhir
             //var blobContainer = _blobServiceClient.GetBlobContainerClient(_blobConfiguration.FhirJsonContainer);
             FhirResponse fhirReponse = new();
             int i = 0;
-            int maxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+            int maxDegreeOfParallelism = _appConfiguration.UploadFhirJsonMaxParallelism;
             int totalFileCount = 0;
             DateTime increaseTwoMinute = DateTime.Now.AddMinutes(2);
 
@@ -183,7 +183,7 @@ namespace UploadFhirJson.ProcessFhir
             BlobContainerClient blobContainer = new(_blobConfiguration.BlobConnectionString, !request.SkipFhirPostProcess ? _blobConfiguration.HL7FhirPostPorcessJson : _blobConfiguration.FhirJsonContainer);
 
             FhirResponse fhirReponse = new();
-            int maxDegreeOfParallelism = _appConfiguration.MaxDegreeOfParallelism;
+            int maxDegreeOfParallelism = _appConfiguration.UploadFhirJsonMaxParallelism;
             int totalFileCount = 0;
             DateTime increaseTwoMinute = DateTime.Now.AddMinutes(2);
 

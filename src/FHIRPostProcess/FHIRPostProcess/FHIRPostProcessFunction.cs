@@ -60,7 +60,7 @@ namespace FHIRPostProcess
                         
                         while (totalFileCount <= hl7FilesList.Count)
                         {
-                            var files = hl7FilesList.Skip(totalFileCount).Take(_appConfiguration.MaxDegreeOfParallelism).ToList();
+                            var files = hl7FilesList.Skip(totalFileCount).Take(_appConfiguration.FHIRPostProcessMaxParallelism).ToList();
                             OrchestrationInput orchestrationInput = new()
                             {
                                 Hl7Files = files,
@@ -68,7 +68,7 @@ namespace FHIRPostProcess
                             };
                             Task<string> result = context.CallActivityAsync<string>(nameof(PostProcessActivityTrigger), orchestrationInput);
                             parallelTasks.Add(result);
-                            totalFileCount += _appConfiguration.MaxDegreeOfParallelism;
+                            totalFileCount += _appConfiguration.FHIRPostProcessMaxParallelism;
                         }
 
                     }
