@@ -31,7 +31,7 @@ param functionAppCustomSettings object = {}
 @description('Tenant ID where resources are deployed')
 var tenantId  = subscription().tenantId
 
-param hl7continername string
+param hl7containername string
 param name string
 
 @description('Deploy Azure Health Data Services and FHIR service')
@@ -58,7 +58,7 @@ module storage './storage.bicep'= {
   params: {
     storageAccountName:storagename
     location:location
-    hl7continername : hl7continername
+    hl7containername : hl7containername
     appTags: appTags
   }
 }
@@ -83,27 +83,35 @@ module monitoring './monitoring.bicep'= {
 var appServiceName = '${prefixName}-appserv'
 
 
-@description('Deploy Azure Function to validate the hl7 files')
+@description('Deploy Azure Functions for Data ingestion pipline logic app')
 module AzureFunc './AzureFunction.bicep'= {
-  name: 'validatefunctionDeploy'
+  name: 'logicAppfunctionsDeploy'
   params: {
     appServiceName: appServiceName
-    functionAppName: 'dataingestion20220512'
+    functionAppName: 'dataingestion20230321'
     storageAccountName: storagename
     storagekey:storagekey
     location: location
-    hl7FilesContinerName: storage.outputs.hl7filescontainer
-    hl7ValidatedBlobContainer : storage.outputs.validatedcontainer
-    hl7validationfailContainer: storage.outputs.hl7failedvalidationfilescontainer
-    hl7resyncontainer: storage.outputs.hl7resyncontainers
-    hl7ConvertedContainer: storage.outputs.hl7convertedfilescontainer
-    hl7conversionfailcontainer:storage.outputs.hl7Failedcontainer
-    hl7SkippedBlobContainer: storage.outputs.hl7skippedfilecontainer
-    hl7SuccessBlobContainer: storage.outputs.hl7processedfilescontainer
-    hl7FailedBlobContainer:  storage.outputs.hl7failedfilescontainer
+    hl7containername:hl7containername
+    ValidatedBlobContainer: storage.outputs.validatedblobcontainer
+    Hl7validationfailBlobContainer: storage.outputs.hl7validationfailblobcontainer
+    Hl7skippedContainer  : storage.outputs.hl7skippedcontainer
+    Hl7ResynchronizationContainer : storage.outputs.hl7resynchronizationcontainer
+    ConvertedContainer  : storage.outputs.convertedcontainer
+    ConversionfailContainer : storage.outputs.conversionfailcontainer
+    Hl7ConverterJsonContainer : storage.outputs.hl7converterjsoncontainer
+    Hl7PostProcessContainer : storage.outputs.hl7postprocesscontainer
+    processedblobcontainer  : storage.outputs.processedblobcontainer
+    HL7FailedBlob  : storage.outputs.hl7failedblob
+    FailedBlobContainer  : storage.outputs.failedblobcontainer
+    FhirFailedBlob  : storage.outputs.fhirfailedblob
+    SkippedBlobContainer  : storage.outputs.skippedblobcontainer
+    FhirJsonContainer  : storage.outputs.fhirjsoncontainer
+    ValidatedContainer : storage.outputs.validatedcontainer
+    HL7FhirPostPorcessJson: storage.outputs.hl7fhirpostporcessjson
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     functionSettings: union({
-      AZURE_FhirServerUrl: 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com'
+      AZURE_FhirURL: 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com'
       AZURE_InstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     }, functionAppCustomSettings)
     appTags: appTags

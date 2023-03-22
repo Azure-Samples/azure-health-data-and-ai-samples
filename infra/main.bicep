@@ -21,7 +21,7 @@ param existingFhirServiceName string = ''
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string = ''
 
-param hl7continername string 
+param hl7containername string 
 
 var envRandomString = toLower(uniqueString(subscription().id, name, existingResourceGroupName, location))
 var nameShort = length(name) > 11 ? substring(name, 0, 11) : name
@@ -54,7 +54,7 @@ module template 'core.bicep'= if (createResourceGroup) {
     prefixName: resourcePrefix
     createWorkspace: createWorkspace
     createFhirService: createFhirService
-    hl7continername : hl7continername
+    hl7containername : hl7containername
     workspaceName: '${replace(resourcePrefix, '-', '')}ahds'
     fhirServiceName: '${replace(resourcePrefix, '-', '')}fhir'
     location: location
@@ -71,7 +71,7 @@ module existingResourceGrouptemplate 'core.bicep'= if (!createResourceGroup) {
     prefixName: resourcePrefix
     createWorkspace: createWorkspace
     createFhirService: createFhirService
-    hl7continername : hl7continername
+    hl7containername : hl7containername
     workspaceName: existingAzureHealthDataServicesWorkspaceName
     fhirServiceName: existingFhirServiceName
     location: location

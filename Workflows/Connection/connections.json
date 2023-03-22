@@ -1,78 +1,78 @@
 {
   "functionConnections": {
-      "azureFunctionOperation": {
-          "authentication": {
-              "name": "Code",
-              "type": "QueryString",
-              "value": "@appsetting('azureFunctionOperation_functionAppKey')"
-          },
-          "displayName": "AzureFunction",
-          "function": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/ValidateHL7"
-          },
-          "triggerUrl": "@appsetting('HL7Validate_URL')"
+    "azureFunctionOperation": {
+      "authentication": {
+        "name": "Code",
+        "type": "QueryString",
+        "value": "@appsetting('azureFunctionOperation_functionAppKey')"
       },
-      "azureFunctionOperation-2": {
-          "authentication": {
-              "name": "Code",
-              "type": "QueryString",
-              "value": "@appsetting('azureFunctionOperation_functionAppKey')"
-          },
-          "displayName": "HL7Sequence",
-          "function": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/HL7Sequencing"
-          },
-          "triggerUrl": "@appsetting('HL7Sequencing_URL')"
+      "displayName": "durable_Hl7validation",
+      "function": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/CallHl7Validation"
       },
-      "azureFunctionOperation-3": {
-          "authentication": {
-              "name": "Code",
-              "type": "QueryString",
-              "value": "@appsetting('azureFunctionOperation_functionAppKey')"
-          },
-          "displayName": "HL7Converter",
-          "function": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/HL7Converter"
-          },
-          "triggerUrl": "@appsetting('HL7Converter_URL')"
+      "triggerUrl": "@appsetting('durable_Hl7validation_URL')"
+    },
+    "azureFunctionOperation-2": {
+      "authentication": {
+        "name": "Code",
+        "type": "QueryString",
+        "value": "@appsetting('azureFunctionOperation_functionAppKey')"
       },
-      "azureFunctionOperation-4": {
-          "authentication": {
-              "name": "Code",
-              "type": "QueryString",
-              "value": "@appsetting('azureFunctionOperation_functionAppKey')"
-          },
-          "displayName": "PostProcessing",
-          "function": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/FHIRPostProcessFunction"
-          },
-          "triggerUrl": "@appsetting('FHIRPostProcessing_URL')"
+      "displayName": "durable_HL7SequencingHttp",
+      "function": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/CallHL7Sequencing"
       },
-      "azureFunctionOperation-5": {
-          "authentication": {
-              "name": "Code",
-              "type": "QueryString",
-              "value": "@appsetting('azureFunctionOperation_functionAppKey')"
-          },
-          "displayName": "FHIRUpload",
-          "function": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/UploadFhirJson"
-          },
-          "triggerUrl": "@appsetting('FHIRUpload_URL')"
-      }
+      "triggerUrl": "@appsetting('durable_HL7SequencingHttp_URL')"
+    },
+    "azureFunctionOperation-3": {
+      "authentication": {
+        "name": "Code",
+        "type": "QueryString",
+        "value": "@appsetting('azureFunctionOperation_functionAppKey')"
+      },
+      "displayName": "hl7converter_durable",
+      "function": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/StartConverterHTTP"
+      },
+      "triggerUrl": "@appsetting('hl7converter_durable_URL')"
+    },
+    "azureFunctionOperation-4": {
+      "authentication": {
+        "name": "Code",
+        "type": "QueryString",
+        "value": "@appsetting('azureFunctionOperation_functionAppKey')"
+      },
+      "displayName": "durable_fhirpostprocess",
+      "function": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/FHIRPostProcess_HTTP"
+      },
+      "triggerUrl": "@appsetting('durable_fhirpostprocess_URL')"
+    },
+    "azureFunctionOperation-5": {
+      "authentication": {
+        "name": "Code",
+        "type": "QueryString",
+        "value": "@appsetting('azureFunctionOperation_functionAppKey')"
+      },
+      "displayName": "durable_uploadfhirjson",
+      "function": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/sites/@appsetting('site_name')/functions/UploadFhirJson_HttpStart"
+      },
+      "triggerUrl": "@appsetting('durable_uploadfhirjson_URL')"
+    }
   },
   "managedApiConnections": {
-      "azureblob_1": {
-          "api": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/providers/Microsoft.Web/locations/@appsetting('Location')/managedApis/azureblob"
-          },
-          "authentication": {
-              "type": "ManagedServiceIdentity"
-          },
-          "connection": {
-              "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/connections/BlobConnection"
-          },
-          "connectionRuntimeUrl": "@appsetting('connectionRuntimeUrl')"
-      }
+    "azureblob_1": {
+      "api": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/providers/Microsoft.Web/locations/@appsetting('Location')/managedApis/azureblob"
+      },
+      "authentication": {
+        "type": "ManagedServiceIdentity"
+      },
+      "connection": {
+        "id": "/subscriptions/@appsetting('subscription_Id')/resourceGroups/@appsetting('resource_group')/providers/Microsoft.Web/connections/BlobConnection"
+      },
+      "connectionRuntimeUrl": "@appsetting('connectionRuntimeUrl')"
+    }
   }
 }

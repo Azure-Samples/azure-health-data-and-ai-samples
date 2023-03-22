@@ -1,6 +1,6 @@
 # Data Ingest PipeLine
 
-Data Ingestion Workflow will help users to get their data present in HL7 format converted FHIR JSON format and also stored on FHIR server. There are couple of steps involved before the final FHIR JSON is uploaded to FHIR Server :
+Data Ingestion Workflow will help users to get their data present in HL7 format which is converted into FHIR JSON format and also uploaded on FHIR server. There are couple of steps involved before the final FHIR JSON is uploaded to FHIR Server :
 
 - HL7 validation
 
@@ -16,7 +16,7 @@ Data Ingestion Workflow will help users to get their data present in HL7 format 
 	In case there is insufficient information in the incoming HL7 message, empty resources are created by the conversion process. Uploading this to FHIR server might result in erroneous state. So all such empty resources are removed from the converted FHIR bundle JSON.
 - Uploading to FHIR server
 
-	FHIR Bundles are uploaded to the FHIR server one by one.
+	FHIR Bundles are uploaded to the FHIR server with respect to users choice, there are two options for uploading FHIR bundles in Batch or Sequence.
 
 
 ## Architecture Overview
@@ -43,7 +43,7 @@ This project framework provides the following features:
     * Resource Group
     * Storage Account
     * App Service Plan
-    * Function App
+    * Azure Durable Functions
     * Logic App
 
 ### Installation
@@ -65,11 +65,12 @@ This project framework provides the following features:
     ```
     which will create below resources,
      - Logic App workflow
-     - Azure Function
+     - Azure Durable Functions
      - Storage Account
      - App Insight
      - Azure FHIR Service
      - Log Analytics Workspace
+
 
  -  Run the PowerShell script that makes the connection between the Azure Function App and the Logic App Workflow.
      
@@ -85,7 +86,9 @@ This project framework provides the following features:
         {
             "containerName" : "hl7inputfiles",
             "proceedOnError" : "true/false",
-            "fhirBundleType":"batch/transaction"
+            "fhirBundleType":"batch/transaction",
+            "skipfhirpostprocess": true/false,
+            "fileProcessInSequence":true/false
         }
     ```
       where,      
@@ -96,6 +99,12 @@ This project framework provides the following features:
   - fhirBundleType : Set "batch" if you want the FHIR bundle type to be "Batch"
 					 OR
 					 Set it to "transaction" if you want the FHIR bundle type to be "Transaction" .
+  - skipfhirpostprocess : Set "true" if you want to skip the FHIR postprocess function app execution
+					 OR
+					 Set it to "false" if you want the FHIR postprocess function app to be execute.
+ - fileProcessInSequence : Set "true" if you want to upload the FHIR bundles in Sequence
+					 OR
+					 Set "false" if you want to upload the FHIR bundles in Batch.
 
 
 ### Process Flow
@@ -104,31 +113,31 @@ Following steps describe the overall flow logic. If any of the steps are not nee
 
 1. When the data ingest pipeline receives an http request, it invokes the hl7 validation function, which reads all hl7 files from the hl7inputfiles container.
 
-2. The NHAPI tool is used to validate the hl7files by the Hl7Validation function. If files are validated successfully, they will move to hl7-validation-succeeded container; otherwise, they will move to hl7-validation-failed container.If any file fails in validation and proceedonError is false, then the process will be stopped.
+2. The NHAPI tool is used to validate the hl7files by the Hl7Validation function. If files are validated successfully, they will move to "hl7-validation-succeeded" container, All invalid Hl7Files will move to "hl7-validation-failed" container.If any file fails in validation and proceedonError is false, then the process will be stopped.
 
-3. The HL7Sequence function will read the files from the hl7-validation-successful container. It will use NHapi tool to parse the hl7 file data.
+3. The HL7Sequence function will read the files from the "hl7-validation-successful" container. It will use NHapi tool to parse the hl7 file data.
 
-4. HL7 file sorting will be done based on DateTimeoffset,SequenceNo and hl7 file name. If the sequence no value is 0 or -1 then will move that file to hl7-sequence-resync container.
+4. HL7 file sorting will be done based on DateTimeoffset,SequenceNo and hl7 file name. If the sequence no value is 0 or -1 then will move that file to "hl7-sequence-resync container".
 
 5. Based on the HL7Sequence response, the logic app will call the HL7Converter function to send the hl7files to $convert-data. This process will be done in a parallel mode.
 
 6. If $convert-data sends 408, 500, 502, 503, 504, or 429, a retry call will be made with a maximum of three attempts.
 
-7. If conversion fails, the IsConversionFail value will be set to true, and email will be sent for all the failed files.
+7. If conversion fails, the IsConversionFail value will be set to true, an email will be sent for all the failed files.
 
-8. Successfully converted HL7 files will be moved to hl7-converter-succeeded, and failed files will be moved to hl7-converter-failed.
+8. Successfully converted HL7 files will be moved to "hl7-converter-succeeded", and failed files will be moved to "hl7-converter-failed".
 
-9. All successfully converterd hl7files will create a new json file with FHIR JSON and will store this json to hl7-converter-json container. 
+9. All successfully converterd hl7files will create a new json file with FHIR JSON and will be stored to "hl7-converter-json" container. 
 
-10. The FHIRPostProcess function will be called which will read the HL7 converted files and performs following operations:
+10. If "proceedOnError" is false and the conversion fails, all remaining files will be moved to the "hl7-skipped" container.
+
+11. The FHIRPostProcess function will be called which will read the HL7 converted files and performs following operations:
 	- Remove any empty resources from FHIR JSON 
 	- Set the bundle type to batch or transaction as specified in the request input 
-	- Store the modified FHIR JSON in hl7-converter-json.
+	- Store the modified FHIR JSON in "hl7-postprocess-json".
 
-11. If processedonerror is false and the conversionfail value is true, then processing will be stopped and all files will be moved to the hl7-skipped container.  
-
-12. If the above condition is false, all files in the list will be sent to the UploadFHIRJson function, which will send them to the FHIR server in batch order.
+12. Once FHIRPostProcess completed, UploadFHIRJson function will be called and all the FHIR bundle JSON will be sent to FHIR server in a Batch or Sequence. 
 
 13. If the FHIR server sends 408, 500, 502, 503, 504, or 429, a retry call will be made with a maximum of three attempts.
 
-14. If files are successfully sent to the fhir server, then it will be moved to hl7-fhirupload-succeeded, or it will move to hl7-fhirupload-failed.
+14. If files are successfully sent to the fhir server, then it will be moved to "hl7-fhirupload-succeeded", or it will move to "hl7-fhirupload-failed".

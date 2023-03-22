@@ -21,7 +21,7 @@
       "value": ""
     },
     "hl7continername": {
-      "value": "hl7file"
+      "value": "hl7inputfiles"
     }
   }
 }

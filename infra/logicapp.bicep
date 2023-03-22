@@ -150,11 +150,11 @@ resource logicAppSetting 'Microsoft.Web/sites/config@2020-12-01' = {
     azureFunctionOperation_functionAppKey : key
     site_name : funcAppName
     Location : location
-    HL7Validate_URL : '${funcURL}/validatehl7'
-    HL7Sequencing_URL : '${funcURL}/hl7sequencing'
-    HL7Converter_URL : '${funcURL}/hl7converter'
-    FHIRPostProcessing_URL : '${funcURL}/fhirpostprocessfunction'
-    FHIRUpload_URL : '${funcURL}/uploadfhirjson'
+    durable_Hl7validation_URL : '${funcURL}/CallHl7Validation'
+    durable_HL7SequencingHttp_URL : '${funcURL}/CallHL7Sequencing'
+    hl7converter_durable_URL : '${funcURL}/StartConverterHTTP'
+    durable_fhirpostprocess_URL : '${funcURL}/FHIRPostProcess_HTTP'
+    durable_uploadfhirjson_URL : '${funcURL}/UploadFhirJson_HttpStart'
     connectionRuntimeUrl : reference(connection.id, connection.apiVersion, 'full').properties.connectionRuntimeUrl
   }
   dependsOn: [
