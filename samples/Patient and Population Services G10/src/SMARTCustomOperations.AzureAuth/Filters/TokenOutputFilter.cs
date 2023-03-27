@@ -84,7 +84,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             {
                 if (tokenResponse["scope"]!.ToString().Contains(" launch "))
                 {
-                    tokenResponse["need_patient_banner"] = "need_patient_banner";
+                    tokenResponse["need_patient_banner"] = "true";
                     tokenResponse["smart_style_url"] = $"https://{_configuration.ApiManagementHostName}/smart/smart-style.json";
                 }
             }
@@ -114,7 +114,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                             var fhirUserValue = fhirUser.Value.Split('/').Last();
                             tokenResponse["patient"] = fhirUserValue;
                         }
-                        context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={fhirUser.Value}; path=/; secure; HttpOnly", CustomHeaderType.ResponseStatic));
+
+                        // Inform the FHIR Service the value of fhirUser claim
                         context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
                     }
                 }
