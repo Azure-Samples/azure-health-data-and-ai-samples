@@ -79,6 +79,16 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 }
             }
 
+            // Add SMART Styling information to the token response if needed
+            if (!tokenResponse["access_token"]!.IsNullOrEmpty())
+            {
+                if (tokenResponse["scope"]!.ToString().Contains(" launch "))
+                {
+                    tokenResponse["need_patient_banner"] = "need_patient_banner";
+                    tokenResponse["smart_style_url"] = $"https://{_configuration.ApiManagementHostName}/smart/smart-style.json";
+                }
+            }
+
             if (!tokenResponse["id_token"]!.IsNullOrEmpty())
             {
                 // Add the openid scope

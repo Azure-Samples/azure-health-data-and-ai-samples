@@ -262,6 +262,23 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     }
   }
 
+  resource smartStyleGet 'operations' = {
+    name: 'smartStyleGet'
+    properties: {
+      displayName: 'SMART Style'
+      method: 'GET'
+      urlTemplate: '/smart-style.json'
+    }
+
+    resource smartStyleGetPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/returnSmartStyleJson.xml')
+      }
+    }
+  }
+
   resource smartApiDiagnostics 'diagnostics' = {
     name: 'applicationinsights'
     properties: {

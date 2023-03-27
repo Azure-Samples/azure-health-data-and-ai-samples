@@ -31,6 +31,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
             State = queryParams.AllKeys.Contains("state") ? queryParams["state"] : null;
             Prompt = queryParams.AllKeys.Contains("prompt") ? queryParams["prompt"] : null;
             LoginHint = queryParams.AllKeys.Contains("login_hint") ? queryParams["login_hint"] : null;
+            Launch = queryParams.AllKeys.Contains("launch") ? queryParams["launch"] : null;
         }
 
         public string ResponseType { get; }
@@ -48,6 +49,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
         public string? CodeChallenge { get; }
 
         public string? CodeChallengeMethod { get; }
+
+        public string? Launch {get; }
 
         public string? Prompt { get; }
 
