@@ -4,15 +4,20 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Http.Headers;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
-using Microsoft.AzureHealth.DataServices.Json;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Extensions;
+using SMARTCustomOperations.AzureAuth.Models;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -49,109 +54,35 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             _logger?.LogInformation("Entered {Name}", Name);
 
-            JObject tokenResponse = JObject.Parse(context.ContentString);
-
-            var audience = _configuration.Audience!;
-
-            // Replace scopes from fully qualified AD scopes to SMART scopes
-            if (!tokenResponse["scope"]!.IsNullOrEmpty())
-            {
-                var ns = tokenResponse["scope"]!.ToString();
-                ns = ns.Replace(_configuration.Audience!, string.Empty, StringComparison.InvariantCulture);
-                ns = ns.Replace("patient.", "patient/", StringComparison.InvariantCulture);
-                ns = ns.Replace("encounter.", "encounter/", StringComparison.InvariantCulture);
-                ns = ns.Replace("user.", "user/", StringComparison.InvariantCulture);
-                ns = ns.Replace("system.", "system/", StringComparison.InvariantCulture);
-                ns = ns.Replace("launch.", "launch/", StringComparison.InvariantCulture);
-
-                tokenResponse["scope"] = ns;
-            }
-            else if (!tokenResponse["access_token"]!.IsNullOrEmpty())
-            {
-                var handler = new JwtSecurityTokenHandler();
-                JwtSecurityToken access_token = (JwtSecurityToken)handler.ReadToken(tokenResponse["access_token"]!.ToString());
-
-                // Application level scopes come across in the token roles.
-                var roles = access_token.Claims.Where(x => x.Type == "roles");
-                if (roles is not null)
-                {
-                    tokenResponse["scope"] = string.Join(" ", roles.Select(x => x.Value));
-                }
-            }
-
-            // Add SMART Styling information to the token response if needed
-            if (!tokenResponse["access_token"]!.IsNullOrEmpty())
-            {
-                if (tokenResponse["scope"]!.ToString().Contains(" launch "))
-                {
-                    tokenResponse["need_patient_banner"] = "true";
-                    tokenResponse["smart_style_url"] = $"https://{_configuration.ApiManagementHostName}/smart/smart-style.json";
-                }
-            }
-
-            if (!tokenResponse["id_token"]!.IsNullOrEmpty())
-            {
-                // Add the openid scope
-                if (tokenResponse["scope"]!.IsNullOrEmpty())
-                {
-                    tokenResponse["scope"] = "openid";
-                }
-                else
-                {
-                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " openid";
-                }   
-
-                // Attempt to parse fhirUser
-                try
-                {
-                    var handler = new JwtSecurityTokenHandler();
-                    JwtSecurityToken id_token = (JwtSecurityToken)handler.ReadToken(tokenResponse["id_token"]!.ToString());
-                    var fhirUser = id_token.Claims.First(x => x.Type == "fhirUser");
-                    if (fhirUser is not null)
-                    {
-                        if (fhirUser.Value.Split('/').First().Equals("Patient", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            var fhirUserValue = fhirUser.Value.Split('/').Last();
-                            tokenResponse["patient"] = fhirUserValue;
-                        }
-
-                        // Inform the FHIR Service the value of fhirUser claim
-                        context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
-                    }
-                }
-                catch (Exception ex) {
-                    _logger.LogWarning("fhirUser not found in id_token");
-                }
-            }
-
-            if (!tokenResponse["refresh_token"]!.IsNullOrEmpty())
-            {
-                // Add the openid scope
-                if (tokenResponse["scope"]!.IsNullOrEmpty())
-                {
-                    tokenResponse["scope"] = "offline_access";
-                }
-                else
-                {
-                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " offline_access";
-                }
-            }
-
+            
+            TokenResponse tokenResponse = new(_configuration, context.ContentString, GetLaunchInformation(context.Request.Headers));
             context.ContentString = tokenResponse.ToString();
+
+            if (tokenResponse.FhirUser is not null)
+            {
+                context.Headers.Add(new HeaderNameValuePair("x-ms-fhirUser", tokenResponse.FhirUser, CustomHeaderType.ResponseStatic));
+                context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={tokenResponse.FhirUser}; path=/; HttpOnly", CustomHeaderType.ResponseStatic));
+            }
+
             context.Headers.Add(new HeaderNameValuePair("Cache-Control", "no-store", CustomHeaderType.ResponseStatic));
             context.Headers.Add(new HeaderNameValuePair("Pragma", "no-cache", CustomHeaderType.ResponseStatic));
 
-            // Stop compiler warning
             await Task.CompletedTask;
             return context;
         }
 
-        private static async ValueTask<AccessToken> GetOverrideAccessToken(string backendFhirUrl, string tenantId)
+        private static Dictionary<string, object>? GetLaunchInformation(HttpRequestHeaders headers)       
         {
-            string[] scopes = new string[] { $"{backendFhirUrl}/.default" };
-            TokenRequestContext tokenRequestContext = new TokenRequestContext(scopes: scopes, tenantId: tenantId);
-            var credential = new DefaultAzureCredential(true);
-            return await credential.GetTokenAsync(tokenRequestContext);
+            var cookies = headers.GetCookies();
+            var launch = cookies.FirstOrDefault(x => x.Cookies.Any(x => x.Name == "launch"))?.Cookies?.FirstOrDefault(x => x.Name == "launch")?.Value;
+
+            var launchDecoded = launch.DecodeBase64();
+            if (launchDecoded is not null)
+            {
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(launchDecoded);
+            }
+
+            return null;
         }
     }
 }

@@ -71,8 +71,6 @@ namespace SMARTCustomOperations.AzureAuth
                     {
                         options.AzureActiveDirectoryEndpoint = "https://login.microsoftonline.com";
                     });
-
-                    services.AddOutputFilter(typeof(TokenOutputFilter));
                 })
                 .Build();
 

@@ -86,6 +86,11 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             context.StatusCode = HttpStatusCode.Redirect;
             context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
 
+            if (!String.IsNullOrEmpty(launchContext.Launch))
+            {
+                context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"launch={launchContext.Launch}; path=/; HttpOnly", CustomHeaderType.ResponseStatic));
+            }
+
             context.Request.RequestUri = new Uri(newRedirectUrl);
 
             await Task.CompletedTask;

@@ -10,7 +10,7 @@ Before deploying this sample, you will need to install some Azure tools **and** 
   - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
   - Visual Studio or Visual Studio Code (for debugging the sample code).
   - NPM (for debugging sample).
-- .NET SDK installed (the version specified in [global.json](../../../global.json) (for building the sample).
+- .NET SDK installed (for building the sample).
 - Access to an Azure Subscription where you can create resources and add role assignments.
 - Elevated access in Azure Active Directory to create Application Registrations and assign Azure Active Directory roles.
 

@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
+using Google.Protobuf.WellKnownTypes;
 using System.Text;
 
 namespace SMARTCustomOperations.AzureAuth.Extensions
@@ -15,16 +16,23 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
             return Convert.ToBase64String(valueBytes);
         }
 
-        public static string DecodeBase64(this string value)
+        public static string? DecodeBase64(this string? value)
         {
-            // Fix invalid base64 from inferno
-            if (!value.EndsWith("=", StringComparison.CurrentCulture))
+            try
             {
-                value = value + "=";
+                var valueBytes = Convert.FromBase64String(value ?? "");
+                return Encoding.UTF8.GetString(valueBytes);
             }
+            catch (Exception) { }
 
-            var valueBytes = System.Convert.FromBase64String(value);
-            return Encoding.UTF8.GetString(valueBytes);
+            try
+            {
+                var valueBytes = Convert.FromBase64String((value ?? "") + "=");
+                return Encoding.UTF8.GetString(valueBytes);
+            }
+            catch (Exception) { }
+
+            return null;
         }
     }
 }
