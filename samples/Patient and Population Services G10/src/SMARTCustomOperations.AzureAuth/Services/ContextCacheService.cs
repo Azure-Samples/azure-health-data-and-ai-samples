@@ -3,15 +3,8 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Azure.Identity;
 using Microsoft.AzureHealth.DataServices.Caching;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Models;
 
@@ -42,6 +35,11 @@ namespace SMARTCustomOperations.AzureAuth.Services
         public async Task SetLaunchCacheObjectAsync(string key, LaunchCacheObject item)
         {
             await _cache.AddAsync<LaunchCacheObject>(key, item);
+        }
+
+        public async Task RemoveLaunchCacheObjectAsync(string key)
+        {
+            await _cache.RemoveAsync(key);
         }
     }
 }

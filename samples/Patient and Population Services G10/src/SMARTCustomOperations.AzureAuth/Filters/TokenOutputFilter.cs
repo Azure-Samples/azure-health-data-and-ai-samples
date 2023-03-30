@@ -65,6 +65,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                         {
                             tokenResponse.AddCustomProperty(launchProperty.Key, launchProperty.Value);
                         }
+
+                        await _cacheService.RemoveLaunchCacheObjectAsync(tokenResponse.UserId);
                     }
                     else if (_configuration.Debug)
                     {
