@@ -1,0 +1,6 @@
+{
+    "IsEncrypted": false,
+    "Host": {
+        "CORS": "*"
+    }
+}
