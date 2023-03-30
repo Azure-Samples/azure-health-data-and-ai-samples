@@ -21,6 +21,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         private string? _userId;
 
+        private string? _appId;
+
         public TokenResponse(AzureAuthOperationsConfig configuration, string tokenResponseString)
         {
             _configuration = configuration;
@@ -69,6 +71,23 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 }
                 
                 return _userId;
+            }
+        }
+
+        public string? AppId
+        {
+            get
+            {
+                if (_appId is null)
+                {
+                    if (_tokenResponseDict.ContainsKey("access_token"))
+                    {
+                        JwtSecurityToken parsedAccessToken = new JwtSecurityToken(_tokenResponseDict["access_token"].ToString());
+                        _appId = parsedAccessToken.Claims.FirstOrDefault(x => x.Type == "appid")?.Value;
+                    }
+                }
+                
+                return _appId;
             }
         }
 

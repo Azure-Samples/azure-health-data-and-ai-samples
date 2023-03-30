@@ -165,6 +165,8 @@ const handleEhrLaunch = async (userId: string | undefined, launch: string | unde
   if (hint.length > 0) {
     newQueryParams.set("login_hint", hint)
   }
+  newQueryParams.set("user", "true");
+  newQueryParams.set("prompt", "consent");
   window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
 }
 

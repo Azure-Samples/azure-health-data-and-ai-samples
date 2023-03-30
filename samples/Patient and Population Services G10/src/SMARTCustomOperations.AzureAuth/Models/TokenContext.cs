@@ -21,6 +21,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
     public abstract class TokenContext
     {
+        public abstract string ClientId { get; }
+
         public virtual string ToLogString()
         {
             return JsonSerializer.Serialize(this);

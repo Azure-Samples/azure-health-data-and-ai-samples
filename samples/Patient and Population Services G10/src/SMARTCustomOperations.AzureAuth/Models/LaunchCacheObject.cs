@@ -14,6 +14,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public string? Launch { get; set; }
 
+        [JsonIgnore]
         public Dictionary<string, string>? LaunchProperties { 
             get 
             {
