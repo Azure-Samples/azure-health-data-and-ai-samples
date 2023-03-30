@@ -118,6 +118,8 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_Audience: authCustomOperationaudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
+    AZURE_CacheConnectionString: functionConnectionString
+    AZURE_CacheContainer: cacheContainer
   }
 }
 
