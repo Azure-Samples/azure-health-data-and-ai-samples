@@ -3,21 +3,15 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Headers;
-using Azure.Core;
-using Azure.Identity;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
+using SMARTCustomOperations.AzureAuth.Services;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -25,12 +19,14 @@ namespace SMARTCustomOperations.AzureAuth.Filters
     {
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
+        private readonly ContextCacheService _cacheService;
         private readonly string _id;
 
-        public TokenOutputFilter(ILogger<TokenOutputFilter> logger, AzureAuthOperationsConfig configuration)
+        public TokenOutputFilter(ILogger<TokenOutputFilter> logger, AzureAuthOperationsConfig configuration, ContextCacheService cacheService)
         {
             _logger = logger;
             _configuration = configuration;
+            _cacheService = cacheService;
             _id = Guid.NewGuid().ToString();
         }
 
@@ -42,7 +38,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
         public StatusType ExecutionStatusType => StatusType.Normal;
 
-        string IFilter.Id => _id;
+        public string Id => _id;
 
         public async Task<OperationContext> ExecuteAsync(OperationContext context)
         {
@@ -54,14 +50,35 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             _logger?.LogInformation("Entered {Name}", Name);
 
-            
-            TokenResponse tokenResponse = new(_configuration, context.ContentString, GetLaunchInformation(context.Request.Headers));
-            context.ContentString = tokenResponse.ToString();
-
-            if (tokenResponse.FhirUser is not null)
+            TokenResponse tokenResponse;
+            try
             {
-                context.Headers.Add(new HeaderNameValuePair("x-ms-fhirUser", tokenResponse.FhirUser, CustomHeaderType.ResponseStatic));
-                context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={tokenResponse.FhirUser}; path=/; HttpOnly", CustomHeaderType.ResponseStatic));
+                tokenResponse = new(_configuration, context.ContentString);
+                
+                // Add launch information from cache if exists
+                if (tokenResponse.UserId is not null)
+                {
+                    var cachedLaunchInfo = await _cacheService.GetLaunchCacheObjectAsync(tokenResponse.UserId);
+                    if (cachedLaunchInfo?.LaunchProperties is not null)
+                    {
+                        foreach (var launchProperty in cachedLaunchInfo.LaunchProperties)
+                        {
+                            tokenResponse.AddCustomProperty(launchProperty.Key, launchProperty.Value);
+                        }
+                    }
+                    else if (_configuration.Debug)
+                    {
+                        _logger?.LogWarning($"No launch information found in cache for user {tokenResponse.UserId}");
+                    }
+                }
+                
+                context.ContentString = tokenResponse.ToString();
+            }
+            catch (Exception ex)
+            {
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
             context.Headers.Add(new HeaderNameValuePair("Cache-Control", "no-store", CustomHeaderType.ResponseStatic));
@@ -69,20 +86,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             await Task.CompletedTask;
             return context;
-        }
-
-        private static Dictionary<string, object>? GetLaunchInformation(HttpRequestHeaders headers)       
-        {
-            var cookies = headers.GetCookies();
-            var launch = cookies.FirstOrDefault(x => x.Cookies.Any(x => x.Name == "launch"))?.Cookies?.FirstOrDefault(x => x.Name == "launch")?.Value;
-
-            var launchDecoded = launch.DecodeBase64();
-            if (launchDecoded is not null)
-            {
-                return JsonConvert.DeserializeObject<Dictionary<string, object>>(launchDecoded);
-            }
-
-            return null;
         }
     }
 }

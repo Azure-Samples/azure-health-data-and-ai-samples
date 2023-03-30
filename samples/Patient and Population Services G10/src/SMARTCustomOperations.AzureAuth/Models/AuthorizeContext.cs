@@ -70,7 +70,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
             if (RedirectUri is not null)
             {
-                queryStringParams.Add($"redirect_uri ={HttpUtility.UrlEncode(RedirectUri.ToString())}");
+                queryStringParams.Add($"redirect_uri={HttpUtility.UrlEncode(RedirectUri.ToString())}");
             }
 
             queryStringParams.Add($"client_id={HttpUtility.UrlEncode(ClientId)}");

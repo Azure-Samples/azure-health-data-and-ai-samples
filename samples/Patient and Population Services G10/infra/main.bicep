@@ -250,13 +250,16 @@ module contextStaticWebApp './app/contextApp.bicep' = {
 }
 
 // These map to user secrets for local execution of the program
-output LOCATION string = location
+output Location string = location
 output FhirServerUrl string = fhirUrl
 output ExportStorageAccountUrl string = 'https://${exportStoreName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
 output BackendServiceKeyVaultStore string = backendServiceVaultName
 output Audience string = authCustomOperation.outputs.authCustomOperationAudience
 output TenantId string = tenantId
+output ContextAppClientId string = contextAadApplicationId
+output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
+output CacheContainer string = authCustomOperation.outputs.cacheContainer
 
 output REACT_APP_AAD_APP_CLIENT_ID string = contextAadApplicationId
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId

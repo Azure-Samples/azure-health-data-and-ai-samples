@@ -88,7 +88,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             if (!String.IsNullOrEmpty(launchContext.Launch))
             {
-                context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"launch={launchContext.Launch}; path=/; HttpOnly", CustomHeaderType.ResponseStatic));
+                context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"launch={launchContext.Launch}; path=/", CustomHeaderType.ResponseStatic));
             }
 
             context.Request.RequestUri = new Uri(newRedirectUrl);

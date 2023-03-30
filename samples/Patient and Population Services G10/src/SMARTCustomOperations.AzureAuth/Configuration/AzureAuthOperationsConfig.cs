@@ -81,6 +81,10 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         // Only for static environment config service - not for production.
         public string? TestBackendClientJwks { get; set; }
 
+        public string? CacheConnectionString { get; set; }
+
+        public string? CacheContainer { get; set; }
+
         public void Validate()
         {
             if (string.IsNullOrEmpty(ApiManagementHostName))
@@ -101,6 +105,21 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
             if (string.IsNullOrEmpty(Audience))
             {
                 throw new ConfigurationErrorsException("Audience must be configured for this application.");
+            }
+
+            if (string.IsNullOrEmpty(ContextAppClientId))
+            {
+                throw new ConfigurationErrorsException("ContextAppClientId must be configured for this application.");
+            }
+
+            if (string.IsNullOrEmpty(CacheConnectionString))
+            {
+                throw new ConfigurationErrorsException("CacheConnectionString must be configured for this application.");
+            }
+
+            if (string.IsNullOrEmpty(CacheContainer))
+            {
+                throw new ConfigurationErrorsException("CacheContainer must be configured for this application.");
             }
         }
     }

@@ -17,6 +17,10 @@ GET {{baseUrl}}/authorize?client_id={{clientId}}&response_type=code&redirect_uri
 
 ###
 
+### If you are debugging launch cache with the frontend app, paste this into a browser.
+http://localhost:3000/?response_type=code&client_id=760b6c93-02b0-4734-aa3f-42f7e78bf7a6&redirect_uri=http%3A%2F%2Flocalhost&scope=launch+openid+fhirUser+offline_access+user%2FMedication.read+user%2FAllergyIntolerance.read+user%2FCarePlan.read+user%2FCareTeam.read+user%2FCondition.read+user%2FDevice.read+user%2FDiagnosticReport.read+user%2FDocumentReference.read+user%2FEncounter.read+user%2FGoal.read+user%2FImmunization.read+user%2FLocation.read+user%2FMedicationRequest.read+user%2FObservation.read+user%2FOrganization.read+user%2FPatient.read+user%2FPractitioner.read+user%2FProcedure.read+user%2FProvenance.read+user%2FPractitionerRole.read&state=7f160c35-774a-43c3-bea6-4456719f0b93&aud=https%3A%2F%2Fmikael-smart5-apim.azure-api.net%2Fsmart&launch=ewogICAgInBhdGllbnQiOiAiUGF0aWVudEEiLAogICAgIm90aGVyIjogIm1vcmVkYXRhIgp9
+###
+
 @authorizationCode = 
 POST {{baseUrl}}/token
 Content-Type: application/x-www-form-urlencoded
@@ -26,7 +30,6 @@ User-Agent: Faraday v1.10.2
 &code={{authorizationCode}}
 &redirect_uri=http%3A%2F%2Flocalhost
 &grant_type=authorization_code
-&code_verifier={{codeVerifier}}
 
 ### Refresh
 

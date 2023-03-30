@@ -56,18 +56,18 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             try
             {
                 string token = context.Request.Headers.Authorization!.Parameter!;
-                userPrincipal = await _graphContextService.ValidateGraphAccessTokenAsync(token);
+                userPrincipal = await _graphContextService.ValidateContextAccessTokenAsync(token);
             }
             catch (Exception ex) when (ex is Microsoft.IdentityModel.Tokens.SecurityTokenValidationException || ex is UnauthorizedAccessException)
             {
-                _logger.LogWarning("User attempted to access app consent info without a valid token. {Exception}", ex);
+                _logger?.LogWarning("User attempted to access app consent info without a valid token. {Exception}", ex);
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.Unauthorized);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("Unknown error while validating user token. {Exception}", ex);
+                _logger?.LogCritical("Unknown error while validating user token. {Exception}", ex);
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
@@ -75,7 +75,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             if (userPrincipal is null || !userPrincipal.HasClaim(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier"))
             {
-                _logger.LogError("User does not have the oid claimin AppConsentInfoInputFilter. {User}", userPrincipal);
+                _logger?.LogError("User does not have the oid claimin AppConsentInfoInputFilter. {User}", userPrincipal);
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new UnauthorizedAccessException("Token validation failed for get context info operation"), code: HttpStatusCode.Unauthorized);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);

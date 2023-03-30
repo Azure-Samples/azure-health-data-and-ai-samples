@@ -44,5 +44,13 @@ namespace SMARTCustomOperations.AzureAuth
 
             return await _pipeline.ExecuteAsync(req);
         }
+
+        [Function("ContextCache")]
+        public async Task<HttpResponseData> RunContextCache([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "context-cache")] HttpRequestData req)
+        {
+            _logger.LogInformation("ContextCache function pipeline started.");
+
+            return await _pipeline.ExecuteAsync(req);
+        }
     }
 }
