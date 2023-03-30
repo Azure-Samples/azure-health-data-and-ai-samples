@@ -91,7 +91,7 @@ resource exportCustomOperationFfhirProxyAppSettings 'Microsoft.Web/sites/config@
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
-    AZURE_ExportStorageAccountUrl: 'https://${funcStorageAccount}.blob.${environment().suffixes.storage}'
+    AZURE_ExportStorageAccountUrl: 'https://${funcStorageAccount.name}.blob.${environment().suffixes.storage}'
     AZURE_Debug: 'true'
   }
 }

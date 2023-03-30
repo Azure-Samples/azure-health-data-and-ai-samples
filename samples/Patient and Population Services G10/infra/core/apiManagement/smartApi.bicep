@@ -83,6 +83,40 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     }
   }
 
+  resource smartContextCacheOptions 'operations' = {
+    name: 'smartContextCacheOptions'
+    properties: {
+      displayName: 'SMART Context Cache (OPTIONS)'
+      method: 'OPTIONS'
+      urlTemplate: '/context-cache'
+    }
+
+    resource smartAuthorizeEndpointPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/contextCachePolicy.xml')
+      }
+    }
+  }
+
+  resource smartContextCachePost 'operations' = {
+    name: 'smartContextCachePost'
+    properties: {
+      displayName: 'SMART Context Cache (POST)'
+      method: 'GET'
+      urlTemplate: '/appConsentInfo'
+    }
+
+    resource smartAuthorizeEndpointPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/contextCachePolicy.xml')
+      }
+    }
+  }
+
   resource smartAppConsentInfoPost 'operations' = {
     name: 'smartAppConsentInfoEndpointPost'
     properties: {
