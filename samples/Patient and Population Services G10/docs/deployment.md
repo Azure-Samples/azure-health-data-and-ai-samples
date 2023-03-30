@@ -8,12 +8,13 @@ Note : This sample is not automated and on average will require at least a coupl
 
 Before deploying this sample, you will need to install some Azure tools **and** ensure you have administrator access to an Azure subscription / tenant.
 
-- Make sure you have the pre-requisites applications installed on your computer.
+Make sure you have the pre-requisites listed below
+- Installation : 
    - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
   - Visual Studio or Visual Studio Code (for debugging the sample code).
   - NPM (for debugging sample).
-  - .NET SDK installed (Ensure to install the version specified in [global.json](https://github.com/microsoft/fhir-server/blob/main/global.json) (for building the sample).
-- Access : Make sure you have 
+  - .NET SDK installed version 7.0.202.
+- Access : 
   - Access to an Azure Subscription where you can create resources and add role assignments.
   - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles.
 
@@ -54,10 +55,10 @@ Before deployment, lets look at the configuration needed to deploying this sampl
   - `apimPublisherName`: Sample owner name.
   - `apimPublisherEmail`: Sample owner email address.
   - `contextAadApplicationId`: Client ID from step 2.
-1. Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
-1. Login with the Azure Developer CLI. Specify the tenant if you have more than one.
-   - `azd login` or `azd login --tenant-id <tenant-id>`.
-1. Run the `azd up` command from this directory. Enter:
+2. Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
+3. Login with the Azure Developer CLI. Specify the tenant if you have more than one.
+  - `azd login` or `azd login --tenant-id <tenant-id>`.
+4. Run the `azd up` command from this directory. Enter:
    - Environment Name: Prefix for the resource group that will be created to hold all Azure resources ([see more details](https://learn.microsoft.com/azure/developer/azure-developer-cli/faq#what-is-an-environment-name)). Must be all lowercase.
     - You can always create a new environment with `azd env new`.
   - Azure Location: The Azure location where your resources will be deployed.
