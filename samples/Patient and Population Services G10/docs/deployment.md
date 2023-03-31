@@ -34,14 +34,15 @@ Make sure you have the pre-requisites listed below
 - Note your `Primary Domain` in the Overview blade of Azure AD.
 - Go to `App Registrations`
 - Create a new application. The name should match that of your FHIR Service.
-- Click `Create` (ignore redirect URI).
+- Click `Register` (ignore redirect URI).
 
 ### 2. Set the application URL
-- Go to `Expose an API`
-- Set the application URL to <app-registration-name>.<Azure AD >
+- Go to `Expose an API` blade.
+- Set the application URL to https://<app-registration-name>.<Azure AD Primary Domain>.
+  - For example `https://my-app-1.mytenant.onmicrosoft.com`.
 
 ### 3. Add all the applicable FHIR Scopes.
-- Go to the Manifest blade. Copy the `oauth2Permissions` json element from `fhir-app-manifest.json` to the `oauth2Permissions` json element in your application manifest.
+- Go to the Manifest blade. Copy the `oauth2Permissions` json element from [fhir-app-manifest.json](fhir-app-manifest.json) to the `oauth2Permissions` json element in your application manifest.
 
 ## 3. Create Azure AD Application for Scope Selection
 
