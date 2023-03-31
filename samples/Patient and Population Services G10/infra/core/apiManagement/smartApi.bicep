@@ -105,7 +105,7 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     properties: {
       displayName: 'SMART Context Cache (POST)'
       method: 'GET'
-      urlTemplate: '/appConsentInfo'
+      urlTemplate: '/context-cache'
     }
 
     resource smartAuthorizeEndpointPolicy 'policies' = {
