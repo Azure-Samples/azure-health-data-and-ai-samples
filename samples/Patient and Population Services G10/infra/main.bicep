@@ -123,7 +123,7 @@ module functionBase 'core/functionHost.bicep' = {
     appTags: appTags
     location: location
     name: name
-    nameClean: nameClean
+    nameCleanShort: nameCleanShort
   }
 }
 

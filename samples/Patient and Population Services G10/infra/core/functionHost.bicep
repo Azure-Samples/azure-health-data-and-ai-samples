@@ -1,11 +1,11 @@
 param name string
-param nameClean string
+param nameCleanShort string
 param location string
 param appTags object
 
 
 @description('Name for the storage account needed for Custom Operation Function Apps')
-var customOperationsFuncStorName = '${nameClean}aadfuncsa'
+var customOperationsFuncStorName = '${nameCleanShort}funcsa'
 
 @description('Used for Custom Operation Azure Function App temp storage and auth.')
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
@@ -19,7 +19,7 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
 }
 
 @description('Name for the App Service used to host Custom Operation Function Apps.')
-var customOperationsAppServiceName = '${name}-as'
+var customOperationsAppServiceName = '${name}-appserv'
 
 @description('App Service used to run Azure Function')
 resource hostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
