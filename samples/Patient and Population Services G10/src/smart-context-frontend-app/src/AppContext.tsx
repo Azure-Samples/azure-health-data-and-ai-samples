@@ -4,8 +4,7 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
 import { IMsalContext, useMsal  } from '@azure/msal-react';
 import { getAppConsentInfo, getLoginHint, saveAppConsentInfo } from './GraphConsentService';
-import { selectProperties } from '@fluentui/react';
-import internal from 'stream';
+import { saveCacheString } from './ContextCacheService';
 import { apiEndpoint } from './Config';
 
 
@@ -37,6 +36,11 @@ export interface AppConsentInfo {
   scopes: AppConsentScope[]
 }
 
+export interface CacheInfo {
+  userId: string
+  launch: string
+}
+
 // Detailed scope information.
 export interface AppConsentScope {
   name: string
@@ -58,6 +62,7 @@ export interface AppError {
 export const queryParams = new URLSearchParams(window.location.search);
 const applicationId = queryParams.get("client_id") ?? undefined;
 const requestedScopes = queryParams.get("scope") ?? undefined;
+const launch = queryParams.get("launch") ?? undefined;
 
 // Create starter (null) context.
 const appContext = createContext<AppContext>({
@@ -112,7 +117,7 @@ function useProvideAppContext() {
     msal.instance.logoutRedirect();
   };
 
-  const setUserIfEmpty = async () => {
+  const setUserIfEmpty = async () : Promise<string | undefined> => {
     if (!user && applicationId && msal?.instance && error == undefined) {
 
       let account = msal.instance.getActiveAccount();
@@ -129,9 +134,41 @@ function useProvideAppContext() {
           displayError('Error getting user', error);
         }
       }
+
+      return account?.localAccountId
     }
   };
 
+const handleEhrLaunch = async (userId: string | undefined, launch: string | undefined) => {
+  // see if user is launching from EHR and has launch parameter
+  if (launch == undefined || userId == undefined)
+  {
+    return;
+  }
+ 
+  try {
+    // save launch parameter in backend cache somewhere
+    const cacheInfo: CacheInfo = {
+      userId: userId,
+      launch: launch
+    }
+    await saveCacheString(cacheInfo);
+  }
+  catch (err: any) {
+    displayError(err.message);
+    return
+  }
+
+  // redirect the app to the EHR launch URL
+  const newQueryParams = queryParams;
+  const hint = await getLoginHint();
+  if (hint.length > 0) {
+    newQueryParams.set("login_hint", hint)
+  }
+  newQueryParams.set("user", "true");
+  newQueryParams.set("prompt", "consent");
+  window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
+}
 
 const setAppConsentInfoIfEmpty = async () => {
   if (applicationId != undefined && requestedScopes != undefined && appConsentInfo == undefined && error == undefined)
@@ -204,8 +241,8 @@ const updateScopesWhereNeeded = async (modifiedAuthInfo: AppConsentInfo) : Promi
     }
 
     // Give graph more time to replicate the consent information.
-    console.log("Sleeping for 30 seconds to ensure graph will have the latest consent information.");
-    await sleep(30000);
+    console.log("Sleeping for 5 seconds to ensure graph will have the latest consent information.");
+    await sleep(5000);
 
     if (!scopeSaveSuccessful) {
       displayError("Scopes did not properly replicate.");
@@ -234,8 +271,18 @@ useEffect(() => {
   }
   else {
     if (error == undefined) {
-      setUserIfEmpty();
-      setAppConsentInfoIfEmpty();
+      (async () => {
+        let userId = await setUserIfEmpty();
+
+        if (requestedScopes.replace('%20', ' ').replace('+', ' ').split(' ').indexOf('launch') > -1)
+        {
+          handleEhrLaunch(userId, launch);
+        }
+        else
+        {
+          setAppConsentInfoIfEmpty();
+        }
+      })();
     }
   }
 }, []);

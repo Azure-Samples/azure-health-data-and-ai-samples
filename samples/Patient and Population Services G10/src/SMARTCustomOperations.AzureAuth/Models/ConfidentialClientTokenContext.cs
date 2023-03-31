@@ -39,7 +39,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public Uri RedirectUri { get; } = default!;
 
-        public string ClientId { get; } = default!;
+        public override string ClientId { get; } = default!;
 
         [JsonIgnore]
         public string ClientSecret { get; } = default!;

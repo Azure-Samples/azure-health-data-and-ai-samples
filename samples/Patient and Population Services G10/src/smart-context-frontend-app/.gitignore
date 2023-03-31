@@ -11,7 +11,7 @@
 # production
 /build
 
-public/env-config.json
+public/env-config.js
 
 # misc
 .DS_Store

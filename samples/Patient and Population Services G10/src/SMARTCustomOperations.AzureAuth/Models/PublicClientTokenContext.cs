@@ -37,7 +37,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public Uri RedirectUri { get; set; } = default!;
 
-        public string ClientId { get; set; } = default!;
+        public override string ClientId { get; } = default!;
 
         public string? CodeVerifier { get; set; } = default!;
 

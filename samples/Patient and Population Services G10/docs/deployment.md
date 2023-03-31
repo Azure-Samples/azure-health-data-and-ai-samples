@@ -13,10 +13,11 @@ Make sure you have the pre-requisites listed below
    - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
   - Visual Studio or Visual Studio Code (for debugging the sample code).
   - NPM (for debugging sample).
-  - .NET SDK installed version 7.0.202.
+
+- .NET SDK 6+ installed (for building the sample).
 - Access : 
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles.
+  - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles
 
 ## 2. Create Azure AD Application for Scope Selection
 

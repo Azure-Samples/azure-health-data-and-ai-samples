@@ -29,6 +29,9 @@
                     var responseBody = context.Response.Body.As<JObject>();
                     responseBody["rest"][0]["security"]["extension"][0]["url"] = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris";
 
+                    // Set Metadata
+                    responseBody["url"] = $"https://{context.Request.OriginalUrl.Host}/smart/metadata";
+
                     // Replace OAuth security with SMART security service
                     responseBody["rest"][0]["security"]["service"][0]["coding"][0]["code"] = "SMART-on-FHIR";
 

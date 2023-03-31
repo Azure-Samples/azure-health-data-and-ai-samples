@@ -43,9 +43,23 @@ param hostingPlanId string
 @description('Name for the Function App to deploy the SDK custom operations to.')
 var authCustomOperationsFunctionAppName = '${name}-aad-func'
 
+var cacheContainer = 'context-cache'
+
 @description('Used for Custom Operation Azure Function App temp storage and auth.')
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' existing = {
   name: customOperationsFuncStorName
+
+  resource blobService 'blobServices@2021-06-01' = {
+    name: 'default'
+
+    resource containers 'containers@2021-06-01' = {
+      name: cacheContainer
+      properties: {
+        publicAccess: 'None'
+        metadata: {}
+      }
+    }
+  }
 }
 
 @description('Azure Function used to run auth flow custom operations using the Azure Health Data Services Toolkit')
@@ -79,13 +93,14 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   tags: union(appTags, {'azd-service-name': 'auth'})
 }
 
-var authCustomOperationaudience = length(smartAudience) > 0 ? smartAudience : fhirUrl
+var authCustomOperationaudience = smartAudience
+var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
   name: 'appsettings'
   parent: authCustomOperationFunctionApp
   properties: {
-    AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+    AzureWebJobsStorage: functionConnectionString
     // WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
     // WEBSITE_CONTENTSHARE: authCustomOperationsFunctionAppName
     FUNCTIONS_EXTENSION_VERSION: '~4'
@@ -103,9 +118,14 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_Audience: authCustomOperationaudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
+    AZURE_CacheConnectionString: functionConnectionString
+    AZURE_CacheContainer: cacheContainer
+    AZURE_Debug: 'true'
   }
 }
 
 output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}/api'
 output functionAppPrincipalId string = authCustomOperationFunctionApp.identity.principalId
 output authCustomOperationAudience string = authCustomOperationaudience
+output cacheConnectionString string = functionConnectionString
+output cacheContainer string = cacheContainer

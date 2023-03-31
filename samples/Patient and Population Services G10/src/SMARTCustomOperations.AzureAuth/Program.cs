@@ -4,7 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Reflection;
-using Microsoft.AzureHealth.DataServices.Clients.Headers;
+using Microsoft.AzureHealth.DataServices.Caching;
 using Microsoft.AzureHealth.DataServices.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +58,18 @@ namespace SMARTCustomOperations.AzureAuth
                     services.AddScoped<GraphConsentService>();
                     services.AddHttpClient();
 
+                    services.AddMemoryCache();
+                    services.AddAzureBlobCacheBackingStore(options =>
+                    {
+                        options.ConnectionString = config.CacheConnectionString;
+                        options.Container = config.CacheContainer;
+                    });
+                    services.AddJsonObjectMemoryCache(options =>
+                    {
+                        options.CacheItemExpiry = TimeSpan.FromSeconds(3600);
+                    });
+                    services.AddScoped<ContextCacheService>();
+
                     services.UseAzureFunctionPipeline();
 
                     services.AddSingleton<AzureAuthOperationsConfig>(config);
@@ -65,14 +77,13 @@ namespace SMARTCustomOperations.AzureAuth
                     services.AddInputFilter(typeof(AuthorizeInputFilter));
                     services.AddInputFilter(typeof(TokenInputFilter));
                     services.AddInputFilter(typeof(AppConsentInfoInputFilter));
+                    services.AddInputFilter(typeof(ContextCacheInputFilter));
                     services.AddOutputFilter(typeof(TokenOutputFilter));
 
                     services.AddBinding<AzureActiveDirectoryBindingOptions>(typeof(AzureActiveDirectoryBinding), options =>
                     {
                         options.AzureActiveDirectoryEndpoint = "https://login.microsoftonline.com";
                     });
-
-                    services.AddOutputFilter(typeof(TokenOutputFilter));
                 })
                 .Build();
 

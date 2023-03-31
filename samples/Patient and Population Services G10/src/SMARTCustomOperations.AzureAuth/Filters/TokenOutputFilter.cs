@@ -3,16 +3,15 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
-using Azure.Core;
-using Azure.Identity;
+using System.Net;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
-using Microsoft.AzureHealth.DataServices.Json;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Extensions;
+using SMARTCustomOperations.AzureAuth.Models;
+using SMARTCustomOperations.AzureAuth.Services;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -20,12 +19,14 @@ namespace SMARTCustomOperations.AzureAuth.Filters
     {
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
+        private readonly ContextCacheService _cacheService;
         private readonly string _id;
 
-        public TokenOutputFilter(ILogger<TokenOutputFilter> logger, AzureAuthOperationsConfig configuration)
+        public TokenOutputFilter(ILogger<TokenOutputFilter> logger, AzureAuthOperationsConfig configuration, ContextCacheService cacheService)
         {
             _logger = logger;
             _configuration = configuration;
+            _cacheService = cacheService;
             _id = Guid.NewGuid().ToString();
         }
 
@@ -37,7 +38,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
         public StatusType ExecutionStatusType => StatusType.Normal;
 
-        string IFilter.Id => _id;
+        public string Id => _id;
 
         public async Task<OperationContext> ExecuteAsync(OperationContext context)
         {
@@ -49,98 +50,44 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             _logger?.LogInformation("Entered {Name}", Name);
 
-            JObject tokenResponse = JObject.Parse(context.ContentString);
-
-            var audience = _configuration.Audience!;
-
-            // Replace scopes from fully qualified AD scopes to SMART scopes
-            if (!tokenResponse["scope"]!.IsNullOrEmpty())
+            TokenResponse tokenResponse;
+            try
             {
-                var ns = tokenResponse["scope"]!.ToString();
-                ns = ns.Replace(_configuration.Audience!, string.Empty, StringComparison.InvariantCulture);
-                ns = ns.Replace("patient.", "patient/", StringComparison.InvariantCulture);
-                ns = ns.Replace("encounter.", "encounter/", StringComparison.InvariantCulture);
-                ns = ns.Replace("user.", "user/", StringComparison.InvariantCulture);
-                ns = ns.Replace("system.", "system/", StringComparison.InvariantCulture);
-                ns = ns.Replace("launch.", "launch/", StringComparison.InvariantCulture);
-
-                tokenResponse["scope"] = ns;
-            }
-            else if (!tokenResponse["access_token"]!.IsNullOrEmpty())
-            {
-                var handler = new JwtSecurityTokenHandler();
-                JwtSecurityToken access_token = (JwtSecurityToken)handler.ReadToken(tokenResponse["access_token"]!.ToString());
-
-                // Application level scopes come across in the token roles.
-                var roles = access_token.Claims.Where(x => x.Type == "roles");
-                if (roles is not null)
+                tokenResponse = new(_configuration, context.ContentString);
+                
+                // Add launch information from cache if exists
+                if (tokenResponse.UserId is not null)
                 {
-                    tokenResponse["scope"] = string.Join(" ", roles.Select(x => x.Value));
-                }
-            }
-
-            if (!tokenResponse["id_token"]!.IsNullOrEmpty())
-            {
-                // Add the openid scope
-                if (tokenResponse["scope"]!.IsNullOrEmpty())
-                {
-                    tokenResponse["scope"] = "openid";
-                }
-                else
-                {
-                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " openid";
-                }   
-
-                // Attempt to parse fhirUser
-                try
-                {
-                    var handler = new JwtSecurityTokenHandler();
-                    JwtSecurityToken id_token = (JwtSecurityToken)handler.ReadToken(tokenResponse["id_token"]!.ToString());
-                    var fhirUser = id_token.Claims.First(x => x.Type == "fhirUser");
-                    if (fhirUser is not null)
+                    var cachedLaunchInfo = await _cacheService.GetLaunchCacheObjectAsync(tokenResponse.UserId);
+                    if (cachedLaunchInfo?.LaunchProperties is not null)
                     {
-                        if (fhirUser.Value.Split('/').First().Equals("Patient", StringComparison.InvariantCultureIgnoreCase))
+                        foreach (var launchProperty in cachedLaunchInfo.LaunchProperties)
                         {
-                            var fhirUserValue = fhirUser.Value.Split('/').Last();
-                            tokenResponse["patient"] = fhirUserValue;
+                            tokenResponse.AddCustomProperty(launchProperty.Key, launchProperty.Value);
                         }
-                        context.Headers.Add(new HeaderNameValuePair("Set-Cookie", $"fhirUser={fhirUser.Value}; path=/; secure; HttpOnly", CustomHeaderType.ResponseStatic));
-                        context.Headers.Add(new HeaderNameValuePair("x-ms-fhiruser", fhirUser.Value, CustomHeaderType.ResponseStatic));
+
+                        await _cacheService.RemoveLaunchCacheObjectAsync(tokenResponse.UserId);
+                    }
+                    else if (_configuration.Debug)
+                    {
+                        _logger?.LogWarning($"No launch information found in cache for user {tokenResponse.UserId}");
                     }
                 }
-                catch (Exception ex) {
-                    _logger.LogWarning("fhirUser not found in id_token");
-                }
+                
+                context.ContentString = tokenResponse.ToString();
             }
-
-            if (!tokenResponse["refresh_token"]!.IsNullOrEmpty())
+            catch (Exception ex)
             {
-                // Add the openid scope
-                if (tokenResponse["scope"]!.IsNullOrEmpty())
-                {
-                    tokenResponse["scope"] = "offline_access";
-                }
-                else
-                {
-                    tokenResponse["scope"] = tokenResponse["scope"]!.ToString() + " offline_access";
-                }
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-            context.ContentString = tokenResponse.ToString();
             context.Headers.Add(new HeaderNameValuePair("Cache-Control", "no-store", CustomHeaderType.ResponseStatic));
             context.Headers.Add(new HeaderNameValuePair("Pragma", "no-cache", CustomHeaderType.ResponseStatic));
 
-            // Stop compiler warning
             await Task.CompletedTask;
             return context;
-        }
-
-        private static async ValueTask<AccessToken> GetOverrideAccessToken(string backendFhirUrl, string tenantId)
-        {
-            string[] scopes = new string[] { $"{backendFhirUrl}/.default" };
-            TokenRequestContext tokenRequestContext = new TokenRequestContext(scopes: scopes, tenantId: tenantId);
-            var credential = new DefaultAzureCredential(true);
-            return await credential.GetTokenAsync(tokenRequestContext);
         }
     }
 }

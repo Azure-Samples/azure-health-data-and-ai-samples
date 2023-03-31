@@ -1,5 +1,8 @@
 *.env
 config.json
-src/**/local.settings.json
-
 .azure
+.vs/*
+src/.vs*
+
+src/*/bin/*
+src/*/obj/*

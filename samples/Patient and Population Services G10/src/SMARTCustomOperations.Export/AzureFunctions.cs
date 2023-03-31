@@ -36,6 +36,10 @@ namespace SMARTCustomOperations.Export
             // Toolkit does not support content headers - workaround.
             if (result.Headers.Any(x => x.Key == "Custom-Content-Locaton"))
             {
+                if (result.Headers.Contains("Content-Location"))
+                {
+                    result.Headers.Remove("Content-Location");
+                }
                 result.Headers.Add("Content-Location", result.Headers.First(x => x.Key == "Custom-Content-Locaton").Value);
                 result.Headers.Remove("Custom-Content-Locaton");
             }

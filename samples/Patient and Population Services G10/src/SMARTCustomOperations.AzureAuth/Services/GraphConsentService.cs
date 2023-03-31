@@ -3,14 +3,9 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Models;
 
@@ -18,70 +13,16 @@ using SMARTCustomOperations.AzureAuth.Models;
 
 namespace SMARTCustomOperations.AzureAuth.Services
 {
-    public class GraphConsentService
+    public class GraphConsentService : BaseContextAppService
     {
-        private readonly ILogger<GraphConsentService> _logger;
+        private readonly ILogger<BaseContextAppService> _logger;
         private readonly GraphServiceClient _graphServiceClient;
-        private readonly bool _debug;
-        private readonly string _contextAppClientId;
-        private readonly string _tenantId;
         private readonly Dictionary<string, ServicePrincipal> _resourceServicePrincipals = new();
 
-        public GraphConsentService(AzureAuthOperationsConfig configuration, ILogger<GraphConsentService> logger)
+        public GraphConsentService(AzureAuthOperationsConfig configuration, ILogger<BaseContextAppService> logger) : base(configuration, logger)
         {
             _graphServiceClient = new GraphServiceClient(new DefaultAzureCredential());
             _logger = logger;
-            _debug = configuration.Debug;
-            _contextAppClientId = configuration.ContextAppClientId!;
-            _tenantId = configuration.TenantId!;
-        }
-
-        // https://github.com/Azure-Samples/ms-identity-dotnet-webapi-azurefunctions/blob/master/Function/BootLoader.cs
-        public async Task<ClaimsPrincipal> ValidateGraphAccessTokenAsync(string accessToken)
-        {
-            var authority = $"https://login.microsoftonline.com/{_tenantId}/v2.0";
-            var validIssuers = new List<string>()
-            {
-                $"https://login.microsoftonline.com/{_tenantId}/",
-                $"https://login.microsoftonline.com/{_tenantId}/v2.0",
-                $"https://login.windows.net/{_tenantId}/",
-                $"https://login.microsoft.com/{_tenantId}/",
-                $"https://sts.windows.net/{_tenantId}/",
-            };
-
-            // Debugging purposes only, set this to false for production
-            if (_debug)
-            {
-                Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
-            }
-
-            ConfigurationManager<OpenIdConnectConfiguration> configManager =
-                new ConfigurationManager<OpenIdConnectConfiguration>(
-                    $"{authority}/.well-known/openid-configuration",
-                    new OpenIdConnectConfigurationRetriever());
-
-            OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();
-
-            ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();
-
-            // Initialize the token validation parameters
-            TokenValidationParameters validationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-
-                // App Id URI and AppId of this service application are both valid audiences.
-                ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}" },
-
-                // Support Azure AD V1 and V2 endpoints.
-                ValidIssuers = validIssuers,
-                IssuerSigningKeys = config.SigningKeys,
-            };
-
-            SecurityToken securityToken;
-            var claimsPrincipal = tokenValidator.ValidateToken(accessToken, validationParameters, out securityToken);
-            return claimsPrincipal;
         }
 
         public async Task<AppConsentInfo> GetAppConsentScopes(string requestingAppClientId, string userId, string[] requestedScopes)

@@ -42,7 +42,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public string ClientAssertion { get; }
 
-        public string ClientId => _handler.ReadJwtToken(ClientAssertion).Subject;
+        public override string ClientId => _handler.ReadJwtToken(ClientAssertion).Subject;
 
         public override FormUrlEncodedContent ToFormUrlEncodedContent()
         {

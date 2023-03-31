@@ -11,7 +11,7 @@ services:
     language: csharp
     host: function
   context:
-    project: src/authorize-app
+    project: src/smart-context-frontend-app
     dist: build
     language: js
     host: staticwebapp

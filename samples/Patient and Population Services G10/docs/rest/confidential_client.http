@@ -1,8 +1,8 @@
 # .SUMMARY Sample requests to test local SMART auth proxy
 
 @baseUrl = {{$dotenv BASE_URL}}
-@clientId = {{$dotenv CLIENT_ID}}
-@clientSecret = {{$dotenv CLIENT_SECRET}}
+@clientId = {{$dotenv CONFIDENTIAL_CLIENT_ID}}
+@clientSecret = {{$dotenv CONFIDENTIAL_CLIENT_SECRET}}
 @redirectUri = {{$dotenv REDIRECT_URI}}
 @scope = launch/patient fhirUser patient/Condition.read patient/Observation.read patient/Patient.read offline_access openid
 @codeChallenge = ECgEuvKylvpiOS9pF2pfu5NKoBErrx8fAWdneyiPT2E
