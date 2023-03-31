@@ -22,10 +22,13 @@ Make sure you have the pre-requisites listed below
   - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles
 
 - Test Accounts :
-  - Account for the patient persona
-  - Account for the provider persona
+  - Account for the patient persona. Make sure you have the object id of the user.
+  - Account for the provider persona. Make sure you have the object id of the user.
 
 ## 2. Create App Registration for FHIR Service backend
+
+
+### 1. Create the application
 
 - Open Azure AD in the Azure Portal
 - Note your `Primary Domain` in the Overview blade of Azure AD.
@@ -33,10 +36,12 @@ Make sure you have the pre-requisites listed below
 - Create a new application. The name should match that of your FHIR Service.
 - Click `Create` (ignore redirect URI).
 
+### 2. Set the application URL
 - Go to `Expose an API`
 - Set the application URL to <app-registration-name>.<Azure AD >
-- Go to the Manifest blade. Copy the `oauth2Permissions` json element from `fhir-app-manifest.json` to the `oauth2Permissions` json element in your application manifest.
 
+### 3. Add all the applicable FHIR Scopes.
+- Go to the Manifest blade. Copy the `oauth2Permissions` json element from `fhir-app-manifest.json` to the `oauth2Permissions` json element in your application manifest.
 
 ## 3. Create Azure AD Application for Scope Selection
 
