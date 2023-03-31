@@ -56,6 +56,7 @@ param logAnalyticsName string = ''
 
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -221,7 +222,7 @@ module apim './core/apiManagement.bicep'= {
   }
 }
 
-var backendServiceVaultName = '${name}-backkv'
+var backendServiceVaultName = '${nameShort}-backkv'
 @description('KeyVault to hold backend service principal maps')
 module keyVault './core/keyVault.bicep' = {
   name: 'vaultDeploy'
