@@ -93,7 +93,7 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   tags: union(appTags, {'azd-service-name': 'auth'})
 }
 
-var authCustomOperationaudience = length(smartAudience) > 0 ? smartAudience : fhirUrl
+var authCustomOperationaudience = smartAudience
 var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
@@ -120,6 +120,7 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: functionConnectionString
     AZURE_CacheContainer: cacheContainer
+    AZURE_Debug: 'true'
   }
 }
 
