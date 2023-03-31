@@ -40,11 +40,12 @@ Make sure you have the pre-requisites listed below
 - Go to `Expose an API` blade.
 - Set the application URL to https://<app-registration-name>.<Azure AD Primary Domain>.
   - For example `https://my-app-1.mytenant.onmicrosoft.com`.
+  - Save the `Application URL` for later.
 
 ### 3. Add all the applicable FHIR Scopes.
 - Go to the Manifest blade. Copy the `oauth2Permissions` json element from [fhir-app-manifest.json](fhir-app-manifest.json) to the `oauth2Permissions` json element in your application manifest.
 
-## 3. Create Azure AD Application for Scope Selection
+## 3. Create Azure AD Application for Scope Selection Frontend Application
 
 The Authorize User Input Application is needed to allow users to select which scopes they want to consent to for SMART on FHIR applications. Azure AD does not support session based scoping, so this app handles modifying consent records for the user. We will need to accomplish this in a custom application and this application needs an Application Registration created. As you create this, collect the `Client ID` and `Tenant ID` information which you will need later on.
 
@@ -52,9 +53,9 @@ The Authorize User Input Application is needed to allow users to select which sc
 2. Leave the application as a single tenant application. Add a Single-page application (SPA) redirict URI of `http://localhost:3000` (useful for debugging).
 3. After registering the application, Under `Token Configuration` add optional claim for Access token type. Select `login_hint` claim and click on Add.
 4. Go to `Expose an API` and setup the `user_impersonation` scope on your app.
-    * Set the Application ID URI in the default format (`api://<app-id>`).
+    * Set the Application ID URI in the default format (`api://<app-id>`). #TODO-FIX THIS. No changes required you just have to save it. Mark down the audience for later/.
       * The URI *has* to be in this format for the sample.
-    * Add a new scope with the value `user_impersonation` and click on 'Add Scope'.
+    * Add a new scope with the value `user_impersonation` and click on 'Add Scope'. #TODO fix this.
       * The scope *has* to be called this for the sample.
 
 <br />
@@ -80,7 +81,8 @@ Before deployment, lets look at the configuration needed to deploying this sampl
 1. Open `main.pramaters.json` inside of the `infra` folder and fill out the following parameters:
   - `apimPublisherName`: Sample owner name.
   - `apimPublisherEmail`: Sample owner email address.
-  - `contextAadApplicationId`: Client ID from step 2.
+  - `contextAadApplicationId`: Client ID from step 3.
+  - `smartAudience`: Application URL from step 2.
 2. Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
 3. Login with the Azure Developer CLI. Specify the tenant if you have more than one.
   - `azd login` or `azd login --tenant-id <tenant-id>`.

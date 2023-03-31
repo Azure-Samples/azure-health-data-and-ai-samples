@@ -1,4 +1,5 @@
-{	"oauth2Permissions": [
+{
+	"oauth2Permissions": [
 		{
 			"adminConsentDescription": "Allows user to read all resources in a patient's compartment.",
 			"adminConsentDisplayName": "patient.all.read",
