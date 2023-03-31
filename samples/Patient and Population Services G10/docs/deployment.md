@@ -6,6 +6,8 @@ Note : This sample is not automated and on average will require at least a coupl
 
 ## 1. Prerequisites
 
+--TODO-- Add clone this repo
+
 Before deploying this sample, you will need to install some Azure tools **and** ensure you have administrator access to an Azure subscription / tenant.
 
 Make sure you have the pre-requisites listed below
@@ -19,7 +21,24 @@ Make sure you have the pre-requisites listed below
   - Access to an Azure Subscription where you can create resources and add role assignments.
   - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles
 
-## 2. Create Azure AD Application for Scope Selection
+- Test Accounts :
+  - Account for the patient persona
+  - Account for the provider persona
+
+## 2. Create App Registration for FHIR Service backend
+
+- Open Azure AD in the Azure Portal
+- Note your `Primary Domain` in the Overview blade of Azure AD.
+- Go to `App Registrations`
+- Create a new application. The name should match that of your FHIR Service.
+- Click `Create` (ignore redirect URI).
+
+- Go to `Expose an API`
+- Set the application URL to <app-registration-name>.<Azure AD >
+- Go to the Manifest blade. Copy the `oauth2Permissions` json element from `fhir-app-manifest.json` to the `oauth2Permissions` json element in your application manifest.
+
+
+## 3. Create Azure AD Application for Scope Selection
 
 The Authorize User Input Application is needed to allow users to select which scopes they want to consent to for SMART on FHIR applications. Azure AD does not support session based scoping, so this app handles modifying consent records for the user. We will need to accomplish this in a custom application and this application needs an Application Registration created. As you create this, collect the `Client ID` and `Tenant ID` information which you will need later on.
 
@@ -46,7 +65,7 @@ The Authorize User Input Application is needed to allow users to select which sc
 
 *Note: In a production scenario, you should create two application registrations here. One for the backend API in Azure API Management and one for the frontend application. See [this documentation for more information](https://learn.microsoft.com/azure/api-management/api-management-howto-protect-backend-with-aad).*
 
-## 3. Deploy Sample
+## 4. Deploy Sample
 
 This sample uses the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) for deployment. This allows for easy deployment of both infrastructure and code at the same time.
 
@@ -67,7 +86,7 @@ Before deployment, lets look at the configuration needed to deploying this sampl
 
 *NOTE:* This will take about an hour to deploy, mainly for Azure API Management. You can continue with Azure Active Directory setup below.
 
-## 4. Setup Auth User Input Application
+## 5. Setup Auth User Input Application
 
 ### Assign Azure AD Permissions for the Auth Custom Operation API
 
@@ -100,7 +119,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 ![](./images/deployment/4_save_redirect_uri.png)
 </details>
 
-## 5. Create Inferno Test Applications in Azure Active Directory
+## 6. Create Inferno Test Applications in Azure Active Directory
 
 It's best practice to register an Application Registration in Azure AD for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. 
 
