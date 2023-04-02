@@ -59,6 +59,7 @@ resource exportStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
 module exportFhirRoleAssignment './identity.bicep'= {
   name: 'fhirExportRoleAssignment'
   params: {
+    #disable-next-line BCP053
     principalId: createFhirService ? fhir.identity.principalId : fhirExisting.identity.principalId
     fhirId: createFhirService ? fhir.id : fhirExisting.id
     roleType: 'storageBlobContributor'
@@ -70,5 +71,6 @@ resource fhirExisting 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-
 }
 
 output fhirId string = createFhirService ? fhir.id : fhirExisting.id
+#disable-next-line BCP053
 output fhirIdentity string = createFhirService ? fhir.identity.principalId : fhirExisting.identity.principalId
 output exportStorageUrl string = exportStorageAccount.properties.primaryEndpoints.blob

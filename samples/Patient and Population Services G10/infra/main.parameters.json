@@ -11,17 +11,17 @@
         "principalId": {
             "value": "${AZURE_PRINCIPAL_ID}"
         },
-        "contextAadApplicationId": {
-            "value": ""
-        },
         "apimPublisherName": {
-            "value": ""
+            "value": "${NAME=Placeholder Name}"
         },
         "apimPublisherEmail": {
-            "value": ""
+            "value": "${EMAIL=youremail@onmicrosoft.com}"
         },
-        "smartAudience": {
-            "value": ""
+        "fhirServiceAudience": {
+            "value": "${FHIR_AUDIENCE}"
+        },
+        "authContextFrontendAppId": {
+            "value": "${CONTEXT_FRONTEND_APPID}"
         }
     }
 }

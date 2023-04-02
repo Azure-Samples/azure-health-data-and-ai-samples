@@ -37,9 +37,9 @@
 
                     // Reroute SMART OAuth Urls
                     responseBody["rest"][0]["security"]["extension"][0]["extension"][0]["url"] = "token";
-                    responseBody["rest"][0]["security"]["extension"][0]["extension"][0]["valueUri"] = $"https://{context.Request.OriginalUrl.Host}/smart/token";
+                    responseBody["rest"][0]["security"]["extension"][0]["extension"][0]["valueUri"] = $"https://{context.Request.OriginalUrl.Host}/auth/token";
                     responseBody["rest"][0]["security"]["extension"][0]["extension"][1]["url"] = "authorize";
-                    responseBody["rest"][0]["security"]["extension"][0]["extension"][1]["valueUri"] = $"https://{context.Request.OriginalUrl.Host}/smart/authorize";
+                    responseBody["rest"][0]["security"]["extension"][0]["extension"][1]["valueUri"] = $"https://{context.Request.OriginalUrl.Host}/auth/authorize";
 
                     // Add the token revocation URL
                     var revoke = new JObject(

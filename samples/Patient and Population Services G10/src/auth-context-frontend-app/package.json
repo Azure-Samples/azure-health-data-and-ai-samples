@@ -1,6 +1,7 @@
 {
-  "name": "smart-context-app",
+  "name": "auth-context-frontend-app",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@azure/msal-browser": "^2.31.0",
