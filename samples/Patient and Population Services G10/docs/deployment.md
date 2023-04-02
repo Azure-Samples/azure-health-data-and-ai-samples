@@ -34,7 +34,9 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Run `azd env new` to create a new deployment environment.
   1. *NOTE:* Environment name will be the prefix for all of your resources.
 1. Create the FHIR Resource App Registration. Use the instructions [here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
+  1. Make sure to tell azd about this application with `azd env set FhirAudience <FHIR Resource App Audience>`.
 1. Create the Auth Context Frontend App Registration. Use the instructions [here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
+  1. Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
 1. Set your deployment environment configuration.
   ```
   azd env set NAME "Your Name"
@@ -52,17 +54,6 @@ Next you will need to clone this repository and prepare your environment for dep
 ## 3. Setup Auth Context Frontend Application
 
 ### Assign Azure AD Permissions for the Auth Custom Operation API
-
-GRAPH_TOKEN=az account get-access-token --resource-type ms-graph --query accessToken --output tsv
-
-$body = @{
-    name = "John Doe"
-    email = "johndoe@example.com"
-    phone = "555-555-5555"
-} | ConvertTo-Json
-
-Invoke-RestMethod -Uri "https://api.example.com/users" -Method Post -Body $body -ContentType "application/json"
-
 
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
 

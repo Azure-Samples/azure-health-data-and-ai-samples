@@ -48,6 +48,6 @@ export const msalConfig = {
     }
 };
 
-export const scopes: string[] = [`api://${msalConfig.auth.clientId}//user_impersonation`];
+export const scopes: string[] = [`${window.ENV_CONFIG.REACT_APP_FHIR_RESOURCE_AUDIENCE}//user_impersonation`];
 export const apiEndpoint: string = (window.location.host.includes("localhost") ? "http://localhost:7071/api" :  window.ENV_CONFIG.REACT_APP_API_BASE_URL) || "http://localhost:7071/api";
 //export const apiEndpoint: string = window.ENV_CONFIG.REACT_APP_API_BASE_URL ?? "http://localhost:7071/api";

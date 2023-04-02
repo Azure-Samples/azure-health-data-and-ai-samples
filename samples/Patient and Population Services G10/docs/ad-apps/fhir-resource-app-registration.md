@@ -4,19 +4,23 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-### 1. Create the application
-
+1. Create the application
 - Open Azure AD in the Azure Portal
 - Note your `Primary Domain` in the Overview blade of Azure AD.
 - Go to `App Registrations`
 - Create a new application. The name should match that of your FHIR Service.
 - Click `Register` (ignore redirect URI).
 
-### 2. Set the application URL
+2. Set the application URL
 - Go to `Expose an API` blade.
 - Set the application URL to https://<app-registration-name>.<Azure AD Primary Domain>.
   - For example `https://my-app-1.mytenant.onmicrosoft.com`.
   - Save the `Application URL` for later.
 
-### 3. Add all the applicable FHIR Scopes.
+3. Add all the applicable FHIR Scopes.
 - Go to the Manifest blade. Copy the `oauth2Permissions` JSON element from [fhir-app-manifest.json](./fhir-app-manifest.json) to the `oauth2Permissions` JSON element in your application manifest.
+
+1. Inform your Azure Developer CLI environment of this application with:
+```
+azd env set FhirAudience <FHIR Resource App Audience>
+```

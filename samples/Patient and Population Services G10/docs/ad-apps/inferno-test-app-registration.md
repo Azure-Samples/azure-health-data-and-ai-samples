@@ -37,8 +37,8 @@ The Patient Standalone Launch application is a standard confidential client appl
 <details>
 <summary>Click to expand and see screenshots.</summary>
 
-![](./images/deployment/5_confidential_client_1.png)
-![](./images/deployment/5_client_confidental_app_scopes.png)
+![](./images/5_confidential_client_1.png)
+![](./images/5_client_confidental_app_scopes.png)
 </details>
 
 
@@ -81,8 +81,8 @@ The EHR Launch application is a standard confidential client application which l
 <details>
 <summary>Click to expand and see screenshots.</summary>
 
-![](./images/deployment/5_confidential_client_1.png)
-![](./images/deployment/5_ehr_confidental_app_scopes.png)
+![](./images/5_confidential_client_1.png)
+![](./images/5_ehr_confidental_app_scopes.png)
 </details>
 
 ### SMART fhirUser Custom Claim
@@ -93,7 +93,7 @@ The EHR Launch application is a standard confidential client application which l
 
 In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the Confidential Client application created previously. Next select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
-![Azure Portal image of custom attribute claims configuration screen](./images/deployment/1_attributes_claims.png)
+![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
 1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
@@ -103,7 +103,7 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/PatientA**
 6. Click **Save** to add the fhirUser claim
 
-![Azure Portal image of creating new custom claim](./images/deployment/2_add_fhiruser_claim2.png)
+![Azure Portal image of creating new custom claim](./images/2_add_fhiruser_claim2.png)
 
 ## Modify Application Manifest
 
@@ -137,13 +137,13 @@ Azure Active Directory does not support RSA384 and/or ES384 which is required by
 <details>
 <summary>Click to expand and see screenshots.</summary>
 
-![](../images/deployment/5_create_backend_services_app.png)
-![](../images/deployment/5_add_backend_role_assignment_1.png)
-![](../images/5_assign_backend_application.png)
-![](../images/deployment/5_create_backend_secret.png)
-![](../images/deployment/5_copy_backend_secret.png)
-![](../images/deployment/5_keyvault_reg.png)
-![](../images/deployment/5_keyvault_create_secret.png)
-![](../images/deployment/5_keyvault_secret_details.png)
+![](./images/5_create_backend_services_app.png)
+![](./images/5_add_backend_role_assignment_1.png)
+![](./images/5_assign_backend_application.png)
+![](./images/5_create_backend_secret.png)
+![](./images/5_copy_backend_secret.png)
+![](./images/5_keyvault_reg.png)
+![](./images/5_keyvault_create_secret.png)
+![](./images/5_keyvault_secret_details.png)
 
 </details>
