@@ -3,7 +3,7 @@
 #>
 param (
     [Parameter(Mandatory=$false)]
-    [string]$APP_ID
+    [string]$FhirResourceAppId
 )
 
 $SCRIPT_PATH = Split-Path -parent $MyInvocation.MyCommand.Definition
@@ -12,9 +12,9 @@ $ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
 Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
 
 
-if ([string]::IsNullOrWhiteSpace($APP_ID)) {
+if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 
-    Write-Host "APP_ID is not set."
+    Write-Host "FhirResourceAppId is not set."
 
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
@@ -25,13 +25,13 @@ if ([string]::IsNullOrWhiteSpace($APP_ID)) {
         }
         
         if ([string]::IsNullOrWhiteSpace($FHIR_URL) -and $name -eq "FhirResourceAppId") {
-            $APP_ID = $value.Trim('"')
+            $FhirResourceAppId = $value.Trim('"')
         }
     }
 }
 
 $graphEndpoint = "https://graph.microsoft.com/v1.0"
-$appObjectId = (az ad app show --id $APP_ID --query "id" --output tsv)
+$appObjectId = (az ad app show --id $FhirResourceAppId --query "id" --output tsv)
 $extensionUrl = "$graphEndpoint/applications/$appObjectId/extensionProperties"
 
 $body = @{
@@ -40,7 +40,7 @@ $body = @{
     targetObjects = @("User")
 } | ConvertTo-Json
 
-Write-Host "Creating fhirUser directory extension for app $APP_ID"
+Write-Host "Creating fhirUser directory extension for app $FhirResourceAppId"
 
 az rest --method post --url $extensionUrl --body $body
 
