@@ -96,6 +96,7 @@ module fhir 'core/fhir.bicep'= {
     location: location
     tenantId: tenantId
     appTags: appTags
+    audience: FhirAudience
   }
 }
 
