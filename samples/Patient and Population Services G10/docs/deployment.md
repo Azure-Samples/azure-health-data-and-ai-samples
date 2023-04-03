@@ -33,22 +33,22 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `Patient and Population Services G10` folder.
 1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
 1. Run `azd env new` to create a new deployment environment.
-  1. *NOTE:* Environment name will be the prefix for all of your resources.
-1. Create the FHIR Resource App Registration. Use the instructions [here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
-  1. Make sure to tell azd about this application with `azd env set FhirAudience <FHIR Resource App Audience>`.
-1. Create the Auth Context Frontend App Registration. Use the instructions [here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
-  1. Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
+    - *NOTE:* Environment name will be the prefix for all of your resources.
+1. [Create the FHIR Resource App Registration. Use the instructions here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
+    - Make sure to tell azd about this application with `azd env set FhirAudience <FHIR Resource App Audience>`.
+1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
+    - Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
 1. Set your deployment environment configuration.
-  ```
-  azd env set Name "Your Name"
-  azd env set Email "Your Email"
-  azd env set FhirAudience "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
-  azd env set ContextAppClientId "Auth Context Frontend App Application ID"
-  ```
+    ```
+    azd env set Name "Your Name"
+    azd env set Email "Your Email"
+    azd env set FhirAudience "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
+    azd env set ContextAppClientId "Auth Context Frontend App Application ID"
+    ```
 1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code. It will take about an hour - you can continue the setup below. 
-  ```
-  azd up
-  ```
+    ```
+    azd up
+    ```
 
 *NOTE:* This will take about an hour to deploy, mainly for Azure API Management. You can continue with Azure Active Directory setup below.
 
@@ -70,6 +70,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 ![](./images/deployment/4_open_application_administrator.png)
 ![](./images/deployment/4_assign_function_application_administrator.png)
 </details>
+<br />
 
 ### Set the Auth User Input Redirect URL
 
@@ -84,6 +85,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 ![](./images/deployment/4_copy_static_app_url.png)
 ![](./images/deployment/4_save_redirect_uri.png)
 </details>
+<br />
 
 ## 4. Create Inferno Test Applications in Azure Active Directory
 
