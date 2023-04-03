@@ -2,7 +2,7 @@
 
 This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Azure Active Directory configuration.
 
-Note : This sample is not automated and on average will require at least a couple of hours to deploy end to end.
+*Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
 ## 1. Prerequisites
 
@@ -11,7 +11,8 @@ In order to deploy this sample, you will need to install some Azure tools, ensur
 Make sure you have the pre-requisites listed below
 - **Installation:**
   - [Git](https://git-scm.com/) to access the files in this repository.
-  - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
+  - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) to run scripts that interact with Azure.
+  - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node / NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK 6+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
@@ -39,10 +40,10 @@ Next you will need to clone this repository and prepare your environment for dep
   1. Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
 1. Set your deployment environment configuration.
   ```
-  azd env set NAME "Your Name"
-  azd env set EMAIL "Your Email"
-  azd env set FHIR_AUDIENCE "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
-  azd env set CONTEXT_FRONTEND_APPID "Auth Context Frontend App Application ID"
+  azd env set Name "Your Name"
+  azd env set Email "Your Email"
+  azd env set FhirAudience "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
+  azd env set ContextAppClientId "Auth Context Frontend App Application ID"
   ```
 1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code. It will take about an hour - you can continue the setup below. 
   ```
@@ -51,7 +52,7 @@ Next you will need to clone this repository and prepare your environment for dep
 
 *NOTE:* This will take about an hour to deploy, mainly for Azure API Management. You can continue with Azure Active Directory setup below.
 
-## 3. Setup Auth Context Frontend Application
+## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
 ### Assign Azure AD Permissions for the Auth Custom Operation API
 
@@ -72,7 +73,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 ### Set the Auth User Input Redirect URL
 
-1. Open the resource group created by step 3. Find the Azure Static Web App
+1. Open the resource group created by step 3. Find the Azure Static Web App.
 1. Copy the URL for the static web app.
 1. Open your Application Registration for the Auth User Input App from step 2. Add the Static Web App URL as a new redirect URI.
 

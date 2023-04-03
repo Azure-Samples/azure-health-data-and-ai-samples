@@ -1,4 +1,19 @@
 {
+	"acceptMappedClaims": true,
+	"appRoles": [
+		{
+			"allowedMemberTypes": [
+				"Application"
+			],
+			"description": "system.all.read",
+			"displayName": "system.all.read",
+			"id": "446c1a33-8f34-43b3-855c-db21aab2889f",
+			"isEnabled": true,
+			"lang": null,
+			"origin": "Application",
+			"value": "system.all.read"
+		}
+	],
 	"oauth2Permissions": [
 		{
 			"adminConsentDescription": "Allows user to read all resources in a patient's compartment.",

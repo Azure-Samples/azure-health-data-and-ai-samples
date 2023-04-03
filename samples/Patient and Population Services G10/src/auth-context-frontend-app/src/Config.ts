@@ -14,7 +14,7 @@ export const msalConfig = {
     auth: {
         clientId: window.ENV_CONFIG.REACT_APP_AAD_APP_CLIENT_ID, 
         authority: `https://login.microsoftonline.com/${window.ENV_CONFIG.REACT_APP_AAD_APP_TENANT_ID}`,
-        redirectUri: window.location.protocol + "//" + window.location.host,
+        redirectUri: window.location.protocol + "//" + window.location.host + window.location.pathname,
         postLogoutRedirectUri: "https://www.microsoft.com",
     },
     cache: {
@@ -49,5 +49,5 @@ export const msalConfig = {
 };
 
 export const scopes: string[] = [`${window.ENV_CONFIG.REACT_APP_FHIR_RESOURCE_AUDIENCE}//user_impersonation`];
-export const apiEndpoint: string = (window.location.host.includes("localhost") ? "http://localhost:7071/api" :  window.ENV_CONFIG.REACT_APP_API_BASE_URL) || "http://localhost:7071/api";
+export const apiEndpoint: string = (window.location.host.includes("localhost") ? "http://localhost:7071/api" : `${window.ENV_CONFIG.REACT_APP_API_BASE_URL}/auth`) || "http://localhost:7071/api";
 //export const apiEndpoint: string = window.ENV_CONFIG.REACT_APP_API_BASE_URL ?? "http://localhost:7071/api";

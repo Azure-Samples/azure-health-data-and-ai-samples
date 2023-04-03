@@ -79,13 +79,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
         {
             var signingKeys = jwks.GetSigningKeys();
 
-            string aud = "https://" + _functionConfig.ApiManagementHostName!;
-            if (_functionConfig.ApiManagementFhirPrefex is not null)
-            {
-                aud += "/" + _functionConfig.ApiManagementFhirPrefex;
-            }
-
-            aud += "/token";
+            string aud = "https://" + _functionConfig.ApiManagementHostName! + "/auth/token";
 
             var validationParameters = new TokenValidationParameters()
             {

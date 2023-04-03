@@ -19,16 +19,16 @@ param principalId string = ''
 // start required API gateway parameters
 
 @description('Name of the owner of the API Management resource')
-param apimPublisherName string
+param ApiPublisherName string
 
 @description('Email of the owner of the API Management resource')
-param apimPublisherEmail string
+param ApiPublisherEmail string
 
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
-param authContextFrontendAppId string
+param ContextAppClientId string
 
 @description('Audience for SMART scopes in Azure Active Directory. Leave blank to use the PaaS Service URL.')
-param fhirServiceAudience string
+param FhirAudience string
 
 // end user required API gateway parameters
 
@@ -140,9 +140,9 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     apimName: apimName
     fhirUrl: fhirUrl
     smartFrontendAppUrl: contextStaticWebApp.outputs.uri
-    fhirServiceAudience: fhirServiceAudience
+    fhirServiceAudience: FhirAudience
     backendServiceVaultName: backendServiceVaultName
-    contextAadApplicationId: authContextFrontendAppId
+    contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
@@ -211,8 +211,8 @@ module apim './core/apiManagement.bicep'= {
   scope: rg
   params: {
     apiManagementServiceName: apimName
-    publisherEmail: apimPublisherEmail
-    publisherName: apimPublisherName
+    publisherEmail: ApiPublisherEmail
+    publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
     smartAuthFunctionBaseUrl: authCustomOperation.outputs.functionAppUrl
@@ -258,13 +258,13 @@ output FhirAudience string = authCustomOperation.outputs.authCustomOperationAudi
 output ExportStorageAccountUrl string = 'https://${exportStoreName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
 output BackendServiceKeyVaultStore string = backendServiceVaultName
-output ContextAppClientId string = authContextFrontendAppId
+output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
 output CacheContainer string = authCustomOperation.outputs.cacheContainer
 
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 
-output REACT_APP_AAD_APP_CLIENT_ID string = authContextFrontendAppId
+output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
-output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}/smart'
-output REACT_APP_FHIR_RESOURCE_AUDIENCE string = fhirServiceAudience
+output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
+output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience

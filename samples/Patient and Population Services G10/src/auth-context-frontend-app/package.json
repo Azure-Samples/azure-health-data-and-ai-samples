@@ -1,7 +1,7 @@
 {
   "name": "auth-context-frontend-app",
-  "version": "0.1.0",
   "homepage": "./",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@azure/msal-browser": "^2.31.0",

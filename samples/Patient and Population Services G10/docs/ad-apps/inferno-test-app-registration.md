@@ -1,12 +1,16 @@
-### Patient Standalone Confidential Client Application
+# Inferno Test Applications 
 
-The Patient Standalone Launch application is a standard confidential client application which leverages the SMART Scopes exposed by Azure Health Data Services.
+To successfully test ONC (g)(10) with Inferno, you will need to create four separate application registrations to represent the different access scenarios addressed by this test. This method of setting up application registrations is applicable to real SMART on FHIR applications too.
 
-- Create a new application in Azure Active Directory. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
-- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Delegated)
+## Patient Standalone Confidential Client / Public Client Applications
+
+The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret (section 1 & 2 of the test). The public client represents an application that cannot protect a secret (section 9 of the test). You will need to follow these instructions twice - once for the confidential client (web) and once for the public client (spa). 
+
+1. Create a new application in Azure Active Directory. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. In API Permissions for this new application, add the below:
+  - Your FHIR Resource API (Delegated)
     - fhirUser
-    - launch
+    - launch.patient
     - patient.AllergyIntolerance.read
     - patient.CarePlan.read
     - patient.CareTeam.read
@@ -30,8 +34,8 @@ The Patient Standalone Launch application is a standard confidential client appl
   - Microsoft Graph (Delegated)
     - openid
     - offline_access
-
-- Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
+1. Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 <br />
 <details>
@@ -41,14 +45,13 @@ The Patient Standalone Launch application is a standard confidential client appl
 ![](./images/5_client_confidental_app_scopes.png)
 </details>
 
+## EHR Launch Confidential Client Application
 
-### EHR Launch Confidential Client Application
+The EHR launch confidential client application is a standard confidential client application which represents an application that can protect a secret (section 3 of the test).
 
-The EHR Launch application is a standard confidential client application which leverages the SMART Scopes exposed by Azure Health Data Services.
-
-- Create a new application in Azure Active Directory. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
-- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Delegated)
+1. Create a new application in Azure Active Directory. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. In API Permissions for this new application, add the below:
+  - Your FHIR Resource Application (Delegated)
     - fhirUser
     - launch
     - user.AllergyIntolerance.read
@@ -74,8 +77,8 @@ The EHR Launch application is a standard confidential client application which l
   - Microsoft Graph (Delegated)
     - openid
     - offline_access
-
-- Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 <br />
 <details>
@@ -85,43 +88,14 @@ The EHR Launch application is a standard confidential client application which l
 ![](./images/5_ehr_confidental_app_scopes.png)
 </details>
 
-### SMART fhirUser Custom Claim
-
-> **NOTE:** This example will only create a global fhirUser claim attached to the Confidential Client application registration. For users that reside in Active Directory, you may use [directory extension attributes](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-schema-extensions). If your users do not reside in Active Directory, you can create a [custom claims provider](https://learn.microsoft.com/en-us/azure/active-directory/develop/custom-extension-get-started?tabs=azure-portal) for user-level fhirUser claims.
-
-## Configure Custom Claim
-
-In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the Confidential Client application created previously. Next select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
-
-![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
-The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
-
-1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
-2. Click **Add New Claim**
-3. Name the claim **fhirUser**
-4. Select **Attribute** for Source
-5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/PatientA**
-6. Click **Save** to add the fhirUser claim
-
-![Azure Portal image of creating new custom claim](./images/2_add_fhiruser_claim2.png)
-
-## Modify Application Manifest
-
-For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
-
-1. In the Azure Portal in Azure Active Directory, select **App registrations**
-2. Select your App registration from the list
-3. Select **Manifest** from the left-hand menu
-4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**
-
 ### Backend Service Client Application
 
 Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
 1. Create a new application in Azure Active Directory. No platform or redirect URL is needed.
-1. Grant this application `FHIR Data Reader` and `FHIR Exporter` role in your FHIR Service. We only support `system/*.read` for now through the `FHIR Data Reader` role.
-<!--- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Application)
+1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
+1. In API Permissions for this new application, add the below:
+  - Your FHIR Resource API (Application)
     - system.all.read
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
