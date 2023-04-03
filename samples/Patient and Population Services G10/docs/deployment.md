@@ -23,8 +23,8 @@ Make sure you have the pre-requisites listed below
   - Elevated access in Azure Active Directory (AD) and Microsoft Graph to create Application Registrations, assign Azure Active Directory roles, and add custom data to user accounts.
 
 - **Test Accounts:**
-  - Patient persona test account. Make sure you have the object id of the user.
-  - Provider persona test account. Make sure you have the object id of the user.
+  - Azure Active Directory test account to represent Patient persona. Make sure you have the object id of the user from Azure Active Directory.
+  - Azure Active Directory test account to represent Provider persona. Make sure you have the object id of the user from Azure Active Directory.
 
 ## 2. Prepare and deploy environment
 
@@ -74,22 +74,22 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 ### Set the Auth User Input Redirect URL
 
-1. Open the resource group created by step 3. Find the Azure Static Web App.
-1. Copy the URL for the static web app.
-1. Open your Application Registration for the Auth User Input App from step 2. Add the Static Web App URL as a new redirect URI.
+1. Open the resource group created by step 3. Find the Azure API Management instance.
+1. Copy the Gateway URL for the API Management instance.
+1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
+    - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />
 <details>
 <summary>Click to expand and see screenshots.</summary>
 
-![](./images/deployment/4_copy_static_app_url.png)
 ![](./images/deployment/4_save_redirect_uri.png)
 </details>
 <br />
 
 ## 4. Create Inferno Test Applications in Azure Active Directory
 
-We will need to create four separate Azure AD Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Azure aD applications, [read this](https://learn.microsoft.com/azure/active-directory/develop/security-best-practices-for-app-registration).
+We will need to create four separate Azure AD Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Azure Active Directory applications, [read this](https://learn.microsoft.com/azure/active-directory/develop/security-best-practices-for-app-registration).
 
 Follow the directions on the [Inferno Test App Registration Page](./ad-apps/inferno-test-app-registration.md) for instructions on registering the needed Azure Applications for the Inferno (g)(10) tests.
 - Standalone Patient App (Confidential Client)

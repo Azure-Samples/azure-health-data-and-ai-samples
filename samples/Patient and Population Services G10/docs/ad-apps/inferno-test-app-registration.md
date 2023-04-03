@@ -45,6 +45,7 @@ The Patient Standalone Launch application is a standard confidential client appl
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_client_confidental_app_scopes.png)
 </details>
+<br />
 
 ## EHR Launch Confidential Client Application
 
@@ -90,7 +91,7 @@ The EHR launch confidential client application is a standard confidential client
 </details>
 <br />
 
-### Backend Service Client Application
+## Backend Service Client Application
 
 Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
