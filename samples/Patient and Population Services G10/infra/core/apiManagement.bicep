@@ -58,19 +58,31 @@ module apimBackends 'apiManagement/backends.bicep' = {
     fhirBaseUrl: fhirBaseUrl
     smartAuthFunctionBaseUrl: smartAuthFunctionBaseUrl
     exportFunctionBaseUrl: exportFunctionBaseUrl
-    contextStaticAppBaseUrl: contextStaticAppBaseUrl
+    contextFrontendAppBaseUrl: contextStaticAppBaseUrl
   }
 
   dependsOn: [ apimService ]
 }
 
-@description('Configuration for SMART on FHIR APIs')
-module apimSmartApi 'apiManagement/smartApi.bicep' = {
-  name: '${apiManagementServiceName}-api-smart'
+@description('Configuration for FHIR API')
+module apimFhirApi 'apiManagement/fhirApi.bicep' = {
+  name: '${apiManagementServiceName}-api-fhir'
   params: {
     apiManagementServiceName: apiManagementServiceName
     fhirBaseUrl: fhirBaseUrl
     apimServiceLoggerId: apimService.outputs.serviceLoggerId
+  }
+
+  dependsOn: [ apimBackends ]
+}
+
+@description('Configuration for SMART on FHIR Auth Custom Operations API')
+module apimSmartAuthApi 'apiManagement/smartAuthApi.bicep' = {
+  name: '${apiManagementServiceName}-api-smart-auth'
+  params: {
+    apiManagementServiceName: apiManagementServiceName
+    apimServiceLoggerId: apimService.outputs.serviceLoggerId
+    authCustomOperationsBaseUrl: smartAuthFunctionBaseUrl
   }
 
   dependsOn: [ apimBackends ]
@@ -100,4 +112,4 @@ module apimFragments 'apiManagement/fragments.bicep' = {
 }
 
 output apimHostName string = '${apiManagementServiceName}.azure-api.net'
-output apimSmartUrl string = 'https://${apiManagementServiceName}.azure-api.net'
+output apimUrl string = 'https://${apiManagementServiceName}.azure-api.net'

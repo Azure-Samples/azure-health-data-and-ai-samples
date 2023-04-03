@@ -1,73 +1,58 @@
-# Sample Deployment: Azure ONC (g)(10) & SMART on FHIR Sample
+# Sample Deployment: Azure Health Data Services ONC (g)(10) & SMART on FHIR
 
 This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Azure Active Directory configuration.
 
-Note : This sample is not automated and on average will require at least a couple of hours to deploy end to end.
+*Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
 ## 1. Prerequisites
 
-Before deploying this sample, you will need to install some Azure tools **and** ensure you have administrator access to an Azure subscription / tenant.
+In order to deploy this sample, you will need to install some Azure tools, ensure the proper administrator access to an Azure subscription / tenant, and have test user accounts for impersonating the patient and practitioner personas.
 
 Make sure you have the pre-requisites listed below
-- Installation : 
-   - Azure Developer CLI: Please install this via [the instructions here](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows)
-  - Visual Studio or Visual Studio Code (for debugging the sample code).
-  - NPM (for debugging sample).
+- **Installation:**
+  - [Git](https://git-scm.com/) to access the files in this repository.
+  - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) to run scripts that interact with Azure.
+  - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
+  - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
+  - [Node / NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
+  - [.NET SDK 6+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
+  - [PowerShell](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!)
 
-- .NET SDK 6+ installed (for building the sample).
-- Access : 
+- **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Azure Active Directory(AD) to create Application Registrations and assign Azure Active Directory roles
+  - Elevated access in Azure Active Directory (AD) and Microsoft Graph to create Application Registrations, assign Azure Active Directory roles, and add custom data to user accounts.
 
-## 2. Create Azure AD Application for Scope Selection
+- **Test Accounts:**
+  - Patient persona test account. Make sure you have the object id of the user.
+  - Provider persona test account. Make sure you have the object id of the user.
 
-The Authorize User Input Application is needed to allow users to select which scopes they want to consent to for SMART on FHIR applications. Azure AD does not support session based scoping, so this app handles modifying consent records for the user. We will need to accomplish this in a custom application and this application needs an Application Registration created. As you create this, collect the `Client ID` and `Tenant ID` information which you will need later on.
+## 2. Prepare and deploy environment
 
-1. Open Azure Active Directory and create a new Application Registration.
-2. Leave the application as a single tenant application. Add a Single-page application (SPA) redirict URI of `http://localhost:3000` (useful for debugging).
-3. After registering the application, Under `Token Configuration` add optional claim for Access token type. Select `login_hint` claim and click on Add.
-4. Go to `Expose an API` and setup the `user_impersonation` scope on your app.
-    * Set the Application ID URI in the default format (`api://<app-id>`).
-      * The URI *has* to be in this format for the sample.
-    * Add a new scope with the value `user_impersonation` and click on 'Add Scope'.
-      * The scope *has* to be called this for the sample.
+Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/deployment/2_create_application_registration.png)
-![](./images/deployment/2_create_application_registration_details.png)
-![](./images/deployment/2_add_login_hint_claim.png)
-![](./images/deployment/2_set_application_uri.png)
-![](./images/deployment/2_save_application_uri.png)
-![](./images/deployment/2_add_scopes.png)
-</details>
-
-*Note: In a production scenario, you should create two application registrations here. One for the backend API in Azure API Management and one for the frontend application. See [this documentation for more information](https://learn.microsoft.com/azure/api-management/api-management-howto-protect-backend-with-aad).*
-
-## 3. Deploy Sample
-
-This sample uses the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) for deployment. This allows for easy deployment of both infrastructure and code at the same time.
-
-Before deployment, lets look at the configuration needed to deploying this sample. All below assumes `samples/Patient and Population Services G10` as the working directory.
-
-1. Open `main.pramaters.json` inside of the `infra` folder and fill out the following parameters:
-  - `apimPublisherName`: Sample owner name.
-  - `apimPublisherEmail`: Sample owner email address.
-  - `contextAadApplicationId`: Client ID from step 2.
-2. Open a terminal to the samples directory (`samples/Patient and Population Services G10`).
-3. Login with the Azure Developer CLI. Specify the tenant if you have more than one.
-  - `azd login` or `azd login --tenant-id <tenant-id>`.
-4. Run the `azd up` command from this directory. Enter:
-   - Environment Name: Prefix for the resource group that will be created to hold all Azure resources ([see more details](https://learn.microsoft.com/azure/developer/azure-developer-cli/faq#what-is-an-environment-name)). Must be all lowercase.
-    - You can always create a new environment with `azd env new`.
-  - Azure Location: The Azure location where your resources will be deployed.
-  - Azure Subscription: The Azure location where your resources will be deployed.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `Patient and Population Services G10` folder.
+1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
+1. Run `azd env new` to create a new deployment environment.
+  1. *NOTE:* Environment name will be the prefix for all of your resources.
+1. Create the FHIR Resource App Registration. Use the instructions [here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
+  1. Make sure to tell azd about this application with `azd env set FhirAudience <FHIR Resource App Audience>`.
+1. Create the Auth Context Frontend App Registration. Use the instructions [here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
+  1. Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
+1. Set your deployment environment configuration.
+  ```
+  azd env set Name "Your Name"
+  azd env set Email "Your Email"
+  azd env set FhirAudience "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
+  azd env set ContextAppClientId "Auth Context Frontend App Application ID"
+  ```
+1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code. It will take about an hour - you can continue the setup below. 
+  ```
+  azd up
+  ```
 
 *NOTE:* This will take about an hour to deploy, mainly for Azure API Management. You can continue with Azure Active Directory setup below.
 
-## 4. Setup Auth User Input Application
+## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
 ### Assign Azure AD Permissions for the Auth Custom Operation API
 
@@ -88,7 +73,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 ### Set the Auth User Input Redirect URL
 
-1. Open the resource group created by step 3. Find the Azure Static Web App
+1. Open the resource group created by step 3. Find the Azure Static Web App.
 1. Copy the URL for the static web app.
 1. Open your Application Registration for the Auth User Input App from step 2. Add the Static Web App URL as a new redirect URI.
 
@@ -100,174 +85,25 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 ![](./images/deployment/4_save_redirect_uri.png)
 </details>
 
-## 5. Create Inferno Test Applications in Azure Active Directory
+## 4. Create Inferno Test Applications in Azure Active Directory
 
-It's best practice to register an Application Registration in Azure AD for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. 
+We will need to create four separate Azure AD Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Azure aD applications, [read this](https://learn.microsoft.com/azure/active-directory/develop/security-best-practices-for-app-registration).
 
-For Inferno tests, you will need to create two applications with platform - Web and Single Page Application (SPA).
-
-### Patient Standalone Confidential Client Application
-
-The Patient Standalone Launch application is a standard confidential client application which leverages the SMART Scopes exposed by Azure Health Data Services.
-
-- Create a new application in Azure Active Directory. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
-- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Delegated)
-    - fhirUser
-    - launch
-    - patient.AllergyIntolerance.read
-    - patient.CarePlan.read
-    - patient.CareTeam.read
-    - patient.Condition.read
-    - patient.Device.read
-    - patient.DiagnosticReport.read
-    - patient.DocumentReference.read
-    - patient.Encounter.read
-    - patient.Goal.read
-    - patient.Immunization.read
-    - patient.Location.read
-    - patient.MedicationRequest.read
-    - patient.Medication.read
-    - patient.Observation.read
-    - patient.Organization.read
-    - patient.Patient.read
-    - patient.Practitioner.read
-    - patient.PractitionerRole.read
-    - patient.Procedure.read
-    - patient.Provenance.read
-  - Microsoft Graph (Delegated)
-    - openid
-    - offline_access
-
-- Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/deployment/5_confidential_client_1.png)
-![](./images/deployment/5_client_confidental_app_scopes.png)
-</details>
+Follow the directions on the [Inferno Test App Registration Page](./ad-apps/inferno-test-app-registration.md) for instructions on registering the needed Azure Applications for the Inferno (g)(10) tests.
+- Standalone Patient App (Confidential Client)
+- EHR Practitioner App (Confidential Client)
+- Backend Service Client
+- Standalone Patient App (Public Client)
 
 
-### EHR Launch Confidential Client Application
+## 5. Add sample data and US Core resources
 
-The EHR Launch application is a standard confidential client application which leverages the SMART Scopes exposed by Azure Health Data Services.
+To successfully run the Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
 
-- Create a new application in Azure Active Directory. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
-- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Delegated)
-    - fhirUser
-    - launch
-    - user.AllergyIntolerance.read
-    - user.CarePlan.read
-    - user.CareTeam.read
-    - user.Condition.read
-    - user.Device.read
-    - user.DiagnosticReport.read
-    - user.DocumentReference.read
-    - user.Encounter.read
-    - user.Goal.read
-    - user.Immunization.read
-    - user.Location.read
-    - user.MedicationRequest.read
-    - user.Medication.read
-    - user.Observation.read
-    - user.Organization.read
-    - user.Patient.read
-    - user.Practitioner.read
-    - user.PractitionerRole.read
-    - user.Procedure.read
-    - user.Provenance.read
-  - Microsoft Graph (Delegated)
-    - openid
-    - offline_access
+To quickly load the needed data to your FHIR Service, execute this script:
 
-- Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+```bash
+pwsh ./scripts/Load-ProfilesData.ps1
+```
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/deployment/5_confidential_client_1.png)
-![](./images/deployment/5_ehr_confidental_app_scopes.png)
-</details>
-
-### SMART fhirUser Custom Claim
-
-> **NOTE:** This example will only create a global fhirUser claim attached to the Confidential Client application registration. For users that reside in Active Directory, you may use [directory extension attributes](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-schema-extensions). If your users do not reside in Active Directory, you can create a [custom claims provider](https://learn.microsoft.com/en-us/azure/active-directory/develop/custom-extension-get-started?tabs=azure-portal) for user-level fhirUser claims.
-
-## Configure Custom Claim
-
-In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the Confidential Client application created previously. Next select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
-
-![Azure Portal image of custom attribute claims configuration screen](./images/deployment/1_attributes_claims.png)
-The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
-
-1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
-2. Click **Add New Claim**
-3. Name the claim **fhirUser**
-4. Select **Attribute** for Source
-5. For Source Attribute, click the dropdown and type in your fhirUser making sure to include the Patient resource prefix. For example: **Patient/PatientA**
-6. Click **Save** to add the fhirUser claim
-
-![Azure Portal image of creating new custom claim](./images/deployment/2_add_fhiruser_claim2.png)
-
-## Modify Application Manifest
-
-For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
-
-1. In the Azure Portal in Azure Active Directory, select **App registrations**
-2. Select your App registration from the list
-3. Select **Manifest** from the left-hand menu
-4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**
-
-### Backend Service Client Application
-
-Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
-
-1. Create a new application in Azure Active Directory. No platform or redirect URL is needed.
-1. Grant this application `FHIR Data Reader` and `FHIR Exporter` role in your FHIR Service. We only support `system/*.read` for now through the `FHIR Data Reader` role.
-<!--- In API Permissions for this new application, add the below:
-  - Azure Healthcare APIs (Application)
-    - system.all.read
-1. Grant admin consent for your Application on the API Permission page-->
-1. Generate a secret for this application. Save this and the client id.
-1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
-1. Add a new secret that corresponds to the Application you just generated. 
-  - Name: Application ID/Client ID of the application
-  - Secret: The secret you generated for the application
-  - Tags: Make sure to add the tag `jwks_url` with the backend service JWKS URL. For Inferno testing, this is: https://inferno.healthit.gov/suites/custom/g10_certification/.well-known/jwks.json
-
-1. Save the client id for later testing.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/deployment/5_create_backend_services_app.png)
-![](./images/deployment/5_add_backend_role_assignment_1.png)
-![](./images/5_assign_backend_application.png)
-![](./images/deployment/5_create_backend_secret.png)
-![](./images/deployment/5_copy_backend_secret.png)
-![](./images/deployment/5_keyvault_reg.png)
-![](./images/deployment/5_keyvault_create_secret.png)
-![](./images/deployment/5_keyvault_secret_details.png)
-
-</details>
-
-## 6. Add sample data and US Core resources
-
-The Inferno (g)(10) suite requires both the US Core profile and data to be loaded in order to pass the test. 
-
-We have created a Powershell script that will load US Core artifacts and test data quickly for testing. Open [this script](../scripts/Load-ProfilesData.ps1), change the variables at the top, and execute.
-
-### Loading the US Core resources
-
-Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
-
-### Loading Data
-
-Passing Inferno (g)(10) may require loading of real data from your application. To quickly test this solution, you can load some sample data.
-
-We have created a bundle containing all the needed resources to pass the Inferno test. This can be found [here](https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json). Postman or another REST client can be used to load this file.
+To learn more about the sample data, read [sample data](./sample-data.md).

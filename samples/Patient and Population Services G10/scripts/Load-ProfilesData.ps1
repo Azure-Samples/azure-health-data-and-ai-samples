@@ -1,11 +1,45 @@
-## NOTE: It's best to login to Azure CLI first before running this script. Make sure to select your tenant and subscription.
+<#
+    Loads sample data and US Core profiles into a FHIR server.
 
-## NOTE: You will need .NET 6 SDK installed on your system. You can download it from https://dotnet.microsoft.com/download/dotnet/6.0
+    Uses the Azure CLI, NPM, .NET 6+ SDK, and the FHIR Loader CLI tool.
+#>
+param (
+    [Parameter(Mandatory=$false)]
+    [string]$FhirUrl,
+    
+    [Parameter(Mandatory=$false)]
+    [string]$FhirAudience
+)
 
-## NOTE: You will need npm installed on your system. You can download it from https://nodejs.org/en/download/
+$SCRIPT_PATH = Split-Path -parent $MyInvocation.MyCommand.Definition
+$SAMPLE_ROOT = (Get-Item $SCRIPT_PATH).Parent.FullName
+$ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
+Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
 
-## Base URL of your Azure FHIR Service
-$FHIR_URL = "https://<workspace>-fhirdata.fhir.azurehealthcareapis.com"
+
+if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($FhirUrl)) {
+
+    Write-Host "FhirUrl or FhirAudience is not set."
+
+    # Load parameters from active Azure Developer CLI environment
+    $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
+    $AZD_ENVIRONMENT | foreach {
+        $name, $value = $_.split('=')
+        if ([string]::IsNullOrWhiteSpace($name) || $name.Contains('#')) {
+            continue
+        }
+        
+        if ([string]::IsNullOrWhiteSpace($FhirUrl) -and $name -eq "FhirUrl") {
+            $FhirUrl = $value.Trim('"')
+        }
+
+        if ([string]::IsNullOrWhiteSpace($FhirUrl) -and $name -eq "FhirAudience") {
+            $FhirAudience = $value.Trim('"')
+        }
+    }
+}
+
+Write-Host "Writing US Core v3.1.1 profiles and test data to FhirUrl: $FhirUrl with FhirAudience: $FhirAudience."
 
 cd $HOME/Downloads
 git clone https://github.com/microsoft/fhir-loader.git
@@ -29,11 +63,11 @@ mkdir sample-data
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json" -OutFile ./sample-data/V3.1.1_USCoreCompliantResources.json
 
 # Load sample data
-microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FHIR_URL
+microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FhirUrl --audience $FhirAudience --debug
 
 # Download US Core
 cd $HOME/Downloads
 npm --registry https://packages.simplifier.net install hl7.fhir.us.core@3.1.1
 
 # Load us core
-microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FHIR_URL
+microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience --debug

@@ -5,14 +5,11 @@
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Azure.Identity;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using SMARTCustomOperations.AzureAuth.Configuration;
-using SMARTCustomOperations.AzureAuth.Models;
 
 #pragma warning disable CA1002 // Do not expose generic lists
 
@@ -22,12 +19,14 @@ namespace SMARTCustomOperations.AzureAuth.Services
     {
         private readonly bool _debug;
         private readonly string _contextAppClientId;
+        private readonly string _fhirAudience;
         private readonly string _tenantId;
 
         public BaseContextAppService(AzureAuthOperationsConfig configuration, ILogger<BaseContextAppService> logger)
         {
             _debug = configuration.Debug;
             _contextAppClientId = configuration.ContextAppClientId!;
+            _fhirAudience = configuration.Audience!;
             _tenantId = configuration.TenantId!;
         }
 
@@ -67,7 +66,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 ValidateIssuerSigningKey = true,
 
                 // App Id URI and AppId of this service application are both valid audiences.
-                ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}" },
+                ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}", _fhirAudience },
 
                 // Support Azure AD V1 and V2 endpoints.
                 ValidIssuers = validIssuers,

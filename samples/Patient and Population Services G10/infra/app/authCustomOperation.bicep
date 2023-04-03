@@ -20,7 +20,7 @@ param fhirUrl string
 param smartFrontendAppUrl string
 
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
-param smartAudience string
+param fhirServiceAudience string
 
 @description('Name of the Key Vault used to store the backend service credentials.')
 param backendServiceVaultName string
@@ -93,7 +93,6 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   tags: union(appTags, {'azd-service-name': 'auth'})
 }
 
-var authCustomOperationaudience = smartAudience
 var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
@@ -115,7 +114,7 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
-    AZURE_Audience: authCustomOperationaudience
+    AZURE_Audience: fhirServiceAudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: functionConnectionString
@@ -126,6 +125,6 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
 
 output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}/api'
 output functionAppPrincipalId string = authCustomOperationFunctionApp.identity.principalId
-output authCustomOperationAudience string = authCustomOperationaudience
+output authCustomOperationAudience string = fhirServiceAudience
 output cacheConnectionString string = functionConnectionString
 output cacheContainer string = cacheContainer

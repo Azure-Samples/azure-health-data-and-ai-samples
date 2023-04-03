@@ -11,14 +11,17 @@
         "principalId": {
             "value": "${AZURE_PRINCIPAL_ID}"
         },
-        "contextAadApplicationId": {
-            "value": ""
+        "ApiPublisherName": {
+            "value": "${ApiPublisherName=Placeholder Name}"
         },
-        "apimPublisherName": {
-            "value": ""
+        "ApiPublisherEmail": {
+            "value": "${ApiPublisherEmail=youremail@onmicrosoft.com}"
         },
-        "apimPublisherEmail": {
-            "value": ""
+        "FhirAudience": {
+            "value": "${FhirAudience}"
+        },
+        "ContextAppClientId": {
+            "value": "${ContextAppClientId}"
         }
     }
 }
