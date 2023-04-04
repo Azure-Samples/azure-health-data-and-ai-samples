@@ -8,14 +8,18 @@ param (
     [string]$FhirUrl,
     
     [Parameter(Mandatory=$false)]
-    [string]$FhirAudience
+    [string]$FhirAudience,
+
+    [Parameter(Mandatory=$false)]
+    [string]$TenantId
 )
 
 $SCRIPT_PATH = Split-Path -parent $MyInvocation.MyCommand.Definition
 $SAMPLE_ROOT = (Get-Item $SCRIPT_PATH).Parent.FullName
-$ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
-Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
 
+
+#$ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
+#Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
 
 if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($FhirUrl)) {
 
@@ -25,7 +29,7 @@ if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($Fhi
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
     $AZD_ENVIRONMENT | foreach {
         $name, $value = $_.split('=')
-        if ([string]::IsNullOrWhiteSpace($name) || $name.Contains('#')) {
+        if ([string]::IsNullOrWhiteSpace($name) -or $name.Contains('#')) {
             continue
         }
         
@@ -33,8 +37,12 @@ if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($Fhi
             $FhirUrl = $value.Trim('"')
         }
 
-        if ([string]::IsNullOrWhiteSpace($FhirUrl) -and $name -eq "FhirAudience") {
+        if ([string]::IsNullOrWhiteSpace($FhirAudience) -and $name -eq "FhirAudience") {
             $FhirAudience = $value.Trim('"')
+        }
+
+        if ([string]::IsNullOrWhiteSpace($TenantId) -and $name -eq "TenantId") {
+            $TenantId = $value.Trim('"')
         }
     }
 }
@@ -63,7 +71,7 @@ mkdir sample-data
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json" -OutFile ./sample-data/V3.1.1_USCoreCompliantResources.json
 
 # Load sample data
-microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FhirUrl --audience $FhirAudience --debug
+microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
 
 # Download US Core
 cd $HOME/Downloads
