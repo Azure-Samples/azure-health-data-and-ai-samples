@@ -78,4 +78,4 @@ cd $HOME/Downloads
 npm --registry https://packages.simplifier.net install hl7.fhir.us.core@3.1.1
 
 # Load us core
-microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience -tenant-id $TenantId --debug
+microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
