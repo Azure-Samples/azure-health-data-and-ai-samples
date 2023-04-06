@@ -63,19 +63,12 @@ dotnet pack
 dotnet tool uninstall FhirLoader.Tool --global
 dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
 
-cd $HOME/Downloads/fhir-loader
-
-mkdir sample-data
-
-# Download sample data
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json" -OutFile ./sample-data/V3.1.1_USCoreCompliantResources.json
-
 # Load sample data
-microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
+microsoft-fhir-loader --folder $SCRIPT_PATH/test-resources --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
 
 # Download US Core
-cd $HOME/Downloads
-npm --registry https://packages.simplifier.net install hl7.fhir.us.core@3.1.1
+#cd $HOME/Downloads
+#npm --registry https://packages.simplifier.net install hl7.fhir.us.core@3.1.1
 
 # Load us core
-microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
+#microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug

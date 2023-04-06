@@ -46,9 +46,6 @@ param workspaceName string = ''
 @description('Name of the FHIR service to deloy or use. Leave blank for default.')
 param fhirServiceName string = ''
 
-@description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param exportStoreName string = ''
-
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
@@ -81,7 +78,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
 var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
-var exportStoreNameResolved = length(exportStoreName) > 0 ? exportStoreName : '${nameCleanShort}exsa'
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
@@ -92,7 +88,7 @@ module fhir 'core/fhir.bicep'= {
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
     fhirServiceName: fhirNameResolved
-    exportStoreName: exportStoreNameResolved
+    exportStoreName: functionBase.outputs.storageAccountName
     location: location
     tenantId: tenantId
     appTags: appTags
@@ -256,7 +252,7 @@ output Location string = location
 output TenantId string = tenantId
 output FhirUrl string = fhirUrl
 output FhirAudience string = authCustomOperation.outputs.authCustomOperationAudience
-output ExportStorageAccountUrl string = 'https://${exportStoreName}.blob.${environment().suffixes.storage}'
+output ExportStorageAccountUrl string = 'https://${functionBase.outputs.storageAccountName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
 output BackendServiceKeyVaultStore string = backendServiceVaultName
 output ContextAppClientId string = ContextAppClientId

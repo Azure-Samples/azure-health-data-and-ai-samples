@@ -104,6 +104,7 @@ To successfully run the Inferno ONC (g)(10) test suite, both the US Core FHIR pa
 
 To quickly load the needed data to your FHIR Service, execute this script:
 
+Windows:
 ```bash
 pwsh ./scripts/Load-ProfilesData.ps1
 ```

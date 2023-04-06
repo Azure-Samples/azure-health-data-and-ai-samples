@@ -1,9 +1,8 @@
-import React, { FC, ReactElement } from 'react';
+import { FC } from 'react';
 import { MsalProvider, MsalAuthenticationTemplate } from "@azure/msal-react";
-import { IPublicClientApplication, InteractionType } from "@azure/msal-browser";
+import { InteractionType } from "@azure/msal-browser";
 import { ThemeProvider, IStackStyles } from '@fluentui/react';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
-import { Buffer } from "buffer";
 
 // MSAL imports
 import { PublicClientApplication, EventType, EventMessage, AuthenticationResult } from "@azure/msal-browser";
@@ -28,15 +27,13 @@ export const App: FC = () => {
   // Check if there are already accounts in the browser session
   // If so, set the first account as the active account
   const accounts = msalInstance.getAllAccounts();
-  if (accounts && accounts.length > 0) {
-    msalInstance.setActiveAccount(accounts[0]);
-  }
 
   msalInstance.addEventCallback((event: EventMessage) => {
     if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
+
       // Set the active account - this simplifies token acquisition
       const authResult = event.payload as AuthenticationResult;
-      msalInstance.setActiveAccount(authResult.account);
+      msalInstance.setActiveAccount(authResult.account);       
     }
     else if (event.eventType == EventType.LOGIN_FAILURE)
     {
@@ -46,7 +43,7 @@ export const App: FC = () => {
 
   const authRequest = {
     scopes: scopes,
-    //state:  Buffer.from(window.location.search, 'binary').toString('base64'),
+    prompt: 'login'
   };
 
   initializeIcons();

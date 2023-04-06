@@ -5,12 +5,12 @@ param apiManagementServiceName string
 param location string = resourceGroup().location
  
 @description('The pricing tier of this API Management service')
-@allowed(['Developer', 'Standard', 'Premium'])
-param sku string = 'Developer'
+@allowed(['Consumption', 'Basic', 'Developer', 'Standard', 'Premium'])
+param sku string = 'Consumption'
 
 @description('The instance size of this API Management service.')
-@allowed([1, 2])
-param skuCount int = 1
+@allowed([0, 1, 2])
+param skuCount int = 0
 
 @description('The name of the owner of the service')
 @minLength(1)
@@ -48,6 +48,16 @@ module apimService 'apiManagement/service.bicep' = {
     publisherEmail: publisherEmail
     appInsightsInstrumentationKey: appInsightsInstrumentationKey
   }
+}
+
+module externalRedisCache 'apiManagement/externalRedisCache.bicep' = {
+  name: '${apiManagementServiceName}-redis-cache'
+  params: {
+    apiManagementServiceName: apiManagementServiceName
+    location: location
+  }
+
+  dependsOn: [ apimService ]
 }
 
 @description('API Management Backends')
@@ -113,3 +123,5 @@ module apimFragments 'apiManagement/fragments.bicep' = {
 
 output apimHostName string = '${apiManagementServiceName}.azure-api.net'
 output apimUrl string = 'https://${apiManagementServiceName}.azure-api.net'
+output redisCacheHostName string = externalRedisCache.outputs.redisCacheHostName
+output redisCacheId string = externalRedisCache.outputs.redisCacheId

@@ -30,21 +30,36 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
             continue
         }
         
-        if ([string]::IsNullOrWhiteSpace($FHIR_URL) -and $name -eq "FhirResourceAppId") {
+        if ([string]::IsNullOrWhiteSpace($FhirResourceAppId) -and $name -eq "FhirResourceAppId") {
             $FhirResourceAppId = $value.Trim('"')
         }
     }
 }
 
+if (-not $FhirResourceAppId) {
+    Write-Error "FhirResourceAppId is not set."
+    exit
+}
+
+if (-not $UserObjectId) {
+    Write-Error "UserObjectId is not set."
+    exit
+}
+
+if (-not $FhirUserValue) {
+    Write-Error "FhirUserValue is not set."
+    exit
+}
+
 $graphEndpoint = "https://graph.microsoft.com/v1.0"
 $userUrl = "$graphEndpoint/users/$UserObjectId"
 $appIdFormatted = $FhirResourceAppId.Replace("-", "")
+$token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
 
-$body = [PSCustomObject]@{}
-$body | Add-Member -MemberType NoteProperty -Name "extension_$($appIdFormatted)_fhirUser" -Value $FhirUserValue
-$bodyString =  $body | ConvertTo-Json
-Write-Host "Updating user $UserObjectId with fhirUser info: $bodyString"
+$body = "{
+    `"extension_$($appIdFormatted)_fhirUser`": `"$FhirUserValue`"
+}"
 
-az rest --method patch --url $userUrl --body $bodyString
+Invoke-RestMethod -Uri $userUrl -Headers @{Authorization = "Bearer $token"} -Method Patch -Body $body -ContentType application/json
 
 Write-Host "Done."

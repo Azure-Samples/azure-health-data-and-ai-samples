@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Collections.Specialized;
+using System.Net;
 using Microsoft.AzureHealth.DataServices.Bindings;
 using Microsoft.AzureHealth.DataServices.Clients;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
@@ -11,6 +12,7 @@ using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.AzureHealth.DataServices.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.Export.Configuration;
 
 namespace SMARTCustomOperations.Export.Bindings
@@ -62,20 +64,26 @@ namespace SMARTCustomOperations.Export.Bindings
             ExportOperationType operationType;
             if (!Enum.TryParse(context.Properties["PipelineType"], out operationType))
             {
-                // default error event in WebPipeline.cs of toolkit
-                OnError?.Invoke(this, new BindingErrorEventArgs(Id, Name, new ArgumentException("PipelineType", $"Invalid pipeline type encountered in Export Binding {context.Properties["PipelineType"]}")));
-                return context;
+                ArgumentException ex = new("PipelineType", $"Invalid pipeline type encountered in Export Binding {context.Properties["PipelineType"]}");
+                return context.SetContextErrorBody(new BindingErrorEventArgs(Id, Name, ex), true);
             }
 
-            RestRequestBuilder builder = await GetBuilderForOperationType(
-                operationType,
-                context.Request.RequestUri!,
-                context.Properties["oid"],
-                context.Properties["token"]);
+            _logger.LogTrace("Received context oid {oid} and token {token}", context.Properties["oid"], context.Properties["token"]);
 
-            _logger.LogTrace("Sending export category request to {ServerUrl}{LocalPath}{Query}", builder.BaseUrl, builder.Path, builder.QueryString);
+            HttpResponseMessage httpResponseMessage;
+            RestRequestBuilder builder;
+            try
+            {
+                builder = await GetBuilderForOperationType(operationType, context.Request.RequestUri!, context.Properties["oid"], context.Properties["token"]);
 
-            HttpResponseMessage httpResponseMessage = await new RestRequest(builder).SendAsync();
+                _logger.LogTrace("Sending export category request to {ServerUrl}{LocalPath}{Query}", builder.BaseUrl, builder.Path, builder.QueryString);
+
+                httpResponseMessage = await new RestRequest(builder).SendAsync();
+            }
+            catch (Exception ex)
+            {
+                return context.SetContextErrorBody(new BindingErrorEventArgs(Id, Name, ex), true);
+            }
 
             var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
 
@@ -151,7 +159,7 @@ namespace SMARTCustomOperations.Export.Bindings
                 baseUrl: serverUrl,
                 securityToken: token,
                 path: localPath,
-                query: queryCollection.ToString(),
+                query: queryCollection.AllKeys.Count() > 0 ? queryCollection.ToString() : null,
                 headers: headers,
                 content: null,
                 contentType: contentType);

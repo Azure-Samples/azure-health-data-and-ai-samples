@@ -24,24 +24,25 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
             continue
         }
         
-        if ([string]::IsNullOrWhiteSpace($FHIR_URL) -and $name -eq "FhirResourceAppId") {
+        if ([string]::IsNullOrWhiteSpace($FhirResourceAppId) -and $name -eq "FhirResourceAppId") {
             $FhirResourceAppId = $value.Trim('"')
         }
     }
+}
+
+if (-not $FhirResourceAppId) {
+    Write-Error "FhirResourceAppId is not set."
+    exit
 }
 
 $graphEndpoint = "https://graph.microsoft.com/v1.0"
 $appObjectId = (az ad app show --id $FhirResourceAppId --query "id" --output tsv)
 $extensionUrl = "$graphEndpoint/applications/$appObjectId/extensionProperties"
 
-$body = @{
+az rest --method post --url $extensionUrl --body @{
     name          = "fhirUser" 
     dataType      = "String"
     targetObjects = @("User")
-} | ConvertTo-Json
-
-Write-Host "Creating fhirUser directory extension for app $FhirResourceAppId"
-
-az rest --method post --url $extensionUrl --body $body
+}
 
 Write-Host "Done."
