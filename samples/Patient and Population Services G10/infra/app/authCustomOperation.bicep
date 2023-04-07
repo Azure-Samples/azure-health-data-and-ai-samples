@@ -40,10 +40,13 @@ param customOperationsFuncStorName string
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
 
+param redisCacheId string
+param redisCacheHostName string
+param redisApiVersion string
+
 @description('Name for the Function App to deploy the SDK custom operations to.')
 var authCustomOperationsFunctionAppName = '${name}-aad-func'
 
-var cacheContainer = 'context-cache'
 
 @description('Used for Custom Operation Azure Function App temp storage and auth.')
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' existing = {
@@ -51,14 +54,6 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' exist
 
   resource blobService 'blobServices@2021-06-01' = {
     name: 'default'
-
-    resource containers 'containers@2021-06-01' = {
-      name: cacheContainer
-      properties: {
-        publicAccess: 'None'
-        metadata: {}
-      }
-    }
   }
 }
 
@@ -94,6 +89,8 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
 }
 
 var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+var redisPrimaryKey = listKeys(redisCacheId, redisApiVersion).primaryKey
+var redisConnectionString = '${redisCacheHostName},password=${redisPrimaryKey},ssl=True,abortConnect=False'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
   name: 'appsettings'
@@ -117,8 +114,7 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_Audience: fhirServiceAudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
-    AZURE_CacheConnectionString: functionConnectionString
-    AZURE_CacheContainer: cacheContainer
+    AZURE_CacheConnectionString: redisConnectionString
     AZURE_Debug: 'true'
   }
 }
@@ -126,5 +122,4 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
 output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}/api'
 output functionAppPrincipalId string = authCustomOperationFunctionApp.identity.principalId
 output authCustomOperationAudience string = fhirServiceAudience
-output cacheConnectionString string = functionConnectionString
-output cacheContainer string = cacheContainer
+output cacheConnectionString string = redisConnectionString

@@ -50,16 +50,6 @@ module apimService 'apiManagement/service.bicep' = {
   }
 }
 
-module externalRedisCache 'apiManagement/externalRedisCache.bicep' = {
-  name: '${apiManagementServiceName}-redis-cache'
-  params: {
-    apiManagementServiceName: apiManagementServiceName
-    location: location
-  }
-
-  dependsOn: [ apimService ]
-}
-
 @description('API Management Backends')
 module apimBackends 'apiManagement/backends.bicep' = {
   name: '${apiManagementServiceName}-backends'
@@ -123,5 +113,3 @@ module apimFragments 'apiManagement/fragments.bicep' = {
 
 output apimHostName string = '${apiManagementServiceName}.azure-api.net'
 output apimUrl string = 'https://${apiManagementServiceName}.azure-api.net'
-output redisCacheHostName string = externalRedisCache.outputs.redisCacheHostName
-output redisCacheId string = externalRedisCache.outputs.redisCacheId

@@ -67,21 +67,41 @@ Write-Host "Writing sample test data to FhirUrl: $FhirUrl with FhirAudience: $Fh
 $curDir = Get-Location
 
 try {
-    
-    Set-Location $HOME/Downloads
-    git clone https://github.com/microsoft/fhir-loader.git
-    Set-Location $HOME/Downloads/fhir-loader
 
-    git checkout fhir-loader-cli
-    git pull
+    $installedDotnetTools = (dotnet tool list --global)
+    $install = $True
 
-    Set-Location $HOME/Downloads/fhir-loader/src/FhirLoader.Tool/
-    dotnet pack
+    if ($installedDotnetTools -contains "microsoft-fhir-loader")
+    {
+        if ($installedDotnetTools -contains "0.1.5        microsoft-fhir-loader")
+        {
+            Write-Information("microsoft-fhir-loader already installed, continuing...")
+            $install = $false
+        }
+        else
+        {
+            Write-Information("microsoft-fhir-loader outdated, removing and reinstalling...")
+            dotnet tool uninstall FhirLoader.Tool --global
+        }
+        
+    }
 
-    # Uninstall if already installed
-    dotnet tool uninstall FhirLoader.Tool --global
-    dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
+    if ($install)
+    {
+        Write-Information("microsoft-fhir-loader not installed, installing now...")
 
+        Set-Location $HOME/Downloads
+        git clone https://github.com/microsoft/fhir-loader.git
+        Set-Location $HOME/Downloads/fhir-loader
+
+        git checkout fhir-loader-cli
+        git pull
+
+        Set-Location $HOME/Downloads/fhir-loader/src/FhirLoader.Tool/
+        dotnet pack
+
+        dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
+    }   
 }
 finally {
     Set-Location $curDir

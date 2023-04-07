@@ -12,9 +12,9 @@
             }
             return uti;
         }" />
-        <cache-lookup-value key="access-@{uti}" default-value="false" variable-name="accessTokenBlocked" caching-type="prefer-external" />
+        <cache-lookup-value key="@("access" + ((string)context.Variables["uti"]))" default-value="false" variable-name="accessTokenBlocked" caching-type="prefer-external" />
         <choose>
-            <when condition="@(context.Variables.GetValueOrDefault<string>("accessTokenBlocked") == "true")">
+            <when condition="@(((string)context.Variables["accessTokenBlocked"]) == "true")">
                 <return-response>
                     <set-status code="401" reason="Blocked" />
                 </return-response>

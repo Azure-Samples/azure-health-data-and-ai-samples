@@ -50,7 +50,7 @@ Next you will need to clone this repository and prepare your environment for dep
     azd up
     ```
 
-*NOTE:* This will take about an hour to deploy, mainly for Azure API Management. You can continue with Azure Active Directory setup below.
+*NOTE:* This will take about an 15 minutes to deploy.
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
@@ -97,12 +97,11 @@ Follow the directions on the [Inferno Test App Registration Page](./ad-apps/infe
 - Backend Service Client
 - Standalone Patient App (Public Client)
 
-
-## 5. Add sample data and US Core resources
+## 6. Add sample data and US Core resources
 
 To successfully run the Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
 
-To quickly load the needed data to your FHIR Service, execute this script:
+To quickly load the needed data to your FHIR Service, make sure your user account has FHIR Data Contributor role on the FHIR Service. Then execute this script:
 
 Windows:
 ```powershell

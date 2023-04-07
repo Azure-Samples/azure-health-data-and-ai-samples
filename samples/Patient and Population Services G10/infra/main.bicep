@@ -19,9 +19,11 @@ param principalId string = ''
 // start required API gateway parameters
 
 @description('Name of the owner of the API Management resource')
+@minLength(4)
 param ApiPublisherName string
 
 @description('Email of the owner of the API Management resource')
+@minLength(8)
 param ApiPublisherEmail string
 
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
@@ -125,6 +127,16 @@ module functionBase 'core/functionHost.bicep' = {
   }
 }
 
+@description('Deploy Redis Cache for use as External Cache for APIM')
+module redis './core/redisCache.bicep'= {
+  name: 'redisCacheDeploy'
+  scope: rg
+  params: {
+    apiManagementServiceName: apimName
+    location: location
+  }
+}
+
 @description('Azure Health Data Services Toolkit auth custom operation function app')
 module authCustomOperation './app/authCustomOperation.bicep' = {
   name: 'authCustomOperationDeploy'
@@ -144,6 +156,9 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
+    redisCacheId: redis.outputs.redisCacheId
+    redisApiVersion: redis.outputs.redisApiVersion
+    redisCacheHostName: redis.outputs.redisCacheHostName
   }
 }
 
@@ -212,10 +227,22 @@ module apim './core/apiManagement.bicep'= {
     publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
-    smartAuthFunctionBaseUrl: authCustomOperation.outputs.functionAppUrl
-    exportFunctionBaseUrl: exportCustomOperation.outputs.functionAppUrl
+    smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
+    exportFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+  }
+}
+
+@description('Link Redis Cache to APIM')
+module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
+  name: 'apimRedisLinkDeploy'
+  scope: rg
+  params: {
+    apiManagementServiceName: apimName
+    redisApiVersion: redis.outputs.redisApiVersion
+    redisCacheHostName: redis.outputs.redisCacheHostName
+    redisCacheId: redis.outputs.redisCacheId
   }
 }
 
@@ -257,7 +284,6 @@ output ApiManagementHostName string = apim.outputs.apimHostName
 output BackendServiceKeyVaultStore string = backendServiceVaultName
 output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
-output CacheContainer string = authCustomOperation.outputs.cacheContainer
 
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 

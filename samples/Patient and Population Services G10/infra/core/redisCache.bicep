@@ -1,6 +1,3 @@
-@description('Specify the name of the Azure Redis Cache to create.')
-param redisCacheName string = 'redisCache-${uniqueString(resourceGroup().id)}'
-
 @description('Location of all resources')
 param location string
 
@@ -37,7 +34,7 @@ param redisCacheCapacity int = 0
 param enableNonSslPort bool = false
 
 
-resource redisCache 'Microsoft.Cache/Redis@2020-06-01' = {
+resource redisCache 'Microsoft.Cache/Redis@2022-06-01' = {
   name: '${apiManagementServiceName}-cache'
   location: location
   properties: {
@@ -51,15 +48,6 @@ resource redisCache 'Microsoft.Cache/Redis@2020-06-01' = {
   }
 }
 
-resource apimCache 'Microsoft.ApiManagement/service/caches@2022-08-01' = {
-  name: '${apiManagementServiceName}/redisCache'
-  properties: {
-    connectionString: '${redisCache.properties.hostName},password=${redisCache.listKeys().primaryKey},ssl=True,abortConnect=False'
-    useFromLocation: 'default'
-    resourceId: redisCache.id
-    description: redisCache.properties.hostName
-  }
-}
-
+output redisApiVersion string = redisCache.apiVersion
 output redisCacheHostName string = redisCache.properties.hostName
 output redisCacheId string = redisCache.id

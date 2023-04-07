@@ -116,11 +116,6 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
             {
                 throw new ConfigurationErrorsException("CacheConnectionString must be configured for this application.");
             }
-
-            if (string.IsNullOrEmpty(CacheContainer))
-            {
-                throw new ConfigurationErrorsException("CacheContainer must be configured for this application.");
-            }
         }
     }
 }

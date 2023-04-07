@@ -59,10 +59,9 @@ namespace SMARTCustomOperations.AzureAuth
                     services.AddHttpClient();
 
                     services.AddMemoryCache();
-                    services.AddAzureBlobCacheBackingStore(options =>
+                    services.AddRedisCacheBackingStore(options =>
                     {
                         options.ConnectionString = config.CacheConnectionString;
-                        options.Container = config.CacheContainer;
                     });
                     services.AddJsonObjectMemoryCache(options =>
                     {
