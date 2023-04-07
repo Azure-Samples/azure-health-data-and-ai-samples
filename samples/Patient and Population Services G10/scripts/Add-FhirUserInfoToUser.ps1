@@ -20,7 +20,7 @@ Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) -
 
 if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 
-    Write-Host "FhirResourceAppId is not set."
+    Write-Host "FhirResourceAppId parameter blank, looking in azd enviornment configuration...."
 
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
@@ -30,21 +30,36 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
             continue
         }
         
-        if ([string]::IsNullOrWhiteSpace($FHIR_URL) -and $name -eq "FhirResourceAppId") {
+        if ([string]::IsNullOrWhiteSpace($FhirResourceAppId) -and $name -eq "FhirResourceAppId") {
             $FhirResourceAppId = $value.Trim('"')
         }
     }
 }
 
-$graphEndpoint = "https://graph.microsoft.com/v1.0"
+if (-not $FhirResourceAppId) {
+    Write-Error "FhirResourceAppId is STILL not set. Exiting."
+    exit
+}
+
+if (-not $UserObjectId) {
+    Write-Error "UserObjectId is not set. Exiting."
+    exit
+}
+
+if (-not $FhirUserValue) {
+    Write-Error "FhirUserValue is not set. Exiting."
+    exit
+}
+
+$graphEndpoint = "https://graph.microsoft.com/beta"
 $userUrl = "$graphEndpoint/users/$UserObjectId"
 $appIdFormatted = $FhirResourceAppId.Replace("-", "")
+$token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
 
-$body = [PSCustomObject]@{}
-$body | Add-Member -MemberType NoteProperty -Name "extension_$($appIdFormatted)_fhirUser" -Value $FhirUserValue
-$bodyString =  $body | ConvertTo-Json
-Write-Host "Updating user $UserObjectId with fhirUser info: $bodyString"
+$body = "{
+    `"extension_$($appIdFormatted)_fhirUser`": `"$FhirUserValue`"
+}"
 
-az rest --method patch --url $userUrl --body $bodyString
+Invoke-RestMethod -Uri $userUrl -Headers @{Authorization = "Bearer $token"} -Method Patch -Body $body -ContentType application/json
 
 Write-Host "Done."

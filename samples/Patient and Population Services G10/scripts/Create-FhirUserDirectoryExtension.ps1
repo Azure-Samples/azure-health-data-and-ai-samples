@@ -14,7 +14,7 @@ Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) -
 
 if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 
-    Write-Host "FhirResourceAppId is not set."
+    Write-Host "FhirResourceAppId parameter blank, looking in azd enviornment configuration...."
 
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
@@ -24,24 +24,28 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
             continue
         }
         
-        if ([string]::IsNullOrWhiteSpace($FHIR_URL) -and $name -eq "FhirResourceAppId") {
+        if ([string]::IsNullOrWhiteSpace($FhirResourceAppId) -and $name -eq "FhirResourceAppId") {
             $FhirResourceAppId = $value.Trim('"')
         }
     }
 }
 
+if (-not $FhirResourceAppId) {
+    Write-Error "FhirResourceAppId is STILL not set. Exiting."
+    exit
+}
+
 $graphEndpoint = "https://graph.microsoft.com/v1.0"
 $appObjectId = (az ad app show --id $FhirResourceAppId --query "id" --output tsv)
 $extensionUrl = "$graphEndpoint/applications/$appObjectId/extensionProperties"
+$token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
 
-$body = @{
-    name          = "fhirUser" 
-    dataType      = "String"
-    targetObjects = @("User")
-} | ConvertTo-Json
+$body = "{
+    `"name`": `"fhirUser`",
+    `"dataType`": `"String`",
+    `"targetObjects`": [`"User`"]
+}"
 
-Write-Host "Creating fhirUser directory extension for app $FhirResourceAppId"
-
-az rest --method post --url $extensionUrl --body $body
+Invoke-RestMethod -Uri $extensionUrl -Headers @{Authorization = "Bearer $token"} -Method Post -Body $body -ContentType application/json
 
 Write-Host "Done."

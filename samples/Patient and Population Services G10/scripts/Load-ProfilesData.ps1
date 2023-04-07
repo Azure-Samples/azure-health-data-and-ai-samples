@@ -23,7 +23,7 @@ $SAMPLE_ROOT = (Get-Item $SCRIPT_PATH).Parent.FullName
 
 if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($FhirUrl)) {
 
-    Write-Host "FhirUrl or FhirAudience is not set."
+    Write-Host "FhirUrl or FhirAudience or TenantId is not set."
 
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
@@ -47,35 +47,65 @@ if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($Fhi
     }
 }
 
-Write-Host "Writing US Core v3.1.1 profiles and test data to FhirUrl: $FhirUrl with FhirAudience: $FhirAudience."
+if (-not $FhirUrl) {
+    Write-Error "FhirUrl is STILL not set. Exiting."
+    exit
+}
 
-cd $HOME/Downloads
-git clone https://github.com/microsoft/fhir-loader.git
-cd $HOME/Downloads/fhir-loader
+if (-not $FhirAudience) {
+    Write-Error "FhirAudience is STILL not set. Exiting."
+    exit
+}
 
-git checkout fhir-loader-cli
-git pull
+if (-not $TenantId) {
+    Write-Error "TenantId is STILL not set. Exiting."
+    exit
+}
 
-cd $HOME/Downloads/fhir-loader/src/FhirLoader.Tool/
-dotnet pack
+Write-Host "Writing sample test data to FhirUrl: $FhirUrl with FhirAudience: $FhirAudience to TenantId: $TenantId"
 
-# Uninstall if already installed
-dotnet tool uninstall FhirLoader.Tool --global
-dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
+$curDir = Get-Location
 
-cd $HOME/Downloads/fhir-loader
+try {
 
-mkdir sample-data
+    $installedDotnetTools = (dotnet tool list --global)
+    $install = $True
 
-# Download sample data
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json" -OutFile ./sample-data/V3.1.1_USCoreCompliantResources.json
+    if ($installedDotnetTools -contains "microsoft-fhir-loader")
+    {
+        if ($installedDotnetTools -contains "0.1.5        microsoft-fhir-loader")
+        {
+            Write-Information("microsoft-fhir-loader already installed, continuing...")
+            $install = $false
+        }
+        else
+        {
+            Write-Information("microsoft-fhir-loader outdated, removing and reinstalling...")
+            dotnet tool uninstall FhirLoader.Tool --global
+        }
+        
+    }
+
+    if ($install)
+    {
+        Write-Information("microsoft-fhir-loader not installed, installing now...")
+
+        Set-Location $HOME/Downloads
+        git clone https://github.com/microsoft/fhir-loader.git
+        Set-Location $HOME/Downloads/fhir-loader
+
+        git checkout fhir-loader-cli
+        git pull
+
+        Set-Location $HOME/Downloads/fhir-loader/src/FhirLoader.Tool/
+        dotnet pack
+
+        dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
+    }   
+}
+finally {
+    Set-Location $curDir
+}
 
 # Load sample data
-microsoft-fhir-loader --folder $HOME/Downloads/fhir-loader/sample-data --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
-
-# Download US Core
-cd $HOME/Downloads
-npm --registry https://packages.simplifier.net install hl7.fhir.us.core@3.1.1
-
-# Load us core
-microsoft-fhir-loader --package $HOME/Downloads/node_modules/hl7.fhir.us.core/ --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
+microsoft-fhir-loader --folder $SCRIPT_PATH/test-resources --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug

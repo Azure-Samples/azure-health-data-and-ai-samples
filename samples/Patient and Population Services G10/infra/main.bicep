@@ -19,9 +19,11 @@ param principalId string = ''
 // start required API gateway parameters
 
 @description('Name of the owner of the API Management resource')
+@minLength(4)
 param ApiPublisherName string
 
 @description('Email of the owner of the API Management resource')
+@minLength(8)
 param ApiPublisherEmail string
 
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
@@ -45,9 +47,6 @@ param workspaceName string = ''
 
 @description('Name of the FHIR service to deloy or use. Leave blank for default.')
 param fhirServiceName string = ''
-
-@description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param exportStoreName string = ''
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
@@ -81,7 +80,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
 var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
-var exportStoreNameResolved = length(exportStoreName) > 0 ? exportStoreName : '${nameCleanShort}exsa'
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
@@ -92,7 +90,7 @@ module fhir 'core/fhir.bicep'= {
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
     fhirServiceName: fhirNameResolved
-    exportStoreName: exportStoreNameResolved
+    exportStoreName: functionBase.outputs.storageAccountName
     location: location
     tenantId: tenantId
     appTags: appTags
@@ -129,6 +127,16 @@ module functionBase 'core/functionHost.bicep' = {
   }
 }
 
+@description('Deploy Redis Cache for use as External Cache for APIM')
+module redis './core/redisCache.bicep'= {
+  name: 'redisCacheDeploy'
+  scope: rg
+  params: {
+    apiManagementServiceName: apimName
+    location: location
+  }
+}
+
 @description('Azure Health Data Services Toolkit auth custom operation function app')
 module authCustomOperation './app/authCustomOperation.bicep' = {
   name: 'authCustomOperationDeploy'
@@ -148,6 +156,9 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
+    redisCacheId: redis.outputs.redisCacheId
+    redisApiVersion: redis.outputs.redisApiVersion
+    redisCacheHostName: redis.outputs.redisCacheHostName
   }
 }
 
@@ -216,10 +227,22 @@ module apim './core/apiManagement.bicep'= {
     publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
-    smartAuthFunctionBaseUrl: authCustomOperation.outputs.functionAppUrl
-    exportFunctionBaseUrl: exportCustomOperation.outputs.functionAppUrl
+    smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
+    exportFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+  }
+}
+
+@description('Link Redis Cache to APIM')
+module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
+  name: 'apimRedisLinkDeploy'
+  scope: rg
+  params: {
+    apiManagementServiceName: apimName
+    redisApiVersion: redis.outputs.redisApiVersion
+    redisCacheHostName: redis.outputs.redisCacheHostName
+    redisCacheId: redis.outputs.redisCacheId
   }
 }
 
@@ -256,12 +279,11 @@ output Location string = location
 output TenantId string = tenantId
 output FhirUrl string = fhirUrl
 output FhirAudience string = authCustomOperation.outputs.authCustomOperationAudience
-output ExportStorageAccountUrl string = 'https://${exportStoreName}.blob.${environment().suffixes.storage}'
+output ExportStorageAccountUrl string = 'https://${functionBase.outputs.storageAccountName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
 output BackendServiceKeyVaultStore string = backendServiceVaultName
 output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
-output CacheContainer string = authCustomOperation.outputs.cacheContainer
 
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 

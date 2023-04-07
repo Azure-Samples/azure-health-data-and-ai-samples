@@ -15,6 +15,13 @@ You will need to add the `fhirUser` claim to each of your test user accounts. Fo
 Changing an Microsoft Graph directory extensions is done through API requests to Microsoft Graph. You can use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will just need the `object id` of your patient test user. In a production scenario, you would integrate this into your user registration process.
 
 1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
+    
+    Windows:
+    ```powershell
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    ```
+
+    Mac/Linux:
     ```bash
     pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
