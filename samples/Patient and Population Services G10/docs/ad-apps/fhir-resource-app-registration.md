@@ -27,6 +27,13 @@ This application registration is used to customize the access token sent to the 
     azd env set FhirResourceAppId <FHIR Resource App Id>
     ```
 1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
+    
+    Windows:
+    ```powershell
+    powershell ./scripts/Create-FhirUserDirectoryExtension.ps1
+    ```
+    
+    Mac/Linux
     ```bash
     pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```

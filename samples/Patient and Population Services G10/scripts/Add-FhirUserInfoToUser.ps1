@@ -20,7 +20,7 @@ Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) -
 
 if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 
-    Write-Host "FhirResourceAppId is not set."
+    Write-Host "FhirResourceAppId parameter blank, looking in azd enviornment configuration...."
 
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
@@ -37,17 +37,17 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 }
 
 if (-not $FhirResourceAppId) {
-    Write-Error "FhirResourceAppId is not set."
+    Write-Error "FhirResourceAppId is STILL not set. Exiting."
     exit
 }
 
 if (-not $UserObjectId) {
-    Write-Error "UserObjectId is not set."
+    Write-Error "UserObjectId is not set. Exiting."
     exit
 }
 
 if (-not $FhirUserValue) {
-    Write-Error "FhirUserValue is not set."
+    Write-Error "FhirUserValue is not set. Exiting."
     exit
 }
 
