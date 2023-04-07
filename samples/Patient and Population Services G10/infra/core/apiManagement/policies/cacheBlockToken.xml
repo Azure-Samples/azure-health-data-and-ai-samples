@@ -11,7 +11,7 @@
             }
             return uti;
         }" />
-        <cache-store-value key="@("access" + ((string)context.Variables["uti"]))" value="true" duration="5000" caching-type="prefer-external" />
+        <cache-store-value key="@("access" + ((string)context.Variables["uti"]))" value="true" duration="6000" caching-type="prefer-external" />
         <return-response>
             <set-status code="204" reason="No Content" />
         </return-response>

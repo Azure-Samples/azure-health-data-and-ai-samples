@@ -51,7 +51,7 @@ if (-not $FhirUserValue) {
     exit
 }
 
-$graphEndpoint = "https://graph.microsoft.com/v1.0"
+$graphEndpoint = "https://graph.microsoft.com/beta"
 $userUrl = "$graphEndpoint/users/$UserObjectId"
 $appIdFormatted = $FhirResourceAppId.Replace("-", "")
 $token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
