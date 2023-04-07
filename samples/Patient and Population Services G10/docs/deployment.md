@@ -50,7 +50,7 @@ Next you will need to clone this repository and prepare your environment for dep
     azd up
     ```
 
-*NOTE:* This will take about an 15 minutes to deploy.
+*NOTE:* This will take around 15 minutes to deploy.
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
