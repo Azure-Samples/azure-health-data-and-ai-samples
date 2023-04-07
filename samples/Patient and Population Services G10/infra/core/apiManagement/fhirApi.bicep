@@ -166,6 +166,14 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
       method: 'GET'
       urlTemplate: '/*'
     }
+
+    resource allOtherRequestsOperationsGetPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('./policies/fhirRequestCheckToken.xml')
+      }
+    }
   }
 
   resource allOtherRequestsOperationsPost 'operations' = {

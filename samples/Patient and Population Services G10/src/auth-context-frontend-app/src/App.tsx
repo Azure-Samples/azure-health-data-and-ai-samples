@@ -24,9 +24,20 @@ const appStyle: IStackStyles = {
 }
 export const App: FC = () => {
   
-  // Check if there are already accounts in the browser session
+// Check if there are already accounts in the browser session
   // If so, set the first account as the active account
   const accounts = msalInstance.getAllAccounts();
+  if (accounts && accounts.length == 0) {
+    console.log("no account")
+  } else if (accounts && accounts.length > 1)
+  {
+    console.log("multiple accounts")
+  }
+  else
+  {
+    msalInstance.setActiveAccount(accounts[0]);
+  }
+
 
   msalInstance.addEventCallback((event: EventMessage) => {
     if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
@@ -40,6 +51,7 @@ export const App: FC = () => {
       console.log(event);
     }
   });
+
 
   const authRequest = {
     scopes: scopes,

@@ -6,6 +6,7 @@ import { IMsalContext, useMsal  } from '@azure/msal-react';
 import { getAppConsentInfo, getLoginHint, saveAppConsentInfo } from './GraphConsentService';
 import { saveCacheString } from './ContextCacheService';
 import { apiEndpoint } from './Config';
+import { AccountInfo } from '@azure/msal-browser';
 
 
 // Core application context object.
@@ -25,6 +26,7 @@ export interface AppUser {
   id: string
   displayName: string
   email: string
+  account: AccountInfo
 };
 
 // Information about the application the user is logging into.
@@ -117,29 +119,7 @@ function useProvideAppContext() {
     msal.instance.logoutRedirect();
   };
 
-  const setUserIfEmpty = async () : Promise<string | undefined> => {
-    if (!user && applicationId && msal?.instance && error == undefined) {
-
-      let account = msal.instance.getActiveAccount();
-
-      if (account) {
-        try {
-          setUser({
-            id: account?.localAccountId || "",
-            displayName: account?.name ?? "Guest User",
-            email: account?.username ?? ""
-          });
-        }
-        catch (err: any) {
-          displayError('Error getting user', error);
-        }
-      }
-
-      return account?.localAccountId
-    }
-  };
-
-const handleEhrLaunch = async (userId: string | undefined, launch: string | undefined) => {
+  const handleEhrLaunch = async (userId: string | undefined, launch: string | undefined) => {
   // see if user is launching from EHR and has launch parameter
   if (launch == undefined || userId == undefined)
   {
@@ -161,8 +141,8 @@ const handleEhrLaunch = async (userId: string | undefined, launch: string | unde
 
   // redirect the app to the EHR launch URL
   const newQueryParams = queryParams;
-  const hint = await getLoginHint();
-  if (hint.length > 0) {
+  const hint = user?.account.idTokenClaims?.login_hint;
+  if (hint && hint.length > 0) {
     newQueryParams.set("login_hint", hint)
   }
   newQueryParams.set("user", "true");
@@ -256,10 +236,11 @@ const updateScopesWhereNeeded = async (modifiedAuthInfo: AppConsentInfo) : Promi
   newQueryParams.set("user", "true");
   newQueryParams.set("prompt", "consent");
 
-  const hint = await getLoginHint();
-  if (hint.length > 0) {
+  const hint = user?.account.idTokenClaims?.login_hint;
+  if (hint && hint.length > 0) {
     newQueryParams.set("login_hint", hint)
   }
+
   window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
 }
 
@@ -270,22 +251,33 @@ useEffect(() => {
     }
   }
   else {
+    
     if (error == undefined) {
       (async () => {
-        let userId = await setUserIfEmpty();
+        const account = msal.instance.getActiveAccount();
 
-        if (requestedScopes.replace('%20', ' ').replace('+', ' ').split(' ').indexOf('launch') > -1)
+        if (account && user == undefined)
         {
-          handleEhrLaunch(userId, launch);
-        }
-        else
-        {
-          setAppConsentInfoIfEmpty();
+          setUser({
+            id: account?.localAccountId || "",
+            displayName: account?.name ?? "Guest User",
+            email: account?.username ?? "",
+            account: account
+          });
+
+          if (requestedScopes.replace('%20', ' ').replace('+', ' ').split(' ').indexOf('launch') > -1)
+          {
+            await handleEhrLaunch(account?.localAccountId, launch);
+          }
+          else
+          {
+            setAppConsentInfoIfEmpty();
+          }
         }
       })();
     }
   }
-}, []);
+}, [msal.instance.getActiveAccount()]);
 
 const requestedScopesDisplay = requestedScopes?.split(" ").filter(x => !shouldScopeBeHiddenAndAlwaysEnabled(x)) || [];
 

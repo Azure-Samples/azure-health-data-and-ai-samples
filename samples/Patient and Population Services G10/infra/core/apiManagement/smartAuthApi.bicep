@@ -151,6 +151,23 @@ resource smartAuthApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' 
     }
   }
 
+  resource blockAccessTokenPost 'operations' = {
+    name: 'blockAccessTokenPost'
+    properties: {
+      displayName: 'Block Access Token'
+      method: 'POST'
+      urlTemplate: '/block-access-token'
+    }
+
+    resource blockAccessTokenPostPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/cacheBlockToken.xml')
+      }
+    }
+  }
+
   resource smartApiDiagnostics 'diagnostics' = {
     name: 'applicationinsights'
     properties: {
