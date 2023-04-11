@@ -5,7 +5,7 @@ This sample will focus on how to visualize FHIR data that **has already been con
 ## End-to-end pipeline
 The end-to-end pipeline is shown in the diagram below, starting with FHIR data in a FHIR server. 
 <img src="./images/analyticspipelinediagram.png" height="220">
-- In **Stage 1: Convert FHIR data to Parquet**, FHIR data in a FHIR server is converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. This is done with the [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool, or the analytics connector private preview. 
+- In **Stage 1: Convert FHIR data to Parquet**, FHIR data in a FHIR server is converted to Parquet files (to help facilitate easier data analysis) and stored in Data Lake. This is done with the [OSS FHIR to Synapse Sync Agent](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) tool.
 - In **Stage 2: Create external tables**, external tables and views of that Parquet files are made in Synapse.
 - In **Stage 3: Query and Visualize**, Stored Procedures query the data to visualize in a PowerBI dashboard. This sample mainly focuses on Stage 3, but pointers will be provided for Stage 1 and 2. 
  
