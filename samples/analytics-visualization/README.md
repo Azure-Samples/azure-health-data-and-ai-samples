@@ -13,13 +13,13 @@ The end-to-end pipeline is shown in the diagram below, starting with FHIR data i
 # Stage 1: Convert FHIR data to Parquet
 First, convert your FHIR data into Parquet files and store them in Azure Data Lake. Converting FHIR data into Parquet files makes it easier to facilitate data analysis later on.
 
-To use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet-option-b-using-provided-sample-data) to create a Data Lake and copy our sample Parquet files inside. Please note that this only copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
+To use our provided sample data parquet files, follow steps in the "Stage 1" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-1-convert-fhir-data-to-parquet) to create a Data Lake and copy our sample Parquet files inside. Please note that this only copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
 
 
 # Stage 2: Create external tables and views
 Next, create external tables and views from the Parquet files. 
 
-To use provided Parquet sample files to run this sample, please follow steps in "Stage 2" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-2-create-external-tables-and-views-option-b-using-provided-sample-data)
+To use provided Parquet sample files to run this sample, please follow steps in "Stage 2" section in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#stage-2-create-external-tables-and-views)
 
 
 # Stage 3: Query and Visualize
@@ -41,7 +41,7 @@ Note: This is a simple, basic example to demonstrate capabilities of the FHIR an
 
 To use provided Parquet sample files to run this sample, the stored procedure was already created from the Bicep template and is available in the database.
 
-If you would like to explore (view/edit) the stored procedure in Microsoft SQL Server Management Studio, detailed instructions can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#connecting-to-microsoft-sql-server-management-studio-option-b-using-provided-sample-data) to connect to the database using the “Serverless SQL endpoint”.
+If you would like to explore (view/edit) the stored procedure in Microsoft SQL Server Management Studio, detailed instructions can be found in the [Appendix](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/analytics-visualization/docs/Appendix.md#connecting-to-microsoft-sql-server-management-studio) to connect to the database using the “Serverless SQL endpoint”.
 
 
 ## Visualize: Checking and editing the dashboard in Power BI desktop application
