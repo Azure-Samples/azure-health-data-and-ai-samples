@@ -1,9 +1,9 @@
 # Appendix
 
-## Stage 1: Convert FHIR data to Parquet (Option B using provided sample data) 
-If you do not have your own sample FHIR data, or you would like to use our provided sample data parquet files, below steps will create a Data Lake and copy our sample Parquet files inside.
+## Stage 1: Convert FHIR data to Parquet 
+To use our provided sample data parquet files, below steps will create a Data Lake and copy our sample Parquet files inside.
 
-Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample. If you have your own sample FHIR data that needs to be analyzed, please follow the above steps in Option 1 to use the [FHIR to Synapse Sync Agent OSS tool](https://github.com/microsoft/FHIR-Analytics-Pipelines/blob/main/FhirToDataLake/docs/Deploy-FhirToDatalake.md) to convert the FHIR data into Parquet files. 
+Please note that this copies over sample Parquet files into Data Lake and is only used to quickly deploy this sample.
 
 #### Prerequisites needed
 - An Azure Account to create Data lake and Synapse workspace
@@ -46,7 +46,7 @@ You must provide the following roles to your account to run the PowerShell scrip
 3. Move on to "Stage 2: Create external tables and views" [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/analytics-visualization#stage-2-create-external-tables-and-views).
 
 
-## Stage 2: Create external tables and views (Option B using provided sample data)
+## Stage 2: Create external tables and views
 1. Provide access of the Storage Account to the Synapse Workspace.  
 To enable Synapse to read the data from the Storage Account, assign the Storage Blob Data Contributor role to it. In your Storage Account created during the pipeline installation, select the Access Control (IAM), assign Store Blob Data Contributor, and select Managed Identity while adding members to the role. You should be able to pick your Synapse workspace instance from the list of managed identities shown on the portal.
 
@@ -120,48 +120,7 @@ To enable Synapse to read the data from the Storage Account, assign the Storage 
 5. Move on to "Stage 3: Query and Visualize" [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/analytics-visualization#stage-3-query-and-visualize)
 
 
-## Uploading stored procedures for querying (Option A: Using your own sample data + FHIR to Synapse Sync Agent or analytics connector private preview) 
-Follow these steps to upload the stored procedures for querying.
-
-1.	Find the “sp_getBCSComplianceDetails.sql” file in this repo (..azure-health-data-services-samples/samples/analytics-visualization/scripts/sql/Stored_Procedure)
-
-2.	Open  “Microsoft SQL Server Management Studio”, and connect to your database server using "Serverless SQL endpoint".  
-The Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
-
-![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)  
-
-Open the “Microsoft SQL Server Management Studio”, from “Object Explorer” menu click on “Connect” and select “Database Engine” from list.
-
-![image](https://user-images.githubusercontent.com/116351573/209016930-88397ea6-1972-457a-9ca1-7317fc9532a7.png)  
-
-Enter serverless SQL endpoint from Synapse workspace into server name textbox, choose authentication method, provide username, and click connect:
-
-![image](https://user-images.githubusercontent.com/116351573/209016965-06591ed5-8a61-4716-b143-1c12433ee3e3.png)  
-
-After clicking connect you will be asked to provide authentication details for user, once user authentication is done, database connection will be done:
-
-![image](https://user-images.githubusercontent.com/116351573/209017010-390892c6-4063-455b-a6fd-ceea7c714b76.png)  
-
-In below sample, the database is called “fhirdb”
-
-![image](https://user-images.githubusercontent.com/116351573/209015656-67b40cb3-b343-4b2a-b54a-ffa27d7cdd16.png)
-
-3.	Click “File” menu choose “Open” and select “File” option, browse to the location of the “sp_getBCSComplianceDetails.sql” file from step 1:
-
-![image](https://user-images.githubusercontent.com/116351573/209015736-dc345b74-bc87-4d59-960a-33d6f8a41abf.png)
-
-4.	Select the database where you wish to create stored procedure, update the database name in script and click “Execute”.
-
-![image](https://user-images.githubusercontent.com/116351573/209015945-75df4542-3fab-4275-8079-174346da42fd.png)
-
-5.	Verify the output for any success and check the stored procedure created under “Stored Procedures” folder in database:
-
-![image](https://user-images.githubusercontent.com/116351573/209016007-05d2f17d-0209-48df-99cc-d7d2778c6d8c.png)
-
-6.	Proceed to “Visualize: Checking and editing the dashboard in Power BI desktop application” section [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/analytics-visualization#visualize-checking-and-editing-the-dashboard-in-power-bi-desktop-application).
-
-
-## Connecting to Microsoft SQL Server Management Studio (Option B: Using provided sample data)
+## Connecting to Microsoft SQL Server Management Studio
 The Serverless SQL endpoint can be found in Synapse Workspace as highlighted below:
 
 ![image](https://user-images.githubusercontent.com/116351573/209016888-8836d4e6-59bd-4eac-80a8-920233c13345.png)
