@@ -30,7 +30,7 @@ Make sure you have the pre-requisites listed below
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
-1. Use the terminal or your git client to clone this repo. Open a terminal to the `Patient and Population Services G10` folder.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `patientandpopulationservices-smartonfhir-oncg10` folder.
 1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
 1. Run `azd env new` to create a new deployment environment.
     - *NOTE:* Environment name will be the prefix for all of your resources.
