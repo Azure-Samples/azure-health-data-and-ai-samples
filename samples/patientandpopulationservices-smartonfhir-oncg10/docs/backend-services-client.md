@@ -8,7 +8,47 @@
 - Store the private in KeyVault
 - JWKS: public azure storage container?
 
-1. Generate the private key
+1. Generate the private key in Azure KeyVault
+  - Add a key
+  - RSA 2048 
+
+![CleanShot 2023-04-18 at 11 31 17](https://user-images.githubusercontent.com/753437/232870701-b9553829-4309-43f6-afdf-ee123a93b374.png)
+
+
+2. Get the public key in C#
+
+```c#
+RSA rsa1 = RSA.Create(2048);
+
+RsaSecurityKey publicKey1 = new(rsa1.ExportParameters(false))
+{
+    KeyId = "keyId1"
+};
+
+RsaSecurityKey publicAndPrivateKey1 = new(rsa1.ExportParameters(true))
+{
+    KeyId = "keyId1"
+};
+
+```
+
+3. Generate JWKS.
+
+```c#
+IList<JsonWebKey> jwksList = new List<JsonWebKey>
+{
+    jwk1,
+};
+
+Dictionary<string, IList<JsonWebKey>> jwksDict = new() 
+{ 
+    { "keys", jwksList }
+};
+
+string jwksStr = SerializeToJson(jwksDict);
+```
+
+4. Upload the `jwksSrt` to public storage.
 
 ## Runtime signing of the client assestion JWT
 
