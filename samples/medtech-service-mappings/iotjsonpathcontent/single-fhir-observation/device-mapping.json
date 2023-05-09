@@ -1,0 +1,20 @@
+{
+  "templateType": "CollectionContent",
+  "template": [
+    {
+      "templateType": "IotJsonPathContent",
+      "template": {
+        "typeName": "HeartRate",
+        "typeMatchExpression": "$..[?(@Body.HeartRate)]",
+        "patientIdExpression": "$.SystemProperties.iothub-connection-device-id",
+        "values": [
+          {
+            "required": true,
+            "valueExpression": "$.Body.HeartRate",
+            "valueName": "HeartRate"
+          }
+        ]
+      }
+    }
+  ]
+}

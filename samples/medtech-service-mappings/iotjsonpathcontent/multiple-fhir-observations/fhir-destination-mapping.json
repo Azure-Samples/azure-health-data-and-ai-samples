@@ -1,0 +1,132 @@
+{
+  "templateType": "CollectionFhir",
+  "template": [
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "system": "http://loinc.org",
+            "code": "8867-4",
+            "display": "Heart rate"
+          }
+        ],
+        "typeName": "HeartRate",
+        "value": {
+          "system": "http://unitsofmeasure.org",
+          "code": "count/min",
+          "unit": "count/min",
+          "valueName": "HeartRate",
+          "valueType": "Quantity"
+        }
+      }
+    },
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "system": "http://loinc.org",
+            "code": "80404-7",
+            "display": "R-R interval.standard deviation (Heart rate variability)"
+          }
+        ],
+        "typeName": "HeartRateVariability",
+        "value": {
+          "system": "http://unitsofmeasure.org",
+          "code": "ms",
+          "unit": "ms",
+          "valueName": "HeartRateVariability",
+          "valueType": "Quantity"
+        }
+      }
+    },
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "system": "http://loinc.org",
+            "code": "9279-1",
+            "display": "Respiratory rate"
+          }
+        ],
+        "typeName": "RespiratoryRate",
+        "value": {
+          "system": "http://unitsofmeasure.org",
+          "code": "count/min",
+          "unit": "count/min",
+          "valueName": "RespiratoryRate",
+          "valueType": "Quantity"
+        }
+      }
+    },
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5",
+            "display": "Body temperature"
+          }
+        ],
+        "typeName": "BodyTemperature",
+        "value": {
+          "system": "http://unitsofmeasure.org",
+          "code": "degC",
+          "unit": "degC",
+          "valueName": "BodyTemperature",
+          "valueType": "Quantity"
+        }
+      }
+    },
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "display": "Blood pressure panel",
+            "code": "35094-2",
+            "system": "http://loinc.org"
+          }
+        ],
+        "typeName": "BloodPressure",
+        "components": [
+          {
+            "codes": [
+              {
+                "system": "http://loinc.org",
+                "code": "8462-4",
+                "display": "Diastolic blood pressure"
+              }
+            ],
+            "value": {
+              "system": "http://unitsofmeasure.org",
+              "code": "mmHg",
+              "unit": "mmHg",
+              "valueName": "Diastolic",
+              "valueType": "Quantity"
+            }
+          },
+          {
+            "codes": [
+              {
+                "system": "http://loinc.org",
+                "code": "8480-6",
+                "display": "Systolic blood pressure"
+              }
+            ],
+            "value": {
+              "system": "http://unitsofmeasure.org",
+              "code": "mmHg",
+              "unit": "mmHg",
+              "valueName": "Systolic",
+              "valueType": "Quantity"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

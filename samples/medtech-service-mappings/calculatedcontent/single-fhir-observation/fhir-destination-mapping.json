@@ -1,0 +1,25 @@
+{
+  "templateType": "CollectionFhir",
+  "template": [
+    {
+      "templateType": "CodeValueFhir",
+      "template": {
+        "codes": [
+          {
+            "code": "8867-4",
+            "system": "http://loinc.org",
+            "display": "Heart rate"
+          }
+        ],
+        "typeName": "heartrate",
+        "value": {
+          "system": "http://unitsofmeasure.org",
+          "code": "count/min",
+          "unit": "count/min",
+          "valueName": "hr",
+          "valueType": "Quantity"
+        }
+      }
+    }
+  ]
+}
