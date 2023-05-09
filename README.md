@@ -64,7 +64,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 |------|-----------|
-|[MedTech service mappings](/samples/medtech-service-mappings/)|These samples provide working examples of test device messages and the conforming and valid [device](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-device-mapping) and [FHIR destination](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-fhir-destination-mapping) mappings for use with the [MedTech service](https://learn.microsoft.com/azure/healthcare-apis/iot/overview) and [Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).|
+|[MedTech service mappings](/samples/medtech-service-mappings/)|These samples provide conforming and valid [device](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-device-mapping) and [FHIR destination](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-fhir-destination-mapping) mappings and test device messages for use with the [MedTech service](https://learn.microsoft.com/azure/healthcare-apis/iot/overview) and [Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).|
 
 NOTE: These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data.
 

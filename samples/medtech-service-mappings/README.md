@@ -1,8 +1,5 @@
 # The MedTech service device and FHIR destination mappings samples overview
 
-> [!NOTE]
-> [Fast Healthcare Interoperability Resources (FHIR&#174;)](https://www.hl7.org/fhir/) is an open healthcare specification.
-
 The MedTech service requires two types of JSON mappings that are added to your MedTech service through the Azure portal or Azure Resource Manager API. The device mapping is the first type and controls mapping values in the device data sent to the MedTech service to an internal, normalized data object. The device mapping contains expressions that the MedTech service uses to extract types, device identifiers, measurement date time, and measurement value(s). The FHIR destination mapping is the second type and controls how the normalized data is mapped to FHIR Observations.
 
 ## Samples content
