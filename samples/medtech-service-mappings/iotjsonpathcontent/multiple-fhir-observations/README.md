@@ -12,7 +12,7 @@ In this sample, the test device message will create:
 Based on these observations in the test message:
 
 - HeartRate
-- RespiratoryRate
 - HeartRateVariability
+- RespiratoryRate
 - BodyTemperature
 - BloodPressure

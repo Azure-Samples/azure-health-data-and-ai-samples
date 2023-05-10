@@ -8,7 +8,7 @@ In this sample, the test device message will create:
 
 Based on these observation in the test device message:
 
-- HeartRate
-- Steps
-- Hrv
-- BloodPressure
+- heartrate
+- steps
+- hrv
+- bloodpressure

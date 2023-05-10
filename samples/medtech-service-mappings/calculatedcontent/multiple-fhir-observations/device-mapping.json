@@ -10,7 +10,7 @@
         "timestampExpression": "$.measurementdatetime",
         "values": [
           {
-            "required": "true",
+            "required": true,
             "valueExpression": "$.heartrate",
             "valueName": "hr"
           }
@@ -26,31 +26,9 @@
         "timestampExpression": "$.measurementdatetime",
         "values": [
           {
-            "required": "true",
+            "required": true,
             "valueExpression": "$.steps",
             "valueName": "steps"
-          }
-        ]
-      }
-    },
-    {
-      "templateType": "CalculatedContent",
-      "template": {
-        "typeName": "bloodpressure",
-        "typeMatchExpression": "$..[?(@systolic && @diastolic)]",
-        "deviceIdExpression": "$.deviceid",
-        "patientIdExpression": "$.patientid",
-        "timestampExpression": "$.measurementdatetime",
-        "values": [
-          {
-            "required": "true",
-            "valueExpression": "$.systolic",
-            "valueName": "systolic"
-          },
-          {
-            "required": "true",
-            "valueExpression": "$.diastolic",
-            "valueName": "diastolic"
           }
         ]
       }
@@ -64,9 +42,31 @@
         "timestampExpression": "$.measurementdatetime",
         "values": [
           {
-            "required": "true",
+            "required": true,
             "valueExpression": "$.hrv",
             "valueName": "hrv"
+          }
+        ]
+      }
+    },
+    {
+      "templateType": "CalculatedContent",
+      "template": {
+        "typeName": "bloodpressure",
+        "typeMatchExpression": "$..[?(@systolic && @diastolic)]",
+        "deviceIdExpression": "$.deviceid",
+        "patientIdExpression": "$.deviceid",
+        "timestampExpression": "$.measurementdatetime",
+        "values": [
+          {
+            "required": true,
+            "valueExpression": "$.systolic",
+            "valueName": "systolic"
+          },
+          {
+            "required": true,
+            "valueExpression": "$.diastolic",
+            "valueName": "diastolic"
           }
         ]
       }

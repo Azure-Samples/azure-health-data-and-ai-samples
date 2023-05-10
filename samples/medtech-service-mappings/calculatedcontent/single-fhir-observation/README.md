@@ -8,4 +8,4 @@ In this sample, the test device message will create:
 
 Based on this observation in the test device message:
 
-- HeartRate
+- heartrate

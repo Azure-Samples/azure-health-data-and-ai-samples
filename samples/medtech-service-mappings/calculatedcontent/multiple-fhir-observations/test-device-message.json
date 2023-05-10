@@ -1,11 +1,11 @@
 {
-  "HeartRate": 78,
-  "Steps": 1000,
-  "HeartRateVariability": 30,
-  "BloodPressure": {
-    "Systolic": 120,
-    "Diastolic": 80
+  "heartrate": 78,
+  "steps": 1000,
+  "hrv": 30,
+  "bloodpressure": {
+    "systolic": 120,
+    "diastolic": 80
   },
-  "endDate": "2023-03-13T22:46:01.8750000",
-  "deviceId": "device01"
+  "measurementdatetime": "2023-03-13T22:46:01.8750000",
+  "deviceid": "device01"
 }
