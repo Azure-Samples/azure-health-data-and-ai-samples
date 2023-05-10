@@ -4,7 +4,7 @@ The MedTech service requires two types of JSON mappings that are added to your M
 
 ## Samples content
 
-Each MedTech service samples folder will contain the following resources:
+Each MedTech service samples folder contains the following resources:
 
 * Device mapping
 * FHIR destination mapping
