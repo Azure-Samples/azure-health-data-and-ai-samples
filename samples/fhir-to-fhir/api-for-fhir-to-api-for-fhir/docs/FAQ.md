@@ -1,4 +1,4 @@
-# FHIR TO FHIR (GEN1 TO GEN1) DATA TRANSFER FAQS
+# FAQ's for FHIR-to-FHIR data movement
 
 1. How do we perform FHIR to FHIR (Gen1 to Gen1) data transfer?
    + For implementation details and architecture overview please refer the [documentation](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir#copying-data-from-one-azure-api-for-fhir-server-to-another-azure-api-for-fhir-server).
@@ -44,7 +44,7 @@
 	+ Users can check for the possible reasons for issues with copy command from [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md#copying-data).
 
 12. How do users handle issues encountered during import by FHIR Loader?
-	+ There are various errors which users could encounter for FHIR Loader while importing data, The details of troubleshooting FHIR loader issue are available [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md#fhir-bulk-loader).
+	+ There are various errors which users could encounter for FHIR Loader while importing data, the details of troubleshooting FHIR loader issue are available [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md#fhir-bulk-loader).
 
 13.	Do we need two storage accounts for holding exported data and to be associated with FHIR loader?
     + No users don’t need two storage accounts, Users can use storage account that gets created with FHIR Loader installation, Export the data from source Azure API for FHIR to a new container in storage account linked to FHIR Loader.
@@ -52,7 +52,7 @@
 14.	Can we run copy script from local machine OR it must be from Azure PowerShell?
 	+ Yes, copy script can be run from local machine for that user should install the Az CLI and AZ copy locally and log into the azure account.
       
-       `Recommendation`: Users should run the copy script from Azure PowerShell.
+       **Recommendation**: Users should run the copy script from Azure PowerShell.
 
 15.	How to rerun the failed files?
 	+ Users have to rerun the failed files manually, more details are available [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Error_Handling.md#fhir-bulk-loader).
@@ -64,15 +64,27 @@
     + All resources should be in the same region. Performance will degrade and egress costs will apply if this is not the case.
 
 18.	How do I deploy this into an environment with "private networking"?
-
+    
+    To create environment with private network you need to disable public access of deployed azure resources and connect them within virtual network, you can follow below steps:
     1. Create virtual network, detail steps given [here](https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal#create-a-virtual-network). 
-    2. In your Fhir Loader function app, select **Networking**, then to deny public access, select [Access restriction](https://learn.microsoft.com/en-us/azure/app-service/overview-access-restrictions#app-access) and unselect the check box and save.
+    2. Once the Fhir Loader function app is deployed follow below steps:
        
-       To enable **VNet integration**, select **Networking**, then under **VNet Integration** select **Click here to configure**. then Select **Add VNet** (Select the virtual network created in step i).
+       + Select **Networking**, then under [Access restriction](https://learn.microsoft.com/en-us/azure/app-service/overview-access-restrictions#app-access) unselect the check box and save.
+       + To enable **VNet integration** for the function app, follow steps given [here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-networking-options?tabs=azure-cli#enable-virtual-network-integration) (select the virtual network created in step i).
+       + Creating Private endpoint for function app
+          + Select **Networking** then under **Private endpoints**. 
+          + Select **Add**, while creating private endpoint select the virtual network created in step i.
 
-       For Creating Private endpoint, select **Networking** then click **Private endpoints** and create a new private endpoint.
-    3. Go to the storage account, select **Networking**, under **Public network access**, select option **Enabled from selected virtual networks and IP addresses** and add existing virtual network created in step i.
-    4. To Enable Private endpoints For **Health Data Services workspace**, select **Networking** option, Create Private endpoint and under **Allow access from** select option **Private endpoints**, select the created private endpoint and approve the same.
+    3. Change **Public network access** for **Storage account**, which is deployed with Fhir loader function app 
+       + Select **Networking** under **Security + networking**.
+       + Under **Public network access**, select option **Enabled from selected virtual networks and IP addresses**, more details steps available [here](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal#change-the-default-network-access-rule).
+       + Add existing virtual network created in step i.
+
+    4. Enable Private endpoints for **Health Data Services workspace**
+       + Select **Networking** under **Settings**.
+       + Click **Private endpoint** to create new private endpoint.
+       + Under **Allow access from** select option **Private endpoints**. 
+       + Select the created private endpoint and approve the same.
 
 
 
