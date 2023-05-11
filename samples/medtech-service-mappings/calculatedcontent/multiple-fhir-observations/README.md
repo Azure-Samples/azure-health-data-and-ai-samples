@@ -6,7 +6,7 @@ In this sample, the test device message will create:
 - Four measurements
 - Four FHIR resources
 
-Based on these observation in the test device message:
+Based on these observations in the test device message:
 
 - heartrate
 - steps
