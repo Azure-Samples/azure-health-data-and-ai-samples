@@ -1,7 +1,9 @@
 # FAQ's for FHIR-to-FHIR data movement
 
 1. How do we perform FHIR to FHIR (Gen1 to Gen1) data transfer?
-   + For implementation details and architecture overview please refer the [documentation](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir#copying-data-from-one-azure-api-for-fhir-server-to-another-azure-api-for-fhir-server).
+   + For implementation details and architecture overview please refer the [documentation](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir#copying-data-from-one-azure-api-for-fhir-server-to-another-azure-api-for-fhir-server). 
+     
+     **Note**: This data transfer will only work if you have full access to create resources in your subscription and are not using private networking.
 
 2. How to deploy FHIR loader?
    + Go to [FHIR Bulk Loader](https://github.com/microsoft/fhir-loader) and follow the [deployment steps](https://github.com/microsoft/fhir-loader#deployment).
@@ -17,7 +19,7 @@
      More details could be found in the readme document of the app [here](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir).
 
 5. How do you check when the FHIR loader is done uploading?
-   + Users must check the containers i.e., "bundles" and "ndjson” to know about FHIR loader completion. FHIR Loader has completed loading when these containers are empty.
+   + Users must check the containers i.e., "bundles" and "ndjson" to know about FHIR loader completion. FHIR Loader has completed loading when these containers are empty.
 
 6.	Do users need to wait for one export to finish, then do the import, wait for import to finish, then kick off the next export?
     + Within each migration, users need to wait for export to finish before they can start import so FHIR Loader can import everything that was exported (i.e., wait for export#1 to finish before starting import#1). However, users can start export#2 while import#1 is finishing up. Users can only overlap though by a factor of 1, and exports need to be going to different containers.
@@ -32,7 +34,8 @@
  	+ For Destination FHIR server we need to configure number of RU, auto scaling, number of nodes and throttling limits, Configuration details could be found in document [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md#destination-fhir-server).
 
 8.	What configurations to be considered for FHIR Bulk Loader Applications?
-	+ Users can configure App Service plan, number of instances, number of fhir resources per bundle, more details could be found [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md#fhir-bulk-loader-application).
+	+ Users can configure App Service plan, number of instances, number of fhir resources per bundle, more details can be found [here](https://github.com/Azure-Samples/azure-health-data-services-samples/blob/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir/docs/Server_%26_App_Config.md#fhir-bulk-loader-application).
+    + To Enhance the Performance of **FHIR Loader**, details  can be found [here](https://github.com/microsoft/fhir-loader/blob/main/docs/performance.md).
 
 9.	How do users verify the data movement?
 	+ Users can follow [Data Movement Verification](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir#data-movement-verification) steps to verify the data import.
@@ -52,6 +55,8 @@
 14.	Can we run copy script from local machine OR it must be from Azure PowerShell?
 	+ Yes, copy script can be run from local machine for that user should install the Az CLI and AZ copy locally and log into the azure account.
       
+       **Note**: If the user is working with **private networks**, then above activity have to be done from an **execution environment** that can access the storage account(s). 
+       
        **Recommendation**: Users should run the copy script from Azure PowerShell.
 
 15.	How to rerun the failed files?
