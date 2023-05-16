@@ -9,7 +9,7 @@ In this sample, the test device message will create:
 - Five measurements
 - Five FHIR resources.
 
-Based on these observations in the test message:
+Based on these measurements in the test device message:
 
 - HeartRate
 - HeartRateVariability
