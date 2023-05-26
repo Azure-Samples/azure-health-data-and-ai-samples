@@ -1,11 +1,10 @@
-# # External Terminology Service integration with AHDS FHIR service
-
+# External Terminology Service integration with AHDS FHIR service
 
 
 Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations.
 
 ## Architecture
-This architecture explains how a web application communicates with a terminology service or FHIR service via an API management service(APIM).
+This architecture explains how a web application communicates with a terminology service and FHIR service via an Azure API management service (APIM).
 
 <img src="./images/Architecture.png" height="300">
 
@@ -13,8 +12,8 @@ This architecture explains how a web application communicates with a terminology
 ## The Architecture components
 - Static Web App: Blaze UI Application for lookup and translating the codes
 - API Management service (APIM): The call from the UI (Static Web Apps) hits the APIM and diverts the call as per the request to terminology server and FHIR service.
-  - Terminology server : Contains the Terminology server codes
-  - AHDS FHIR service : Contains the FHIR Data
+  - Terminology server : It contains terminology server codes
+  - AHDS FHIR service : It contains the FHIR Data
 
 ## Prerequisites
 
@@ -43,30 +42,38 @@ This architecture explains how a web application communicates with a terminology
 
 ## Overview
 
-This sample provides an applicatipn (APIM) which acts as Common Endpoint Application for External Terminology Service (Third Party Terminology Service) and AHDS FHIR Service along with a UI application and Postman scripts.
+This sample uses an Azure APIM which acts as Common Endpoint Application for External Terminology Service (Third Party Terminology Service) and AHDS FHIR Service along with a UI application and Postman scripts.
 
-The APIM handles the routing and authentication part for external terminology service and AHDS FHIR service.
+- **Azure API Management Service**
 
-__Note:__ The APIM uses client Id and client secret for authenticating calls to terminology service. APIM will need changes in case external terminology service uses different kind of authentication.
+	The APIM handles the routing and authentication part for external terminology service and AHDS FHIR service.
 
-UI application and Postman queries use common APIM endpoint for termonology service operations and FHIR service Operations.
+	The APIM routes $validate-code, $lookup, $translate, $expand, $find-matches, $subsumes and $closure operations to a third party terminology service and routes Search Observation and Save Observation operations to AHDS FHIR Service.
 
-The APIM routes $validate-code, $lookup, $translate, $expand, $find-matches, $subsumes and $closure operations to a third party terminology service.
+	- Useful links for APIM:
+		1.	How to create [Azure APIM instance](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance).
+		2. How to add [API](https://learn.microsoft.com/en-us/azure/api-management/add-api-manually) in Azure APIM instance.
+		3. Azure APIM [Policies](https://learn.microsoft.com/en-us/azure/api-management/policies/)
+		4. How to configure [authentication and authorization](https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview) in APIM.
 
-The APIM routes Seach Observation and Save Observation operations to AHDS FHIR Service.
+	__Note:__ The APIM uses client Id and client secret for authenticating calls to terminology service. APIM will need changes in case external terminology service uses different kind of authentication.
 
-The UI application demonstartes $lookup and $translate operations, those operations are routed to external terminology service by APIM. 
+- **Static Web App (UI) and Postman queries**
 
-The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
+	UI application and Postman queries use common APIM endpoint for termonology service operations and FHIR service Operations.
 
-The postman queries to demonstare Common Endpoint Application (APIM) routing calls to external terminology service and AHDS FHIR Service via single endpoint are available under `FHIR & Terminology Service Integration` folder in `Fhir Collection` postman collection available in [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo. For Queries in this folder, we are using APIM URL as our base URL and auth token of FHIR service to authenticate requests.
+	The UI application demonstartes $lookup and $translate operations, those operations are routed to external terminology service by APIM. 
 
+	The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
 
+	- **Postman Queries**
+
+	The postman queries to demonstare Common Endpoint Application (APIM) routing calls to external terminology service and AHDS FHIR Service via single endpoint are available under `FHIR & Terminology Service Integration` folder in `Fhir Collection` postman collection available in [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo. For Queries in this folder, we are using APIM URL as our base URL and auth token of FHIR service to authenticate requests.
 
 ## Setting up application locally 
 ### Visual Studio
 
-* Clone the repo, under path *\samples\fir=terminology-service-integration\ui-app, Open the `FhirBlaze.sln` project in Visual Studio.
+* Clone the repo, under path *\samples\fhir-terminology-service-integration\ui-app, Open the `FhirBlaze.sln` project in Visual Studio.
 * This application is based on sample app [here](https://github.com/microsoft/azure-health-data-services-workshop/tree/main/Challenge-10%20-%20Optional%20-%20FhirBlaze%20(Blazor%20app%20dev%20%2B%20FHIR)), please refer Readme file for configuration of project. Follow step 1 & 3 only, skip step 2.
 * Set FhirBlaze project as StartUpProject
 * Run FhirBlaze Application.
@@ -83,13 +90,13 @@ The postman queries to demonstare Common Endpoint Application (APIM) routing cal
 
 3. First/Landing page is "Lookup and Translate". It allows user to perform lookup and translate operations on terminology service.
 
-4. For Lookup, Enter code & select code system, Click on lookup button to get the code details from terminology service.
+4. For Lookup, Enter code & select code system, Click on lookup button to get theï¿½code details from terminology service.
 
 	<img src="./images/image3.png" height="380">
 
 	The reponse json is shown in "Response" text area and some important details from response are also shown in table at bottom of the page for easy readability.
 
-5. For Translate, Enter code, select source system & target system, Click on Translate button to get the default Terminology mappings between source code and target code.
+5. For Translate, Enter code, select source system & target system, Click onï¿½Translate button to get the default Terminology mappings between source code and target code.
 
 	<img src="./images/image4.png" height="380">
 
