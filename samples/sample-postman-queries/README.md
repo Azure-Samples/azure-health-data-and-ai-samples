@@ -39,7 +39,7 @@ The queries in this collection are categorized into the folders listed below:
     - DiagnosticReport - patient+category+date, patient+code+date 
     - Goal - patient+target-date, patient+lifecycle-status 
     - Service Request - patient+category+authored, patient+status, patient+category 
- 
+ - `FHIR & Terminology Service Integration`  - This folder has queries for FHIR and terminology service operations like $lookup, $translate, $validate, $expand, $subsumes, $find-matches and $closure. User need to set up APIM and use APIM url for these queries, please refer [fhir-terminology-service-integration](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/fhir-terminology-service-integration) sample.
 
 # Getting started
 To set up Postman for testing FHIR service, we'll walk through these steps:
