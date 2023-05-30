@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<UserSecretsId>d5d6b92a-009f-4333-aa32-2607d1ed3efc</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Data\**" />
+	  <Content Remove="Data\**" />
+	  <EmbeddedResource Remove="Data\**" />
+	  <None Remove="Data\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazored.Modal" Version="7.1.0" />
+		<PackageReference Include="DiffPlex" Version="1.7.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.5" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Graph.Beta" Version="4.6.0-preview" />
+		<PackageReference Include="Microsoft.PowerBI.Api" Version="4.6.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FhirBlaze.SharedComponents\FhirBlaze.SharedComponents.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="BlazorTextDiff">
+			<HintPath>bin\Debug\net6.0\BlazorTextDiff.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Folder Include="wwwroot\css\modal\" />
+	</ItemGroup>
+	
+</Project>
