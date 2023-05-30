@@ -1,0 +1,64 @@
+{
+  "templateType": "CollectionContent",
+  "template": [
+    {
+      "templateType": "CalculatedContent",
+      "template": {
+        "typeName": "DeviceADataElements",
+        "typeMatchExpression": "$..[?(@.deviceType == 'deviceTypeA')]",
+        "deviceIdExpression": "$.deviceId",
+        "timestampExpression": "$.matchedToken.timestamp",
+        "patientIdExpression": "$.matchedToken.userId",
+        "values": [
+          {
+            "required": true,
+            "valueExpression": {
+              "value": "multiply(matchedToken.heightInInches, `0.0254`)",
+              "language": "JmesPath"
+            },
+            "valueName": "heightInMeters"
+          },
+          {
+            "required": true,
+            "valueExpression": {
+              "value": "multiply(matchedToken.distanceInMiles, `1609.344`)",
+              "language": "JmesPath"
+            },
+            "valueName": "distanceInMeters"
+          }
+        ]
+      }
+    },
+    {
+      "templateType": "CalculatedContent",
+      "template": {
+        "typeName": "DeviceBDataElements",
+        "typeMatchExpression": {
+          "value": "to_array(@) | [? starts_with(deviceId, 'deviceTypeB')].data[] ",
+          "language": "JmesPath"
+        },
+        "deviceIdExpression": "$.deviceId",
+        "timestampExpression": "$.matchedToken.startTime",
+        "patientIdExpression": "$.userDetails.id",
+        "values": [
+          {
+            "required": true,
+            "valueExpression": {
+              "value": "userDetails.heightInMeters",
+              "language": "JmesPath"
+            },
+            "valueName": "heightInMeters"
+          },
+          {
+            "required": true,
+            "valueExpression": {
+              "value": "divide(matchedToken.distanceInYards, `1.0936`)",
+              "language": "JmesPath"
+            },
+            "valueName": "distanceInMeters"
+          }
+        ]
+      }
+    }
+  ]
+}

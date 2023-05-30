@@ -60,15 +60,17 @@ This project provides samples outlining example implementations of various use c
 | --- | --- |
 | [DICOM service demo environment](/samples/dicom-demo-env/) | This sample provisions a full end-to-end demo environment of a simplified on-prem radiology network in an Azure resource group. Instructions are provided for configuring and using the DICOM router and ZFP viewer included in the environment. |
 
-### MedTech service
-### FHIR Service and Terminology Service Integraion 
+### FHIR service and Terminology service integration
+
 |Sample|Description|
 | --- | --- |
-| [FHIR Service and Terminology Service Integraion](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
+| [FHIR service and Terminology service integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
+
+### MedTech service
 
 |Sample|Description|
 |------|-----------|
-|[MedTech service mappings](/samples/medtech-service-mappings/)|These samples provide conforming and valid [device](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-device-mapping) and [FHIR destination](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-fhir-destination-mapping) mappings and test device messages for use with the [MedTech service](https://learn.microsoft.com/azure/healthcare-apis/iot/overview) and [Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).|
+|[MedTech service mappings](/samples/medtech-service-mappings/)|These scenario-based samples provide conforming and valid [device](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-device-mapping) and [FHIR destination](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-fhir-destination-mapping) mappings and test device messages for use with the [MedTech service](https://learn.microsoft.com/azure/healthcare-apis/iot/overview) and [Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).|
 
 NOTE: These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data.
 
