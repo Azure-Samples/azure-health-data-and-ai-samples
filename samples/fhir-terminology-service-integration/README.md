@@ -78,7 +78,7 @@ This sample uses an Azure APIM which acts as Common Endpoint Application for Ext
 * Set FhirBlaze project as StartUpProject
 * Run FhirBlaze Application.
 
-## UI Application Waklthrough:
+## UI Application Walkthrough:
 
 1. After launching UI application user will be redirected to below landing page, Click on login, select/enter username and password.
 
