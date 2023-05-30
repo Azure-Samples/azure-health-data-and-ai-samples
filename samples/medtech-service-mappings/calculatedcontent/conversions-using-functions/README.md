@@ -19,7 +19,7 @@ We need to account for the following:
 
 Rather than create an upstream process to work around the above, we can customize the MedTech normalization process to achieve these conversions.
 
-## Overview of Device A device message
+## Overview of the Device A device message
 
 During an exercise session, device data is submitted at one minute intervals to the MedTech service.
 
@@ -86,7 +86,7 @@ Data is then extracted/normalized from this device data based on the remaining e
 
 For more information on defining templates within CalculatedContent mappings, see [How to use CalculatedContent mappings with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
 
-## Overview of Device B device message
+## Overview of the Device B device message
 
 During an exercise session, data is collected and stored on the device. Data is collected for each minute of the workout. At the end of the session, the data is aggregated into a single device message and submitted to the MedTech service.
 
