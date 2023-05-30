@@ -6,9 +6,9 @@ The MedTech service requires two types of JSON mappings that are added to your M
 
 Each MedTech service samples folder contains the following resources:
 
-* README
 * Device mapping
 * FHIR destination mapping
+* README
 * Test device message(s)
 
 You can use the MedTech service [Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger) for assistance creating, updating, and troubleshooting the MedTech service device and FHIR destination mappings. The Mapping debugger enables you to easily view and make inline adjustments in real-time, without ever having to leave the Azure portal. The Mapping debugger can also be used for uploading test device messages to see how they'll look after being processed into normalized messages and transformed into FHIR Observations.
