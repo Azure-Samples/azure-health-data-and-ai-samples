@@ -132,5 +132,5 @@ This sample uses an Azure APIM which acts as Common Endpoint Application for Ext
 
 12. Click on the search button again to verify reset of `Observation` resource.
 
-	<img src="./images/image10.png" height="380">
+	<img src="./images/Image10.png" height="380">
 	
