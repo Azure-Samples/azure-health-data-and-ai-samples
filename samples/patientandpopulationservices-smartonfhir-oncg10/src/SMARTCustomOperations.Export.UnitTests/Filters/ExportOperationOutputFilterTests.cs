@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using SMARTCustomOperations.Export.Configuration;
 using SMARTCustomOperations.Export.Filters;
+using System.Net;
 
 namespace SMARTCustomOperations.Export.UnitTests.Filters
 {
@@ -31,15 +32,38 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             string origContentLocation = $"{_config.FhirServerUrl}/_operations/export/{exportId}";
 
             OperationContext context = new();
-            context.StatusCode = System.Net.HttpStatusCode.Accepted;
+            context.StatusCode = HttpStatusCode.Accepted;
             context.Properties["PipelineType"] = ExportOperationType.GroupExport.ToString();
             context.Headers.Add(new HeaderNameValuePair("Content-Location", origContentLocation, CustomHeaderType.ResponseStatic));
+            context.StatusCode = HttpStatusCode.Accepted;
 
             ExportOperationOutputFilter filter = new(_logger, _config);
             OperationContext newContext = await filter.ExecuteAsync(context);
 
             var expectedContentLocaton = $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/_operations/export/{exportId}";
-            Assert.Equal(expectedContentLocaton, newContext.Headers.Single(x => x.Name == "Content-Location").Value);
+            Assert.Contains("Custom-Content-Location", newContext.Headers.Select(x => x.Name));
+            Assert.Equal(expectedContentLocaton, newContext.Headers.Single(x => x.Name == "Custom-Content-Location").Value);
+        }
+
+        [Fact]
+        public async Task GivenAGetExportCheckOperation_WhenExportOperationHasntStarted_ContentLocationIsModified()
+        {
+
+            string exportId = "42";
+            string origContentLocation = $"{_config.FhirServerUrl}/_operations/export/{exportId}";
+
+            OperationContext context = new();
+            context.StatusCode = HttpStatusCode.Accepted;
+            context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
+            context.Headers.Add(new HeaderNameValuePair("Content-Location", origContentLocation, CustomHeaderType.ResponseStatic));
+            context.StatusCode = HttpStatusCode.Accepted;
+
+            ExportOperationOutputFilter filter = new(_logger, _config);
+            OperationContext newContext = await filter.ExecuteAsync(context);
+
+            var expectedContentLocaton = $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/_operations/export/{exportId}";
+            Assert.Contains("Custom-Content-Location", newContext.Headers.Select(x => x.Name));
+            Assert.Equal(expectedContentLocaton, newContext.Headers.Single(x => x.Name == "Custom-Content-Location").Value);
         }
     }
 }

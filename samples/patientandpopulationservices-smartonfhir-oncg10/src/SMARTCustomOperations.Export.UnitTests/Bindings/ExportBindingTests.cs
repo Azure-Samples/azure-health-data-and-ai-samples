@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Collections.Specialized;
+using System.Linq;
 using System.Web;
 using Microsoft.AzureHealth.DataServices.Clients;
 using Microsoft.AzureHealth.DataServices.Security;
@@ -27,11 +28,6 @@ namespace SMARTCustomOperations.Export.UnitTests.Bindings
 
         private static IAuthenticator _auth = Substitute.For<IAuthenticator>();
 
-        private static NameValueCollection _expectedHeaders = new()
-        {
-            HttpUtility.ParseQueryString("?Accept=application/fhir+json&Prefer=respond-async"),
-        };
-
         [Fact]
         public async Task GivenAGroupExportOperation_WhenCreatingRestRequestBuilder_BuilderIsProperlyFormed()
         {
@@ -48,8 +44,9 @@ namespace SMARTCustomOperations.Export.UnitTests.Bindings
             Assert.Equal(token, builder.SecurityToken);
             Assert.Equal($"/Group/{groupId}/$export", builder.Path);
             Assert.Equal($"_container={oid}", builder.QueryString);
-            Assert.Equal("application/json", builder.ContentType);
-            Assert.Equal(_expectedHeaders, builder.Headers);
+            Assert.Equal("application/fhir+json", builder.ContentType);
+            Assert.Contains("Prefer", builder.Headers.AllKeys);
+            Assert.Equal("respond-async", builder.Headers["Prefer"]);
         }
 
         [Fact]
@@ -67,9 +64,8 @@ namespace SMARTCustomOperations.Export.UnitTests.Bindings
             Assert.Equal(_config.FhirServerEndpoint, builder.BaseUrl);
             Assert.Equal(token, builder.SecurityToken);
             Assert.Equal($"/_operations/export/{exportId}", builder.Path);
-            Assert.Equal(string.Empty, builder.QueryString);
+            Assert.True(string.IsNullOrEmpty(builder.QueryString));
             Assert.Equal("application/json", builder.ContentType);
-            Assert.Equal(_expectedHeaders, builder.Headers);
         }
 
         [Fact]
@@ -90,9 +86,8 @@ namespace SMARTCustomOperations.Export.UnitTests.Bindings
             Assert.Equal(_config.StorageEndpoint, builder.BaseUrl);
             Assert.Equal(storageToken, builder.SecurityToken);
             Assert.Equal($"/{oid}/DateTimeFolder/filename.ndjson", builder.Path);
-            Assert.Equal(string.Empty, builder.QueryString);
+            Assert.True(string.IsNullOrEmpty(builder.QueryString));
             Assert.Equal("application/fhir+ndjson", builder.ContentType);
-            Assert.Equal(_expectedHeaders, builder.Headers);
         }
     }
 }

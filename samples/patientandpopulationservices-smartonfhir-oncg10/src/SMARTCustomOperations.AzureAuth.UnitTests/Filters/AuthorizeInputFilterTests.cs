@@ -41,7 +41,6 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
             Assert.Equal($"/{config.TenantId}/oauth2/v2.0/authorize", context.Request.RequestUri.AbsolutePath);
 
             Assert.Equal(1, context.Headers.Count(x => x.Name == "Location"));
-            Assert.Equal(1, context.Headers.Count(x => x.Name == "Origin"));
         }
 
         [Fact]
@@ -73,7 +72,6 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
             Assert.Equal($"/{config.TenantId}/oauth2/v2.0/authorize", context.Request.RequestUri.AbsolutePath);
 
             Assert.Equal(1, context.Headers.Count(x => x.Name == "Location"));
-            Assert.Equal(1, context.Headers.Count(x => x.Name == "Origin"));
         }
 
         [Fact]

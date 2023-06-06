@@ -38,14 +38,7 @@ namespace SMARTCustomOperations.Export.Filters
 
         public Task<OperationContext> ExecuteAsync(OperationContext context)
         {
-            // Only execute filter fof export job check operations
-            if (context.Properties["PipelineType"] != ExportOperationType.ExportCheck.ToString())
-            {
-                return Task.FromResult(context);
-            }
-
-            // Don't process running or failed export operations
-            if (context.StatusCode != HttpStatusCode.OK)
+            if (!IsRunningOrCompletedExportCheckJob(context))
             {
                 return Task.FromResult(context);
             }
@@ -59,7 +52,7 @@ namespace SMARTCustomOperations.Export.Filters
                 // Replace the content location URL with the public endpoint
                 var jBody = JObject.Parse(context.ContentString);
 
-                jBody["requiresAccessToken"] = true;
+                jBody["requireAccessToken"] = true;
 
                 foreach (JToken output in (JArray)jBody.SelectToken("output")!)
                 {
@@ -110,6 +103,17 @@ namespace SMARTCustomOperations.Export.Filters
             outputUriBuilder.Path += requestLocalPath;
 
             return outputUriBuilder.Uri;
+        }
+
+        // Only execute filter for export job check operations that are running or completed.
+        private static bool IsRunningOrCompletedExportCheckJob(OperationContext context)
+        {
+            if (context.Properties["PipelineType"] != ExportOperationType.ExportCheck.ToString() || context.StatusCode != HttpStatusCode.OK)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

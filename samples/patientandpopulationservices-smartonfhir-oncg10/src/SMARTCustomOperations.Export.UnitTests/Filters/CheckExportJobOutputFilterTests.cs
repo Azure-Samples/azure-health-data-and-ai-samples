@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Net;
+using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
+            context.StatusCode = HttpStatusCode.OK;
 
             JObject payload = new();
             payload["requireAccessToken"] = false;
@@ -50,7 +52,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             OperationContext newContext = await filter.ExecuteAsync(context);
 
             JObject newContextPayload = JObject.Parse(newContext.ContentString);
-            Assert.Equal(true, newContextPayload["requireAccessToken"]);
+            Assert.True(newContextPayload.Value<bool>("requireAccessToken"));
             string expectedUrlOne = $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/_export/{oid}/{restOfPath}";
             Assert.Equal(expectedUrlOne, newContextPayload["output"]![0]!["url"]!.ToString());
         }
@@ -67,6 +69,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
+            context.StatusCode = HttpStatusCode.OK;
 
             JObject payload = new();
             payload["requireAccessToken"] = false;
