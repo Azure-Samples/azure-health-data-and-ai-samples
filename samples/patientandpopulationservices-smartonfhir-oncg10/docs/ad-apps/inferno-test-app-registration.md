@@ -99,7 +99,7 @@ Azure Active Directory does not support RSA384 and/or ES384 which is required by
 1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
-        - system.all.read
+        - user.all.read
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
