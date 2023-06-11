@@ -31,7 +31,7 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
                         // and does not allow '/'. Therefore, we need to
                         // replace '/' with '.' in the scope URI
                         var formattedScope = s.Replace("/", ".", StringComparison.InvariantCulture);
-                        formattedScope = formattedScope.Replace("*", "all", StringComparison.InvariantCulture);
+                        formattedScope = formattedScope.Replace(".*", ".all", StringComparison.InvariantCulture);
 
                         // Leave the space in the string below
                         if (scopeAudience.EndsWith("/", StringComparison.InvariantCultureIgnoreCase) || scopeAudience.Length == 0)

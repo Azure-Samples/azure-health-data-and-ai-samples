@@ -17,15 +17,15 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
 {
     public class CheckExportJobOutputFilterTests
     {
-        private static ExportCustomOperationsConfig _config = new()
+        private static readonly ExportCustomOperationsConfig _config = new()
         {
             ApiManagementHostName = "apim-name.azure-api.net",
             ApiManagementFhirPrefex = "smart",
-            FhirServerUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
+            FhirUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
             ExportStorageAccountUrl = "https://account.blob.core.windows.net",
         };
 
-        private static ILogger<CheckExportJobOutputFilter> _logger = Substitute.For<ILogger<CheckExportJobOutputFilter>>();
+        private static readonly ILogger<CheckExportJobOutputFilter> _logger = Substitute.For<ILogger<CheckExportJobOutputFilter>>();
 
         [Fact]
         public async Task GivenAGetExportCheckOperation_WhenAccessingAllowedFile_FileObjectIsReturnedCorrectly()
@@ -34,17 +34,23 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             string oid = Guid.NewGuid().ToString();
             string restOfPath = "DateTimeFolder/filename.ndjson";
 
-            OperationContext context = new();
-            context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
+            OperationContext context = new()
+            {
+                Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export")
+            };
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
             context.StatusCode = HttpStatusCode.OK;
 
-            JObject payload = new();
-            payload["requireAccessToken"] = false;
+            JObject payload = new()
+            {
+                ["requireAccessToken"] = false
+            };
 
-            JObject urlOne = new JObject();
-            urlOne["url"] = $"{_config.ExportStorageAccountUrl}/{oid}/{restOfPath}";
+            JObject urlOne = new()
+            {
+                ["url"] = $"{_config.ExportStorageAccountUrl}/{oid}/{restOfPath}"
+            };
             payload["output"] = new JArray() { urlOne };
             context.ContentString = payload.ToString();
 
@@ -65,17 +71,23 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             string containerName = Guid.NewGuid().ToString();
             string restOfPath = "DateTimeFolder/filename.ndjson";
 
-            OperationContext context = new();
-            context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
+            OperationContext context = new()
+            {
+                Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export")
+            };
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
             context.StatusCode = HttpStatusCode.OK;
 
-            JObject payload = new();
-            payload["requireAccessToken"] = false;
+            JObject payload = new()
+            {
+                ["requireAccessToken"] = false
+            };
 
-            JObject urlOne = new JObject();
-            urlOne["url"] = $"{_config.ExportStorageAccountUrl}/{containerName}/{restOfPath}";
+            JObject urlOne = new()
+            {
+                ["url"] = $"{_config.ExportStorageAccountUrl}/{containerName}/{restOfPath}"
+            };
             payload["output"] = new JArray() { urlOne };
             context.ContentString = payload.ToString();
 

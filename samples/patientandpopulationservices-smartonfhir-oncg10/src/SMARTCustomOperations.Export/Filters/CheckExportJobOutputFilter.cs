@@ -5,7 +5,6 @@
 
 using System.Net;
 using System.Security;
-using System.Security.Policy;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
@@ -52,7 +51,7 @@ namespace SMARTCustomOperations.Export.Filters
                 // Replace the content location URL with the public endpoint
                 var jBody = JObject.Parse(context.ContentString);
 
-                jBody["requireAccessToken"] = true;
+                jBody["requiresAccessToken"] = true;
 
                 foreach (JToken output in (JArray)jBody.SelectToken("output")!)
                 {
@@ -60,10 +59,9 @@ namespace SMARTCustomOperations.Export.Filters
                     var outputObj = (JObject)output;
                     var origUrl = new Uri(outputObj["url"]!.ToString());
 
-                    // #TODO - test this logic
                     if (!origUrl.LocalPath.StartsWith("/" + context.Properties["oid"], StringComparison.InvariantCulture))
                     {
-                        var ex = new SecurityException($"User attempted export with token with wrong oid claim. {Id}. OID: {context.Properties["oid"]}. Container: {origUrl.Segments[1]}.");
+                        var ex = new SecurityException($"User attempted export access with token with wrong oid claim. {Id}. OID: {context.Properties["oid"]}. Container: {origUrl.Segments[1]}.");
 
                         FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.Unauthorized);
                         OnFilterError?.Invoke(this, error);

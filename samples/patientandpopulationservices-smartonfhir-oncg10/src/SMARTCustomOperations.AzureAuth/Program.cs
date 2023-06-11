@@ -4,16 +4,18 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Reflection;
+using Azure.Identity;
+using Microsoft.AzureHealth.DataServices.Bindings;
 using Microsoft.AzureHealth.DataServices.Caching;
 using Microsoft.AzureHealth.DataServices.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SMARTCustomOperations.AzureAuth.Bindings;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Filters;
 using SMARTCustomOperations.AzureAuth.Services;
+
 
 namespace SMARTCustomOperations.AzureAuth
 {
@@ -21,7 +23,7 @@ namespace SMARTCustomOperations.AzureAuth
     {
         internal static async Task Main(string[] args)
         {
-            AzureAuthOperationsConfig config = new AzureAuthOperationsConfig();
+            AzureAuthOperationsConfig config = new();
             using IHost host = new HostBuilder()
                 .ConfigureAppConfiguration((context, configuration) =>
                 {
@@ -52,12 +54,21 @@ namespace SMARTCustomOperations.AzureAuth
                         services.UseAppInsightsLogging(config.AppInsightsInstrumentationKey, LogLevel.Information);
                         services.UseTelemetry(config.AppInsightsInstrumentationKey);
                     }
+                    // Add configuration
+                    services.AddSingleton<AzureAuthOperationsConfig>(config);
 
+                    // Add services needed for backend services
                     services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
                     services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
-                    services.AddScoped<GraphConsentService>();
-                    services.AddHttpClient();
 
+                    // Add services needed for Microsoft Graph
+                    services.AddMicrosoftGraphClient(options =>
+                    {
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.TenantId });
+                    });
+                    services.AddScoped<GraphConsentService>();
+
+                    // Add cache for token context
                     services.AddMemoryCache();
                     services.AddRedisCacheBackingStore(options =>
                     {
@@ -69,20 +80,21 @@ namespace SMARTCustomOperations.AzureAuth
                     });
                     services.AddScoped<ContextCacheService>();
 
+                    // Use the toolkit Azure Function pipeline
                     services.UseAzureFunctionPipeline();
 
-                    services.AddSingleton<AzureAuthOperationsConfig>(config);
-
+                    // Add toolkit elements
                     services.AddInputFilter(typeof(AuthorizeInputFilter));
                     services.AddInputFilter(typeof(TokenInputFilter));
                     services.AddInputFilter(typeof(AppConsentInfoInputFilter));
                     services.AddInputFilter(typeof(ContextCacheInputFilter));
-                    services.AddOutputFilter(typeof(TokenOutputFilter));
 
-                    services.AddBinding<AzureActiveDirectoryBindingOptions>(typeof(AzureActiveDirectoryBinding), options =>
+                    services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.AzureActiveDirectoryEndpoint = "https://login.microsoftonline.com";
+                        options.BaseAddress = new Uri("https://login.microsoftonline.com");
                     });
+
+                    services.AddOutputFilter(typeof(TokenOutputFilter));
                 })
                 .Build();
 

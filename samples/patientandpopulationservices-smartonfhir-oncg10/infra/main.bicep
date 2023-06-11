@@ -147,7 +147,6 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     appTags: appTags
     tenantId: tenantId
     apimName: apimName
-    fhirUrl: fhirUrl
     smartFrontendAppUrl: contextStaticWebApp.outputs.uri
     fhirServiceAudience: FhirAudience
     backendServiceVaultName: backendServiceVaultName
@@ -228,7 +227,7 @@ module apim './core/apiManagement.bicep'= {
     location: location
     fhirBaseUrl: fhirUrl
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
-    exportFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
+    exportFunctionBaseUrl: 'https://${name}-exp-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
   }

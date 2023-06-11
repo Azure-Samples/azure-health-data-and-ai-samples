@@ -27,23 +27,6 @@ namespace SMARTCustomOperations.Export
             _logger.LogInformation("StartGroupExport function pipeline started.");
             var result = await _pipeline.ExecuteAsync(req);
 
-            // Toolkit uses content-length instead of transfer encoding
-            if (result.Headers.Contains("Transfer-Encoding"))
-            {
-                result.Headers.Remove("Transfer-Encoding");
-            }
-
-            // Toolkit does not support content headers - workaround.
-            if (result.Headers.Any(x => x.Key == "Custom-Content-Location"))
-            {
-                if (result.Headers.Contains("Content-Location"))
-                {
-                    result.Headers.Remove("Content-Location");
-                }
-                result.Headers.Add("Content-Location", result.Headers.First(x => x.Key == "Custom-Content-Locaton").Value);
-                result.Headers.Remove("Custom-Content-Location");
-            }
-
             return result;
         }
 
@@ -53,12 +36,6 @@ namespace SMARTCustomOperations.Export
             _logger.LogInformation("ExportJob function pipeline started.");
             var result = await _pipeline.ExecuteAsync(req);
 
-            // Toolkit uses content-length instead of transfer encoding
-            if (result.Headers.Contains("Transfer-Encoding"))
-            {
-                result.Headers.Remove("Transfer-Encoding");
-            }
-
             return result;
         }
 
@@ -67,12 +44,6 @@ namespace SMARTCustomOperations.Export
         {
             _logger.LogInformation("ExportJob function pipeline started.");
             var result = await _pipeline.ExecuteAsync(req);
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                result.Headers.Remove("Content-Type");
-                result.Headers.Add("Content-Type", "application/fhir+ndjson");
-            }
 
             return result;
         }

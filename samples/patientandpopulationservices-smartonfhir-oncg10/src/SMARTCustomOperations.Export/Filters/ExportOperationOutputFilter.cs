@@ -40,7 +40,7 @@ namespace SMARTCustomOperations.Export.Filters
             _logger?.LogInformation("Entered {Name}", Name);
 
             // Only execute filter for successful $export operations
-            if (!IsExportOperation(context) && !IsPendingExportCheckOperation(context))
+            if (!IsExportOperation(context))
             {
                 return Task.FromResult(context);
             }
@@ -50,18 +50,15 @@ namespace SMARTCustomOperations.Export.Filters
 
             if (contentLocationHeader is not null)
             {
-                // Toolkit does not support setting Content output headers
-                contentLocationHeader.Name = "Custom-Content-Location";
                 contentLocationHeader.Value =
                     contentLocationHeader.Value.Replace(
-                        _configuration.FhirServerUrl!,
+                        _configuration.FhirUrl!,
                         $"https://{_configuration.ApiManagementHostName}/{_configuration.ApiManagementFhirPrefex}",
                         StringComparison.OrdinalIgnoreCase);
 
                 return Task.FromResult(context);
             }
 
-#pragma warning disable CA2201 // #TODO - add more specific exception.
             FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new Exception("Content Location not found."), code: HttpStatusCode.InternalServerError);
             OnFilterError?.Invoke(this, error);
             return Task.FromResult(context.SetContextErrorBody(error, _configuration.Debug));
@@ -70,11 +67,6 @@ namespace SMARTCustomOperations.Export.Filters
         private static bool IsExportOperation(OperationContext context)
         {
             return context.Properties["PipelineType"] == ExportOperationType.GroupExport.ToString() && context.StatusCode == HttpStatusCode.Accepted;
-        }
-
-        private static bool IsPendingExportCheckOperation(OperationContext context)
-        {
-            return context.Properties["PipelineType"] == ExportOperationType.ExportCheck.ToString() && context.StatusCode == HttpStatusCode.Accepted;
         }
     }
 }

@@ -3,11 +3,8 @@
 name: fhir-smart-onc-g10-solution
 metadata:
   template: patientandpopulationservices-smartonfhir-oncg10@1.0.0
-requiredVersions: >= 1.0.1
-hooks:
-  preprovision: 
-    shell: pwsh
-    run:  ./scripts/Run-Preprovision.ps1
+requiredVersions: 
+  azd: ">= 1.0.1"
 services:
   auth:
     project: src/SMARTCustomOperations.AzureAuth

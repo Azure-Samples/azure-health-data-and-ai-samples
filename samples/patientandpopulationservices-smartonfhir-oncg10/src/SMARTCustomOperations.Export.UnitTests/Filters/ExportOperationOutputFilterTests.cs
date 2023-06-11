@@ -15,24 +15,26 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
 {
     public class ExportOperationOutputFilterTests
     {
-        private static ExportCustomOperationsConfig _config = new()
+        private static readonly ExportCustomOperationsConfig _config = new()
         {
             ApiManagementHostName = "apim-name.azure-api.net",
             ApiManagementFhirPrefex = "smart",
-            FhirServerUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
+            FhirUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
             ExportStorageAccountUrl = "https://account.blob.core.windows.net",
         };
 
-        private static ILogger<ExportOperationOutputFilter> _logger = Substitute.For<ILogger<ExportOperationOutputFilter>>();
+        private static readonly ILogger<ExportOperationOutputFilter> _logger = Substitute.For<ILogger<ExportOperationOutputFilter>>();
 
         [Fact]
         public async Task GivenAGroupExportOperation_WhenOutputIsProcessed_ContentLocationHeaderIsSetCorrectly()
         {
             string exportId = "42";
-            string origContentLocation = $"{_config.FhirServerUrl}/_operations/export/{exportId}";
+            string origContentLocation = $"{_config.FhirUrl}/_operations/export/{exportId}";
 
-            OperationContext context = new();
-            context.StatusCode = HttpStatusCode.Accepted;
+            OperationContext context = new()
+            {
+                StatusCode = HttpStatusCode.Accepted
+            };
             context.Properties["PipelineType"] = ExportOperationType.GroupExport.ToString();
             context.Headers.Add(new HeaderNameValuePair("Content-Location", origContentLocation, CustomHeaderType.ResponseStatic));
             context.StatusCode = HttpStatusCode.Accepted;
@@ -50,10 +52,12 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
         {
 
             string exportId = "42";
-            string origContentLocation = $"{_config.FhirServerUrl}/_operations/export/{exportId}";
+            string origContentLocation = $"{_config.FhirUrl}/_operations/export/{exportId}";
 
-            OperationContext context = new();
-            context.StatusCode = HttpStatusCode.Accepted;
+            OperationContext context = new()
+            {
+                StatusCode = HttpStatusCode.Accepted
+            };
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Headers.Add(new HeaderNameValuePair("Content-Location", origContentLocation, CustomHeaderType.ResponseStatic));
             context.StatusCode = HttpStatusCode.Accepted;
