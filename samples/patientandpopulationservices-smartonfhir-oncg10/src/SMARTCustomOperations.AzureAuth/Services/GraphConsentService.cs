@@ -30,7 +30,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             var requestingClientApp = await GetRequestingApplication(requestingAppClientId);
             var resourceServicePrincipals = await GetResourceServicePrincipals(requestingClientApp.RequiredResourceAccess!.Select(x => x.ResourceAppId!).Distinct());
             var requestingServicePrincipal = await GetRequestingServicePrincipal(requestingAppClientId);
-            var permissions = await GetUserAppOAuth2PermissinGrants(requestingServicePrincipal.Id!, userId);
+            var permissions = await GetUserAppOAuth2PermissionGrants(requestingServicePrincipal.Id!, userId);
 
             AppConsentInfo info = new()
             {
@@ -87,7 +87,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 else if (resourceScopes.Any())
                 {
                     var requestingServicePrincipal = await GetRequestingServicePrincipal(consentInfo.ApplicationId!);
-                    await CreateUserAppOAuth2PermissinGrant(requestingServicePrincipal.Id, userId, resourceId!, scopeString);
+                    await CreateUserAppOAuth2PermissionGrant(requestingServicePrincipal.Id, userId, resourceId!, scopeString);
                 }*/
             }
 
@@ -179,7 +179,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             return _resourceServicePrincipals;
         }
 
-        private async Task<List<OAuth2PermissionGrant>> GetUserAppOAuth2PermissinGrants(string requestingAppClientId, string userId)
+        private async Task<List<OAuth2PermissionGrant>> GetUserAppOAuth2PermissionGrants(string requestingAppClientId, string userId)
         {
             var permissionPage = await _graphServiceClient.Oauth2PermissionGrants.GetAsync((rq) =>
             {
@@ -189,7 +189,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             return permissionPage!.Value!.ToList();
         }
 
-        private async Task<OAuth2PermissionGrant> CreateUserAppOAuth2PermissinGrant(string servicePrincipalId, string userId, string resourceId, string scope)
+        private async Task<OAuth2PermissionGrant> CreateUserAppOAuth2PermissionGrant(string servicePrincipalId, string userId, string resourceId, string scope)
         {
             var permission = new OAuth2PermissionGrant
             {
