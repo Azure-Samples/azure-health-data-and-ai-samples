@@ -142,10 +142,12 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 // These must be case-sensitive to perserve scopes like patient/Patient.read.
                 transformedScopes.Add(scope
                     .Replace(_configuration.FhirAudience!, string.Empty, StringComparison.InvariantCulture)
+                    .TrimStart('/')
                     .Replace("patient.", "patient/", StringComparison.InvariantCulture)
                     .Replace("user.", "user/", StringComparison.InvariantCulture)
                     .Replace("system.", "system/", StringComparison.InvariantCulture)
                     .Replace("launch.", "launch/", StringComparison.InvariantCulture)
+                    .Replace("all", "*")
                 );
             }
 
