@@ -58,7 +58,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             OperationContext newContext = await filter.ExecuteAsync(context);
 
             JObject newContextPayload = JObject.Parse(newContext.ContentString);
-            Assert.True(newContextPayload.Value<bool>("requireAccessToken"));
+            Assert.True(newContextPayload.Value<bool>("requiresAccessToken"));
             string expectedUrlOne = $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/_export/{oid}/{restOfPath}";
             Assert.Equal(expectedUrlOne, newContextPayload["output"]![0]!["url"]!.ToString());
         }
