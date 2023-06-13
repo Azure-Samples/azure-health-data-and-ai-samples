@@ -60,6 +60,7 @@ module fhir_template 'fhir.bicep'= {
     location: resourceLocation
     tags: resourceTags
     logAnalyticsWorkspaceId: log_analytics_template.outputs.loagAnalyticsId
+    storageName: datalakeName
   }
 }
 

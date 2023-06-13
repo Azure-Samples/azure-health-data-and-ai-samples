@@ -40,5 +40,9 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
   name: '${storage_account.name}/default/${containerName}'
 }
 
+resource importContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
+  name: '${storage_account.name}/default/import'
+}
+
 output storage_account_name string = storage_account.name
 output storage_account_id string = storage_account.id

@@ -4,6 +4,7 @@ param tenantId string
 param location string
 param tags object = {}
 param logAnalyticsWorkspaceId string
+param storageName string
 
 var loginURL = environment().authentication.loginEndpoint
 var authority = '${loginURL}${tenantId}'
@@ -15,7 +16,7 @@ resource healthWorkspace 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview
   tags: tags
 }
 
-resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-preview' = {
+resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2022-06-01' = {
   parent: healthWorkspace
   name: fhirServiceName
   location: location
@@ -30,6 +31,11 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-previ
       authority: authority
       audience: audience
       smartProxyEnabled: false
+    }
+    importConfiguration: {
+      enabled: true
+      initialImportMode: false
+      integrationDataStore: storageName
     }
   }
 
