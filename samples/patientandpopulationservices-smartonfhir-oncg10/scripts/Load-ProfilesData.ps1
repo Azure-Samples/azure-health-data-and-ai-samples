@@ -17,28 +17,24 @@ param (
 $SCRIPT_PATH = Split-Path -parent $MyInvocation.MyCommand.Definition
 $SAMPLE_ROOT = (Get-Item $SCRIPT_PATH).Parent.FullName
 
+if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($FhirAudience) -or  [string]::IsNullOrWhiteSpace($TenantId)) {
 
-#$ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
-#Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
-
-if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($FhirUrl)) {
-
-    Write-Host "FhirUrl or FhirAudience or TenantId is not set."
+    Write-Host "Required parameters parameter blank, looking in azd enviornment configuration...."
 
     # Load parameters from active Azure Developer CLI environment
-    $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
+    $AZD_ENVIRONMENT = azd env get-values --cwd $SAMPLE_ROOT
     $AZD_ENVIRONMENT | foreach {
         $name, $value = $_.split('=')
-        if ([string]::IsNullOrWhiteSpace($name) -or $name.Contains('#')) {
+        if ([string]::IsNullOrWhiteSpace($name) || $name.Contains('#')) {
             continue
         }
         
-        if ([string]::IsNullOrWhiteSpace($FhirUrl) -and $name -eq "FhirUrl") {
-            $FhirUrl = $value.Trim('"')
-        }
-
         if ([string]::IsNullOrWhiteSpace($FhirAudience) -and $name -eq "FhirAudience") {
             $FhirAudience = $value.Trim('"')
+        }
+
+        if ([string]::IsNullOrWhiteSpace($FhirUrl) -and $name -eq "FhirUrl") {
+            $FhirUrl = $value.Trim('"')
         }
 
         if ([string]::IsNullOrWhiteSpace($TenantId) -and $name -eq "TenantId") {
@@ -47,13 +43,13 @@ if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($Fhi
     }
 }
 
-if (-not $FhirUrl) {
-    Write-Error "FhirUrl is STILL not set. Exiting."
+if (-not $FhirAudience) {
+    Write-Error "FhirAudience is STILL not set. Exiting."
     exit
 }
 
-if (-not $FhirAudience) {
-    Write-Error "FhirAudience is STILL not set. Exiting."
+if (-not $FhirUrl) {
+    Write-Error "FhirUrl is STILL not set. Exiting."
     exit
 }
 
@@ -62,50 +58,14 @@ if (-not $TenantId) {
     exit
 }
 
-Write-Host "Writing sample test data to FhirUrl: $FhirUrl with FhirAudience: $FhirAudience to TenantId: $TenantId"
+az login -t $TenantId
 
-$curDir = Get-Location
+$access_token = az account get-access-token --scope "$FhirAudience/user_impersonation" --query 'accessToken' -o tsv
 
-try {
+Write-Host "Using token $access_token"
 
-    $installedDotnetTools = (dotnet tool list --global)
-    $install = $True
+$FilePath = "$SCRIPT_PATH/test-resources/V3.1.1_USCoreCompliantResources.json"
+az rest --uri $FhirUrl --method POST --body "@$FilePath" --headers "Authorization=Bearer $access_token" "Content-Type=application/json"
 
-    if ($installedDotnetTools -contains "microsoft-fhir-loader")
-    {
-        if ($installedDotnetTools -contains "0.1.5        microsoft-fhir-loader")
-        {
-            Write-Information("microsoft-fhir-loader already installed, continuing...")
-            $install = $false
-        }
-        else
-        {
-            Write-Information("microsoft-fhir-loader outdated, removing and reinstalling...")
-            dotnet tool uninstall FhirLoader.Tool --global
-        }
-        
-    }
-
-    if ($install)
-    {
-        Write-Information("microsoft-fhir-loader not installed, installing now...")
-
-        Set-Location $HOME/Downloads
-        git clone https://github.com/microsoft/fhir-loader.git
-        Set-Location $HOME/Downloads/fhir-loader
-
-        git checkout fhir-loader-cli
-        git pull
-
-        Set-Location $HOME/Downloads/fhir-loader/src/FhirLoader.Tool/
-        dotnet pack
-
-        dotnet tool install --global --add-source ./nupkg FhirLoader.Tool
-    }   
-}
-finally {
-    Set-Location $curDir
-}
-
-# Load sample data
-microsoft-fhir-loader --folder $SCRIPT_PATH/test-resources --fhir $FhirUrl --audience $FhirAudience --tenant-id $TenantId --debug
+$FilePath = "$SCRIPT_PATH/test-resources/CapabilityStatement-us-core-server.json"
+az rest --uri "$FhirUrl/CapabilityStatement/us-core-server" --method PUT --body "@$FilePath" --headers "Authorization=Bearer $access_token" "Content-Type=application/json"

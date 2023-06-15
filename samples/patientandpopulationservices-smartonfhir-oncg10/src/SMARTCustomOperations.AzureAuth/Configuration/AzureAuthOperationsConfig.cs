@@ -9,7 +9,7 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 {
     public class AzureAuthOperationsConfig
     {
-        private string? _audience;
+        private string? _fhirAudience;
         private string? _apiManagementHostName;
 
         // Example: my-apim.azure-api.net
@@ -36,33 +36,26 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         // Returns more detailed error messages to client
         public bool Debug { get; set; } = false;
 
-#pragma warning disable CA1056 // Needs to be string to parse from config easily.
-
-        // Example: https://<workspace>-<fhir>.fhir.azurehealthcareapis.com
-        public string? FhirServerUrl { get; set; }
-
-#pragma warning restore CA1056 // Needs to be string to parse from config easily.
-
         public string? AppInsightsConnectionString { get; set; }
 
         public string? AppInsightsInstrumentationKey { get; set; }
 
         public string? TenantId { get; set; }
 
-        public string? Audience
+        public string? FhirAudience
         {
-            get => _audience;
+            get => _fhirAudience;
             set
             {
                 if (value is not null && value.Length > 0)
                 {
                     if (!value.EndsWith("/", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _audience = value + "/";
+                        _fhirAudience = value + "/";
                     }
                     else
                     {
-                        _audience = value;
+                        _fhirAudience = value;
                     }
                 }
             }
@@ -92,17 +85,12 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
                 throw new ConfigurationErrorsException("ApiManagementHostName must be configured for this application.");
             }
 
-            if (string.IsNullOrEmpty(FhirServerUrl))
-            {
-                throw new ConfigurationErrorsException("FhirServerUrl must be configured for this application.");
-            }
-
             if (string.IsNullOrEmpty(TenantId))
             {
                 throw new ConfigurationErrorsException("TenantId must be configured for this application.");
             }
 
-            if (string.IsNullOrEmpty(Audience))
+            if (string.IsNullOrEmpty(FhirAudience))
             {
                 throw new ConfigurationErrorsException("Audience must be configured for this application.");
             }

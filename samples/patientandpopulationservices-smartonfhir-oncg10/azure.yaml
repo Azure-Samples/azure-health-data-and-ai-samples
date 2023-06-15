@@ -1,6 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
 name: fhir-smart-onc-g10-solution
+metadata:
+  template: patientandpopulationservices-smartonfhir-oncg10@1.0.0
+requiredVersions: 
+  azd: ">= 1.0.1"
 services:
   auth:
     project: src/SMARTCustomOperations.AzureAuth

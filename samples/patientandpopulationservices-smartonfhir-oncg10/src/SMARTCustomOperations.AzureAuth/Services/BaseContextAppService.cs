@@ -26,7 +26,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
         {
             _debug = configuration.Debug;
             _contextAppClientId = configuration.ContextAppClientId!;
-            _fhirAudience = configuration.Audience!;
+            _fhirAudience = configuration.FhirAudience!;
             _tenantId = configuration.TenantId!;
         }
 

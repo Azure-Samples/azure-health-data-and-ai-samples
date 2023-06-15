@@ -13,9 +13,6 @@ param tenantId string
 @description('Name of the Azure API Management instance.')
 param apimName string
 
-@description('URL used to access the FHIR Service by the custom operation.')
-param fhirUrl string
-
 @description('URL used to access the SMART on FHIR frontend application.')
 param smartFrontendAppUrl string
 
@@ -107,11 +104,10 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     ENABLE_ORYX_BUILD: 'true'
 
     AZURE_ApiManagementHostName: '${apimName}.azure-api.net'
-    AZURE_FhirServerUrl: fhirUrl
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
-    AZURE_Audience: fhirServiceAudience
+    AZURE_FhirAudience: fhirServiceAudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: redisConnectionString

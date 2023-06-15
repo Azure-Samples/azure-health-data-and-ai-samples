@@ -104,7 +104,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 }
                 catch (Microsoft.Graph.ServiceException ex)
                 {
-                    _logger.LogError(ex, "Fatal error calling Microsoft Graph to get Consent Inforation. {Uri} {CliendId} {UserId} {Scopes}", context.Request.RequestUri, uriContext.ClientId, userId!, scopes);
+                    _logger?.LogError(ex, "Fatal error calling Microsoft Graph to get Consent Inforation. {Uri} {CliendId} {UserId} {Scopes}", context.Request.RequestUri, uriContext.ClientId, userId!, scopes);
                     FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError, responseBody: context.ContentString);
                     context.StatusCode = HttpStatusCode.InternalServerError;
                     return context.SetContextErrorBody(error, _configuration.Debug);
@@ -133,7 +133,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 }
                 catch (Microsoft.Graph.ServiceException ex)
                 {
-                    _logger.LogError(ex, "Fatal error calling Microsoft Graph to update Consent Inforation. {Uri} {AppInformation} {UserId}", context.Request.RequestUri, appConsentInfo, userId);
+                    _logger?.LogError(ex, "Fatal error calling Microsoft Graph to update Consent Inforation. {Uri} {AppInformation} {UserId}", context.Request.RequestUri, appConsentInfo, userId);
                     FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError, responseBody: context.ContentString);
                     context.StatusCode = HttpStatusCode.InternalServerError;
                     return context.SetContextErrorBody(error, _configuration.Debug);

@@ -37,7 +37,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
-1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mappind the `fhirUser` to the access token.
+1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
 <br />
 <details>
