@@ -5,6 +5,7 @@ param managedIdentityName string
 var ownerRoleDefId = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
 var storageDataContributorRole = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var fhirDataImporterRole = '4465e953-8ced-4406-a58e-0f6e3f3b530b'
+// var fhirDataContributorRole = '5a1fc7df-4bf1-4951-a576-89034ee01acd'
 
 resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
   name: managedIdentityName
@@ -31,7 +32,7 @@ resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-
   }
 }
 
-resource fhirRoleAssigment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource fhirImporterRoleAssigment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
   name:  guid(fhirDataImporterRole,resourceGroup().id)
   scope: resourceGroup()
   properties: {

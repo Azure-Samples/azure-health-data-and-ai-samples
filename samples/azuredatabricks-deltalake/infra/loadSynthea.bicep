@@ -25,7 +25,7 @@ resource loadSyntheaData 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     }
   }
   properties: {
-    azPowerShellVersion: '10.0'
+    azPowerShellVersion: '9.7'
     forceUpdateTag: utcValue
     containerSettings: {
       containerGroupName: 'loadSyntheaData-${name}-ci'

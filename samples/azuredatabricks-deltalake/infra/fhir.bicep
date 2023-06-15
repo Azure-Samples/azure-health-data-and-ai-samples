@@ -73,3 +73,5 @@ resource fhirDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-0
 
 output fhirId string = fhir.id
 output fhirServiceUrl string = 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com'
+#disable-next-line BCP053
+output fhirIdentity string = fhir.identity.principalId
