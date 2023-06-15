@@ -46,11 +46,13 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 <details>
 <summary>Click to expand and see screenshots.</summary>
 <br />
+
 ![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
 </details>
+
 
 
 ### Modify Application Manifest
@@ -66,5 +68,6 @@ For the Application Registration to allow custom claims, the *acceptMappedClaims
 <details>
 <summary>Click to expand and see screenshots.</summary>
 <br />
+
 ![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
 </details>

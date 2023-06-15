@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Net;
+using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
@@ -16,15 +17,15 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
 {
     public class CheckExportJobOutputFilterTests
     {
-        private static ExportCustomOperationsConfig _config = new()
+        private static readonly ExportCustomOperationsConfig _config = new()
         {
             ApiManagementHostName = "apim-name.azure-api.net",
             ApiManagementFhirPrefex = "smart",
-            FhirServerUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
+            FhirUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
             ExportStorageAccountUrl = "https://account.blob.core.windows.net",
         };
 
-        private static ILogger<CheckExportJobOutputFilter> _logger = Substitute.For<ILogger<CheckExportJobOutputFilter>>();
+        private static readonly ILogger<CheckExportJobOutputFilter> _logger = Substitute.For<ILogger<CheckExportJobOutputFilter>>();
 
         [Fact]
         public async Task GivenAGetExportCheckOperation_WhenAccessingAllowedFile_FileObjectIsReturnedCorrectly()
@@ -33,16 +34,23 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             string oid = Guid.NewGuid().ToString();
             string restOfPath = "DateTimeFolder/filename.ndjson";
 
-            OperationContext context = new();
-            context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
+            OperationContext context = new()
+            {
+                Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export")
+            };
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
+            context.StatusCode = HttpStatusCode.OK;
 
-            JObject payload = new();
-            payload["requireAccessToken"] = false;
+            JObject payload = new()
+            {
+                ["requireAccessToken"] = false
+            };
 
-            JObject urlOne = new JObject();
-            urlOne["url"] = $"{_config.ExportStorageAccountUrl}/{oid}/{restOfPath}";
+            JObject urlOne = new()
+            {
+                ["url"] = $"{_config.ExportStorageAccountUrl}/{oid}/{restOfPath}"
+            };
             payload["output"] = new JArray() { urlOne };
             context.ContentString = payload.ToString();
 
@@ -50,7 +58,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             OperationContext newContext = await filter.ExecuteAsync(context);
 
             JObject newContextPayload = JObject.Parse(newContext.ContentString);
-            Assert.Equal(true, newContextPayload["requireAccessToken"]);
+            Assert.True(newContextPayload.Value<bool>("requiresAccessToken"));
             string expectedUrlOne = $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/_export/{oid}/{restOfPath}";
             Assert.Equal(expectedUrlOne, newContextPayload["output"]![0]!["url"]!.ToString());
         }
@@ -63,16 +71,23 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
             string containerName = Guid.NewGuid().ToString();
             string restOfPath = "DateTimeFolder/filename.ndjson";
 
-            OperationContext context = new();
-            context.Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export");
+            OperationContext context = new()
+            {
+                Request = new HttpRequestMessage(HttpMethod.Get, $"https://{_config.ApiManagementHostName}/{_config.ApiManagementFhirPrefex}/Group/{groupId}/$export")
+            };
             context.Properties["PipelineType"] = ExportOperationType.ExportCheck.ToString();
             context.Properties["oid"] = oid;
+            context.StatusCode = HttpStatusCode.OK;
 
-            JObject payload = new();
-            payload["requireAccessToken"] = false;
+            JObject payload = new()
+            {
+                ["requireAccessToken"] = false
+            };
 
-            JObject urlOne = new JObject();
-            urlOne["url"] = $"{_config.ExportStorageAccountUrl}/{containerName}/{restOfPath}";
+            JObject urlOne = new()
+            {
+                ["url"] = $"{_config.ExportStorageAccountUrl}/{containerName}/{restOfPath}"
+            };
             payload["output"] = new JArray() { urlOne };
             context.ContentString = payload.ToString();
 

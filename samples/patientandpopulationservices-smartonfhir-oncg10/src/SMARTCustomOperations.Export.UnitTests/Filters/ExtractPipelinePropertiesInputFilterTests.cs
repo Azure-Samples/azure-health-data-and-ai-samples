@@ -24,7 +24,7 @@ namespace SMARTCustomOperations.Export.UnitTests.Filters
         {
             ApiManagementHostName = "apim-name.azure-api.net",
             ApiManagementFhirPrefex = "smart",
-            FhirServerUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
+            FhirUrl = "https://workspace-fhir.fhir.azurehealthcareapis.com",
             ExportStorageAccountUrl = "https://account.blob.core.windows.net",
         };
 

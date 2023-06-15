@@ -89,9 +89,9 @@ namespace SMARTCustomOperations.Export.Filters
             // Ensure request has bearer token
             if (!tokenDecoder.CanReadToken(context.Request.Headers.Authorization?.Parameter))
             {
-                // default error event in WebPipeline.cs of toolkit
-                OnFilterError?.Invoke(this, new FilterErrorEventArgs(name: Name, id: Id, fatal: true, error: new SecurityException("Bearer token missing."), code: HttpStatusCode.Unauthorized));
-                return context;
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new SecurityException("Bearer token missing."), code: HttpStatusCode.Unauthorized);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
             // Set and parse the token
@@ -101,9 +101,9 @@ namespace SMARTCustomOperations.Export.Filters
             // Ensure there is an OID claim
             if (!jwtSecurityToken.Payload.ContainsKey("oid"))
             {
-                // default error event in WebPipeline.cs of toolkit
-                OnFilterError?.Invoke(this, new FilterErrorEventArgs(name: Name, id: Id, fatal: true, error: new SecurityException("Bearer token must have OID claim."), code: HttpStatusCode.Unauthorized));
-                return context;
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new SecurityException("Bearer token must have OID claim."), code: HttpStatusCode.Unauthorized);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
             // Set the object ID

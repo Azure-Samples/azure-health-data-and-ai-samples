@@ -6,6 +6,7 @@
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Net;
+using System.Net.Http.Headers;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
@@ -50,12 +51,14 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             _logger?.LogInformation("Entered {Name}", Name);
 
-            if (!context.Request.Content!.Headers.GetValues("Content-Type").Single().Contains("application/x-www-form-urlencoded", StringComparison.CurrentCultureIgnoreCase))
+            if (IsRequestUrlFormEncoded(context))
             {
-                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new ArgumentException("Content Type must be application/x-www-form-urlencoded"), code: HttpStatusCode.BadRequest);
+                FilterErrorEventArgs error = new FilterErrorEventArgs(name: Name, id: Id, fatal: true, error: new ArgumentException("Content Type must be application/x-www-form-urlencoded"), code: HttpStatusCode.BadRequest);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
+
+            context.Request!.Content!.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
             // Read the request body
             TokenContext? tokenContext = null;
@@ -64,7 +67,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Parse the request body
             try
             {
-                tokenContext = TokenContext.FromFormUrlEncodedContent(requestData!, context.Request.Headers.Authorization, _configuration.Audience!);
+                tokenContext = TokenContext.FromFormUrlEncodedContent(requestData!, context.Request.Headers.Authorization, _configuration.FhirAudience!);
                 tokenContext.Validate();
             }
             catch (Exception)
@@ -132,6 +135,13 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             context.Request.Content = castTokenContext.ConvertToClientCredentialsFormUrlEncodedContent(clientConfig.ClientSecret);
 
             return context;
+        }
+
+        private bool IsRequestUrlFormEncoded(OperationContext context)
+        {
+            return context.Request.Content == null ||
+                !context.Request.Content.Headers.GetValues("Content-Type")
+                .Any(x => string.Equals(x, "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

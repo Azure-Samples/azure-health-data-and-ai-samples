@@ -23,7 +23,7 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Filters
         private static AzureAuthOperationsConfig config = new()
         {
             TenantId = "xxxx-xxxx-xxxx-xxxx",
-            Audience = "12345678-90ab-cdef-1234-567890abcdef",
+            FhirAudience = "12345678-90ab-cdef-1234-567890abcdef",
         };
 
         [Fact]

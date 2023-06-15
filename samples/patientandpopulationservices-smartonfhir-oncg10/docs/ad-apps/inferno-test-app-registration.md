@@ -96,10 +96,10 @@ The EHR launch confidential client application is a standard confidential client
 Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
 1. Create a new application in Azure Active Directory. No platform or redirect URL is needed.
-1. Grant this application `FHIR Data Reader` and `FHIR Exporter` role in your FHIR Service.
+1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
-        - system.all.read
+        - user.all.read
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.

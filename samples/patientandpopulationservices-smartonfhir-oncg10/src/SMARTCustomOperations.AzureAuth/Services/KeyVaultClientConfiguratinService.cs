@@ -31,7 +31,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         public async Task<BackendClientConfiguration> FetchBackendClientConfiguration(string clientId)
         {
-            _logger.LogInformation("Attempting to pull backend service client informatoin for {ClientId}", clientId);
+            _logger.LogInformation("Attempting to pull backend service client information for {ClientId}", clientId);
 
             try
             {

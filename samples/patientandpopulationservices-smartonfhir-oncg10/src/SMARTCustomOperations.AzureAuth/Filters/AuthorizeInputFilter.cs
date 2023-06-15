@@ -49,7 +49,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             AuthorizeContext launchContext;
             try
             {
-                launchContext = await ParseLaunchContext(context.Request, _configuration.Audience!);
+                launchContext = await ParseLaunchContext(context.Request, _configuration.FhirAudience!);
             }
             catch (ArgumentException ex)
             {

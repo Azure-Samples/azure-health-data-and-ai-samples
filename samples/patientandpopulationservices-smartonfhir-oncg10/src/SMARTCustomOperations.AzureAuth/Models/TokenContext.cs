@@ -86,7 +86,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
                     formData.Remove("client_id");
                     formData.Remove("client_secret");
 
-                    var authParameterDecoded = reqAuth!.Parameter!.DecodeBase64().Split(":");
+                    var authParameterDecoded = reqAuth!.Parameter!.DecodeBase64()!.Split(":");
 
                     formData.Add("client_id", authParameterDecoded[0]);
                     formData.Add("client_secret", authParameterDecoded[1]);

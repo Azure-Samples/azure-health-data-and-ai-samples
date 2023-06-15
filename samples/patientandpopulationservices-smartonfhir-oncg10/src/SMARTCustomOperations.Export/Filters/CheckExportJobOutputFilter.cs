@@ -5,7 +5,6 @@
 
 using System.Net;
 using System.Security;
-using System.Security.Policy;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
@@ -38,14 +37,7 @@ namespace SMARTCustomOperations.Export.Filters
 
         public Task<OperationContext> ExecuteAsync(OperationContext context)
         {
-            // Only execute filter fof export job check operations
-            if (context.Properties["PipelineType"] != ExportOperationType.ExportCheck.ToString())
-            {
-                return Task.FromResult(context);
-            }
-
-            // Don't process running or failed export operations
-            if (context.StatusCode != HttpStatusCode.OK)
+            if (!IsRunningOrCompletedExportCheckJob(context))
             {
                 return Task.FromResult(context);
             }
@@ -67,10 +59,9 @@ namespace SMARTCustomOperations.Export.Filters
                     var outputObj = (JObject)output;
                     var origUrl = new Uri(outputObj["url"]!.ToString());
 
-                    // #TODO - test this logic
                     if (!origUrl.LocalPath.StartsWith("/" + context.Properties["oid"], StringComparison.InvariantCulture))
                     {
-                        var ex = new SecurityException($"User attempted export with token with wrong oid claim. {Id}. OID: {context.Properties["oid"]}. Container: {origUrl.Segments[1]}.");
+                        var ex = new SecurityException($"User attempted export access with token with wrong oid claim. {Id}. OID: {context.Properties["oid"]}. Container: {origUrl.Segments[1]}.");
 
                         FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.Unauthorized);
                         OnFilterError?.Invoke(this, error);
@@ -110,6 +101,17 @@ namespace SMARTCustomOperations.Export.Filters
             outputUriBuilder.Path += requestLocalPath;
 
             return outputUriBuilder.Uri;
+        }
+
+        // Only execute filter for export job check operations that are running or completed.
+        private static bool IsRunningOrCompletedExportCheckJob(OperationContext context)
+        {
+            if (context.Properties["PipelineType"] != ExportOperationType.ExportCheck.ToString() || context.StatusCode != HttpStatusCode.OK)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -62,12 +62,13 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public FormUrlEncodedContent ConvertToClientCredentialsFormUrlEncodedContent(string clientSecret)
         {
-            List<KeyValuePair<string, string>> formValues = new();
-
-            formValues.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
-            formValues.Add(new KeyValuePair<string, string>("scope", Scope));
-            formValues.Add(new KeyValuePair<string, string>("client_id", ClientId));
-            formValues.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
+            List<KeyValuePair<string, string>> formValues = new()
+            {
+                new KeyValuePair<string, string>("grant_type", "client_credentials"),
+                new KeyValuePair<string, string>("scope", Scope),
+                new KeyValuePair<string, string>("client_id", ClientId),
+                new KeyValuePair<string, string>("client_secret", clientSecret)
+            };
 
             return new FormUrlEncodedContent(formValues);
         }

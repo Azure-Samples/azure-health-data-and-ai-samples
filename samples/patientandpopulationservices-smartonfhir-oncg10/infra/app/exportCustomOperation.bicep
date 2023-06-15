@@ -87,7 +87,7 @@ resource exportCustomOperationFfhirProxyAppSettings 'Microsoft.Web/sites/config@
     ENABLE_ORYX_BUILD: 'true'
     
     AZURE_ApiManagementHostName: '${apimName}.azure-api.net'
-    AZURE_FhirServerUrl: fhirUrl
+    AZURE_FhirUrl: fhirUrl
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
