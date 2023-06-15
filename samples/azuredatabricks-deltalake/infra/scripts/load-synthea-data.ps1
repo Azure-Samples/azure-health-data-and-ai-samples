@@ -6,7 +6,7 @@ Invoke-WebRequest $azCopyUrl -OutFile $azCopyFile
 tar -xf $azCopyFile --strip-components=1
 
 ./azcopy login --identity --identity-resource-id "$env:MSI"
-./azcopy copy "https://ahdssampledata.blob.core.windows.net/fhir/synthea-ndjson-uscore-10000/*" "https://$env:STORAGE_ACCOUNT_NAME.blob.core.windows.net/import" --s2s-preserve-access-tier=false
+./azcopy copy "https://ahdssampledata.blob.core.windows.net/fhir/synthea-ndjson-uscore-1000/*" "https://$env:STORAGE_ACCOUNT_NAME.blob.core.windows.net/import" --s2s-preserve-access-tier=false
 
 $Ctx = New-AzStorageContext -StorageAccountName $env:STORAGE_ACCOUNT_NAME -UseConnectedAccount
 $FhirFiles = Get-AzStorageBlob -Container "import" -Context $Ctx
