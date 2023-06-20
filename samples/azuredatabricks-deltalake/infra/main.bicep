@@ -60,6 +60,7 @@ module fhir_template 'fhir.bicep'= {
     location: resourceLocation
     tags: resourceTags
     logAnalyticsWorkspaceId: log_analytics_template.outputs.loagAnalyticsId
+    storageName: datalakeName
   }
 }
 
@@ -109,12 +110,17 @@ module analytics_sync_app_template 'analyticsSyncApp.bicep'= {
   dependsOn: [databricks_template, datalake_template]
 }
 
+var fhirDataContributorRoleId = '5a1fc7df-4bf1-4951-a576-89034ee01acd'
+var storageBlobDataContributorRoleId = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+var storageQueueDataContributorRoleId = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+var storageTableDataContributorRoleId = '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3'
+
 @description('Setup access between FHIR and the function app via role assignment')
 module function_fhir_role_assignment_template './roleAssignment.bicep'= {
   name: 'fhirIdentity-function'
   params: {
     resourceId: fhir_template.outputs.fhirId
-    roleId: '5a1fc7df-4bf1-4951-a576-89034ee01acd'
+    roleId: fhirDataContributorRoleId
     principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
   }
 }
@@ -124,8 +130,17 @@ module deploymment_script_role_assignment_template './roleAssignment.bicep'= {
   name: 'fhirIdentity-deployment'
   params: {
     resourceId: fhir_template.outputs.fhirId
-    roleId: '5a1fc7df-4bf1-4951-a576-89034ee01acd'
+    roleId: fhirDataContributorRoleId
     principalId: managed_identity.outputs.identityPrincipalId
+  }
+}
+
+module fhirStorageBlobIdentity './roleAssignment.bicep'= {
+  name: 'fhirBlobIdentity-function'
+  params: {
+    resourceId: datalake_template.outputs.storage_account_id
+    roleId: storageBlobDataContributorRoleId
+    principalId: fhir_template.outputs.fhirIdentity
   }
 }
 
@@ -134,7 +149,7 @@ module functionStorageBlobIdentity './roleAssignment.bicep'= {
   name: 'storageBlobIdentity-function'
   params: {
     resourceId: datalake_template.outputs.storage_account_id
-    roleId: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+    roleId: storageBlobDataContributorRoleId
     principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
   }
 }
@@ -144,7 +159,7 @@ module functionStorageQueueIdentity './roleAssignment.bicep'= {
   name: 'storageQueueIdentity-function'
   params: {
     resourceId: datalake_template.outputs.storage_account_id
-    roleId: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+    roleId: storageQueueDataContributorRoleId
     principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
   }
 }
@@ -154,7 +169,7 @@ module functionStorageTableIdentity './roleAssignment.bicep'= {
   name: 'storageTableIdentity-function'
   params: {
     resourceId: datalake_template.outputs.storage_account_id
-    roleId: '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3'
+    roleId: storageTableDataContributorRoleId
     principalId: analytics_sync_app_template.outputs.functionAppPrincipalId
   }
 }

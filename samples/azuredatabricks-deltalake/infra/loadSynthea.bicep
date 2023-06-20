@@ -11,11 +11,13 @@ resource deployStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' exi
   name: storageName
 }
 
+var storageKey = listKeys(deployStorageAccount.id, '2019-06-01').keys[0].value
+
 @description('Deploymenet script to load sample Synthea data')
 resource loadSyntheaData 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: 'loadSyntheaData'
   location: location
-  kind: 'AzureCLI'
+  kind: 'AzurePowerShell'
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -23,14 +25,14 @@ resource loadSyntheaData 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     }
   }
   properties: {
-    azCliVersion: '2.26.0'
+    azPowerShellVersion: '9.7'
     forceUpdateTag: utcValue
     containerSettings: {
       containerGroupName: 'loadSyntheaData-${name}-ci'
     }
     storageAccountSettings: {
       storageAccountName: deployStorageAccount.name
-      storageAccountKey: listKeys(deployStorageAccount.id, '2019-06-01').keys[0].value
+      storageAccountKey: storageKey
     }
     timeout: 'PT2H'
     cleanupPreference: 'OnExpiration'
@@ -40,7 +42,15 @@ resource loadSyntheaData 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
         name: 'FHIR_URL'
         value: fhirUrl
       }
+      {
+        name: 'STORAGE_ACCOUNT_NAME'
+        value: deployStorageAccount.name
+      }
+      {
+        name: 'MSI'
+        value: identity
+      }
     ]
-    scriptContent: loadTextContent('scripts/load-synthea-data.sh')
+    scriptContent: loadTextContent('scripts/load-synthea-data.ps1')
   }
 }
