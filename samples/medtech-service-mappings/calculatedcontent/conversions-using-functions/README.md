@@ -17,7 +17,7 @@ We need to account for the following:
   - Height (meters)
   - Distance traveled (meters)
 
-Rather than create an upstream process to work around the above, we can customize the MedTech normalization process to achieve these conversions.
+Rather than create an upstream process as a workaround, we can customize the MedTech normalization process to achieve these conversions.
 
 ## Overview of the Device A device message
 
