@@ -60,11 +60,11 @@ This project provides samples outlining example implementations of various use c
 | --- | --- |
 | [DICOM service demo environment](/samples/dicom-demo-env/) | This sample provisions a full end-to-end demo environment of a simplified on-prem radiology network in an Azure resource group. Instructions are provided for configuring and using the DICOM router and ZFP viewer included in the environment. |
 
-### FHIR service and Terminology service integration
+### FHIR Service and Terminology Service Integration
 
 |Sample|Description|
 | --- | --- |
-| [FHIR service and Terminology service integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
+| [FHIR Service and Terminology Service Integraion](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
 
 ### MedTech service
 
