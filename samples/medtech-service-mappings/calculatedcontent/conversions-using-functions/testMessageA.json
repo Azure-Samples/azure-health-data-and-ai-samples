@@ -1,0 +1,8 @@
+{
+    "deviceType": "deviceTypeA",
+    "deviceId": "device123",
+    "timestamp": "2023-05-13T23:45:44Z",
+    "userId": "user123",
+    "heightInInches": 72,
+    "distanceInMiles": 0.6214
+}
