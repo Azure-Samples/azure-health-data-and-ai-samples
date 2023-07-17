@@ -87,6 +87,8 @@ Data is then extracted/normalized from this device data based on the remaining e
 
 For more information on defining templates within CalculatedContent mappings, see [How to use CalculatedContent mappings with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
 
+For more information on using custom functions within CalculatedContent mappings, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+
 ## Overview of the Device B device message
 
 During an exercise session, data is collected and stored on the device. Data is collected for each minute of the workout. At the end of the session, the data is aggregated into a single device message and submitted to the MedTech service.
@@ -201,3 +203,5 @@ Each element in the `data` array will be normalized according to the expressions
 ```
 
 For more information on defining templates within CalculatedContent mappings, see [How to use CalculatedContent mappings with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
+
+For more information on using custom functions within CalculatedContent mappings, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
