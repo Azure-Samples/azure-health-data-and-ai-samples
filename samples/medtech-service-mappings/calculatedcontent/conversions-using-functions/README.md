@@ -23,16 +23,16 @@ Rather than create an upstream process as a workaround, we can customize the Med
 
 During an exercise session, device data is submitted at one minute intervals to the MedTech service.
 
-A sample device message looks like this:
+The Device A sample device message looks like this:
 
 ```json
 {
-  "deviceType": "deviceTypeA",
-  "deviceId": "device123",
-  "timestamp": "2023-05-13T23:45:44Z",
-  "userId": "user123",
-  "heightInInches": 72,
-  "distanceInMiles": 0.6214
+    "deviceType": "deviceTypeA",
+    "deviceId": "device123",
+    "timestamp": "2023-05-13T23:45:44Z",
+    "userId": "user123",
+    "heightInInches": 72,
+    "distanceInMiles": 0.6214
 }
 ```
 
@@ -58,29 +58,30 @@ The JsonPath matches on device messages produced by Device A.
 
 We do the following:
 
-1. Match on a JSON Object that contains a field `deviceType` that has a value of `deviceTypeA`. **Note:** This matches on the entire device message object.
+1. Match on a JSON Object that contains a field `deviceType` that has a value of `deviceTypeA`.
+   1. This matches on the entire device message object.
 2. Return the entire device message.
 
 Data is then extracted/normalized from this device data based on the remaining expressions within the template. This produces the following normalized data:
 
 ```json
 [
-  {
-    "type": "DeviceADataElements",
-    "occurrenceTimeUtc": "2023-05-13T23:45:44Z",
-    "deviceId": "device123",
-    "patientId": "user123",
-    "properties": [
-      {
-        "name": "heightInMeters",
-        "value": "1.8288"
-      },
-      {
-        "name": "distanceInMeters",
-        "value": "1000.0463616"
-      }
-    ]
-  }
+    {
+        "type": "DeviceADataElements",
+        "occurrenceTimeUtc": "2023-05-13T23:45:44Z",
+        "deviceId": "device123",
+        "patientId": "user123",
+        "properties": [
+            {
+                "name": "heightInMeters",
+                "value": "1.8288"
+            },
+            {
+                "name": "distanceInMeters",
+                "value": "1000.0463616"
+            }
+        ]
+    }
 ]
 ```
 
@@ -90,31 +91,31 @@ For more information on defining templates within CalculatedContent mappings, se
 
 During an exercise session, data is collected and stored on the device. Data is collected for each minute of the workout. At the end of the session, the data is aggregated into a single device message and submitted to the MedTech service.
 
-A sample device message looks like this:
+The Device B sample device message looks like this:
 
 ```json
 {
-  "deviceId": "deviceTypeB_456",
-  "workoutStartTime": "2023-05-23T23:01:00Z",
-  "workoutEndTime": "2023-05-23T23:03:00Z",
-  "userDetails": {
-    "id": "user123",
-    "heightInMeters": 1.8288
-  },
-  "data": [
-    {
-      "startTime": "2023-05-23T23:01:00Z",
-      "distanceInYards": 30.6
+    "deviceId": "deviceTypeB_456",
+    "workoutStartTime": "2023-05-23T23:01:00Z",
+    "workoutEndTime": "2023-05-23T23:03:00Z",
+    "userDetails": {
+        "id": "user123",
+        "heightInMeters": 1.8288
     },
-    {
-      "startTime": "2023-05-23T23:02:00Z",
-      "distanceInYards": 32.1
-    },
-    {
-      "startTime": "2023-05-23T23:03:00Z",
-      "distanceInYards": 29.8
-    }
-  ]
+    "data": [
+        {
+            "startTime": "2023-05-23T23:01:00Z",
+            "distanceInYards": 30.6
+        },
+        {
+            "startTime": "2023-05-23T23:02:00Z",
+            "distanceInYards": 32.1
+        },
+        {
+            "startTime": "2023-05-23T23:03:00Z",
+            "distanceInYards": 29.8
+        }
+    ]
 }
 ```
 
@@ -129,7 +130,7 @@ We start with a `typeMatchExpression`, which allows us to match this device mess
 
 ```json
 "typeMatchExpression": {
-      "value": "to_array(@) | [? starts_with(deviceId, 'deviceTypeB')].data[] ",
+      "value": "to_array(@.Body) | [? deviceId && starts_with(deviceId, 'deviceTypeB')].data[] ",
       "language": "JmesPath"
   },
 ```
@@ -138,62 +139,64 @@ The JmesPath matches on device messages produced by Device B and processes each 
 
 We do the following:
 
-1. Convert the incoming object to an array. This is a prerequisite to using [filtering](https://jmespath.org/specification.html#filter-expressions) in JmesPath.
-2. Filter the array to only include objects which have a field `deviceId` with a value that starts with the string `deviceTypeB`. **Note:** This matches on the entire device message object.
+1. Convert the incoming object to an array. This is a prerequisite to using [filtering](https://jmespath.org/specification.html#filter-expressions) in JMESPath.
+2. Filter the array to only include objects which have a field `deviceId` with a value that starts with the string `deviceTypeB`.
+   1. We first determine if the field `deviceId` is actually present. This is done by the left hand side of the filter. The attribute must be "truth-like" according to JMESPath (for example: must exist, not have a value of `null`, etc.). If this check fails, the right hand side of the filter is not evaluated.
+   2. Next we use the `starts_with` function to determine if the string begins with `deviceTypeB`.
 3. Return a collection of all elements contained within the `data` array.
 
 Each element in the `data` array will be normalized according to the expressions within the template. Each element is accessible using a special token called `matchedToken`. The original device message is accessible as well. In this way, values for each `data` element as well as in the outer message can be extracted. This produces the following normalized data:
 
 ```json
 [
-  {
-    "type": "DeviceBDataElements",
-    "occurrenceTimeUtc": "2023-05-23T23:01:00Z",
-    "deviceId": "deviceTypeB_456",
-    "patientId": "user123",
-    "properties": [
-      {
-        "name": "heightInMeters",
-        "value": "1.8288"
-      },
-      {
-        "name": "distanceInMeters",
-        "value": "27.9809802487198"
-      }
-    ]
-  },
-  {
-    "type": "DeviceBDataElements",
-    "occurrenceTimeUtc": "2023-05-23T23:02:00Z",
-    "deviceId": "deviceTypeB_456",
-    "patientId": "user123",
-    "properties": [
-      {
-        "name": "heightInMeters",
-        "value": "1.8288"
-      },
-      {
-        "name": "distanceInMeters",
-        "value": "29.3525969275786"
-      }
-    ]
-  },
-  {
-    "type": "DeviceBDataElements",
-    "occurrenceTimeUtc": "2023-05-23T23:03:00Z",
-    "deviceId": "deviceTypeB_456",
-    "patientId": "user123",
-    "properties": [
-      {
-        "name": "heightInMeters",
-        "value": "1.8288"
-      },
-      {
-        "name": "distanceInMeters",
-        "value": "27.2494513533285"
-      }
-    ]
-  }
+    {
+        "type": "DeviceBDataElements",
+        "occurrenceTimeUtc": "2023-05-23T23:01:00Z",
+        "deviceId": "deviceTypeB_456",
+        "patientId": "user123",
+        "properties": [
+            {
+                "name": "heightInMeters",
+                "value": "1.8288"
+            },
+            {
+                "name": "distanceInMeters",
+                "value": "27.9809802487198"
+            }
+        ]
+    },
+    {
+        "type": "DeviceBDataElements",
+        "occurrenceTimeUtc": "2023-05-23T23:02:00Z",
+        "deviceId": "deviceTypeB_456",
+        "patientId": "user123",
+        "properties": [
+            {
+                "name": "heightInMeters",
+                "value": "1.8288"
+            },
+            {
+                "name": "distanceInMeters",
+                "value": "29.3525969275786"
+            }
+        ]
+    },
+    {
+        "type": "DeviceBDataElements",
+        "occurrenceTimeUtc": "2023-05-23T23:03:00Z",
+        "deviceId": "deviceTypeB_456",
+        "patientId": "user123",
+        "properties": [
+            {
+                "name": "heightInMeters",
+                "value": "1.8288"
+            },
+            {
+                "name": "distanceInMeters",
+                "value": "27.2494513533285"
+            }
+        ]
+    }
 ]
 ```
 

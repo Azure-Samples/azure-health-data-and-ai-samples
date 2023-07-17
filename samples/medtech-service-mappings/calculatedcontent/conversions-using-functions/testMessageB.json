@@ -1,23 +1,23 @@
 {
-  "deviceId": "deviceTypeB_456",
-  "workoutStartTime": "2023-05-23T23:01:00Z",
-  "workoutEndTime": "2023-05-23T23:03:00Z",
-  "userDetails": {
-    "id": "user123",
-    "heightInMeters": 1.8288
-  },
-  "data": [
-    {
-      "startTime": "2023-05-23T23:01:00Z",
-      "distanceInYards": 30.6
+    "deviceId": "deviceTypeB_456",
+    "workoutStartTime": "2023-05-23T23:01:00Z",
+    "workoutEndTime": "2023-05-23T23:03:00Z",
+    "userDetails": {
+        "id": "user123",
+        "heightInMeters": 1.8288
     },
-    {
-      "startTime": "2023-05-23T23:02:00Z",
-      "distanceInYards": 32.1
-    },
-    {
-      "startTime": "2023-05-23T23:03:00Z",
-      "distanceInYards": 29.8
-    }
-  ]
+    "data": [
+        {
+            "startTime": "2023-05-23T23:01:00Z",
+            "distanceInYards": 30.6
+        },
+        {
+            "startTime": "2023-05-23T23:02:00Z",
+            "distanceInYards": 32.1
+        },
+        {
+            "startTime": "2023-05-23T23:03:00Z",
+            "distanceInYards": 29.8
+        }
+    ]
 }

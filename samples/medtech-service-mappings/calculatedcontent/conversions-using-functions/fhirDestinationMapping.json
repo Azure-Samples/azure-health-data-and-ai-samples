@@ -1,133 +1,133 @@
 {
-  "templateType": "CollectionFhir",
-  "template": [
-    {
-      "templateType": "CodeValueFhir",
-      "template": {
-        "codes": [
-          {
-            "code": "sampleCode",
-            "display": "User details when collected by devices of type A",
-            "system": "http://loinc.org"
-          }
-        ],
-        "periodInterval": 60,
-        "typeName": "DeviceADataElements",
-        "components": [
-          {
-            "codes": [
-              {
-                "code": "sampleHeightCode",
-                "display": "Height",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "heightInMeters",
-              "code": "sampleHeightCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
+    "templateType": "CollectionFhir",
+    "template": [
+        {
+            "templateType": "CodeValueFhir",
+            "template": {
+                "codes": [
+                    {
+                        "code": "sampleCode",
+                        "display": "User details when collected by devices of type A",
+                        "system": "http://loinc.org"
+                    }
+                ],
+                "periodInterval": 60,
+                "typeName": "DeviceADataElements",
+                "components": [
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleHeightCode",
+                                "display": "Height",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "heightInMeters",
+                            "code": "sampleHeightCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    },
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleWeightCode",
+                                "display": "Weight",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "weightInKiloGrams",
+                            "code": "sampleWeightCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    },
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleDistanceCode",
+                                "display": "Distance",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "distanceInMeters",
+                            "code": "sampleDistanceCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "codes": [
-              {
-                "code": "sampleWeightCode",
-                "display": "Weight",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "weightInKiloGrams",
-              "code": "sampleWeightCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
+        },
+        {
+            "templateType": "CodeValueFhir",
+            "template": {
+                "codes": [
+                    {
+                        "code": "sampleCode",
+                        "display": "User details when collected by devices of type A",
+                        "system": "http://loinc.org"
+                    }
+                ],
+                "periodInterval": 60,
+                "typeName": "DeviceBDataElements",
+                "components": [
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleHeightCode",
+                                "display": "Height",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "heightInMeters",
+                            "code": "sampleHeightCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    },
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleWeightCode",
+                                "display": "Weight",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "weightInKiloGrams",
+                            "code": "sampleWeightCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    },
+                    {
+                        "codes": [
+                            {
+                                "code": "sampleDistanceCode",
+                                "display": "Distance",
+                                "system": "http://loinc.org"
+                            }
+                        ],
+                        "value": {
+                            "unit": "meter",
+                            "valueName": "distanceInMeters",
+                            "code": "sampleDistanceCode",
+                            "system": "http://loinc.org",
+                            "valueType": "Quantity"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "codes": [
-              {
-                "code": "sampleDistanceCode",
-                "display": "Distance",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "distanceInMeters",
-              "code": "sampleDistanceCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "templateType": "CodeValueFhir",
-      "template": {
-        "codes": [
-          {
-            "code": "sampleCode",
-            "display": "User details when collected by devices of type A",
-            "system": "http://loinc.org"
-          }
-        ],
-        "periodInterval": 60,
-        "typeName": "DeviceBDataElements",
-        "components": [
-          {
-            "codes": [
-              {
-                "code": "sampleHeightCode",
-                "display": "Height",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "heightInMeters",
-              "code": "sampleHeightCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
-            }
-          },
-          {
-            "codes": [
-              {
-                "code": "sampleWeightCode",
-                "display": "Weight",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "weightInKiloGrams",
-              "code": "sampleWeightCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
-            }
-          },
-          {
-            "codes": [
-              {
-                "code": "sampleDistanceCode",
-                "display": "Distance",
-                "system": "http://loinc.org"
-              }
-            ],
-            "value": {
-              "unit": "meter",
-              "valueName": "distanceInMeters",
-              "code": "sampleDistanceCode",
-              "system": "http://loinc.org",
-              "valueType": "Quantity"
-            }
-          }
-        ]
-      }
-    }
-  ]
+        }
+    ]
 }
