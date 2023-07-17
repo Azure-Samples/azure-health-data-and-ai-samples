@@ -141,9 +141,9 @@ The JmesPath matches on device messages produced by Device B and processes each 
 
 We do the following:
 
-1. Convert the incoming object to an array. This is a prerequisite to using [filtering](https://jmespath.org/specification.html#filter-expressions) in JMESPath.
+1. Convert the incoming object to an array. This is a prerequisite to using [filtering](https://jmespath.org/specification.html#filter-expressions) in JmesPath.
 2. Filter the array to only include objects which have a field `deviceId` with a value that starts with the string `deviceTypeB`.
-   1. We first determine if the field `deviceId` is actually present. This is done by the left hand side of the filter. The attribute must be "truth-like" according to JMESPath (for example: must exist, not have a value of `null`, etc.). If this check fails, the right hand side of the filter is not evaluated.
+   1. We first determine if the field `deviceId` is actually present. This is done by the left hand side of the filter. The attribute must be "truth-like" according to JmesPath (for example: must exist, not have a value of `null`, etc.). If this check fails, the right hand side of the filter is not evaluated.
    2. Next we use the `starts_with` function to determine if the string begins with `deviceTypeB`.
 3. Return a collection of all elements contained within the `data` array.
 
