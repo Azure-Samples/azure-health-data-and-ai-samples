@@ -52,7 +52,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [Patient and Population Services (g)(10) (including SMART on FHIR) sample](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/Patient%20and%20Population%20Services%20G10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
+| [Patient and Population Services (g)(10) (including SMART on FHIR) sample](samples/patientandpopulationservices-smartonfhir-oncg10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
 
 ### DICOM service
 
