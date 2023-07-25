@@ -1,0 +1,11 @@
+{
+    "PatientId": "patient1",
+    "HeartRate": 78,
+    "HeartRateVariability": 30,
+    "RespiratoryRate": 12,
+    "BodyTemperature": 98.6,
+    "BloodPressure": {
+        "Systolic": 120,
+        "Diastolic": 80
+    }
+}
