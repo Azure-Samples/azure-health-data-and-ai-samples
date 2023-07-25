@@ -2,7 +2,9 @@
 
 ## Scenario
 
-This example shows how the MedTech service can extract and normalize incoming device data using functions defined inside of the CalculatedContent mapping templates.
+This sample shows how the MedTech service can extract and normalize incoming device data using functions defined inside of the CalculatedContent templates.
+
+![Image](media/device-message-flow-with-event-hub.png)
 
 In this scenario, we set up two devices (Device A and Device B) to emit exercise data to the MedTech service. Both devices collect the same set of telemetry:
 
@@ -85,9 +87,11 @@ Data is then extracted/normalized from this device data based on the remaining e
 ]
 ```
 
-For more information on defining templates within CalculatedContent mappings, see [How to use CalculatedContent mappings with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
+To learn about using CalculatedContent templates, see [How to use CalculatedContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
 
-For more information on using custom functions within CalculatedContent mappings, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+To about using custom functions within CalculatedContent templates, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+
+To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).
 
 ## Overview of the Device B device message
 
@@ -202,6 +206,8 @@ Each element in the `data` array will be normalized according to the expressions
 ]
 ```
 
-For more information on defining templates within CalculatedContent mappings, see [How to use CalculatedContent mappings with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
+To learn about using CalculatedContent templates, see [How to use CalculatedContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
 
-For more information on using custom functions within CalculatedContent mappings, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+To lean about using custom functions within CalculatedContent templates, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+
+To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).
