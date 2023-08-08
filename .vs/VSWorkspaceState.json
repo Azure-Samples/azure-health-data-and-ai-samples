@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\samples",
+    "\\samples\\patientandpopulationservices-smartonfhir-oncg10",
+    "\\samples\\patientandpopulationservices-smartonfhir-oncg10\\src",
+    "\\samples\\patientandpopulationservices-smartonfhir-oncg10\\src\\auth-context-frontend-app"
+  ],
+  "SelectedNode": "\\samples\\patientandpopulationservices-smartonfhir-oncg10\\src\\auth-context-frontend-app\\entrypoint.js",
+  "PreviewInSolutionExplorer": false
+}
