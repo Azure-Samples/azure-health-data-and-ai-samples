@@ -1,8 +1,10 @@
-# Azure Health Data Services Samples Repo
+# Azure Health Data and AI Samples Repo
 
-The Azure Health Data Services Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data Services, learn how to use our products, and accelerate your implementations.
+The Azure Health Data and AI Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data and AI services, learn how to use our products, and accelerate your implementations.
 
-This project hosts open-source **samples** for Azure Health Data Services. To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview)
+This project hosts open-source **samples** for Azure Health Data and AI. 
+
+To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview)
 
 ## Samples
 
