@@ -25,7 +25,7 @@ if ([string]::IsNullOrWhiteSpace($FhirUrl) -or [string]::IsNullOrWhiteSpace($Fhi
     $AZD_ENVIRONMENT = azd env get-values --cwd $SAMPLE_ROOT
     $AZD_ENVIRONMENT | foreach {
         $name, $value = $_.split('=')
-        if ([string]::IsNullOrWhiteSpace($name) || $name.Contains('#')) {
+        if ([string]::IsNullOrWhiteSpace($name) +or $name.Contains('#')) {
             continue
         }
         
