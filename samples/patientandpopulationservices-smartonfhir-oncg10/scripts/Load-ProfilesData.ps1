@@ -58,7 +58,7 @@ if (-not $TenantId) {
     exit
 }
 
-az login -t $TenantId
+az login -t $TenantId --scope "$FhirAudience/user_impersonation"
 
 $access_token = az account get-access-token --scope "$FhirAudience/user_impersonation" --query 'accessToken' -o tsv
 
