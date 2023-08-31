@@ -1,14 +1,11 @@
-# Azure ONC (g)(10) Sample Technical Guide
+# Azure SMART on FHIR Technical Guide
 
-This document describes how we plan to create a passing ONC (g)(10) sample combining Azure Health Data Services with other Azure services.
+This document describes how this SMART on FHIR sample works with Azure Health Data Services.
 
-## Introduction
-
-ONC (g)(10) is a requirement of EHR vendors laid out by the Office of the National Coordinator. The full name for this requirement is Standardized API for Patient and Population Services criterion § 170.315(g)(10) in the 2015 Edition Cures Update.
 
 ## Architecture Overview
 
-To successfully use this ONC (g)(10) sample, your Azure environment must be setup with the below resources.
+To successfully use this SMART on FHIR sample, your Azure environment must be setup with the below resources.
 
 - Azure Health Data Services with a FHIR Service
 - Azure API Management
@@ -19,8 +16,6 @@ To successfully use this ONC (g)(10) sample, your Azure environment must be setu
     - Backend Services Auth Handler enables the auth flow for SMART backend services scenarios.
 - Storage Account
   - Needed for Azure Function, assorted static assets, and configuration tables.
-- Azure KeyVault
-  - Needed for JWKS authentication since Azure AD does not support the RSA384 or ES384 encryption algorithms.
 - Azure Static Web Apps
   - Needed for the Patient Standalone authorize flow to properly handle scopes. Azure AD does not support session based scoping. 
 
@@ -140,65 +135,10 @@ Azure Active Directory does not have a mechanism for selecting a subset of scope
     APIM ->> User/App: Forward token response
 ```
 
-## Backend Service Authorization
 
-Backend Service Authorization is part of the [FHIR Bulk Data Access Implementation Guide](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html). Backend services are intended to be used by developers of backend services (clients) that autonomously (or semi-autonomously) need to access resources from FHIR servers that have pre-authorized defined scopes of access. It is a combination of a client registration process (using JSON Web Keys), token generation without the sharing of secrets, and using SMART on FHIR with `system` scopes to access data.
-
-SMART Backend Services requires that FHIR servers allow client asymmetric authentication with RSA384 and/or ES384. Active Directory does not support this natively today, so the SMART Auth Custom Operations has code to handle these backend authorization request. This code in the SMART auth handlers function is responsible for validating the backend service authentication request, creating an Azure Active Directory token using the matching secret in Azure KeyVault, and returning the token to the backend service for use when calling Azure Health Data Services.
-
-### Backend Service Registration
-
-Client registration is an out-of-band process required before backend services can access data from the FHIR server. Client registration can be an automated or manual process. In our sample, we have a manual client registration process that must be done during backend service registration. The process is as follows:
-
-- Collect the JWKS url from the client who needs to register.
-- Create an Application Registration for the backend service. Generate a client secret and save both.
-- In the Azure KeyVault created when deploying the sample, you need to create a new secret where the name is the client_id and the value is the secret.
-  - You also must create a tag on the secret called `jwks_url` containing the url for the backend service. The SMART Auth Custom Operation for backend services will use this tag to validate the backend service.  
-
-![](./images/keyvault-reg.png)
-
-### Backend Service Authorization Flow
-
-```mermaid
-  sequenceDiagram
-    participant Backend Service
-    participant APIM
-    participant SMART Auth Custom Operations
-    participant KeyVault
-    participant FHIR
-
-    Backend Service ->> APIM: Discovery Request
-    APIM -->> Backend Service: Discovery Response
-    Backend Service ->> Backend Service: Generate RSA 384 Client Assertion
-    Backend Service ->> APIM: /token
-    APIM ->> SMART Auth Custom Operations: /token request
-    SMART Auth Custom Operations ->> KeyVault: client_id
-    KeyVault -->> SMART Auth Custom Operations: jwks_url & secret
-
-    note over SMART Auth Custom Operations: Validate assertion
-    alt Granted
-        note over SMART Auth Custom Operations: Generate AAD token using secret
-        SMART Auth Custom Operations -->> APIM: Token Response
-        APIM -->> Backend Service: Access Token Response
-        Backend Service ->> APIM: Request Resources
-        APIM ->> FHIR: Request Resources
-        FHIR -->> Backend Service: FHIR Response
-    else Denied
-        SMART Auth Custom Operations -->> APIM: Authorization Error
-        APIM -->> Backend Service: Authorization Error
-    end
-```
 
 ## Resources
 
 - [SMART on FHIR 1.0 Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/)
-- [FHIR Bulk Data Access Implementation Guide (STU1.0.1)](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/)
-- [ONC Health IT Certification Program API Resource Guide](https://onc-healthit.github.io/api-resource-guide/g10-criterion/)
-- [Inferno Testing Tool](https://inferno.healthit.gov/)
-- [ONC Certification (g)(10) Standardized API Test Kit on Github](https://github.com/onc-healthit/onc-certification-g10-test-kit)
 
-# TODO
 
-- EHR Launch
-- Rewriting of resource URLs
-- Missing Data

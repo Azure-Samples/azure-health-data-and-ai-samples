@@ -1,4 +1,4 @@
-# Sample Deployment: Azure Health Data Services ONC (g)(10) & SMART on FHIR
+# Sample Deployment: SMART on FHIR
 
 This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Azure Active Directory configuration.
 
@@ -30,7 +30,7 @@ Make sure you have the pre-requisites listed below
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
-1. Use the terminal or your git client to clone this repo. Open a terminal to the `patientandpopulationservices-smartonfhir-oncg10` folder.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `smartonfhir` folder.
 1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
 1. Run `azd env new` to create a new deployment environment.
     - *NOTE:* Environment name will be the prefix for all of your resources.
@@ -87,19 +87,9 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 </details>
 <br />
 
-## 4. Create Inferno Test Applications in Azure Active Directory
+## 4. [Optionally] Add sample data and US Core resources
 
-We will need to create four separate Azure AD Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Azure Active Directory applications, [read this](https://learn.microsoft.com/azure/active-directory/develop/security-best-practices-for-app-registration).
-
-Follow the directions on the [Inferno Test App Registration Page](./ad-apps/inferno-test-app-registration.md) for instructions on registering the needed Azure Applications for the Inferno (g)(10) tests.
-- Standalone Patient App (Confidential Client)
-- EHR Practitioner App (Confidential Client)
-- Backend Service Client
-- Standalone Patient App (Public Client)
-
-## 6. Add sample data and US Core resources
-
-To successfully run the Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
+Optionally you can load US Core Profiles and sample data to your FHIR Service. 
 
 To quickly load the needed data to your FHIR Service, make sure your user account has FHIR Data Contributor role on the FHIR Service. Then execute this script:
 
