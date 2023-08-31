@@ -14,6 +14,14 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     ]
     path: '/smart'
   }
+
+  resource policy 'policies@2021-01-01-preview' = {
+    name: 'policy'
+    properties: {
+      format: 'rawxml'
+      value: loadTextContent('policies/headerAttribution.xml')
+    }
+  }
   
   resource metadataOverrideOperation 'operations' = {
     name: 'metadatOverride'
