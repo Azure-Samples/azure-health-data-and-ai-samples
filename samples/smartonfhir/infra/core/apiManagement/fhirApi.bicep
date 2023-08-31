@@ -14,7 +14,7 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     ]
     path: '/smart'
   }
-
+  
   resource metadataOverrideOperation 'operations' = {
     name: 'metadatOverride'
     properties: {

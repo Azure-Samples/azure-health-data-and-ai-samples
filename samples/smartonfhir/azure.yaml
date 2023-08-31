@@ -2,16 +2,12 @@
 
 name: fhir-smart-onc-g10-solution
 metadata:
-  template: patientandpopulationservices-smartonfhir-oncg10@1.0.0
+  template: smartonfhir@1.0.0
 requiredVersions: 
   azd: ">= 1.0.1"
 services:
   auth:
     project: src/SMARTCustomOperations.AzureAuth
-    language: csharp
-    host: function
-  export:
-    project: src/SMARTCustomOperations.Export
     language: csharp
     host: function
   context:
