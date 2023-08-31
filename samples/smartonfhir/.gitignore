@@ -1,0 +1,8 @@
+*.env
+config.json
+.azure
+.vs/*
+src/.vs*
+
+src/*/bin/*
+src/*/obj/*
