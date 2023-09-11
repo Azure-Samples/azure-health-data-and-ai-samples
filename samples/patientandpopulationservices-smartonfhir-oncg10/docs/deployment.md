@@ -97,6 +97,8 @@ Follow the directions on the [Inferno Test App Registration Page](./ad-apps/infe
 - Backend Service Client
 - Standalone Patient App (Public Client)
 
+Note : In Inferno test tool you need to provide <APIM gateway URL>/smart as a base Url.
+
 ## 6. Add sample data and US Core resources
 
 To successfully run the Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
