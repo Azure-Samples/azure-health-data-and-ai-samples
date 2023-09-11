@@ -14,7 +14,6 @@ Make sure you have the pre-requisites listed below
   - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) to run scripts that interact with Azure.
   - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
-  - [Node / NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK 6+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
   - [PowerShell](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!)
 
@@ -76,7 +75,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 1. Open the resource group created by step 3. Find the Azure API Management instance.
 1. Copy the Gateway URL for the API Management instance.
-1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
+1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to add the last slash.
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />
@@ -87,20 +86,3 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 </details>
 <br />
 
-## 4. [Optionally] Add sample data and US Core resources
-
-Optionally you can load US Core Profiles and sample data to your FHIR Service. 
-
-To quickly load the needed data to your FHIR Service, make sure your user account has FHIR Data Contributor role on the FHIR Service. Then execute this script:
-
-Windows:
-```powershell
-powershell ./scripts/Load-ProfilesData.ps1
-```
-
-Mac/Linux:
-```bash
-pwsh ./scripts/Load-ProfilesData.ps1
-```
-
-To learn more about the sample data, read [sample data](./sample-data.md).
