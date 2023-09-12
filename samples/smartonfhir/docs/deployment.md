@@ -87,20 +87,3 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 </details>
 <br />
 
-## 4. [Optionally] Add sample data and US Core resources
-
-Optionally you can load US Core Profiles and sample data to your FHIR Service. 
-
-To quickly load the needed data to your FHIR Service, make sure your user account has FHIR Data Contributor role on the FHIR Service. Then execute this script:
-
-Windows:
-```powershell
-powershell ./scripts/Load-ProfilesData.ps1
-```
-
-Mac/Linux:
-```bash
-pwsh ./scripts/Load-ProfilesData.ps1
-```
-
-To learn more about the sample data, read [sample data](./sample-data.md).
