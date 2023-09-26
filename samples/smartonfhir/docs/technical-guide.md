@@ -19,7 +19,7 @@ To successfully use this SMART on FHIR sample, your Azure environment must be se
 - Azure Static Web Apps
   - Needed for the Patient Standalone authorize flow to properly handle scopes. Azure AD does not support session based scoping. 
 
-![](./images/overview-architecture.png)
+![](./images/smart-sample-overview-archdiagram.png)
 
 ## Conformance/Discovery
 
