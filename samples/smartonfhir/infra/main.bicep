@@ -36,17 +36,20 @@ param FhirAudience string
 
 // start optional configuration parameters
 
+@description('Name of your existing resource group (leave blank to create a new one)')
+param existingResourceGroupName string 
+
 @description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
-param createWorkspace bool = true
+param createWorkspace bool 
 
 @description('Do you want to create a new FHIR Service or use an existing one?')
-param createFhirService bool = true
+param createFhirService bool 
 
 @description('Name of Azure Health Data Services workspace to deploy or use. Leave blank for default.')
-param workspaceName string = ''
+param workspaceName string
 
 @description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param fhirServiceName string = ''
+param fhirServiceName string 
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
@@ -76,7 +79,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 }
 
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
-var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
+var fhirNameResolved = length(fhirServiceName) > 0 ? fhirServiceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 
 @description('Deploy Azure Health Data Services and FHIR service')
@@ -84,6 +87,7 @@ module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
   scope: rg
   params: {
+    existingResourceGroupName: existingResourceGroupName
     createWorkspace: createWorkspace
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
@@ -115,7 +119,7 @@ module monitoring 'core/monitoring.bicep'= {
 @description('Deploy base resources needed for function app based custoom operations.')
 module functionBase 'core/functionHost.bicep' = {
   name: 'functionBaseDeploy'
-  scope: rg
+ scope: rg
   params: {
     appTags: appTags
     location: location
