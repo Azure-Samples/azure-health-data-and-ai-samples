@@ -30,22 +30,21 @@ Make sure you have the pre-requisites listed below
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
-1. Use the terminal or your git client to clone this repo. Open a terminal to the `smartonfhir` folder.
-1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir` folder.
+1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd auth login` or `azd auth login --tenant-id <tenant-id>`. Also login with the Azure CLI using `az login`.
 1. Run `azd env new` to create a new deployment environment.
     - *NOTE:* Environment name will be the prefix for all of your resources.
 1. [Create the FHIR Resource App Registration. Use the instructions here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
-    - Make sure to tell azd about this application with `azd env set FhirAudience <FHIR Resource App Audience>`.
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
     - Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
 1. Set your deployment environment configuration.
     ```
     azd env set ApiPublisherName "Your Name"
     azd env set ApiPublisherEmail "Your Email"
-    azd env set FhirAudience "FHIR Resource Application URL (like http://appname.tenant.onmicrosoft.com)"
-    azd env set ContextAppClientId "Auth Context Frontend App Application ID"
     ```
-1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code. It will take about an hour - you can continue the setup below. 
+1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code.  It will take about an hour.
+    - You will need to provide `subscription name` and `location` during exection of this command where all the required resource will get deployed.
+    - You can continue the setup below. 
     ```
     azd up
     ```
