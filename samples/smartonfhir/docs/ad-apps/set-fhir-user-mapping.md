@@ -35,7 +35,7 @@ In the Azure Portal under Azure Active Directory, select Enterprise Applications
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
-1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
+1. In the Azure Portal, on the **Attributes & Claims** section, select **Edit**
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source

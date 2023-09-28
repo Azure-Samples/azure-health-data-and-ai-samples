@@ -13,12 +13,11 @@ This application registration is used to customize the access token sent to the 
     - Click `Register` (ignore redirect URI).
 1. Set the application URL
     - Go to `Expose an API` blade.
-    - Set the application URL to https://<app-registration-name>.<Azure AD Primary Domain>.
+    - Set the application URL to `https://<app-registration-name>.<Azure AD Primary Domain>`.
         - For example `https://my-app-1.mytenant.onmicrosoft.com`.
         - Save the `Application URL` for later.
 1. Add all the applicable FHIR Scopes.
     - Go to the Manifest blade for your application.
-    - Change `acceptMappedClaims` from null to true.
     - Copy the `appRoles` JSON element from [fhir-app-manifest.json](./fhir-app-manifest.json) to the `appRoles` JSON element in your application manifest.
     - Copy the `oauth2Permissions` JSON element from [fhir-app-manifest.json](./fhir-app-manifest.json) to the `oauth2Permissions` JSON element in your application manifest.
 1. Inform your Azure Developer CLI environment of this application with:
