@@ -22,6 +22,21 @@
         },
         "ContextAppClientId": {
             "value": "${ContextAppClientId}"
+        },    
+        "existingResourceGroupName": {
+          "value": ""
+        },
+        "createworkspace": {
+          "value": false
+        },
+        "createfhirservice": {
+          "value": false
+        },
+        "workspacename": {
+          "value": ""
+        },
+        "fhirservicename": {
+          "value": ""
         }
     }
 }
