@@ -12,6 +12,7 @@ The below components will be deployed with this sample.
 2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Azure Active Directory](https://learn.microsoft.com/azure/active-directory/fundamentals/active-directory-whatis) with custom code to enable some specific requirements.
 
 **As a next step, follow the steps listed in the [Deployment document](./docs/deployment.md). This document provides detailed deployment instructions.**
+Note : Known Issue: The execution of this deployment script creates a new FHIR instance. We are actively working on enabling script to work with existing FHIR instance[Reference issue link](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/issues/132).
 
 Read through [the technical guide](./docs/technical-guide.md) to understand integration of deployed components with Azure Health Data Services, FHIR service.
 
