@@ -1,42 +1,42 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "value": "${AZURE_ENV_NAME}"
-        },
-        "location": {
-            "value": "${AZURE_LOCATION}"
-        },
-        "principalId": {
-            "value": "${AZURE_PRINCIPAL_ID}"
-        },
-        "ApiPublisherName": {
-            "value": "${ApiPublisherName=Placeholder Name}"
-        },
-        "ApiPublisherEmail": {
-            "value": "${ApiPublisherEmail=youremail@onmicrosoft.com}"
-        },
-        "FhirAudience": {
-            "value": "${FhirAudience}"
-        },
-        "ContextAppClientId": {
-            "value": "${ContextAppClientId}"
-        },    
-        "existingResourceGroupName": {
-          "value": ""
-        },
-        "createworkspace": {
-          "value": false
-        },
-        "createfhirservice": {
-          "value": false
-        },
-        "workspacename": {
-          "value": ""
-        },
-        "fhirservicename": {
-          "value": ""
-        }
+  "parameters": {
+    "name": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "ApiPublisherName": {
+      "value": "${ApiPublisherName=Placeholder Name}"
+    },
+    "ApiPublisherEmail": {
+      "value": "${ApiPublisherEmail=youremail@onmicrosoft.com}"
+    },
+    "FhirAudience": {
+      "value": "${FhirAudience}"
+    },
+    "ContextAppClientId": {
+      "value": "${ContextAppClientId}"
+    },
+    "existingresourcegroupname": {
+      "value": ""
+    },
+    "createworkspace": {
+      "value": false
+    },
+    "createfhirservice": {
+      "value": false
+    },
+    "workspacename": {
+      "value": ""
+    },
+    "fhirservicename": {
+      "value": ""
     }
+  }
 }
