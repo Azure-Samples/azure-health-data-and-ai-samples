@@ -37,6 +37,9 @@
     },
     "workspacename": {
       "value": ""
+    },
+    "fhirId": {
+      "value": ""
     }
   }
 }

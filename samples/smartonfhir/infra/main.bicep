@@ -54,6 +54,9 @@ param fhirServiceName string
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
+@description('Id of the FHIR Service to load resources into.')
+param fhirid string = ''
+
 // end optional configuration parameters
 
 var nameClean = replace(name, '-', '')
@@ -71,6 +74,8 @@ var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
 var createResourceGroup = empty(existingResourceGroupName) ? true : false
 
+var fhirResourceIdSplit = split(fhirid,'/')
+var fhirserviceRg = fhirResourceIdSplit[4]
 
 @description('Resource group to deploy sample in.')
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {
@@ -93,7 +98,7 @@ module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
-    existingResourceGroupName: existingResourceGroupName
+    existingResourceGroupName: fhirserviceRg
     createWorkspace: createWorkspace
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
