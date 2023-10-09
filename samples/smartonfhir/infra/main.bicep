@@ -74,9 +74,6 @@ var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
 var createResourceGroup = empty(existingResourceGroupName) ? true : false
 
-var fhirResourceIdSplit = split(fhirid,'/')
-var fhirserviceRg = fhirResourceIdSplit[4]
-
 @description('Resource group to deploy sample in.')
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {
   name: '${name}-rg'
@@ -98,7 +95,7 @@ module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
-    existingResourceGroupName: fhirserviceRg
+    fhirid: fhirid
     createWorkspace: createWorkspace
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
