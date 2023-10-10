@@ -89,13 +89,16 @@ var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${repla
 var fhirNameResolved = length(fhirServiceName) > 0 ? fhirServiceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
+var fhirResourceIdSplit = split(fhirid,'/')
+var fhirserviceRg = empty(fhirid) ? '' : fhirResourceIdSplit[4]
+var fhirInstanceResourceGroup = empty(fhirid) ? newOrExistingResourceGroupName : fhirserviceRg
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
-    fhirid: fhirid
+    fhirInstanceResourceGroup: fhirInstanceResourceGroup
     createWorkspace: createWorkspace
     createFhirService: createFhirService
     workspaceName: workspaceNameResolved
