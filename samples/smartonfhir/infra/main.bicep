@@ -55,7 +55,7 @@ param fhirServiceName string
 param logAnalyticsName string = ''
 
 @description('Id of the FHIR Service to load resources into.')
-param fhirid string = ''
+param fhirid string 
 
 // end optional configuration parameters
 

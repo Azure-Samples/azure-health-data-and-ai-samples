@@ -23,6 +23,9 @@
     "FhirAudience": {
       "value": "${FhirAudience}"
     },
+    "fhirId": {
+      "value": ""
+    },
     "fhirservicename": {
       "value": ""
     },
@@ -36,9 +39,6 @@
       "value": "${AZURE_PRINCIPAL_ID}"
     },
     "workspacename": {
-      "value": ""
-    },
-    "fhirId": {
       "value": ""
     }
   }
