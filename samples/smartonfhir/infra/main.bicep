@@ -45,12 +45,6 @@ param createWorkspace bool
 @description('Do you want to create a new FHIR Service or use an existing one?')
 param createFhirService bool 
 
-@description('Name of Azure Health Data Services workspace to deploy or use. Leave blank for default.')
-param workspaceName string
-
-@description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param fhirServiceName string 
-
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
@@ -59,8 +53,8 @@ param fhirid string
 
 // end optional configuration parameters
 
-var nameClean = replace(name, '-', '')
-var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+ var nameClean = replace(name, '-', '')
+ var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -85,12 +79,12 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
   name: existingResourceGroupName
 }
 
-var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
-var fhirNameResolved = length(fhirServiceName) > 0 ? fhirServiceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
 var fhirResourceIdSplit = split(fhirid,'/')
 var fhirserviceRg = empty(fhirid) ? '' : fhirResourceIdSplit[4]
+var workspaceNameResolved = empty(fhirid) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
+var fhirNameResolved = empty(fhirid) ? 'fhirdata' : fhirResourceIdSplit[10]
 var fhirInstanceResourceGroup = empty(fhirid) ? newOrExistingResourceGroupName : fhirserviceRg
 
 @description('Deploy Azure Health Data Services and FHIR service')

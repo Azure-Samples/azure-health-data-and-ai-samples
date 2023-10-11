@@ -25,10 +25,7 @@
     },
     "fhirId": {
       "value": ""
-    },
-    "fhirservicename": {
-      "value": ""
-    },
+    }, 
     "location": {
       "value": "${AZURE_LOCATION}"
     },
@@ -37,9 +34,6 @@
     },
     "principalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
-    },
-    "workspacename": {
-      "value": ""
     }
   }
 }
