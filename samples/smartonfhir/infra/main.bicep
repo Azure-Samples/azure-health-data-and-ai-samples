@@ -53,8 +53,8 @@ param fhirid string
 
 // end optional configuration parameters
 
- var nameClean = replace(name, '-', '')
- var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+var nameClean = replace(name, '-', '')
+var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -243,9 +243,7 @@ output ExportStorageAccountUrl string = 'https://${functionBase.outputs.storageA
 output ApiManagementHostName string = apim.outputs.apimHostName
 output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
-
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
-
 output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
