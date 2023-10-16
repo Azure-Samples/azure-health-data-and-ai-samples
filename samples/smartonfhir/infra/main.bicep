@@ -167,7 +167,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 }
 
 @description('Setup identity connection between FHIR and the given contributors')
-module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: if(createResourceGroup && empty(fhirid)) {
+module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirContrib'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
