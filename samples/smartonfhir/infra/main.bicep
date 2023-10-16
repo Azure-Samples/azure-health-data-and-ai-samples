@@ -167,7 +167,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 }
 
 @description('Setup identity connection between FHIR and the given contributors')
-module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
+module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: if(createResourceGroup && empty(fhirid)) {
   name: 'fhirIdentity-${principalId}-fhirContrib'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
@@ -248,3 +248,4 @@ output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
+output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
