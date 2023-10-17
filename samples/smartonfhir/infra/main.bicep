@@ -39,16 +39,10 @@ param FhirAudience string
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string 
 
-@description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
-param createWorkspace bool 
-
-@description('Do you want to create a new FHIR Service or use an existing one?')
-param createFhirService bool 
-
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
-@description('Id of the FHIR Service to load resources into.')
+@description('Id of the FHIR Service to load resources into. (Get it from your fhir service properties)')
 param fhirid string 
 
 // end optional configuration parameters
@@ -67,6 +61,8 @@ var tenantId = subscription().tenantId
 var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
 var createResourceGroup = empty(existingResourceGroupName) ? true : false
+var createWorkspace = empty(fhirid) ? true : false
+var createFhirService = empty(fhirid) ? true : false
 
 @description('Resource group to deploy sample in.')
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {

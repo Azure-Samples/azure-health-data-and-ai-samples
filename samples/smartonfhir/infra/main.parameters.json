@@ -11,12 +11,6 @@
     "ContextAppClientId": {
       "value": "${ContextAppClientId}"
     },
-    "createfhirservice": {
-      "value": false
-    },
-    "createworkspace": {
-      "value": false
-    },
     "existingresourcegroupname": {
       "value": ""
     },
