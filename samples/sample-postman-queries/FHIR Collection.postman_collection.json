@@ -21900,6 +21900,44 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "FHIR & EMPI Integration",
+			"item": [
+				{
+					"name": "Match Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"resourceType\": \"Parameters\",\r\n  \"parameter\": [\r\n    {\r\n      \"name\": \"resource\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"identifier\":[\r\n            {\r\n                 \"system\": \"urn:oid:2.16.840.1.113883.4.927\",\r\n                 \"value\": \"9A13A627AA01\"\r\n            }\r\n        ],\r\n        \"gender\": \"female\",\r\n        \"name\": [\r\n          {\r\n            \"family\": \"Smith\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"name\": \"count\",\r\n      \"valueInteger\": \"10\"\r\n    },\r\n    {\r\n      \"name\": \"onlyCertainMatches\",\r\n      \"valueBoolean\": \"true\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{empiconnectorurl}}/api/Match?code={{apikey}}",
+							"host": [
+								"{{empiconnectorurl}}"
+							],
+							"path": [
+								"api",
+								"Match"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "{{apikey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
