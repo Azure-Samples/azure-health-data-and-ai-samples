@@ -36,8 +36,8 @@ if (-not $FhirResourceAppId) {
 
 $AppRoles = "$SCRIPT_PATH/manifest-json-contents/app-roles.json"
 $OAuth2Permissions = "$SCRIPT_PATH/manifest-json-contents/oauth2-permissions.json"
-
-$APP_NAME=$(az ad app show --id $FhirResourceAppId --query 'displayName' --output tsv)
+ 
+    $APP_NAME=$(az ad app show --id $FhirResourceAppId --query 'displayName' --output tsv)
 
 $DOMAIN_INFO=$(az rest --method get --url 'https://graph.microsoft.com/v1.0/domains?$select=id')
 $DOMAIN_JSON = $DOMAIN_INFO | ConvertFrom-Json
@@ -45,6 +45,6 @@ $PRIMARY_DOMAIN = $DOMAIN_JSON.value[0].id
 
 azd env set FhirAudience "https://$APP_NAME.$PRIMARY_DOMAIN"
 
-az ad app update --id $FhirResourceAppId --identifier-uris "https://$APP_NAME.$PRIMARY_DOMAIN" --set acceptMappedClaims=true appRoles=@$AppRoles oauth2Permissions=@$OAuth2Permissions 
+az ad app update --id $FhirResourceAppId --identifier-uris "https://$APP_NAME.$PRIMARY_DOMAIN" --set appRoles=@$AppRoles api=@$OAuth2Permissions
 
 Write-Host "Done."
