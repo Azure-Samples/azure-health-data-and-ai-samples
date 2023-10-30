@@ -45,9 +45,7 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code.  It will take about an hour.
     - During the execution of this command, you will need to select `subscription name` and `location` from the drop down to specify where all resources will get deployed. 
     - To create a new resource group for SMART on FHIR resources deployment, leave the `existingResourceGroupName` parameter blank; otherwise, enter the name of an existing resource group where you want to deploy all of your SMART on FHIR resources. 
-    - If you want to create a new FHIR server instance, leave the `fhirid` parameter blank. Otherwise, provide the FHIR instance id of existing FHIR server instance in case you want to use existing FHIR server instance.
-    - To get the FHIR instance Id go to your fhir service and in left menu click on properties and Copy the Id field.
-    - Multiple SMART on FHIR apps can not be deployed in same resource group and it's expected to have FHIR server instance and SMART on FHIR resources deployed in same resource group.
+    - Multiple SMART on FHIR sample apps can not be deployed in same resource group.
     - You can continue the setup below. 
     ```
     azd up
