@@ -44,6 +44,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
 1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code.  It will take about an hour.
     - During the execution of this command, you will need to select `subscription name` and `location` from the drop down to specify where all resources will get deployed. 
+      - Please note: This sample can only be deployed in EastUS2, WestUS2, or CentralUS regions. Please choose one of those regions when doing the deployment.  
     - To create a new resource group for SMART on FHIR resources deployment, leave the `existingResourceGroupName` parameter blank; otherwise, enter the name of an existing resource group where you want to deploy all of your SMART on FHIR resources. 
     - Multiple SMART on FHIR sample apps can not be deployed in same resource group.
     - You can continue the setup below. 
