@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Azure.Health.Data.Dicom.Cast": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7209",
+      "launchBrowser": false
+    }
+  }
+}

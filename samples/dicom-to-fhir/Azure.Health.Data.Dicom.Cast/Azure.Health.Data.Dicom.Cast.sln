@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Health.Data.Dicom.Cast", "Azure.Health.Data.Dicom.Cast.csproj", "{E3CFC825-D566-491A-9615-F59D2AB8002B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3CFC825-D566-491A-9615-F59D2AB8002B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CFC825-D566-491A-9615-F59D2AB8002B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CFC825-D566-491A-9615-F59D2AB8002B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CFC825-D566-491A-9615-F59D2AB8002B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {093F8E5E-B0CF-4B68-81D7-9B5943CA666B}
+	EndGlobalSection
+EndGlobal
