@@ -1,0 +1,82 @@
+syntax: glob
+
+# Custom files
+*.tt.out
+
+### VisualStudio ###
+
+# Tool Runtime Dir
+.dotnet/
+.packages/
+.store/
+.tools/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+artifacts/
+.idea/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+bld/
+[Bb]in/
+[Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
+msbuild.binlog
+.deps/
+.dirstamp
+.libs/
+*.lo
+*.o
+
+# Visual Studio
+.vs/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# NuGet Packages
+*.nuget.props
+*.nuget.targets
+*.nupkg
+*.snupkg
+**/packages/*

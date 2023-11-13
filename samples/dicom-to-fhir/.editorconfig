@@ -1,0 +1,45 @@
+# editorconfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# Default settings:
+# - UTF-8
+# - Posix-style newline ending every file
+# - Use 4 spaces as indentation
+[*]
+charset              = utf-8
+insert_final_newline = true
+indent_style         = space
+indent_size          = 4
+
+# Xml project files
+[*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+indent_size = 2
+
+# Xml build files
+[*.builds]
+indent_size = 2
+
+# Xml files
+[*.{xml,stylecop,resx,ruleset}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec,runsettings}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# YAML files
+[*.{yml,yaml}]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+end_of_line = lf
+
+[*.{cmd,bat}]
+end_of_line = crlf

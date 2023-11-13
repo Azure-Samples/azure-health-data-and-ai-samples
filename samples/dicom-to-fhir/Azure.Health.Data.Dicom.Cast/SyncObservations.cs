@@ -1,6 +1,7 @@
-// Default URL for triggering event grid function in the local environment.
-// http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
+// Copyright © Microsoft Corporation.
+// Licensed under the MIT License.
 
+using System;
 using Azure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -12,9 +13,7 @@ public class SyncObservations
     private readonly ILogger<SyncObservations> _logger;
 
     public SyncObservations(ILogger<SyncObservations> logger)
-    {
-        _logger = logger;
-    }
+        => _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     [Function(nameof(SyncObservations))]
     public void Run([EventGridTrigger] CloudEvent cloudEvent)

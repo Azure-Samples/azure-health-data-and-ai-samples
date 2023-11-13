@@ -1,17 +1,21 @@
-using Azure.Health.Data.Dicom.Cast.DependencyInjection;
+// Copyright © Microsoft Corporation.
+// Licensed under the MIT License.
+
 using Azure.Health.Data.Dicom.Cast.DicomWeb;
+using Azure.Health.Data.Dicom.Cast.Fhir;
+using Azure.Health.Data.Dicom.Cast.Http;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var host = new HostBuilder()
+IHost host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureAppConfiguration(builder => builder
         .AddJsonFile("worker.json", optional: false, reloadOnChange: true))
     .ConfigureServices((context, services) => services
-        
-        .ConfigureFhirClient(context.Configuration)
+        .AddJsonSerialization()
+        .AddDicomWebClient()
+        .AddFhirClient()
         .AddAzureClientsCore())
     .Build();
 

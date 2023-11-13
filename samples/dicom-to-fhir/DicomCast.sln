@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Health.Data.Dicom.Cast", "Azure.Health.Data.Dicom.Cast.csproj", "{E3CFC825-D566-491A-9615-F59D2AB8002B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Health.Data.Dicom.Cast", "Azure.Health.Data.Dicom.Cast\Azure.Health.Data.Dicom.Cast.csproj", "{E3CFC825-D566-491A-9615-F59D2AB8002B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{88B54E38-25CA-4AE5-A892-9470A0EC892B}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.globalconfig = ..\.globalconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
