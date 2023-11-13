@@ -16,52 +16,51 @@ namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 internal class ImagingStudyTransactionHandler
 {
     private readonly FhirClient _client;
-    private readonly PatientTransactionHandler _previous;
     private readonly ILogger<ImagingStudyTransactionHandler> _logger;
 
-    public ImagingStudyTransactionHandler(
-        FhirClient client,
-        PatientTransactionHandler previous,
-        ILogger<ImagingStudyTransactionHandler> logger)
+    public ImagingStudyTransactionHandler(FhirClient client, ILogger<ImagingStudyTransactionHandler> logger)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _previous = previous ?? throw new ArgumentNullException(nameof(previous));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<TransactionBuilder> ConfigureAsync(
+    public async ValueTask<ImagingStudy> AddOrUpdateImagingStudyAsync(
         TransactionBuilder builder,
-        DicomSopInstanceEvent instanceEvent,
+        DicomDataset dataset,
+        Endpoint endpoint,
+        Patient patient,
         CancellationToken cancellationToken = default)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
 
-        if (instanceEvent is null)
-            throw new ArgumentNullException(nameof(instanceEvent));
+        if (dataset is null)
+            throw new ArgumentNullException(nameof(dataset));
 
-        PatientTransactionHandler.TransactionContext context = await _previous.ConfigureAsync(builder, instanceEvent.Dataset, cancellationToken);
-
-        Identifier imagingStudyIdentifier = dataset.GetImagingStudyIdentifier();
-        ImagingStudy? imagingStudy = await GetImagingStudyOrDefaultAsync(imagingStudyIdentifier, cancellationToken);
+        Identifier identifier = dataset.GetImagingStudyIdentifier();
+        ImagingStudy? imagingStudy = await GetImagingStudyOrDefaultAsync(identifier, cancellationToken);
         if (imagingStudy is null)
         {
             imagingStudy = new()
             {
-                Identifier = new List<Identifier> { imagingStudyIdentifier },
-                Meta = new Meta { Source = context.Endpoint.Address },
+                Identifier = new List<Identifier> { identifier },
+                Meta = new Meta { Source = endpoint.Address },
                 Status = ImagingStudy.ImagingStudyStatus.Available,
-                Subject = new ResourceReference($"{ResourceType.Patient:G}/{context.Patient.Id}"),
+                Subject = new ResourceReference($"{ResourceType.Patient:G}/{patient.Id}"),
             };
 
-            imagingStudy = UpdateImagingStudy(context, imagingStudy, dataset);
+            imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
+
+            SearchParams ifNoneExistsCondition = new SearchParams().Add("identifier", $"{identifier.System}|{identifier.Value}");
+            _ = builder.Create(imagingStudy, ifNoneExistsCondition);
         }
         else
         {
-            imagingStudy = UpdateImagingStudy(context, imagingStudy, dataset);
+            imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
+            _ = builder.Update(new SearchParams(), imagingStudy, imagingStudy.Meta.VersionId);
         }
 
-        return builder;
+        return imagingStudy;
     }
 
     private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier imagingStudyIdentifier, CancellationToken cancellationToken)
@@ -81,17 +80,17 @@ internal class ImagingStudyTransactionHandler
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    private ImagingStudy UpdateImagingStudy(PatientTransactionContext context, ImagingStudy imagingStudy, DicomDataset dataset)
+    private static ImagingStudy UpdateDicomStudy(ImagingStudy imagingStudy, DicomDataset dataset, Endpoint endpoint)
     {
-        // Update the study date
+        // Update Study Date
         if (dataset.TryGetDateTimeOffset(DicomTag.StudyDate, DicomTag.StudyTime, out DateTimeOffset studyDate))
             imagingStudy.StartedElement = new FhirDateTime(studyDate);
 
         // Does the imaging study reference this endpoint?
-        if (!imagingStudy.Endpoint.Any(e => context.Endpoint.Identifier.Any(e.IsExactly)))
-            imagingStudy.Endpoint.Add(new ResourceReference($"{ResourceType.Endpoint:G}/{context.Endpoint.Id}"));
+        if (!imagingStudy.Endpoint.Any(e => endpoint.Identifier.Any(e.IsExactly)))
+            imagingStudy.Endpoint.Add(new ResourceReference($"{ResourceType.Endpoint:G}/{endpoint.Id}"));
 
-        // Update modalities
+        // Update Modalities
         if (dataset.TryGetSingleValue(DicomTag.Modality, out string? modality) && modality is not null)
         {
             // Create a set of all of the modalities in the DICOM study
@@ -110,9 +109,9 @@ internal class ImagingStudyTransactionHandler
                 imagingStudy.Modality.Add(new CodeableConcept("http://dicom.nema.org/resources/ontology/DCM", code));
         }
 
-        // Update notes
+        // Update Notes
         if (dataset.TryGetSingleValue(DicomTag.StudyDescription, out string? description) &&
-            description is not null &&
+            !string.IsNullOrWhiteSpace(description) &&
             !imagingStudy.Note.Any(note => string.Equals(note.Text, description, StringComparison.Ordinal)))
         {
             imagingStudy.Note.Add(new Annotation { Text = description });
@@ -130,23 +129,61 @@ internal class ImagingStudyTransactionHandler
                 imagingStudy.Identifier.Add(accessionNumberId);
         }
 
+        // Update the series
+        _ = AddOrUpdateSeries(imagingStudy, dataset);
+
         return imagingStudy;
     }
 
-    private ImagingStudy AddSopInstance(ImagingStudy imagingStudy, DicomDataset dataset)
-    { }
-
-    private ImagingStudy RemoveSopInstance(ImagingStudy imagingStudy, DicomDataset dataset)
+    private static ImagingStudy.SeriesComponent AddOrUpdateSeries(ImagingStudy imagingStudy, DicomDataset dataset)
     {
+        // Find Series
+        string seriesInstanceUid = dataset.GetSingleValue<string>(DicomTag.SeriesInstanceUID);
+        ImagingStudy.SeriesComponent series = imagingStudy
+            .Series
+            .FirstOrDefault(x => string.Equals(x.Uid, seriesInstanceUid, StringComparison.Ordinal)) ?? new() { Uid = seriesInstanceUid };
 
+        // Update Series Number
+        if (dataset.TryGetSingleValue(DicomTag.SeriesNumber, out int seriesNumber))
+            series.Number = seriesNumber;
+
+        // Update Description
+        if (dataset.TryGetSingleValue(DicomTag.SeriesDescription, out string description) && !string.IsNullOrWhiteSpace(description))
+            series.Description = description;
+
+        // Update Modality
+        if (dataset.TryGetSingleValue(DicomTag.Modality, out string? modality) && !string.IsNullOrWhiteSpace(modality))
+            series.Modality = new CodeableConcept("http://dicom.nema.org/resources/ontology/DCM", modality);
+
+        // Update Study Date
+        if (dataset.TryGetDateTimeOffset(DicomTag.StudyDate, DicomTag.StudyTime, out DateTimeOffset studyDate))
+            series.StartedElement = new FhirDateTime(studyDate);
+
+        // Update the SOP instance
+        _ = AddOrUpdateSopInstance(series, dataset);
+
+        return series;
     }
 
-    internal class TransactionContext : PatientTransactionHandler.TransactionContext
+    private static ImagingStudy.InstanceComponent AddOrUpdateSopInstance(ImagingStudy.SeriesComponent series, DicomDataset dataset)
     {
-        public ImagingStudy ImagingStudy { get; }
+        // Find SOP Instance
+        string sopInstanceUid = dataset.GetSingleValue<string>(DicomTag.SOPInstanceUID);
+        ImagingStudy.InstanceComponent? instance = series.Instance.FirstOrDefault(x => string.Equals(x.Uid, sopInstanceUid, StringComparison.Ordinal));
+        if (instance is null)
+        {
+            instance = new() { Uid = sopInstanceUid };
+            series.Instance.Add(instance);
+        }
 
-        public TransactionContext(TransactionBuilder builder, Endpoint endpoint, Patient patient, ImagingStudy imagingStudy)
-            : base(builder, endpoint, patient)
-            => ImagingStudy = imagingStudy ?? throw new ArgumentNullException(nameof(imagingStudy));
+        // Update SOP Class
+        if (dataset.TryGetSingleValue(DicomTag.SOPClassUID, out string? sopClassUid) && !string.IsNullOrWhiteSpace(sopClassUid))
+            instance.SopClass = new Coding("urn:ietf:rfc:3986", $"urn:oid:{sopClassUid}");
+
+        // Update Instance Number
+        if (dataset.TryGetSingleValue(DicomTag.InstanceNumber, out int instanceNumber))
+            instance.Number = instanceNumber;
+
+        return instance;
     }
 }

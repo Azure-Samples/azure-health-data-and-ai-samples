@@ -20,20 +20,15 @@ namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 internal class PatientTransactionHandler
 {
     private readonly FhirClient _client;
-    private readonly EndpointTransactionHandler _previous;
     private readonly ILogger<PatientTransactionHandler> _logger;
 
-    public PatientTransactionHandler(
-        FhirClient client,
-        EndpointTransactionHandler previous,
-        ILogger<PatientTransactionHandler> logger)
+    public PatientTransactionHandler(FhirClient client, ILogger<PatientTransactionHandler> logger)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _previous = previous ?? throw new ArgumentNullException(nameof(previous));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<TransactionContext> ConfigureAsync(
+    public async ValueTask<Patient> AddOrUpdatePatientAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
         CancellationToken cancellationToken = default)
@@ -44,20 +39,30 @@ internal class PatientTransactionHandler
         if (dataset is null)
             throw new ArgumentNullException(nameof(dataset));
 
-        EndpointTransactionHandler.TransactionContext context = await _previous.ConfigureAsync(builder, dataset, cancellationToken);
+        Identifier identifier = dataset.GetPatientIdentifier();
+        Patient? patient = await GetPatientOrDefaultAsync(identifier, cancellationToken);
 
-        Identifier fhirPatientId = dataset.GetPatientIdentifier();
-        Patient? patient = await GetPatientOrDefaultAsync(fhirPatientId, cancellationToken);
-
-        // Do not update patient if it already exists in the FHIR server
         if (patient is null)
         {
-            SearchParams ifNotExistsCondition = new SearchParams().Add("identifier", $"{fhirPatientId.System}|{fhirPatientId.Value}");
-            patient = ParsePatient(fhirPatientId, dataset);
-            builder = builder.Create(patient, ifNotExistsCondition);
+            patient = new()
+            {
+                Id = $"urn:uuid:{Guid.NewGuid()}",
+                Identifier = { identifier },
+            };
+
+            patient = UpdatePatient(patient, dataset);
+
+            SearchParams ifNotExistsCondition = new SearchParams().Add("identifier", $"{identifier.System}|{identifier.Value}");
+            _ = builder.Create(patient, ifNotExistsCondition);
+        }
+        else
+        {
+            patient = UpdatePatient(patient, dataset);
+
+            _ = builder.Update(new SearchParams(), patient, patient.Meta.VersionId);
         }
 
-        return new TransactionContext(builder, context.Endpoint, patient);
+        return patient;
     }
 
     private async ValueTask<Patient?> GetPatientOrDefaultAsync(Identifier patientId, CancellationToken cancellationToken)
@@ -77,76 +82,20 @@ internal class PatientTransactionHandler
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    private static Patient ParsePatient(Identifier patientId, DicomDataset dataset)
+    private static Patient UpdatePatient(Patient patient, DicomDataset dataset)
     {
-        Patient patient = new()
-        {
-            Id = $"urn:uuid:{Guid.NewGuid()}",
-            Identifier = { patientId },
-        };
-
-        if (TryParsePatientName(dataset, out HumanName? name))
-            patient.Name.Add(name);
-
+        // Update Patient Gender
         if (TryParsePatientGender(dataset, out AdministrativeGender? gender))
             patient.Gender = gender;
 
+        // Update Patient Birth Date
         if (TryParsePatientBirthDate(dataset, out Date? birthDate))
             patient.BirthDateElement = birthDate;
 
+        // Update the patient's usual name
+        _ = UpdatePatientName(patient, dataset);
+
         return patient;
-    }
-
-    private static bool TryParsePatientName(DicomDataset dataset, [NotNullWhen(true)] out HumanName? name)
-    {
-        if (!dataset.TryGetString(DicomTag.PatientName, out string patientName) || string.IsNullOrWhiteSpace(patientName))
-        {
-            name = default;
-            return false;
-        }
-
-        // Refer to PS3.5 6.2 and 6.2.1 for parsing logic
-        string[] parts = patientName.Trim().Split('^');
-
-        name = new()
-        {
-            Use = HumanName.NameUse.Usual,
-            Family = parts[0]
-        };
-
-        List<string> combinedGivenNames = new();
-
-        // Given name
-        if (TryGetNamePart(parts, 1, out string[]? givenNames))
-            combinedGivenNames.AddRange(givenNames);
-
-        // Middle name
-        if (TryGetNamePart(parts, 2, out string[]? middleNames))
-            combinedGivenNames.AddRange(middleNames);
-
-        name.Given = combinedGivenNames;
-
-        // Prefix
-        if (TryGetNamePart(parts, 3, out string[]? prefixes))
-            name.Prefix = prefixes;
-
-        // Suffix
-        if (TryGetNamePart(parts, 4, out string[]? suffixes))
-            name.Suffix = suffixes;
-
-        return true;
-
-        static bool TryGetNamePart(string[] parts, int index, [NotNullWhen(true)] out string[]? nameParts)
-        {
-            if (parts.Length > index && !string.IsNullOrWhiteSpace(parts[index]))
-            {
-                nameParts = parts[index].Split(' ');
-                return true;
-            }
-
-            nameParts = default;
-            return false;
-        }
     }
 
     private static bool TryParsePatientGender(DicomDataset dataset, [NotNullWhen(true)] out AdministrativeGender? gender)
@@ -184,12 +133,51 @@ internal class PatientTransactionHandler
         return false;
     }
 
-    public class TransactionContext : EndpointTransactionHandler.TransactionContext
+    private static HumanName UpdatePatientName(Patient patient, DicomDataset dataset)
     {
-        public Patient Patient { get; }
+        HumanName? name = patient
+            .Name
+            .FirstOrDefault(n => n.Use == HumanName.NameUse.Usual) ?? new() { Use = HumanName.NameUse.Usual };
 
-        public TransactionContext(TransactionBuilder builder, Endpoint endpoint, Patient patient)
-            : base(builder, endpoint)
-            => Patient = patient ?? throw new ArgumentNullException(nameof(patient));
+        if (dataset.TryGetString(DicomTag.PatientName, out string patientName) && !string.IsNullOrWhiteSpace(patientName))
+        {
+            // Refer to PS3.5 6.2 and 6.2.1 for parsing logic
+            string[] parts = patientName.Trim().Split('^');
+            name.Family = parts[0];
+
+            List<string> combinedGivenNames = new();
+
+            // Given name
+            if (TryGetNamePart(parts, 1, out string[]? givenNames))
+                combinedGivenNames.AddRange(givenNames);
+
+            // Middle name
+            if (TryGetNamePart(parts, 2, out string[]? middleNames))
+                combinedGivenNames.AddRange(middleNames);
+
+            name.Given = combinedGivenNames;
+
+            // Prefix
+            if (TryGetNamePart(parts, 3, out string[]? prefixes))
+                name.Prefix = prefixes;
+
+            // Suffix
+            if (TryGetNamePart(parts, 4, out string[]? suffixes))
+                name.Suffix = suffixes;
+        }
+
+        return name;
+
+        static bool TryGetNamePart(string[] parts, int index, [NotNullWhen(true)] out string[]? nameParts)
+        {
+            if (parts.Length > index && !string.IsNullOrWhiteSpace(parts[index]))
+            {
+                nameParts = parts[index].Split(' ');
+                return true;
+            }
+
+            nameParts = default;
+            return false;
+        }
     }
 }

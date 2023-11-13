@@ -8,8 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Health.Data.Dicom.Cast.DicomWeb;
-using Azure.Health.Data.Dicom.Cast.Fhir.Transactions.Contexts;
-using FellowOakDicom;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
 using Microsoft.Extensions.Logging;
@@ -37,13 +35,10 @@ internal class EndpointTransactionHandler
         _endpointName = $"Azure Dicom Service {dicomOptions.Workspace}/{dicomOptions.Service} WADO-RS Endpoint";
     }
 
-    public async ValueTask<TransactionContext> ConfigureAsync(TransactionBuilder builder, DicomDataset dataset, CancellationToken cancellationToken)
+    public async ValueTask<Endpoint> GetOrAddEndpointAsync(TransactionBuilder builder, CancellationToken cancellationToken)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
-
-        if (dataset is null)
-            throw new ArgumentNullException(nameof(dataset));
 
         // Whether we're updating and deleting DICOM SOP instances, ensure the endpoint is present in FHIR
         Endpoint? endpoint = await GetEndpointOrDefaultAsync(cancellationToken);
@@ -71,7 +66,7 @@ internal class EndpointTransactionHandler
                 Status = Endpoint.EndpointStatus.Active,
             };
 
-            builder = builder.Create(endpoint);
+            _ = builder.Create(endpoint);
         }
         else if (!string.Equals(endpoint.Address, _dicomServiceUri.AbsoluteUri, StringComparison.Ordinal))
         {
@@ -84,7 +79,7 @@ internal class EndpointTransactionHandler
                     endpoint.Address));
         }
 
-        return new TransactionContext(builder, endpoint);
+        return endpoint;
     }
 
     private async ValueTask<Endpoint?> GetEndpointOrDefaultAsync(CancellationToken cancellationToken)
@@ -103,17 +98,5 @@ internal class EndpointTransactionHandler
             .Select(x => x.Resource)
             .Cast<Endpoint>()
             .SingleOrDefaultAsync(cancellationToken);
-    }
-
-    public class TransactionContext : Transactions.TransactionContext
-    {
-        public Endpoint Endpoint { get; }
-
-        public TransactionContext(TransactionBuilder builder, Endpoint endpoint)
-            : base(builder)
-            => Endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
-
-        public PatientTransactionContext WithPatient(Patient patient)
-            => new(Builder, Endpoint, patient);
     }
 }
