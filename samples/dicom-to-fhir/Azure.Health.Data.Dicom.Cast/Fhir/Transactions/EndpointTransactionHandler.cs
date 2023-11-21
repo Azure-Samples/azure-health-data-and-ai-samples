@@ -37,8 +37,7 @@ internal class EndpointTransactionHandler
 
     public async ValueTask<Endpoint> GetOrAddEndpointAsync(TransactionBuilder builder, CancellationToken cancellationToken)
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        ArgumentNullException.ThrowIfNull(builder);
 
         // Whether we're updating and deleting DICOM SOP instances, ensure the endpoint is present in FHIR
         Endpoint? endpoint = await GetEndpointOrDefaultAsync(cancellationToken);
@@ -50,17 +49,17 @@ internal class EndpointTransactionHandler
                 ConnectionType = new List<CodeableConcept>
                 {
                     // "dicom-wado-rs" is a well-defined Endpoint Connection Type code
-                    new CodeableConcept("http://terminology.hl7.org/CodeSystem/endpoint-connection-type", "dicom-wado-rs")
+                    new("http://terminology.hl7.org/CodeSystem/endpoint-connection-type", "dicom-wado-rs")
                 },
                 Id = $"urn:uuid:{Guid.NewGuid()}",
                 Name = _endpointName,
                 Payload = new List<Endpoint.PayloadComponent>
                 {
-                    new Endpoint.PayloadComponent()
+                    new()
                     {
                         // "DICOM WADO-RS" is a well-defined Endpoint Connection Type display name
                         MimeType = new List<string> { "application/dicom" },
-                        Type = new List<CodeableConcept> { new CodeableConcept(string.Empty, string.Empty, "DICOM WADO-RS") },
+                        Type = new List<CodeableConcept> { new(string.Empty, string.Empty, "DICOM WADO-RS") },
                     }
                 },
                 Status = Endpoint.EndpointStatus.Active,

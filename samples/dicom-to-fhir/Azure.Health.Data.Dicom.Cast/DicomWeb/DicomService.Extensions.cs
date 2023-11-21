@@ -14,8 +14,7 @@ internal static class DicomServiceExtensions
 {
     public static IServiceCollection AddDicomWebClient(this IServiceCollection services)
     {
-        if (services is null)
-            throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
 
         _ = services
             .AddOptions<DicomWebClientOptions>()

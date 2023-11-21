@@ -11,8 +11,7 @@ internal static class HttpServiceExtensions
 {
     public static IServiceCollection AddJsonSerialization(this IServiceCollection services)
     {
-        if (services is null)
-            throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
 
         return services.Configure<JsonSerializerOptions>(
             options =>

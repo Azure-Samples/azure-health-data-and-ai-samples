@@ -31,11 +31,8 @@ internal class ImagingStudyTransactionHandler
         Patient patient,
         CancellationToken cancellationToken = default)
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
-
-        if (dataset is null)
-            throw new ArgumentNullException(nameof(dataset));
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(dataset);
 
         Identifier identifier = dataset.GetImagingStudyIdentifier();
         ImagingStudy? imagingStudy = await GetImagingStudyOrDefaultAsync(identifier, cancellationToken);

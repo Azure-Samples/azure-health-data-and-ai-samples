@@ -32,8 +32,7 @@ internal class DicomTransactionBuilder
 
     public async ValueTask<Bundle> CreateUpsertBundleAsync(DicomDataset dataset, CancellationToken cancellationToken = default)
     {
-        if (dataset is null)
-            throw new ArgumentNullException(nameof(dataset));
+        ArgumentNullException.ThrowIfNull(dataset);
 
         TransactionBuilder builder = new(_options.ServiceUri, Bundle.BundleType.Transaction);
         Endpoint endpoint = await _endpointHandler.GetOrAddEndpointAsync(builder, cancellationToken);

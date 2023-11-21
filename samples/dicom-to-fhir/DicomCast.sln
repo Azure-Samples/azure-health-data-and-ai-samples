@@ -7,8 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Health.Data.Dicom.Cas
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{88B54E38-25CA-4AE5-A892-9470A0EC892B}"
 	ProjectSection(SolutionItems) = preProject
-		..\.editorconfig = ..\.editorconfig
-		..\.globalconfig = ..\.globalconfig
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		.globalconfig = .globalconfig
 	EndProjectSection
 EndProject
 Global

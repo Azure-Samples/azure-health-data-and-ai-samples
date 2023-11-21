@@ -16,14 +16,9 @@ internal readonly struct InstanceIdentifiers : IEquatable<InstanceIdentifiers>
 
     public InstanceIdentifiers(string studyInstanceUid, string seriesInstanceUid, string sopInstanceUid)
     {
-        if (string.IsNullOrWhiteSpace(studyInstanceUid))
-            throw new ArgumentNullException(nameof(studyInstanceUid));
-
-        if (string.IsNullOrWhiteSpace(seriesInstanceUid))
-            throw new ArgumentNullException(nameof(seriesInstanceUid));
-
-        if (string.IsNullOrWhiteSpace(sopInstanceUid))
-            throw new ArgumentNullException(nameof(sopInstanceUid));
+        ArgumentException.ThrowIfNullOrEmpty(studyInstanceUid);
+        ArgumentException.ThrowIfNullOrEmpty(seriesInstanceUid);
+        ArgumentException.ThrowIfNullOrEmpty(sopInstanceUid);
 
         StudyInstanceUid = studyInstanceUid;
         SeriesInstanceUid = seriesInstanceUid;

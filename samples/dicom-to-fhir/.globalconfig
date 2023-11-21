@@ -112,7 +112,12 @@ dotnet_diagnostic.CA1506.severity = error # Avoid excessive class coupling
 dotnet_diagnostic.CA1507.severity = error # Use nameof in place of string
 dotnet_diagnostic.CA1508.severity = error # Avoid dead conditional code
 dotnet_diagnostic.CA1509.severity = error # Invalid entry in code metrics configuration file
+dotnet_diagnostic.CA1510.severity = error # Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1511.severity = error # Use ArgumentException throw helper
+dotnet_diagnostic.CA1512.severity = error # Use ArgumentOutOfRangeException throw helper
+dotnet_diagnostic.CA1513.severity = error # Use ObjectDisposedException throw helper
 dotnet_diagnostic.CA1514.severity = error # Avoid redundant length argument
+dotnet_diagnostic.CA1515.severity = error # Consider making public types internal
 
 # -----------------------------------
 # Naming rules
@@ -184,6 +189,8 @@ dotnet_diagnostic.CA1852.severity = error # Seal internal types
 dotnet_diagnostic.CA1853.severity = error # Unnecessary call to 'Dictionary.ContainsKey(key)'
 dotnet_diagnostic.CA1854.severity = error # Prefer the IDictionary.TryGetValue(TKey, out TValue) method
 dotnet_diagnostic.CA1855.severity = error # Use Span<T>.Clear() instead of Span<T>.Fill()
+dotnet_diagnostic.CA1856.severity = error # Incorrect usage of ConstantExpected attribute
+dotnet_diagnostic.CA1857.severity = error # A constant is expected for the parameter
 dotnet_diagnostic.CA1858.severity = error # Use StartsWith instead of IndexOf
 dotnet_diagnostic.CA1859.severity = error # Use concrete types when possible for improved performance
 dotnet_diagnostic.CA1860.severity = error # Avoid using 'Enumerable.Any()' extension method
@@ -191,7 +198,7 @@ dotnet_diagnostic.CA1861.severity = error # Avoid constant arrays as arguments
 dotnet_diagnostic.CA1864.severity = error # Prefer the 'IDictionary.TryAdd(TKey, TValue)' method
 dotnet_diagnostic.CA1865.severity = error # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
 dotnet_diagnostic.CA1866.severity = error # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
-dotnet_diagnostic.CA1867.severity = error #  Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
+dotnet_diagnostic.CA1867.severity = error # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
 dotnet_diagnostic.CA1868.severity = error # Unnecessary call to 'Contains' for sets
 dotnet_diagnostic.CA1869.severity = error # Cache and reuse 'JsonSerializerOptions' instances
 dotnet_diagnostic.CA1870.severity = error # Use a cached 'SearchValues' instance
@@ -224,6 +231,7 @@ dotnet_diagnostic.CA2017.severity = error # Parameter count mismatch
 dotnet_diagnostic.CA2018.severity = error # The count argument to Buffer.BlockCopy should specify the number of bytes to copy
 dotnet_diagnostic.CA2019.severity = error # ThreadStatic fields should not use inline initialization
 dotnet_diagnostic.CA2020.severity = error # Prevent behavioral change caused by built-in operators of IntPtr/UIntPtr
+dotnet_diagnostic.CA2021.severity = error # Do not call Enumerable.Cast<T> or Enumerable.OfType<T> with incompatible types
 
 # -----------------------------------
 # Security rules
