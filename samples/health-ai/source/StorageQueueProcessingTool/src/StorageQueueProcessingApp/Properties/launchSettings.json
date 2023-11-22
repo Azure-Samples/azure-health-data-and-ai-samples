@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "StorageQueueProcessingApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7133",
+      "launchBrowser": false
+    }
+  }
+}
