@@ -40,10 +40,10 @@ internal class ImagingStudyTransactionHandler
         {
             imagingStudy = new()
             {
-                Identifier = new List<Identifier> { identifier },
+                Identifier = [identifier],
                 Meta = new Meta { Source = endpoint.Address },
                 Status = ImagingStudy.ImagingStudyStatus.Available,
-                Subject = new ResourceReference($"{ResourceType.Patient:G}/{patient.Id}"),
+                Subject = patient.GetReference(),
             };
 
             imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
@@ -60,10 +60,10 @@ internal class ImagingStudyTransactionHandler
         return imagingStudy;
     }
 
-    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier imagingStudyIdentifier, CancellationToken cancellationToken)
+    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier studyInstanceIdentifier, CancellationToken cancellationToken)
     {
         SearchParams parameters = new SearchParams()
-            .Add("identifier", $"{imagingStudyIdentifier.System}|{imagingStudyIdentifier.Value}")
+            .Add("identifier", $"{studyInstanceIdentifier.System}|{studyInstanceIdentifier.Value}")
             .LimitTo(1);
 
         Bundle? bundle = await _client.SearchAsync<ImagingStudy>(parameters, cancellationToken);
@@ -85,7 +85,7 @@ internal class ImagingStudyTransactionHandler
 
         // Does the imaging study reference this endpoint?
         if (!imagingStudy.Endpoint.Any(e => endpoint.Identifier.Any(e.IsExactly)))
-            imagingStudy.Endpoint.Add(new ResourceReference($"{ResourceType.Endpoint:G}/{endpoint.Id}"));
+            imagingStudy.Endpoint.Add(endpoint.GetReference());
 
         // Update Modalities
         if (dataset.TryGetSingleValue(DicomTag.Modality, out string? modality) && modality is not null)

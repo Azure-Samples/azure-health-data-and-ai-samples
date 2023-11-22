@@ -30,10 +30,20 @@ internal static class DicomDatasetExtensions
     {
         ArgumentNullException.ThrowIfNull(dataset);
 
-        if (!dataset.TryGetSingleValue(DicomTag.StudyInstanceUID, out string studyInstanceUID))
+        if (!dataset.TryGetSingleValue(DicomTag.StudyInstanceUID, out string? studyInstanceUID) || string.IsNullOrWhiteSpace(studyInstanceUID))
             throw new KeyNotFoundException(Exceptions.StudyInstanceUidNotFound);
 
         return new Identifier("urn:dicom:uid", $"urn:oid:{studyInstanceUID}");
+    }
+
+    public static Identifier GetImagingSopInstanceIdentifier(this DicomDataset dataset)
+    {
+        ArgumentNullException.ThrowIfNull(dataset);
+
+        if (!dataset.TryGetSingleValue(DicomTag.SOPInstanceUID, out string? sopInstanceUid) || string.IsNullOrWhiteSpace(sopInstanceUid))
+            throw new KeyNotFoundException(Exceptions.StudyInstanceUidNotFound);
+
+        return new Identifier("urn:dicom:uid", $"urn:oid:{sopInstanceUid}");
     }
 
     public static bool TryGetDateTimeOffset(this DicomDataset dataset, DicomTag dateTag, DicomTag timeTag, out DateTimeOffset value)
@@ -57,11 +67,21 @@ internal static class DicomDatasetExtensions
 
     public static bool TryCreateIrradiationEvent(
         this DicomDataset dataset,
-        ResourceReference patientReference,
+        DicomCodeItem code,
+        ResourceReference patient,
         [NotNullWhen(true)] out Observation? observation)
     {
         ArgumentNullException.ThrowIfNull(dataset);
-        ArgumentNullException.ThrowIfNull(patientReference);
+        ArgumentNullException.ThrowIfNull(code);
+        ArgumentNullException.ThrowIfNull(patient);
+
+        if (!code.Equals(StructuredReportCodes.IrradiationEventXRayData) &&
+            !code.Equals(StructuredReportCodes.CtAcquisition) &&
+            !code.Equals(StructuredReportCodes.RadiopharmaceuticalAdministration))
+        {
+            observation = default;
+            return false;
+        }
 
         DicomStructuredReport report = new(dataset);
 
@@ -79,7 +99,7 @@ internal static class DicomDatasetExtensions
             Code = FhirObservationCodes.IrradiationEvent,
             Identifier = { dataset.GetImagingStudyIdentifier() },
             Status = ObservationStatus.Preliminary,
-            Subject = patientReference,
+            Subject = patient,
         };
 
         DicomCodeItem bodySite = report.Get<DicomCodeItem>(StructuredReportCodes.TargetRegion, default!);
@@ -98,14 +118,14 @@ internal static class DicomDatasetExtensions
     public static bool TryCreateDoseSummary(
         this DicomDataset dataset,
         DicomCodeItem code,
-        ResourceReference patientReference,
-        ResourceReference imagingStudyReference,
+        ResourceReference patient,
+        ResourceReference imagingStudy,
         [NotNullWhen(true)] out Observation? observation)
     {
         ArgumentNullException.ThrowIfNull(dataset);
         ArgumentNullException.ThrowIfNull(code);
-        ArgumentNullException.ThrowIfNull(patientReference);
-        ArgumentNullException.ThrowIfNull(imagingStudyReference);
+        ArgumentNullException.ThrowIfNull(patient);
+        ArgumentNullException.ThrowIfNull(imagingStudy);
 
         if (!code.Equals(StructuredReportCodes.RadiopharmaceuticalRadiationDoseReport) && !code.Equals(StructuredReportCodes.XRayRadiationDoseReport))
         {
@@ -121,8 +141,8 @@ internal static class DicomDatasetExtensions
             Code = FhirObservationCodes.RadiationExposure,
             Identifier = { dataset.GetImagingStudyIdentifier() },
             Status = ObservationStatus.Preliminary,
-            Subject = patientReference,
-            PartOf = { imagingStudyReference },
+            Subject = patient,
+            PartOf = { imagingStudy },
         };
 
         // Try to get accession number from report first then tag; ignore if it is not present it is not a required identifier.
