@@ -1,61 +1,21 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "storageAccountName": {
-        "value": ""
-      },
-      "queueName":{
-        "value": ""
-      },
-      "ingestContainerName":{
-        "value": ""
-      },
-      "processedContainerName":{
-        "value": ""
-      },
-      "idpDicomContainerName":{
-        "value": ""
-      },
-      "fhirDataContainerName":{
-        "value": ""
-      },
-      "eventGridSubscriptionName": {
-        "value": ""
-      },
-      "workspaceName": {
-        "value": ""
-      },
-      "fhirName": {
-        "value": ""
-      },
-      "dicomName": {
-        "value": ""
-      },
-      "storageQueueProcessingAppName": {
-        "value": ""
-      },
-      "storageQProcessingStorageName":{
-        "value": ""
-      },
-      "storageQProcessingPlanName": {
-        "value": ""
-        },
-      "dataFactoryName":{
-            "value": ""
-        },
-      "alwaysOn": {
-      "value": false
-      },
-      "keyVaultName":{
-        "value": ""
-      },
-      "principalId":{
-        "value": ""
-      },
-      "userPrincipalId":{
-        "value": ""
-      }
-    }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+   "prefix":{
+    "value": ""
+   },
+   "nameOFstorageQueueProcessingApp":{
+    "value": ""
+   },
+   "nameOfstorageAccount":{
+    "value": ""
+  },
+  "planNameofstorageQueueProcessing":{
+    "value": ""
+  },
+  "nameOfDataFactory":{
+    "value": ""
   }
-  
+}
+}

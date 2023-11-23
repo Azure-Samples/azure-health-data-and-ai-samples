@@ -1,83 +1,22 @@
-@description('Name of your Storage Account.')
-param storageAccountName string = ''
-
-@description('The Azure region into which the resources should be deployed.')
-param location string = resourceGroup().location
-
-@description('Name of the queue associated with the storage account.')
-param queueName string = ''
-
-@description('Name of the Ingest Container Name.')
-param ingestContainerName string = ''
-
-@description('Name of the Processed Container Name')
-param processedContainerName string=''
-
-@description('Name of the IdpDicom Container Name')
-param idpDicomContainerName string =''
-
-@description('Name of FHIR Data Container ')
-param fhirDataContainerName string
-
-@description('Name of the Event Grid subscription.')
-param eventGridSubscriptionName string = ''
-
-@description('Name of your Azure Health Data Services workspace.')
-param workspaceName string = ''
-
-@minLength(3)
-@description('Name of your Fhir Service.')
-param fhirName string 
-
-@minLength(3)
-@description('Name of your Dicom Service.')
-param dicomName string
-
-@description('Automatically create a role assignment for the function app to access the FHIR service.')
-param createRoleAssignment bool = true
-
-@description('Unique identifier for a principal')
-param principalId string
-
-@description('Unique identifier for a user principal')
-param userPrincipalId string
-
-@description('Unique identifier for a FHIR contributor role assignment')
-param fhirContributorRoleAssignmentId string = '5a1fc7df-4bf1-4951-a576-89034ee01acd'
-
-@description('Unique identifier for a DICOM owner role assignment')
-param dicomOwnerRoleAssignmentId string = '58a3b984-7adf-4c20-983a-32417c86fbc8'
-
-@description('Unique identifier for a DICOM reader role assignment')
-param dicomReaderRoleAssignmentId string = 'e89c7a3c-2f64-4fa1-a847-3e4c9ba4283a'
+@description('Prefix for all resources')
+param prefix string = ''
 
 @description('Name of the storageQueue Processing Functions App.')
-param storageQueueProcessingAppName string
+param nameOFstorageQueueProcessingApp string
 
 @description('Name of Storage Account for Storage Queue Processing')
-param storageQProcessingStorageName string  
-
-@description('Specifies if the Azure Functions App should always be on.')
-param alwaysOn bool=false
+param nameOfstorageAccount string  
 
 @description('Name of the Storage Queue Processing App Service Plan.')
-param storageQProcessingPlanName string
+param planNameofstorageQueueProcessing string
 
 @description('Data Factory Name')
-param dataFactoryName string 
+param nameOfDataFactory string 
 
-@description('linked service for the DICOM service')
-param RestServicename string='RestService1'
-
-@description('linked service for Azure Data Lake Storage Gen2')
-param AzureDataLakeStoragename string='AzureDataLakeStorage1'
-
-@description('Name of Key Vault')
-param keyVaultName string
-
-@description('URL of the GitHub repository.')
-param repoUrl string= 'https://github.com/Azure-Samples/azure-health-data-and-ai-samples/'
-
+var uniqueResourceIdentifier = substring(uniqueString(resourceGroup().id, prefix), 0, 4)
+var prefixNameClean = '${replace(prefix, '-', '')}${uniqueResourceIdentifier}'
+var prefixNameCleanShort = length(prefixNameClean) > 16 ? substring(prefixNameClean, 0, 8) : prefixNameClean
+var createRoleAssignment  = true
 var tenantId= subscription().tenantId
 var fhirservicename = '${workspaceName}/${fhirName}'
 var dicomservicename = '${workspaceName}/${dicomName}'
@@ -89,6 +28,24 @@ var subscriptionid=subscription().subscriptionId
 var resourcegroupname=resourceGroup().name
 var managedIdentityName='${workspaceName}-${dicomName}'
 var pipelineName = 'Copy IDP DICOM Metadata Changes to ADLS Gen2 in Delta Formatt'
+var location = resourceGroup().location
+var queueName= '${prefixNameCleanShort}queue'
+var storageAccountName='${prefixNameCleanShort}cstorageaccount'
+var ingestContainerName='ingest'
+var processedContainerName='processed'
+var idpDicomContainerName='idpdicom'
+var eventGridSubscriptionName='${prefixNameCleanShort}eventgrid'
+var workspaceName='${prefixNameCleanShort}ws'
+var fhirName='${prefixNameCleanShort}fhir'
+var dicomName='${prefixNameCleanShort}dicom'
+var storageQueueProcessingAppName='${prefixNameCleanShort}${nameOFstorageQueueProcessingApp}'
+var storageQProcessingStorageName='${prefixNameCleanShort}${nameOfstorageAccount}'
+var storageQProcessingPlanName='${prefixNameCleanShort}${planNameofstorageQueueProcessing}'
+var dataFactoryName='${prefixNameCleanShort}${nameOfDataFactory}'
+var RestServicename='${prefixNameCleanShort}dcmpipelineservice'
+var AzureDataLakeStoragename='${prefixNameCleanShort}dcmpipelineonelake'
+var keyVaultName ='${prefixNameCleanShort}notebookkv'
+var repoUrl ='https://github.com/Azure-Samples/azure-health-data-and-ai-samples/'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
@@ -150,11 +107,6 @@ resource processedContainer 'Microsoft.Storage/storageAccounts/blobServices/cont
 resource idpDicomContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
   parent: blobService
   name: idpDicomContainerName
-}
-
-resource fhirDataContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
-  parent: blobService
-  name: fhirDataContainerName
 }
 
 resource storageQueue 'Microsoft.Storage/storageAccounts/queueServices/queues@2021-08-01' = {
@@ -350,7 +302,7 @@ resource keySecretsAiApiVersion 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
 
 resource storageQueueProcessingApp 'Microsoft.Web/sites@2021-03-01' = {
   name: storageQueueProcessingAppName
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   location: location
   identity: {
     type: 'SystemAssigned'
@@ -360,31 +312,10 @@ resource storageQueueProcessingApp 'Microsoft.Web/sites@2021-03-01' = {
     clientAffinityEnabled: false
     httpsOnly: true
     serverFarmId:storageQProcessinghostingPlan.id
-
     siteConfig: {
-      alwaysOn:alwaysOn
-      appSettings: [
-        {
-          name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~4'
-        }
-        {
-          name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'dotnet-isolated'
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: reference('microsoft.insights/components/${storageQueueProcessingAppName}', '2015-05-01').ConnectionString
-        }
-        {
-          name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageQProcessingStorageName};AccountKey=${listKeys(storageQProcessingStorage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
-        }
-        {
-          name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageQProcessingStorageName};AccountKey=${listKeys(storageQProcessingStorage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
-        }
-      ] 
+            linuxFxVersion: 'dotnet-isolated|7.0'
+            use32BitWorkerProcess: false
+            alwaysOn: true
     }  
   }
   dependsOn: [
@@ -443,13 +374,12 @@ resource storageQProcessinghostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = 
   name: storageQProcessingPlanName
   location: location
   kind: 'functionapp'
-  properties: {
-    targetWorkerCount: 2
-    reserved: true
-  }
   sku: {
-    tier: 'Dynamic'
-    name: 'Y1'
+    tier: 'Standard'
+    name: 'S2'
+  }
+  properties: {
+    reserved: true
   }
 }
 
@@ -645,9 +575,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                     type: 'SetVariable'
                     dependsOn: []
                     policy: {
-                      // timeout: '0.12:00:00'
-                      // retry: 0
-                      // retryIntervalInSeconds: 30
                       secureOutput: false
                       secureInput: false
                     }
@@ -668,9 +595,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                     type: 'SetVariable'
                     dependsOn: []
                     policy: {
-                      // timeout: '0.12:00:00'
-                      // retry: 0
-                      // retryIntervalInSeconds: 30
                       secureOutput: false
                       secureInput: false
                     }
@@ -696,9 +620,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                       }
                     ]
                     policy: {
-                      // timeout: '0.12:00:00'
-                      // retry: 0
-                      // retryIntervalInSeconds: 30
                       secureOutput: false
                       secureInput: false
                     }
@@ -724,9 +645,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                       }
                     ]
                     policy: {
-                      // timeout: '0.12:00:00'
-                      // retry: 0
-                      // retryIntervalInSeconds: 30
                       secureOutput: false
                       secureInput: false
                     }
@@ -755,9 +673,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                 }
               ]
               policy: {
-                // timeout: '0.12:00:00'
-                // retry: 0
-                // retryIntervalInSeconds: 30
                 secureOutput: false
                 secureInput: false
               }
@@ -834,7 +749,6 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
       }
     }
     annotations: []
-    //lastPublishTime: '2023-06-23T19:54:06Z'
   }
   dependsOn: [
     dataflows
@@ -875,7 +789,6 @@ resource hourlyTrigger 'Microsoft.DataFactory/factories/triggers@2018-06-01' = {
     pipeline
   ]
 }
-
 
 resource dataflows 'Microsoft.DataFactory/factories/dataflows@2018-06-01' = {
   parent: dataFactory
@@ -1288,26 +1201,17 @@ module roleAssignmentFhirService './roleAssignment.bicep' = if (createRoleAssign
   name: 'role-assign-fhir'
   scope: resourceGroup(resourceGroup().name)
   params: {
-    fhirservicename: fhirservicename
     dicomservicename : dicomservicename
-	  fhirContributorRoleAssignmentId: fhirContributorRoleAssignmentId
-    dicomOwnerRoleAssignmentId: dicomOwnerRoleAssignmentId
-    dicomReaderRoleAssignmentId:dicomReaderRoleAssignmentId
-    principalId: principalId
     storageAccountName:storageAccountName
     storageBlobDataContributorRole:storageBlobDataContributorRole
-    userPrincipalId:userPrincipalId
     dataFactoryName:dataFactoryName
     managedIdentityName:managedIdentityName
-    keyVaultName:keyVaultName
   }
   dependsOn:[
     DICOM
-    FHIR
     managedIdentity
     storageAccount
     dataFactory
-    keyvault
   ]
 }
 
