@@ -1,28 +1,34 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.23.1.45101",
+      "templateHash": "13108194016327152565"
+    }
+  },
   "parameters": {
-    "prefix": {
+    "prefixForAllResources": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "Prefix for all resources"
       }
     },
-    "nameOFstorageQueueProcessingApp": {
+    "nameOfStorageQueueProcessingApp": {
       "type": "string",
       "metadata": {
         "description": "Name of the storageQueue Processing Functions App."
       }
     },
-    "nameOfstorageAccount": {
+    "nameOfStorageAccount": {
       "type": "string",
       "metadata": {
         "description": "Name of Storage Account for Storage Queue Processing"
       }
     },
-    "planNameofstorageQueueProcessing": {
+    "planNameOfStorageQueueProcessing": {
       "type": "string",
       "metadata": {
         "description": "Name of the Storage Queue Processing App Service Plan."
@@ -36,8 +42,8 @@
     }
   },
   "variables": {
-    "uniqueResourceIdentifier": "[substring(uniqueString(resourceGroup().id, parameters('prefix')), 0, 4)]",
-    "prefixNameClean": "[format('{0}{1}', replace(parameters('prefix'), '-', ''), variables('uniqueResourceIdentifier'))]",
+    "uniqueResourceIdentifier": "[substring(uniqueString(resourceGroup().id, parameters('prefixForAllResources')), 0, 4)]",
+    "prefixNameClean": "[format('{0}{1}', replace(parameters('prefixForAllResources'), '-', ''), variables('uniqueResourceIdentifier'))]",
     "prefixNameCleanShort": "[if(greater(length(variables('prefixNameClean')), 16), substring(variables('prefixNameClean'), 0, 8), variables('prefixNameClean'))]",
     "createRoleAssignment": true,
     "tenantId": "[subscription().tenantId]",
@@ -61,9 +67,9 @@
     "workspaceName": "[format('{0}ws', variables('prefixNameCleanShort'))]",
     "fhirName": "[format('{0}fhir', variables('prefixNameCleanShort'))]",
     "dicomName": "[format('{0}dicom', variables('prefixNameCleanShort'))]",
-    "storageQueueProcessingAppName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOFstorageQueueProcessingApp'))]",
-    "storageQProcessingStorageName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfstorageAccount'))]",
-    "storageQProcessingPlanName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('planNameofstorageQueueProcessing'))]",
+    "storageQueueProcessingAppName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfStorageQueueProcessingApp'))]",
+    "storageQProcessingStorageName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfStorageAccount'))]",
+    "storageQProcessingPlanName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('planNameOfStorageQueueProcessing'))]",
     "dataFactoryName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfDataFactory'))]",
     "RestServicename": "[format('{0}dcmpipelineservice', variables('prefixNameCleanShort'))]",
     "AzureDataLakeStoragename": "[format('{0}dcmpipelineonelake', variables('prefixNameCleanShort'))]",

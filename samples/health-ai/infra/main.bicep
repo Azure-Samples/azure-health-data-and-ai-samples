@@ -1,20 +1,20 @@
 @description('Prefix for all resources')
-param prefix string = ''
+param prefixForAllResources string = ''
 
 @description('Name of the storageQueue Processing Functions App.')
-param nameOFstorageQueueProcessingApp string
+param nameOfStorageQueueProcessingApp string
 
 @description('Name of Storage Account for Storage Queue Processing')
-param nameOfstorageAccount string  
+param nameOfStorageAccount string  
 
 @description('Name of the Storage Queue Processing App Service Plan.')
-param planNameofstorageQueueProcessing string
+param planNameOfStorageQueueProcessing string
 
 @description('Data Factory Name')
 param nameOfDataFactory string 
 
-var uniqueResourceIdentifier = substring(uniqueString(resourceGroup().id, prefix), 0, 4)
-var prefixNameClean = '${replace(prefix, '-', '')}${uniqueResourceIdentifier}'
+var uniqueResourceIdentifier = substring(uniqueString(resourceGroup().id, prefixForAllResources), 0, 4)
+var prefixNameClean = '${replace(prefixForAllResources, '-', '')}${uniqueResourceIdentifier}'
 var prefixNameCleanShort = length(prefixNameClean) > 16 ? substring(prefixNameClean, 0, 8) : prefixNameClean
 var createRoleAssignment  = true
 var tenantId= subscription().tenantId
@@ -38,9 +38,9 @@ var eventGridSubscriptionName='${prefixNameCleanShort}eventgrid'
 var workspaceName='${prefixNameCleanShort}ws'
 var fhirName='${prefixNameCleanShort}fhir'
 var dicomName='${prefixNameCleanShort}dicom'
-var storageQueueProcessingAppName='${prefixNameCleanShort}${nameOFstorageQueueProcessingApp}'
-var storageQProcessingStorageName='${prefixNameCleanShort}${nameOfstorageAccount}'
-var storageQProcessingPlanName='${prefixNameCleanShort}${planNameofstorageQueueProcessing}'
+var storageQueueProcessingAppName='${prefixNameCleanShort}${nameOfStorageQueueProcessingApp}'
+var storageQProcessingStorageName='${prefixNameCleanShort}${nameOfStorageAccount}'
+var storageQProcessingPlanName='${prefixNameCleanShort}${planNameOfStorageQueueProcessing}'
 var dataFactoryName='${prefixNameCleanShort}${nameOfDataFactory}'
 var RestServicename='${prefixNameCleanShort}dcmpipelineservice'
 var AzureDataLakeStoragename='${prefixNameCleanShort}dcmpipelineonelake'
