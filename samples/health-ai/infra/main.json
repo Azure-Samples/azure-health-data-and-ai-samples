@@ -1,43 +1,12 @@
 {
-   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "metadata": {
-    "_generator": {
-      "name": "bicep",
-      "version": "0.23.1.45101",
-      "templateHash": "13108194016327152565"
-    }
-  },
   "parameters": {
     "prefixForAllResources": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "Prefix for all resources"
-      }
-    },
-    "nameOfStorageQueueProcessingApp": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the storageQueue Processing Functions App."
-      }
-    },
-    "nameOfStorageAccount": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of Storage Account for Storage Queue Processing"
-      }
-    },
-    "planNameOfStorageQueueProcessing": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Storage Queue Processing App Service Plan."
-      }
-    },
-    "nameOfDataFactory": {
-      "type": "string",
-      "metadata": {
-        "description": "Data Factory Name"
       }
     }
   },
@@ -67,15 +36,15 @@
     "workspaceName": "[format('{0}ws', variables('prefixNameCleanShort'))]",
     "fhirName": "[format('{0}fhir', variables('prefixNameCleanShort'))]",
     "dicomName": "[format('{0}dicom', variables('prefixNameCleanShort'))]",
-    "storageQueueProcessingAppName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfStorageQueueProcessingApp'))]",
-    "storageQProcessingStorageName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfStorageAccount'))]",
-    "storageQProcessingPlanName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('planNameOfStorageQueueProcessing'))]",
-    "dataFactoryName": "[format('{0}{1}', variables('prefixNameCleanShort'), parameters('nameOfDataFactory'))]",
+    "storageQueueProcessingAppName": "[format('{0}storageqprocessingapp', variables('prefixNameCleanShort'))]",
+    "storageQProcessingStorageName": "[format('{0}storageacct', variables('prefixNameCleanShort'))]",
+    "storageQProcessingPlanName": "[format('{0}storageqprocessingplan', variables('prefixNameCleanShort'))]",
+    "dataFactoryName": "[format('{0}healthaiadf', variables('prefixNameCleanShort'))]",
     "RestServicename": "[format('{0}dcmpipelineservice', variables('prefixNameCleanShort'))]",
     "AzureDataLakeStoragename": "[format('{0}dcmpipelineonelake', variables('prefixNameCleanShort'))]",
     "keyVaultName": "[format('{0}notebookkv', variables('prefixNameCleanShort'))]",
     "repoUrl": "https://github.com/Azure-Samples/azure-health-data-and-ai-samples/",
-    "principalType":"ServicePrincipal"
+    "principalType": "ServicePrincipal"
   },
   "resources": [
     {
@@ -885,7 +854,7 @@
         "typeProperties": {
           "frequency": "Minute",
           "interval": 60,
-          "startTime": "2023-11-21T13:56:00Z",
+          "startTime": "2023-11-24T13:56:00Z",
           "delay": "00:15:00",
           "maxConcurrency": 1,
           "retryPolicy": {

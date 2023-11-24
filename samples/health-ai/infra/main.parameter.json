@@ -4,18 +4,6 @@
   "parameters": {
    "prefixForAllResources":{
     "value": ""
-   },
-   "nameOfStorageQueueProcessingApp":{
-    "value": ""
-   },
-   "nameOfStorageAccount":{
-    "value": ""
-  },
-  "planNameOfStorageQueueProcessing":{
-    "value": ""
-  },
-  "nameOfDataFactory":{
-    "value": ""
-  }
+   }
 }
 }

@@ -1,18 +1,6 @@
 @description('Prefix for all resources')
 param prefixForAllResources string = ''
 
-@description('Name of the storageQueue Processing Functions App.')
-param nameOfStorageQueueProcessingApp string
-
-@description('Name of Storage Account for Storage Queue Processing')
-param nameOfStorageAccount string  
-
-@description('Name of the Storage Queue Processing App Service Plan.')
-param planNameOfStorageQueueProcessing string
-
-@description('Data Factory Name')
-param nameOfDataFactory string 
-
 var uniqueResourceIdentifier = substring(uniqueString(resourceGroup().id, prefixForAllResources), 0, 4)
 var prefixNameClean = '${replace(prefixForAllResources, '-', '')}${uniqueResourceIdentifier}'
 var prefixNameCleanShort = length(prefixNameClean) > 16 ? substring(prefixNameClean, 0, 8) : prefixNameClean
@@ -38,10 +26,10 @@ var eventGridSubscriptionName='${prefixNameCleanShort}eventgrid'
 var workspaceName='${prefixNameCleanShort}ws'
 var fhirName='${prefixNameCleanShort}fhir'
 var dicomName='${prefixNameCleanShort}dicom'
-var storageQueueProcessingAppName='${prefixNameCleanShort}${nameOfStorageQueueProcessingApp}'
-var storageQProcessingStorageName='${prefixNameCleanShort}${nameOfStorageAccount}'
-var storageQProcessingPlanName='${prefixNameCleanShort}${planNameOfStorageQueueProcessing}'
-var dataFactoryName='${prefixNameCleanShort}${nameOfDataFactory}'
+var storageQueueProcessingAppName='${prefixNameCleanShort}storageqprocessingapp'
+var storageQProcessingStorageName='${prefixNameCleanShort}storageacct'
+var storageQProcessingPlanName='${prefixNameCleanShort}storageqprocessingplan'
+var dataFactoryName='${prefixNameCleanShort}healthaiadf'
 var RestServicename='${prefixNameCleanShort}dcmpipelineservice'
 var AzureDataLakeStoragename='${prefixNameCleanShort}dcmpipelineonelake'
 var keyVaultName ='${prefixNameCleanShort}notebookkv'
@@ -777,7 +765,7 @@ resource hourlyTrigger 'Microsoft.DataFactory/factories/triggers@2018-06-01' = {
     typeProperties: {
       frequency: 'Minute'
       interval: 60
-      startTime: '2023-11-21T13:56:00Z'
+      startTime: '2023-11-24T13:56:00Z'
       delay: '00:15:00'
       maxConcurrency: 1
       retryPolicy: {
