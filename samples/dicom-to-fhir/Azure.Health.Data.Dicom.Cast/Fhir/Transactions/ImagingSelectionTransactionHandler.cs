@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
         ArgumentNullException.ThrowIfNull(patient);
         ArgumentNullException.ThrowIfNull(study);
 
-        Identifier identifier = dataset.GetImagingSopInstanceIdentifier();
+        Identifier identifier = dataset.GetSopInstanceIdentifier();
         ImagingSelection? imagingSelection = await GetImagingSelectionOrDefault(identifier, cancellationToken);
         if (imagingSelection is null)
         {
@@ -41,41 +40,28 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
                 Endpoint = [endpoint.GetReference()],
                 DerivedFrom = [study.GetReference()],
                 Identifier = [identifier],
+                Meta = new Meta { Source = endpoint.Address },
                 Status = ImagingSelection.ImagingSelectionStatus.Available,
                 Subject = patient.GetReference(),
                 Issued = DateTime.UtcNow,
             };
+
+            imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
+            _ = builder.Create(imagingSelection, GetSearchParamsQuery(identifier));
         }
         else
         {
-
-        }
-
-
-        // StudyUid = dataset.GetSingleValue<string>(DicomTag.StudyInstanceUID),
-        imagingSelection = new()
-            {
-                Identifier = [identifier],
-                Meta = new Meta { Source = endpoint.Address },
-                Status = ImagingStudy.ImagingStudyStatus.Available,
-                Subject = patient.GetReference(),
-            };
-
-            imagingSelection = UpdateDicomStudy(imagingSelection, dataset, endpoint);
-
-            SearchParams ifNoneExistsCondition = new SearchParams().Add("identifier", $"{identifier.System}|{identifier.Value}");
-            _ = builder.Create(imagingSelection, ifNoneExistsCondition);
-                else
-        {
-            imagingSelection = UpdateDicomStudy(imagingSelection, dataset, endpoint);
+            imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
             _ = builder.Update(new SearchParams(), imagingSelection, imagingSelection.Meta.VersionId);
         }
+
+        return imagingSelection;
     }
 
-    private async ValueTask<ImagingSelection?> GetImagingSelectionOrDefault(Identifier sopInstanceIdentifier, CancellationToken cancellationToken = default)
+    private async ValueTask<ImagingSelection?> GetImagingSelectionOrDefault(Identifier sopInstance, CancellationToken cancellationToken = default)
     {
         // Use SOP Instance UID as the identifier for ImagingSelection resources that refer to the entire SOP instance
-        SearchParams parameters = GetSingleInstanceSearchParams().LimitTo(1);
+        SearchParams parameters = GetSearchParamsQuery(sopInstance).LimitTo(1);
 
         Bundle? bundle = await _client.SearchAsync<ImagingSelection>(parameters, cancellationToken);
         if (bundle is null)
@@ -88,7 +74,7 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    private static ImagingStudy UpdateDicomSopInstance(ImagingSelection imagingSelection, DicomDataset dataset, Endpoint endpoint)
+    private static ImagingSelection UpdateDicomSopInstance(ImagingSelection imagingSelection, DicomDataset dataset)
     {
         imagingSelection.StudyUid = dataset.GetSingleValue<string>(DicomTag.StudyInstanceUID);
 
@@ -107,11 +93,10 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
         // Update Instance Number
         if (dataset.TryGetSingleValue(DicomTag.InstanceNumber, out int instanceNumber))
             instance.Number = instanceNumber;
+
+        return imagingSelection;
     }
 
-    private static SearchParams GetSingleInstanceSearchParams()
-    {
-        return new SearchParams()
-            .Add("identifier", $"{sopInstanceIdentifier.System}|{sopInstanceIdentifier.Value}")
-            .Add("instance.uid", );
-    }
+    private static SearchParams GetSearchParamsQuery(Identifier sopInstance)
+        => new SearchParams().Add("identifier", $"{sopInstance.System}|{sopInstance.Value}");
+}

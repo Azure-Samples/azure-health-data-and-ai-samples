@@ -34,7 +34,7 @@ internal class ImagingStudyTransactionHandler
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(dataset);
 
-        Identifier identifier = dataset.GetImagingStudyIdentifier();
+        Identifier identifier = dataset.GetStudyInstanceIdentifier();
         ImagingStudy? imagingStudy = await GetImagingStudyOrDefaultAsync(identifier, cancellationToken);
         if (imagingStudy is null)
         {
@@ -43,12 +43,12 @@ internal class ImagingStudyTransactionHandler
                 Identifier = [identifier],
                 Meta = new Meta { Source = endpoint.Address },
                 Status = ImagingStudy.ImagingStudyStatus.Available,
-                Subject = patient.GetReference(),
+                Subject = new ResourceReference($"{ResourceType.Patient:G}/{patient.Id}"),
             };
 
             imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
 
-            SearchParams ifNoneExistsCondition = new SearchParams().Add("identifier", $"{identifier.System}|{identifier.Value}");
+            SearchParams ifNoneExistsCondition = GetSearchParamsQuery(identifier);
             _ = builder.Create(imagingStudy, ifNoneExistsCondition);
         }
         else
@@ -60,12 +60,9 @@ internal class ImagingStudyTransactionHandler
         return imagingStudy;
     }
 
-    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier studyInstanceIdentifier, CancellationToken cancellationToken)
+    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier imagingStudyIdentifier, CancellationToken cancellationToken)
     {
-        SearchParams parameters = new SearchParams()
-            .Add("identifier", $"{studyInstanceIdentifier.System}|{studyInstanceIdentifier.Value}")
-            .LimitTo(1);
-
+        SearchParams parameters = GetSearchParamsQuery(imagingStudyIdentifier).LimitTo(1);
         Bundle? bundle = await _client.SearchAsync<ImagingStudy>(parameters, cancellationToken);
         if (bundle is null)
             return null;
@@ -85,7 +82,7 @@ internal class ImagingStudyTransactionHandler
 
         // Does the imaging study reference this endpoint?
         if (!imagingStudy.Endpoint.Any(e => endpoint.Identifier.Any(e.IsExactly)))
-            imagingStudy.Endpoint.Add(endpoint.GetReference());
+            imagingStudy.Endpoint.Add(new ResourceReference($"{ResourceType.Endpoint:G}/{endpoint.Id}"));
 
         // Update Modalities
         if (dataset.TryGetSingleValue(DicomTag.Modality, out string? modality) && modality is not null)
@@ -183,4 +180,7 @@ internal class ImagingStudyTransactionHandler
 
         return instance;
     }
+
+    private static SearchParams GetSearchParamsQuery(Identifier studyInstance)
+        => new SearchParams().Add("identifier", $"{studyInstance.System}|{studyInstance.Value}");
 }

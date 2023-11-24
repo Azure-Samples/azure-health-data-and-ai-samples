@@ -46,26 +46,27 @@ internal class EndpointTransactionHandler
             endpoint = new()
             {
                 Address = _dicomServiceUri.AbsoluteUri,
-                ConnectionType = new List<CodeableConcept>
-                {
+                ConnectionType =
+                [
                     // "dicom-wado-rs" is a well-defined Endpoint Connection Type code
                     new("http://terminology.hl7.org/CodeSystem/endpoint-connection-type", "dicom-wado-rs")
-                },
+                ],
                 Id = $"urn:uuid:{Guid.NewGuid()}",
                 Name = _endpointName,
-                Payload = new List<Endpoint.PayloadComponent>
-                {
+                Payload =
+                [
                     new()
                     {
                         // "DICOM WADO-RS" is a well-defined Endpoint Connection Type display name
                         MimeType = new List<string> { "application/dicom" },
-                        Type = new List<CodeableConcept> { new(string.Empty, string.Empty, "DICOM WADO-RS") },
+                        Type = [new(string.Empty, string.Empty, "DICOM WADO-RS")],
                     }
-                },
+                ],
                 Status = Endpoint.EndpointStatus.Active,
             };
 
-            _ = builder.Create(endpoint);
+            SearchParams searchParams = GetSearchParamsQuery();
+            _ = builder.Create(endpoint, searchParams);
         }
         else if (!string.Equals(endpoint.Address, _dicomServiceUri.AbsoluteUri, StringComparison.Ordinal))
         {
@@ -83,11 +84,7 @@ internal class EndpointTransactionHandler
 
     private async ValueTask<Endpoint?> GetEndpointOrDefaultAsync(CancellationToken cancellationToken)
     {
-        SearchParams searchParams = new SearchParams()
-            .Add("name", _endpointName)
-            .Add("connection-type", "http://terminology.hl7.org/CodeSystem/endpoint-connection-type|dicom-wado-rs")
-            .LimitTo(1);
-
+        SearchParams searchParams = GetSearchParamsQuery().LimitTo(1);
         Bundle? bundle = await _client.SearchAsync<Endpoint>(searchParams, cancellationToken);
         if (bundle is null)
             return null;
@@ -97,5 +94,12 @@ internal class EndpointTransactionHandler
             .Select(x => x.Resource)
             .Cast<Endpoint>()
             .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    private SearchParams GetSearchParamsQuery()
+    {
+        return new SearchParams()
+            .Add("name", _endpointName)
+            .Add("connection-type", "http://terminology.hl7.org/CodeSystem/endpoint-connection-type|dicom-wado-rs");
     }
 }

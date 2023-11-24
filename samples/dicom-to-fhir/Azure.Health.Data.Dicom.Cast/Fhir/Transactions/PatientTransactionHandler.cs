@@ -31,6 +31,7 @@ internal class PatientTransactionHandler
     public async ValueTask<Patient> AddOrUpdatePatientAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
+        Endpoint endpoint,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -45,11 +46,12 @@ internal class PatientTransactionHandler
             {
                 Id = $"urn:uuid:{Guid.NewGuid()}",
                 Identifier = { identifier },
+                Meta = new Meta { Source = endpoint.Address },
             };
 
             patient = UpdatePatient(patient, dataset);
 
-            SearchParams ifNotExistsCondition = new SearchParams().Add("identifier", $"{identifier.System}|{identifier.Value}");
+            SearchParams ifNotExistsCondition = GetSearchParamsQuery(identifier);
             _ = builder.Create(patient, ifNotExistsCondition);
         }
         else
@@ -64,10 +66,7 @@ internal class PatientTransactionHandler
 
     private async ValueTask<Patient?> GetPatientOrDefaultAsync(Identifier patientId, CancellationToken cancellationToken)
     {
-        SearchParams parameters = new SearchParams()
-            .Add("identifier", $"{patientId.System}|{patientId.Value}")
-            .LimitTo(1);
-
+        SearchParams parameters = GetSearchParamsQuery(patientId).LimitTo(1);
         Bundle? bundle = await _client.SearchAsync<Patient>(parameters, cancellationToken);
         if (bundle is null)
             return null;
@@ -142,7 +141,7 @@ internal class PatientTransactionHandler
             string[] parts = patientName.Trim().Split('^');
             name.Family = parts[0];
 
-            List<string> combinedGivenNames = new();
+            List<string> combinedGivenNames = [];
 
             // Given name
             if (TryGetNamePart(parts, 1, out string[]? givenNames))
@@ -177,4 +176,7 @@ internal class PatientTransactionHandler
             return false;
         }
     }
+
+    private static SearchParams GetSearchParamsQuery(Identifier patient)
+        => new SearchParams().Add("identifier", $"{patient.System}|{patient.Value}");
 }
