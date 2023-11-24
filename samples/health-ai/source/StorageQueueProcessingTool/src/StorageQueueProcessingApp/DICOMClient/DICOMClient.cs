@@ -10,6 +10,7 @@ namespace StorageQueueProcessingApp.DICOMClient
 		private readonly IDicomWebClient client;
 		private readonly ProcessorConfig config;
 		private readonly ILogger<DICOMClient>? logger;
+		private static SemaphoreSlim semaphore = new SemaphoreSlim(10, 15);
 
 		public DICOMClient(IHttpClientFactory httpClientfactory, ProcessorConfig _config, ILogger<DICOMClient>? _logger)
 		{
@@ -23,6 +24,7 @@ namespace StorageQueueProcessingApp.DICOMClient
 		{
 			try
 			{
+				await semaphore.WaitAsync();
 				DicomWebResponse response = await client.StoreAsync(new[] { dicomStream });
 				return response;
 			}
@@ -35,6 +37,7 @@ namespace StorageQueueProcessingApp.DICOMClient
 			{
 				throw;
 			}
+			finally { semaphore.Release(); }
 		}
 	}
 }

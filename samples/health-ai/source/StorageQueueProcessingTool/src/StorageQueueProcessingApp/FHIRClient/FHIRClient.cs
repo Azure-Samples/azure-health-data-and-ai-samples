@@ -3,6 +3,7 @@
 	public class FHIRClient : IFHIRClient
 	{
 		private readonly IHttpClientFactory _httpClient;
+		private static SemaphoreSlim semaphore = new SemaphoreSlim(10, 15);
 
 		public FHIRClient(IHttpClientFactory httpClient)
 		{
@@ -13,6 +14,7 @@
 			HttpResponseMessage fhirResponse;
 			try
 			{
+				await semaphore.WaitAsync();
 				HttpClient client = _httpClient.CreateClient(clientName);
 				fhirResponse = await client.SendAsync(request);
 			}
@@ -20,6 +22,7 @@
 			{
 				throw;
 			}
+			finally { semaphore.Release(); }
 
 			return fhirResponse;
 		}
