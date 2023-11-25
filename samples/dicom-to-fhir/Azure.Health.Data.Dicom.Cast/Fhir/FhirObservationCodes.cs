@@ -5,7 +5,7 @@ using Hl7.Fhir.Model;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir;
 
-internal class FhirObservationCodes
+internal static class FhirObservationCodes
 {
     public static readonly CodeableConcept RadiationExposure = new("http://loinc.org", "73569-6", "Radiation exposure and protection information");
     public static readonly CodeableConcept Accession = new("http://terminology.hl7.org/CodeSystem/v2-0203", "ACSN");

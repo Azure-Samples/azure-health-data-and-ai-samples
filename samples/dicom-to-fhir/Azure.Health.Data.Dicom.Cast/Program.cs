@@ -16,6 +16,7 @@ IHost host = new HostBuilder()
         .AddJsonSerialization()
         .AddDicomWebClient()
         .AddFhirClient()
+        .AddFhirTransactionHandlers()
         .AddAzureClientsCore())
     .Build();
 

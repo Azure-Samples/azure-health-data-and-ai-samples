@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Health.Data.Dicom.Cast.Http;
 
-internal class AuthorizationHandler : DelegatingHandler
+internal sealed class AuthorizationHandler : DelegatingHandler
 {
     private readonly TokenCredential _tokenCredential;
     private readonly Uri _scope;

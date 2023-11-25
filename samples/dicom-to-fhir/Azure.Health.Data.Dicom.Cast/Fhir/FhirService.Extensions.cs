@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 using Azure.Health.Data.Dicom.Cast.Http;
 using Hl7.Fhir.Rest;
 using Microsoft.Extensions.Azure;
@@ -41,5 +42,18 @@ internal static class FhirServiceExtensions
                 HttpClient httpClient = sp.GetRequiredService<HttpClient>();
                 return new FhirClient(options.ServiceUri, httpClient, options);
             });
+    }
+
+    public static IServiceCollection AddFhirTransactionHandlers(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        return services
+            .AddSingleton<DicomTransactionBuilder>()
+            .AddSingleton<EndpointTransactionHandler>()
+            .AddSingleton<PatientTransactionHandler>()
+            .AddSingleton<ImagingStudyTransactionHandler>()
+            .AddSingleton<ImagingSelectionTransactionHandler>()
+            .AddSingleton<ObservationTransactionHandler>();
     }
 }

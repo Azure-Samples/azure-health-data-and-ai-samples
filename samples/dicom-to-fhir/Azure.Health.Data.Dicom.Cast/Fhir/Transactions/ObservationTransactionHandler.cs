@@ -12,11 +12,10 @@ using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class ObservationTransactionHandler(FhirClient client, ILogger<ObservationTransactionHandler> logger)
+internal sealed class ObservationTransactionHandler(FhirClient client, ILogger<ObservationTransactionHandler> logger)
 {
     private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
     private readonly ILogger<ObservationTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -36,27 +35,32 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
         ArgumentNullException.ThrowIfNull(selection);
 
         Identifier identifier = dataset.GetSopInstanceIdentifier();
-        List<Observation> observations = await GetObservationsAsync(identifier, cancellationToken).ToListAsync(cancellationToken);
-        if (observations.Count > 0)
+        List<Observation> existingObservations = await GetObservationsAsync(identifier, cancellationToken).ToListAsync(cancellationToken);
+        if (existingObservations.Count > 0)
         {
-            // Delete the old observations for this imaging selection
-            foreach (Observation previous in observations)
+            // Delete the old existingObservations for this imaging selection
+            foreach (Observation previous in existingObservations)
                 builder = builder.Delete(nameof(Observation), previous.Id);
         }
 
-        // TODO: Is there a way to "deduplicate" the observations?
-        observations = CreateObservations(dataset, endpoint, patient.GetReference(), selection.GetReference());
-        foreach (Observation observation in observations)
+        // TODO: Is there a way to "deduplicate" the existingObservations?
+        List<Observation> newObservations = CreateObservations(dataset, endpoint, patient.GetReference(), selection.GetReference());
+        foreach (Observation observation in newObservations)
             builder = builder.Create(observation);
 
-        return builder.ForResource<IReadOnlyList<Observation>>(observations);
+        _logger.LogInformation(
+            "Replacing {ExistingCount} Observation resources with {NewCount} new Observation resources.",
+            existingObservations.Count,
+            newObservations.Count);
+
+        return builder.ForResource<IReadOnlyList<Observation>>(newObservations);
     }
 
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Instance method for symmetry.")]
     public TransactionBuilder DeleteObservations(TransactionBuilder builder, InstanceIdentifiers identifiers)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        _logger.LogInformation("Deleting all Observation resources based on the DICOM SOP instance.");
         Identifier identifier = DicomIdentifier.FromUid(identifiers.SopInstanceUid);
         return builder.Delete(nameof(ResourceType.ImagingSelection), new SearchParams().Add(identifier));
     }
@@ -85,7 +89,7 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
                 observations.Add(observation);
         }
 
-        // Create observations for each of the content items
+        // Create existingObservations for each of the content items
         if (dataset.TryGetSequence(DicomTag.ContentSequence, out DicomSequence content) && content?.Items.Count > 0)
             observations.AddRange(content.Items.SelectMany(c => CreateObservations(c, endpoint, patient, imagingSelection)));
 
@@ -97,7 +101,7 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
         Bundle? bundle = await _client.SearchAsync<Observation>(new SearchParams().Add(identifier), cancellationToken);
         if (bundle is not null)
         {
-            await foreach (Observation o in bundle.GetEntriesAsync(_client).Select(x => x.Resource).Cast<Observation>())
+            await foreach (Observation o in bundle.GetPagesAsync(_client).SelectMany(x => x.Entry).Select(x => x.Resource).Cast<Observation>())
                 yield return o;
         }
     }

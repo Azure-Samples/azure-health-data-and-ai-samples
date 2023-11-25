@@ -14,16 +14,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class ImagingStudyTransactionHandler
+internal sealed class ImagingStudyTransactionHandler(FhirClient client, ILogger<ImagingStudyTransactionHandler> logger)
 {
-    private readonly FhirClient _client;
-    private readonly ILogger<ImagingStudyTransactionHandler> _logger;
-
-    public ImagingStudyTransactionHandler(FhirClient client, ILogger<ImagingStudyTransactionHandler> logger)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
+    private readonly ILogger<ImagingStudyTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public async ValueTask<ResourceTransactionBuilder<ImagingStudy>> AddOrUpdateImagingStudyAsync(
         TransactionBuilder builder,
@@ -41,17 +35,22 @@ internal class ImagingStudyTransactionHandler
         {
             study = new()
             {
+                Id = $"urn:uuid:{Guid.NewGuid()}",
                 Identifier = [identifier],
                 Meta = new Meta { Source = endpoint.Address },
                 Status = ImagingStudy.ImagingStudyStatus.Available,
                 Subject = new ResourceReference($"{ResourceType.Patient:G}/{patient.Id}"),
             };
 
+            _logger.LogInformation("Creating new ImagingStudy resource with ID {ID}.", study.Id);
+
             study = UpdateDicomStudy(study, dataset, endpoint);
             builder = builder.Create(study, new SearchParams().Add(identifier));
         }
         else
         {
+            _logger.LogInformation("Found existing ImagingStudy resource with ID {ID}.", study.Id);
+
             study = UpdateDicomStudy(study, dataset, endpoint);
             builder = builder.Update(new SearchParams(), study, study.Meta.VersionId);
         }
@@ -88,7 +87,8 @@ internal class ImagingStudyTransactionHandler
             return null;
 
         return await bundle
-            .GetEntriesAsync(_client)
+            .GetPagesAsync(_client)
+            .SelectMany(x => x.Entry)
             .Select(x => x.Resource)
             .Cast<ImagingStudy>()
             .SingleOrDefaultAsync(cancellationToken);

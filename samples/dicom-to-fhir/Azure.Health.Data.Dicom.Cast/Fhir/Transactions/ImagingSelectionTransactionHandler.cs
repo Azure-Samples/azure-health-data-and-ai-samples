@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<ObservationTransactionHandler> logger)
+internal sealed class ImagingSelectionTransactionHandler(FhirClient client, ILogger<ObservationTransactionHandler> logger)
 {
     private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
     private readonly ILogger<ObservationTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -38,6 +37,7 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
         {
             imagingSelection = new()
             {
+                Id = $"urn:uuid:{Guid.NewGuid()}",
                 Endpoint = [endpoint.GetReference()],
                 DerivedFrom = [study.GetReference()],
                 Identifier = [identifier],
@@ -47,11 +47,15 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
                 Issued = DateTime.UtcNow,
             };
 
+            _logger.LogInformation("Creating new ImagingSelection resource with ID {ID}.", study.Id);
+
             imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
             builder = builder.Create(imagingSelection, new SearchParams().Add(identifier));
         }
         else
         {
+            _logger.LogInformation("Found existing ImagingSelection resource with ID {ID}.", study.Id);
+
             imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
             builder = builder.Update(new SearchParams(), imagingSelection, imagingSelection.Meta.VersionId);
         }
@@ -59,11 +63,11 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
         return builder.ForResource(imagingSelection);
     }
 
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Instance method for symmetry.")]
     public TransactionBuilder DeleteImagingSelection(TransactionBuilder builder, InstanceIdentifiers identifiers)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        _logger.LogInformation("Deleting the ImagingSelection resource for the DICOM SOP instance.");
         Identifier identifier = DicomIdentifier.FromUid(identifiers.SopInstanceUid);
         return builder.Delete(nameof(ResourceType.ImagingSelection), new SearchParams().Add(identifier));
     }
@@ -78,7 +82,8 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
         // TODO: There could be multiple selections that include the same SOP instance,
         // so we'll throw an error if there are multiple matches.
         return await bundle
-            .GetEntriesAsync(_client)
+            .GetPagesAsync(_client)
+            .SelectMany(x => x.Entry)
             .Select(x => x.Resource)
             .Cast<ImagingSelection>()
             .SingleOrDefaultAsync(cancellationToken);

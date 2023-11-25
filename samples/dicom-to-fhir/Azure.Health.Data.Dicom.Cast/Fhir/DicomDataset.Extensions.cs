@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Net;
 using FellowOakDicom;
 using FellowOakDicom.StructuredReport;
 using Hl7.Fhir.Model;
@@ -79,8 +78,8 @@ internal static class DicomDatasetExtensions
         ArgumentNullException.ThrowIfNull(endpoint);
         ArgumentNullException.ThrowIfNull(patient);
 
-        if (!code.Equals(StructuredReportCodes.IrradiationEventXRayData) &&
-            !code.Equals(StructuredReportCodes.CtAcquisition) &&
+        if (!code.Equals(StructuredReportCodes.CtAcquisition) &&
+            !code.Equals(StructuredReportCodes.IrradiationEventXRayData) &&
             !code.Equals(StructuredReportCodes.RadiopharmaceuticalAdministration))
         {
             observation = default;
@@ -101,6 +100,7 @@ internal static class DicomDatasetExtensions
         observation = new Observation
         {
             Code = FhirObservationCodes.IrradiationEvent,
+            Id = $"urn:uuid:{Guid.NewGuid()}",
             Identifier = { dataset.GetSopInstanceIdentifier() },
             Meta = new Meta { Source = endpoint.Address },
             PartOf = { imagingSelection },
@@ -135,7 +135,8 @@ internal static class DicomDatasetExtensions
         ArgumentNullException.ThrowIfNull(patient);
         ArgumentNullException.ThrowIfNull(imagingSelection);
 
-        if (!code.Equals(StructuredReportCodes.RadiopharmaceuticalRadiationDoseReport) && !code.Equals(StructuredReportCodes.XRayRadiationDoseReport))
+        if (!code.Equals(StructuredReportCodes.RadiopharmaceuticalRadiationDoseReport) &&
+            !code.Equals(StructuredReportCodes.XRayRadiationDoseReport))
         {
             observation = default;
             return false;
@@ -147,6 +148,7 @@ internal static class DicomDatasetExtensions
         observation = new Observation
         {
             Code = FhirObservationCodes.RadiationExposure,
+            Id = $"urn:uuid:{Guid.NewGuid()}",
             Identifier = { dataset.GetSopInstanceIdentifier() },
             Meta = new Meta { Source = endpoint.Address },
             PartOf = { imagingSelection },

@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class EndpointTransactionHandler
+internal sealed class EndpointTransactionHandler
 {
     private readonly FhirClient _client;
     private readonly Uri _dicomServiceUri;
@@ -65,8 +65,8 @@ internal class EndpointTransactionHandler
                 Status = Endpoint.EndpointStatus.Active,
             };
 
-            SearchParams searchParams = GetSearchParamsQuery();
-            builder = builder.Create(endpoint, searchParams);
+            _logger.LogInformation("Creating new Endpoint resource for Azure DICOM Service with address {ServiceUrl}.", _dicomServiceUri.AbsoluteUri);
+            builder = builder.Create(endpoint, GetSearchParamsQuery());
         }
         else if (!string.Equals(endpoint.Address, _dicomServiceUri.AbsoluteUri, StringComparison.Ordinal))
         {
@@ -84,13 +84,13 @@ internal class EndpointTransactionHandler
 
     private async ValueTask<Endpoint?> GetEndpointOrDefaultAsync(CancellationToken cancellationToken)
     {
-        SearchParams searchParams = GetSearchParamsQuery().LimitTo(1);
-        Bundle? bundle = await _client.SearchAsync<Endpoint>(searchParams, cancellationToken);
+        Bundle? bundle = await _client.SearchAsync<Endpoint>(GetSearchParamsQuery(), cancellationToken);
         if (bundle is null)
             return null;
 
         return await bundle
-            .GetEntriesAsync(_client)
+            .GetPagesAsync(_client)
+            .SelectMany(x => x.Entry)
             .Select(x => x.Resource)
             .Cast<Endpoint>()
             .SingleOrDefaultAsync(cancellationToken);

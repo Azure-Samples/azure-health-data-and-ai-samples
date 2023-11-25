@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -17,16 +18,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class PatientTransactionHandler
+internal sealed class PatientTransactionHandler(FhirClient client, ILogger<PatientTransactionHandler> logger)
 {
-    private readonly FhirClient _client;
-    private readonly ILogger<PatientTransactionHandler> _logger;
-
-    public PatientTransactionHandler(FhirClient client, ILogger<PatientTransactionHandler> logger)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
+    private readonly ILogger<PatientTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public async ValueTask<ResourceTransactionBuilder<Patient>> AddOrUpdatePatientAsync(
         TransactionBuilder builder,
@@ -49,11 +44,15 @@ internal class PatientTransactionHandler
                 Meta = new Meta { Source = endpoint.Address },
             };
 
+            _logger.LogInformation("Creating new Patient resource with ID {ID}.", patient.Id);
+
             patient = UpdatePatient(patient, dataset);
             builder = builder.Create(patient, new SearchParams().Add(identifier));
         }
         else
         {
+            _logger.LogInformation("Found existing Patient resource with ID {ID}.", patient.Id);
+
             patient = UpdatePatient(patient, dataset);
             builder = builder.Update(new SearchParams(), patient, patient.Meta.VersionId);
         }
@@ -68,7 +67,8 @@ internal class PatientTransactionHandler
             return null;
 
         return await bundle
-            .GetEntriesAsync(_client)
+            .GetPagesAsync(_client)
+            .SelectMany(x => x.Entry)
             .Select(x => x.Resource)
             .Cast<Patient>()
             .SingleOrDefaultAsync(cancellationToken);

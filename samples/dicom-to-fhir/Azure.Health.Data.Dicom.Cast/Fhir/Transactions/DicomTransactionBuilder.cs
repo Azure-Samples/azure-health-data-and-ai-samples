@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
-internal class DicomTransactionBuilder(
+internal sealed class DicomTransactionBuilder(
     EndpointTransactionHandler endpointHandler,
     PatientTransactionHandler patientHandler,
     ImagingStudyTransactionHandler imagingStudyHandler,

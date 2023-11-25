@@ -13,26 +13,16 @@ using Microsoft.Extensions.Options;
 
 namespace Azure.Health.Data.Dicom.Cast.DicomWeb;
 
-internal class DicomWebClient
+internal sealed class DicomWebClient(HttpClient httpClient, IOptionsSnapshot<JsonSerializerOptions> options)
 {
-    private readonly HttpClient _httpClient;
-    private readonly JsonSerializerOptions _options;
+    private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    private readonly JsonSerializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
     private const string ApplicationDicomJson = "application/dicom+json";
 
-    public DicomWebClient(HttpClient httpClient, IOptionsSnapshot<JsonSerializerOptions> options)
+    public async ValueTask<DicomDataset> RetrieveInstanceMetadataAsync(InstanceIdentifiers identifiers, CancellationToken cancellationToken = default)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-    }
-
-    public async Task<DicomDataset?> RetrieveInstanceMetadataAsync(
-        string studyInstanceUid,
-        string seriesInstanceUid,
-        string sopInstanceUid,
-        CancellationToken cancellationToken = default)
-    {
-        Uri route = new($"study/{studyInstanceUid}/series/{seriesInstanceUid}/instance/{sopInstanceUid}/metadata", UriKind.Relative);
+        Uri route = new($"study/{identifiers.StudyInstanceUid}/series/{identifiers.SeriesInstanceUid}/instance/{identifiers.SopInstanceUid}/metadata", UriKind.Relative);
         using HttpRequestMessage request = new(HttpMethod.Get, route)
         {
             Headers =
@@ -42,9 +32,9 @@ internal class DicomWebClient
         };
 
         using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
-        return await response
+        return (await response
             .EnsureSuccessStatusCode()
             .Content
-            .ReadFromJsonAsync<DicomDataset>(_options, cancellationToken);
+            .ReadFromJsonAsync<DicomDataset>(_options, cancellationToken))!;
     }
 }
