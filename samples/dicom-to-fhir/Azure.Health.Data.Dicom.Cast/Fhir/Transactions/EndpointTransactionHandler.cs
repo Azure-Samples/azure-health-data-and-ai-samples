@@ -35,7 +35,7 @@ internal class EndpointTransactionHandler
         _endpointName = $"Azure Dicom Service {dicomOptions.Workspace}/{dicomOptions.Service} WADO-RS Endpoint";
     }
 
-    public async ValueTask<Endpoint> GetOrAddEndpointAsync(TransactionBuilder builder, CancellationToken cancellationToken)
+    public async ValueTask<ResourceTransactionBuilder<Endpoint>> GetOrAddEndpointAsync(TransactionBuilder builder, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -66,7 +66,7 @@ internal class EndpointTransactionHandler
             };
 
             SearchParams searchParams = GetSearchParamsQuery();
-            _ = builder.Create(endpoint, searchParams);
+            builder = builder.Create(endpoint, searchParams);
         }
         else if (!string.Equals(endpoint.Address, _dicomServiceUri.AbsoluteUri, StringComparison.Ordinal))
         {
@@ -79,7 +79,7 @@ internal class EndpointTransactionHandler
                     endpoint.Address));
         }
 
-        return endpoint;
+        return builder.ForResource(endpoint);
     }
 
     private async ValueTask<Endpoint?> GetEndpointOrDefaultAsync(CancellationToken cancellationToken)

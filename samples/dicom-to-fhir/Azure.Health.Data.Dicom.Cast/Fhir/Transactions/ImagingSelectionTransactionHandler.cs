@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
     private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
     private readonly ILogger<ObservationTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public async ValueTask<ImagingSelection> AddOrUpdateImagingSelectionAsync(
+    public async ValueTask<ResourceTransactionBuilder<ImagingSelection>> AddOrUpdateImagingSelectionAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
         Endpoint endpoint,
@@ -47,26 +48,35 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
             };
 
             imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
-            _ = builder.Create(imagingSelection, GetSearchParamsQuery(identifier));
+            builder = builder.Create(imagingSelection, new SearchParams().Add(identifier));
         }
         else
         {
             imagingSelection = UpdateDicomSopInstance(imagingSelection, dataset);
-            _ = builder.Update(new SearchParams(), imagingSelection, imagingSelection.Meta.VersionId);
+            builder = builder.Update(new SearchParams(), imagingSelection, imagingSelection.Meta.VersionId);
         }
 
-        return imagingSelection;
+        return builder.ForResource(imagingSelection);
     }
 
-    private async ValueTask<ImagingSelection?> GetImagingSelectionOrDefault(Identifier sopInstance, CancellationToken cancellationToken = default)
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Instance method for symmetry.")]
+    public TransactionBuilder DeleteImagingSelection(TransactionBuilder builder, InstanceIdentifiers identifiers)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        Identifier identifier = DicomIdentifier.FromUid(identifiers.SopInstanceUid);
+        return builder.Delete(nameof(ResourceType.ImagingSelection), new SearchParams().Add(identifier));
+    }
+
+    private async ValueTask<ImagingSelection?> GetImagingSelectionOrDefault(Identifier identifier, CancellationToken cancellationToken = default)
     {
         // Use SOP Instance UID as the identifier for ImagingSelection resources that refer to the entire SOP instance
-        SearchParams parameters = GetSearchParamsQuery(sopInstance).LimitTo(1);
-
-        Bundle? bundle = await _client.SearchAsync<ImagingSelection>(parameters, cancellationToken);
+        Bundle? bundle = await _client.SearchAsync<ImagingSelection>(new SearchParams().Add(identifier), cancellationToken);
         if (bundle is null)
             return null;
 
+        // TODO: There could be multiple selections that include the same SOP instance,
+        // so we'll throw an error if there are multiple matches.
         return await bundle
             .GetEntriesAsync(_client)
             .Select(x => x.Resource)
@@ -96,7 +106,4 @@ internal class ImagingSelectionTransactionHandler(FhirClient client, ILogger<Obs
 
         return imagingSelection;
     }
-
-    private static SearchParams GetSearchParamsQuery(Identifier sopInstance)
-        => new SearchParams().Add("identifier", $"{sopInstance.System}|{sopInstance.Value}");
 }

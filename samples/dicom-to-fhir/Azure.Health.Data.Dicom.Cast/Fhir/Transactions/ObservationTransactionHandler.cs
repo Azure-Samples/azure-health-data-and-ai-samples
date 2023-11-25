@@ -12,6 +12,7 @@ using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.Health.Data.Dicom.Cast.Fhir.Transactions;
 
@@ -20,7 +21,7 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
     private readonly FhirClient _client = client ?? throw new ArgumentNullException(nameof(client));
     private readonly ILogger<ObservationTransactionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public async ValueTask<IReadOnlyList<Observation>> AddOrUpdateObservationsAsync(
+    public async ValueTask<ResourceTransactionBuilder<IReadOnlyList<Observation>>> AddOrUpdateObservationsAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
         Endpoint endpoint,
@@ -48,7 +49,16 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
         foreach (Observation observation in observations)
             builder = builder.Create(observation);
 
-        return observations;
+        return builder.ForResource<IReadOnlyList<Observation>>(observations);
+    }
+
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Instance method for symmetry.")]
+    public TransactionBuilder DeleteObservations(TransactionBuilder builder, InstanceIdentifiers identifiers)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        Identifier identifier = DicomIdentifier.FromUid(identifiers.SopInstanceUid);
+        return builder.Delete(nameof(ResourceType.ImagingSelection), new SearchParams().Add(identifier));
     }
 
     private List<Observation> CreateObservations(
@@ -82,17 +92,13 @@ internal class ObservationTransactionHandler(FhirClient client, ILogger<Observat
         return observations;
     }
 
-    private async IAsyncEnumerable<Observation> GetObservationsAsync(Identifier imagingStudy, [EnumeratorCancellation] CancellationToken cancellationToken)
+    private async IAsyncEnumerable<Observation> GetObservationsAsync(Identifier identifier, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        SearchParams parameters = GetSearchParamsQuery(imagingStudy);
-        Bundle? bundle = await _client.SearchAsync<Observation>(parameters, cancellationToken);
+        Bundle? bundle = await _client.SearchAsync<Observation>(new SearchParams().Add(identifier), cancellationToken);
         if (bundle is not null)
         {
             await foreach (Observation o in bundle.GetEntriesAsync(_client).Select(x => x.Resource).Cast<Observation>())
                 yield return o;
         }
     }
-
-    private static SearchParams GetSearchParamsQuery(Identifier imagingStudy)
-        => new SearchParams().Add("identifier", $"{imagingStudy.System}|{imagingStudy.Value}");
 }

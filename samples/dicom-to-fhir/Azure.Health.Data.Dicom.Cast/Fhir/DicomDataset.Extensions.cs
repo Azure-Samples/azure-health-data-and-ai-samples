@@ -34,7 +34,7 @@ internal static class DicomDatasetExtensions
         if (!dataset.TryGetSingleValue(DicomTag.StudyInstanceUID, out string? studyInstanceUID) || string.IsNullOrWhiteSpace(studyInstanceUID))
             throw new KeyNotFoundException(Exceptions.StudyInstanceUidNotFound);
 
-        return new Identifier("urn:dicom:uid", $"urn:oid:{studyInstanceUID}");
+        return DicomIdentifier.FromUid(studyInstanceUID);
     }
 
     public static Identifier GetSopInstanceIdentifier(this DicomDataset dataset)
@@ -44,7 +44,7 @@ internal static class DicomDatasetExtensions
         if (!dataset.TryGetSingleValue(DicomTag.SOPInstanceUID, out string? sopInstanceUid) || string.IsNullOrWhiteSpace(sopInstanceUid))
             throw new KeyNotFoundException(Exceptions.StudyInstanceUidNotFound);
 
-        return new Identifier("urn:dicom:uid", $"urn:oid:{sopInstanceUid}");
+        return DicomIdentifier.FromUid(sopInstanceUid);
     }
 
     public static bool TryGetDateTimeOffset(this DicomDataset dataset, DicomTag dateTag, DicomTag timeTag, out DateTimeOffset value)

@@ -28,7 +28,7 @@ internal class PatientTransactionHandler
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<Patient> AddOrUpdatePatientAsync(
+    public async ValueTask<ResourceTransactionBuilder<Patient>> AddOrUpdatePatientAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
         Endpoint endpoint,
@@ -50,24 +50,20 @@ internal class PatientTransactionHandler
             };
 
             patient = UpdatePatient(patient, dataset);
-
-            SearchParams ifNotExistsCondition = GetSearchParamsQuery(identifier);
-            _ = builder.Create(patient, ifNotExistsCondition);
+            builder = builder.Create(patient, new SearchParams().Add(identifier));
         }
         else
         {
             patient = UpdatePatient(patient, dataset);
-
-            _ = builder.Update(new SearchParams(), patient, patient.Meta.VersionId);
+            builder = builder.Update(new SearchParams(), patient, patient.Meta.VersionId);
         }
 
-        return patient;
+        return builder.ForResource(patient);
     }
 
-    private async ValueTask<Patient?> GetPatientOrDefaultAsync(Identifier patientId, CancellationToken cancellationToken)
+    private async ValueTask<Patient?> GetPatientOrDefaultAsync(Identifier identifier, CancellationToken cancellationToken)
     {
-        SearchParams parameters = GetSearchParamsQuery(patientId).LimitTo(1);
-        Bundle? bundle = await _client.SearchAsync<Patient>(parameters, cancellationToken);
+        Bundle? bundle = await _client.SearchAsync<Patient>(new SearchParams().Add(identifier), cancellationToken);
         if (bundle is null)
             return null;
 
@@ -176,7 +172,4 @@ internal class PatientTransactionHandler
             return false;
         }
     }
-
-    private static SearchParams GetSearchParamsQuery(Identifier patient)
-        => new SearchParams().Add("identifier", $"{patient.System}|{patient.Value}");
 }

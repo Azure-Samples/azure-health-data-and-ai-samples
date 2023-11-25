@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ internal class ImagingStudyTransactionHandler
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<ImagingStudy> AddOrUpdateImagingStudyAsync(
+    public async ValueTask<ResourceTransactionBuilder<ImagingStudy>> AddOrUpdateImagingStudyAsync(
         TransactionBuilder builder,
         DicomDataset dataset,
         Endpoint endpoint,
@@ -35,10 +36,10 @@ internal class ImagingStudyTransactionHandler
         ArgumentNullException.ThrowIfNull(dataset);
 
         Identifier identifier = dataset.GetStudyInstanceIdentifier();
-        ImagingStudy? imagingStudy = await GetImagingStudyOrDefaultAsync(identifier, cancellationToken);
-        if (imagingStudy is null)
+        ImagingStudy? study = await GetImagingStudyOrDefaultAsync(identifier, cancellationToken);
+        if (study is null)
         {
-            imagingStudy = new()
+            study = new()
             {
                 Identifier = [identifier],
                 Meta = new Meta { Source = endpoint.Address },
@@ -46,24 +47,43 @@ internal class ImagingStudyTransactionHandler
                 Subject = new ResourceReference($"{ResourceType.Patient:G}/{patient.Id}"),
             };
 
-            imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
-
-            SearchParams ifNoneExistsCondition = GetSearchParamsQuery(identifier);
-            _ = builder.Create(imagingStudy, ifNoneExistsCondition);
+            study = UpdateDicomStudy(study, dataset, endpoint);
+            builder = builder.Create(study, new SearchParams().Add(identifier));
         }
         else
         {
-            imagingStudy = UpdateDicomStudy(imagingStudy, dataset, endpoint);
-            _ = builder.Update(new SearchParams(), imagingStudy, imagingStudy.Meta.VersionId);
+            study = UpdateDicomStudy(study, dataset, endpoint);
+            builder = builder.Update(new SearchParams(), study, study.Meta.VersionId);
         }
 
-        return imagingStudy;
+        return builder.ForResource(study);
     }
 
-    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier imagingStudyIdentifier, CancellationToken cancellationToken)
+    public async ValueTask<TransactionBuilder> UpdateOrDeleteImagingStudyAsync(TransactionBuilder builder, InstanceIdentifiers identifiers, CancellationToken cancellationToken = default)
     {
-        SearchParams parameters = GetSearchParamsQuery(imagingStudyIdentifier).LimitTo(1);
-        Bundle? bundle = await _client.SearchAsync<ImagingStudy>(parameters, cancellationToken);
+        ArgumentNullException.ThrowIfNull(builder);
+
+        ImagingStudy? study = await GetImagingStudyOrDefaultAsync(DicomIdentifier.FromUid(identifiers.StudyInstanceUid), cancellationToken);
+        if (study is not null)
+        {
+            ImagingStudy.SeriesComponent? series = GetSeriesOrDefault(study, identifiers.SeriesInstanceUid);
+            if (series is not null)
+            {
+                _ = series.Instance.RemoveAll(x => x.Uid == identifiers.SopInstanceUid);
+
+                // Update the study, unless this was the last SOP instance for the last series. Then delete the entire study
+                builder = study.Series.Count == 1 && series.Instance.Count == 0
+                    ? builder.Delete(nameof(ResourceType.ImagingStudy), study.Id)
+                    : builder.Update(new SearchParams(), study, study.Meta.VersionId);
+            }
+        }
+
+        return builder;
+    }
+
+    private async ValueTask<ImagingStudy?> GetImagingStudyOrDefaultAsync(Identifier identifier, CancellationToken cancellationToken)
+    {
+        Bundle? bundle = await _client.SearchAsync<ImagingStudy>(new SearchParams().Add(identifier), cancellationToken);
         if (bundle is null)
             return null;
 
@@ -133,9 +153,12 @@ internal class ImagingStudyTransactionHandler
     {
         // Find Series
         string seriesInstanceUid = dataset.GetSingleValue<string>(DicomTag.SeriesInstanceUID);
-        ImagingStudy.SeriesComponent series = imagingStudy
-            .Series
-            .FirstOrDefault(x => string.Equals(x.Uid, seriesInstanceUid, StringComparison.Ordinal)) ?? new() { Uid = seriesInstanceUid };
+        ImagingStudy.SeriesComponent? series = GetSeriesOrDefault(imagingStudy, seriesInstanceUid);
+        if (series is null)
+        {
+            series = new() { Uid = seriesInstanceUid };
+            imagingStudy.Series.Add(series);
+        }
 
         // Update Series Number
         if (dataset.TryGetSingleValue(DicomTag.SeriesNumber, out int seriesNumber))
@@ -163,7 +186,7 @@ internal class ImagingStudyTransactionHandler
     {
         // Find SOP Instance
         string sopInstanceUid = dataset.GetSingleValue<string>(DicomTag.SOPInstanceUID);
-        ImagingStudy.InstanceComponent? instance = series.Instance.FirstOrDefault(x => string.Equals(x.Uid, sopInstanceUid, StringComparison.Ordinal));
+        ImagingStudy.InstanceComponent? instance = GetSopInstanceOrDefault(series, sopInstanceUid);
         if (instance is null)
         {
             instance = new() { Uid = sopInstanceUid };
@@ -181,6 +204,9 @@ internal class ImagingStudyTransactionHandler
         return instance;
     }
 
-    private static SearchParams GetSearchParamsQuery(Identifier studyInstance)
-        => new SearchParams().Add("identifier", $"{studyInstance.System}|{studyInstance.Value}");
+    private static ImagingStudy.SeriesComponent? GetSeriesOrDefault(ImagingStudy imagingStudy, string seriesInstanceUid)
+        => imagingStudy.Series.FirstOrDefault(x => string.Equals(x.Uid, seriesInstanceUid, StringComparison.Ordinal));
+
+    private static ImagingStudy.InstanceComponent? GetSopInstanceOrDefault(ImagingStudy.SeriesComponent series, string sopInstanceUid)
+        => series.Instance.FirstOrDefault(x => string.Equals(x.Uid, sopInstanceUid, StringComparison.Ordinal));
 }
