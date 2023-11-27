@@ -44,7 +44,8 @@
     "AzureDataLakeStoragename": "[format('{0}dcmpipelineonelake', variables('prefixNameCleanShort'))]",
     "keyVaultName": "[format('{0}notebookkv', variables('prefixNameCleanShort'))]",
     "repoUrl": "https://github.com/Azure-Samples/azure-health-data-and-ai-samples/",
-    "principalType": "ServicePrincipal"
+    "principalType": "ServicePrincipal",
+    "packageUri": "https://sthealthai.blob.core.windows.net/publish/sqp.zip"
   },
   "resources": [
     {
@@ -491,6 +492,17 @@
       "metadata": {
         "description": "Azure Function required linked storage account"
       }
+    },
+    {
+      "type": "Microsoft.Web/sites/extensions",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/{1}', variables('storageQueueProcessingAppName'), 'zipdeploy')]",
+      "properties": {
+        "packageUri": "[variables('packageUri')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories",
