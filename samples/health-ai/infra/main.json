@@ -509,7 +509,7 @@
       "condition": true,
       "type": "Microsoft.Web/sites/slots/extensions",
       "apiVersion": "2021-02-01",
-      "name": "[format('{0}/{1}/ZipDeploy', parameters('appServiceName'), 'staging')]",
+      "name": "[format('{0}/{1}/ZipDeploy', variables('storageQueueProcessingAppName'), 'staging')]",
       "properties": {
         "packageUri": "[parameters('packageUri')]",
         "appOffline": true
