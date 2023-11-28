@@ -45,7 +45,7 @@
     "AzureDataLakeStoragename": "[format('{0}dcmonelake', variables('prefixNameCleanShort'))]",
     "keyVaultName": "[format('{0}notebookkv', variables('prefixNameCleanShort'))]",
     "principalType": "ServicePrincipal",
-    "packageUri": "https://sthealthai.blob.core.windows.net/publish/StorageQueueProcessingApp.zip"
+    "packageUri": "https://sthealthai.blob.core.windows.net/publish/StrgQueueProcApp.zip"
   },
   "resources": [
     {
