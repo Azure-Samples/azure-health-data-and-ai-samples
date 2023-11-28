@@ -499,7 +499,8 @@
       "apiVersion": "2021-02-01",
       "name": "[format('{0}/{1}', variables('storageQueueProcessingAppName'), 'ZipDeploy')]",
       "properties": {
-        "packageUri": "[variables('packageUri')]"
+        "packageUri": "[variables('packageUri')]",
+        "appOffline": true
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]"
