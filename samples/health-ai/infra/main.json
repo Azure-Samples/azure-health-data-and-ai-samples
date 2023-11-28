@@ -416,7 +416,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('storageQProcessingPlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageQProcessingStorageName'))]",
-        "[resourceId('Microsoft.Insights/components', variables('storageQueueProcessingAppName'))]"
+        "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]"
       ]
     },
     {
