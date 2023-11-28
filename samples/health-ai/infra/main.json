@@ -39,7 +39,7 @@
     "storageQueueProcessingAppName": "[format('{0}strgqprocapp', variables('prefixNameCleanShort'))]",
     "storageQProcessingStorageName": "[format('{0}qprocappstrg', variables('prefixNameCleanShort'))]",
     "storageQProcessingPlanName": "[format('{0}strgqprocplan', variables('prefixNameCleanShort'))]",
-    "applicationInsightsName": "[format('ai{0}{1}', parameters('prefix'), parameters('storageQueueProcessingAppName'))]",
+    "applicationInsightsName": "[format('ai{0}', variables('storageQueueProcessingAppName'))]",
     "dataFactoryName": "[format('{0}healthaiadf', variables('prefixNameCleanShort'))]",
     "RestServicename": "[format('{0}dcmlinkedservice', variables('prefixNameCleanShort'))]",
     "AzureDataLakeStoragename": "[format('{0}dcmonelake', variables('prefixNameCleanShort'))]",
