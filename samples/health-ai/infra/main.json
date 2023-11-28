@@ -44,9 +44,8 @@
     "RestServicename": "[format('{0}dcmlinkedservice', variables('prefixNameCleanShort'))]",
     "AzureDataLakeStoragename": "[format('{0}dcmonelake', variables('prefixNameCleanShort'))]",
     "keyVaultName": "[format('{0}notebookkv', variables('prefixNameCleanShort'))]",
-    "repoUrl": "https://github.com/Azure-Samples/azure-health-data-and-ai-samples/",
     "principalType": "ServicePrincipal",
-    "packageUri": "https://sthealthai.blob.core.windows.net/publish/sqp.zip"
+    "packageUri": "https://sthealthai.blob.core.windows.net/publish/StorageQueueProcessingApp.zip"
   },
   "resources": [
     {
@@ -426,21 +425,22 @@
       "properties": {
         "FUNCTIONS_EXTENSION_VERSION": "~4",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-        "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', variables('storageQProcessingStorageName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageQProcessingStorageName')), '2019-06-01').keys[0].value)]",
+        "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]",
         "fhirUri": "[format('https://{0}.fhir.azurehealthcareapis.com', replace(variables('fhirservicename'), '/', '-'))]",
         "DicomUri": "[format('https://{0}.dicom.azurehealthcareapis.com', replace(variables('dicomservicename'), '/', '-'))]",
         "fhirHttpClient": "[format('https://{0}.fhir.azurehealthcareapis.com', replace(variables('fhirservicename'), '/', '-'))]",
         "dicomHttpClient": "[format('https://{0}.dicom.azurehealthcareapis.com/v1', replace(variables('dicomservicename'), '/', '-'))]",
         "dicomResourceUri": "https://dicom.healthcareapis.azure.com",
-        "storageAccountName": "[variables('storageQProcessingStorageName')]",
+        "storageAccountName": "[variables('storageAccountName')]",
         "sourceContainerName": "[variables('ingestContainerName')]",
         "processedContainerName": "[variables('processedContainerName')]",
-        "storageConnection": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', variables('storageQProcessingStorageName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageQProcessingStorageName')), '2019-06-01').keys[0].value)]",
+        "queueName": "[variables('queueName')]",
+        "storageConnection": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]",
         "AppInsightConnectionString": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').ConnectionString]",
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]",
         "SCM_DO_BUILD_DURING_DEPLOYMENT": true,
         "ENABLE_ORYX_BUILD": true,
-        "WEBSITE_RUN_FROM_PACKAGE": "1"
+        "WEBSITE_RUN_FROM_PACKAGE": "[variables('packageUri')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]",

@@ -33,7 +33,35 @@ var dataFactoryName='${prefixNameCleanShort}healthaiadf'
 var RestServicename='${prefixNameCleanShort}dcmpipelineservice'
 var AzureDataLakeStoragename='${prefixNameCleanShort}dcmpipelineonelake'
 var keyVaultName ='${prefixNameCleanShort}notebookkv'
-var repoUrl ='https://github.com/Azure-Samples/azure-health-data-and-ai-samples/'
+var principalType = 'ServicePrincipal'
+var packageUri = 'https://sthealthai.blob.core.windows.net/publish/StorageQueueProcessingApp2.zip'
+
+resource storageQueueProcessingAppName_web 'Microsoft.Web/sites/config@2021-03-01' = {
+  parent: storageQueueProcessingApp
+  name: 'web'
+  properties: {
+    ftpsState: 'Disabled'
+    minTlsVersion: '1.2'
+  }
+}
+
+resource storageQueueProcessingAppName_ftp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2021-03-01' = {
+  parent: storageQueueProcessingApp
+  name: 'ftp'
+  location: location
+  properties: {
+    allow: false
+  }
+}
+
+resource storageQueueProcessingAppName_scm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2021-03-01' = {
+  parent: storageQueueProcessingApp
+  name: 'scm'
+  location: location
+  properties: {
+    allow: false
+  }
+}
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
@@ -82,9 +110,9 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01'
   }
 }
 
-resource ingestContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-08-01' = {
+resource singestContainer  'Microsoft.Storage/storageAccounts/blobServices/containers@2021-08-01' = {
   parent: blobService
-  name: ingestContainerName 
+  name: ingestContainerName
 }
 
 resource processedContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
@@ -99,17 +127,19 @@ resource idpDicomContainer 'Microsoft.Storage/storageAccounts/blobServices/conta
 
 resource storageQueue 'Microsoft.Storage/storageAccounts/queueServices/queues@2021-08-01' = {
   name: '${storageAccountName}/default/${queueName}'
-  dependsOn: [ storageAccount ]
+  dependsOn: [
+    storageAccount
+  ]
 }
 
 resource eventGridSubscription 'Microsoft.EventGrid/eventSubscriptions@2023-06-01-preview' = {
-  name: eventGridSubscriptionName
   scope: storageAccount
+  name: eventGridSubscriptionName
   properties: {
     destination: {
       endpointType: 'StorageQueue'
       properties: {
-        resourceId:storageAccount.id
+        resourceId: storageAccount.id
         queueName: queueName
         queueMessageTimeToLiveInSeconds: -1
       }
@@ -119,7 +149,7 @@ resource eventGridSubscription 'Microsoft.EventGrid/eventSubscriptions@2023-06-0
         'Microsoft.Storage.BlobCreated'
         'Microsoft.Storage.BlobDeleted'
       ]
-      subjectBeginsWith: '/blobServices/default/containers/${ingestContainerName}'              
+      subjectBeginsWith: '/blobServices/default/containers/${ingestContainerName}'
       enableAdvancedFilteringOnArrays: true
     }
     labels: []
@@ -132,7 +162,7 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
   location: location
 }
 
-resource Workspace 'Microsoft.HealthcareApis/workspaces@2022-06-01' = {
+resource workspace 'Microsoft.HealthcareApis/workspaces@2022-06-01' = {
   name: workspaceName
   location: location
 }
@@ -144,9 +174,6 @@ resource FHIR 'Microsoft.HealthcareApis/workspaces/fhirservices@2022-06-01' = {
   identity: {
     type: 'SystemAssigned'
   }
-  dependsOn: [
-    Workspace 
-  ]
   properties: {
     authenticationConfiguration: {
       authority: authority
@@ -154,31 +181,32 @@ resource FHIR 'Microsoft.HealthcareApis/workspaces/fhirservices@2022-06-01' = {
       smartProxyEnabled: false
     }
   }
+  dependsOn: [
+    workspace
+  ]
 }
 
-resource DICOM 'Microsoft.HealthcareApis/workspaces/dicomservices@2022-06-01' =  {
+resource DICOM 'Microsoft.HealthcareApis/workspaces/dicomservices@2022-06-01' = {
   name: dicomservicename
   location: location
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${managedIdentity.id}': {
-      }
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    storageConfiguration: {
+      accountName: storageAccountName
+      containerName: ingestContainerName
     }
   }
   dependsOn: [
-    Workspace
-
+    workspace
   ]
-  properties:{
-    storageConfiguration:{
-      accountName:storageAccountName
-      containerName:ingestContainerName
-    }
-  }
 }
 
-resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: keyVaultName
   location: location
   properties: {
@@ -198,92 +226,99 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     publicNetworkAccess: 'Enabled'
   }
 }
+
 resource keySecretsFhirAuthUrl 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'fhirAuthurl'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsFhirClientId 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'fhirClientId'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsFhirClientSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'fhirClientSecret'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsFhirUrl 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'fhirUrl'
   properties: {
-    contentType:'text/plain'
-    value:'https://${workspaceName}-${fhirName}.fhir.azurehealthcareapis.com'
+    contentType: 'text/plain'
+    value: 'https://${workspaceName}-${fhirName}.fhir.azurehealthcareapis.com'
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsAiApiKey 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'aiApiKey'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
 
 resource keySecretsAiResourceName 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'aiResourceName'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsAiDeployment 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'aiDeploymentName'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
+
 resource keySecretsAiApiVersion 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyvault
+  parent: keyVault
   name: 'aiApiVersion'
   properties: {
-    contentType:'text/plain'
-    value:' '
+    contentType: 'text/plain'
+    value: ' '
     attributes: {
-      enabled: true  
+      enabled: true
     }
   }
 }
@@ -299,66 +334,51 @@ resource storageQueueProcessingApp 'Microsoft.Web/sites@2021-03-01' = {
     enabled: true
     clientAffinityEnabled: false
     httpsOnly: true
-    serverFarmId:storageQProcessinghostingPlan.id
+    serverFarmId: storageQProcessingPlan.id
     siteConfig: {
-            linuxFxVersion: 'dotnet-isolated|7.0'
-            use32BitWorkerProcess: false
-            alwaysOn: true
-    }  
+      linuxFxVersion: 'dotnet-isolated|7.0'
+      use32BitWorkerProcess: false
+      alwaysOn: true
+    }
   }
   dependsOn: [
     storageQueueProcessingAppInsight
     storageQProcessingStorage
   ]
-  resource config 'config' = {
-    name: 'web'
-    properties: {
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-    }
-  }
-  resource ftpPublishingPolicy 'basicPublishingCredentialsPolicies' = {
-    name: 'ftp'
-    location: location
-    properties: {
-      allow: false
-    }
-  }
-
-  resource scmPublishingPolicy 'basicPublishingCredentialsPolicies' = {
-    name: 'scm'
-    location: location
-    properties: {
-      allow: false
-    }
-  }
 }
 
 resource storageQueueProcessingConfig 'Microsoft.Web/sites/config@2021-03-01' = {
-  name: 'appsettings'
   parent: storageQueueProcessingApp
+  name: 'appsettings'
   properties: {
     FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
-    AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageQProcessingStorageName};AccountKey=${listKeys(storageQProcessingStorage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
-    fhirUri: format('https://{0}.fhir.azurehealthcareapis.com', replace(fhirservicename, '/', '-'))  
-    DicomUri: format('https://{0}.dicom.azurehealthcareapis.com', replace(dicomservicename, '/', '-'))
-    fhirHttpClient: format('https://{0}.fhir.azurehealthcareapis.com', replace(fhirservicename, '/', '-'))
-    dicomHttpClient: format('https://{0}.dicom.azurehealthcareapis.com/v1', replace(dicomservicename, '/', '-'))
+    AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(storageAccount.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
+    fhirUri: 'https://${replace(fhirservicename, '/', '-')}.fhir.azurehealthcareapis.com'
+    DicomUri: 'https://${replace(dicomservicename, '/', '-')}.dicom.azurehealthcareapis.com'
+    fhirHttpClient: 'https://${replace(fhirservicename, '/', '-')}.fhir.azurehealthcareapis.com'
+    dicomHttpClient: 'https://${replace(dicomservicename, '/', '-')}.dicom.azurehealthcareapis.com/v1'
     dicomResourceUri: 'https://dicom.healthcareapis.azure.com'
-    storageAccountName:storageQProcessingStorageName
+    storageAccountName: storageAccountName
     sourceContainerName: ingestContainerName
-    processedContainerName:processedContainerName
-    storageConnection: 'DefaultEndpointsProtocol=https;AccountName=${storageQProcessingStorageName};AccountKey=${listKeys(storageQProcessingStorage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
+    processedContainerName: processedContainerName
+    queueName: queueName
+    storageConnection: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(storageAccount.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
     AppInsightConnectionString: reference('microsoft.insights/components/${storageQueueProcessingAppName}', '2015-05-01').ConnectionString
-    APPINSIGHTS_INSTRUMENTATIONKEY:reference('microsoft.insights/components/${storageQueueProcessingAppName}', '2015-05-01').InstrumentationKey
-    WEBSITE_CONTENTSHARE:storageQueueProcessingAppName
-    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING:'DefaultEndpointsProtocol=https;AccountName=${storageQProcessingStorageName};AccountKey=${listKeys(storageQProcessingStorage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
+    APPINSIGHTS_INSTRUMENTATIONKEY: reference('microsoft.insights/components/${storageQueueProcessingAppName}', '2015-05-01').InstrumentationKey
+    SCM_DO_BUILD_DURING_DEPLOYMENT: true
+    ENABLE_ORYX_BUILD: true
+    WEBSITE_RUN_FROM_PACKAGE: packageUri
   }
+  dependsOn: [
+    storageQueueProcessingAppInsight
+    storageQProcessingStorage
+
+  ]
 }
 
 @description('App Service used to run Azure Function')
-resource storageQProcessinghostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
+resource storageQProcessingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: storageQProcessingPlanName
   location: location
   kind: 'functionapp'
@@ -372,9 +392,9 @@ resource storageQProcessinghostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = 
 }
 
 @description('Monitoring for Function App')
-resource storageQueueProcessingAppInsight 'microsoft.insights/components@2020-02-02-preview' = {
+resource storageQueueProcessingAppInsight 'Microsoft.Insights/components@2020-02-02-preview' = {
   name: storageQueueProcessingAppName
-  location:location
+  location: location
   kind: 'web'
   properties: {
     Application_Type: 'web'
@@ -385,7 +405,7 @@ resource storageQueueProcessingAppInsight 'microsoft.insights/components@2020-02
 resource storageQProcessingStorage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageQProcessingStorageName
   location: location
-  kind:'StorageV2'
+  kind: 'StorageV2'
   sku: {
     name: 'Standard_LRS'
   }
@@ -393,9 +413,16 @@ resource storageQProcessingStorage 'Microsoft.Storage/storageAccounts@2022-05-01
     supportsHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
     defaultToOAuthAuthentication: true
-  }  
+  }
 }
 
+resource zipDeploy 'Microsoft.Web/sites/extensions@2022-03-01' = {
+  parent: storageQueueProcessingApp
+  name: 'ZipDeploy'
+  properties: {
+    packageUri: packageUri
+  }
+}
 
 resource dataFactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   name: dataFactoryName
@@ -405,23 +432,22 @@ resource dataFactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   }
 }
 
-resource RestService 'Microsoft.DataFactory/factories/linkedServices@2018-06-01' = {
+resource RestService 'Microsoft.DataFactory/factories/linkedservices@2018-06-01' = {
   parent: dataFactory
   name: RestServicename
   properties: {
     annotations: []
     type: 'RestService'
     typeProperties: {
-      url:'https://${managedIdentityName}.dicom.azurehealthcareapis.com'
+      url: 'https://${managedIdentityName}.dicom.azurehealthcareapis.com'
       enableServerCertificateValidation: true
       authenticationType: 'ManagedServiceIdentity'
       aadResourceId: 'https://dicom.healthcareapis.azure.com'
     }
   }
-  dependsOn: []
 }
 
-resource AzureDataLakeStorage 'Microsoft.DataFactory/factories/linkedServices@2018-06-01' = {
+resource AzureDataLakeStorage'Microsoft.DataFactory/factories/linkedservices@2018-06-01' = {
   parent: dataFactory
   name: AzureDataLakeStoragename
   properties: {
@@ -431,7 +457,6 @@ resource AzureDataLakeStorage 'Microsoft.DataFactory/factories/linkedServices@20
       url: 'https://${storageAccountName}.dfs.core.windows.net/'
     }
   }
-  dependsOn: []
 }
 
 resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
@@ -511,26 +536,17 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
                     }
                   }
                   datasetParameters: {
-                    changeFeed: {
-                    }
-                    existingInstances: {
-                    }
-                    existingSeries: {
-                    }
-                    instanceTable: {
-                    }
-                    seriesTable: {
-                    }
-                    studyTable: {
-                    }
-                    seriesCache: {
-                    }
-                    studyCache: {
-                    }
+                    changeFeed: {}
+                    existingInstances: {}
+                    existingSeries: {}
+                    instanceTable: {}
+                    seriesTable: {}
+                    studyTable: {}
+                    seriesCache: {}
+                    studyCache: {}
                   }
                 }
-                staging: {
-                }
+                staging: {}
                 compute: {
                   coreCount: 8
                   computeType: 'General'
@@ -679,10 +695,7 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
       }
     ]
     policy: {
-      elapsedTimeMetric: {
-      }
-      // cancelAfter: {
-      // }
+      elapsedTimeMetric: {}
     }
     parameters: {
       BatchSize: {
@@ -739,6 +752,7 @@ resource pipeline 'Microsoft.DataFactory/factories/pipelines@2018-06-01' = {
     annotations: []
   }
   dependsOn: [
+
     dataflows
   ]
 }
@@ -756,9 +770,8 @@ resource hourlyTrigger 'Microsoft.DataFactory/factories/triggers@2018-06-01' = {
         type: 'PipelineReference'
       }
       parameters: {
-        StartTime:  '@trigger().outputs.windowStartTime'
+        StartTime: '@trigger().outputs.windowStartTime'
         EndTime: '@trigger().outputs.windowEndTime'
-
       }
     }
     type: 'TumblingWindowTrigger'
@@ -774,6 +787,7 @@ resource hourlyTrigger 'Microsoft.DataFactory/factories/triggers@2018-06-01' = {
     }
   }
   dependsOn: [
+
     pipeline
   ]
 }
@@ -1184,7 +1198,6 @@ resource dataflows 'Microsoft.DataFactory/factories/dataflows@2018-06-01' = {
     AzureDataLakeStorage
   ]
 }
-
 module roleAssignmentFhirService './roleAssignment.bicep' = if (createRoleAssignment == true) {
   name: 'role-assign-fhir'
   scope: resourceGroup(resourceGroup().name)
