@@ -1359,7 +1359,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts/queueServices/queues', variables('queueName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
     }
   ]
