@@ -22,6 +22,7 @@
     "authority": "[format('{0}{1}', variables('loginURL'), variables('tenantId'))]",
     "audience": "[format('https://{0}-{1}.fhir.azurehealthcareapis.com', variables('workspaceName'), variables('fhirName'))]",
     "storageBlobDataContributorRole": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe', subscription().subscriptionId)]",
+    "queueDataContRole": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88', subscription().subscriptionId)]",
     "subscriptionid": "[subscription().subscriptionId]",
     "resourcegroupname": "[resourceGroup().name]",
     "managedIdentityName": "[format('{0}-{1}', variables('workspaceName'), variables('dicomName'))]",
@@ -1344,6 +1345,21 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
+      "name": "[guid('queueassignment',subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
+        "description": "Assign queue data contributor role to App"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts/queueServices/queues', variables('queueName'))]"
       ]
     }
   ]
