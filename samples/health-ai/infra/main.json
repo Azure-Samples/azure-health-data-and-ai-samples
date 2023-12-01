@@ -438,7 +438,8 @@
         "storageUri": "[format('https://{0}.blob.core.windows.net/', variables('storageAccountName'))]",
         "AppInsightConnectionString": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').ConnectionString]",
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]",
-        "WEBSITE_RUN_FROM_PACKAGE": "1"
+        "WEBSITE_RUN_FROM_PACKAGE": "0",
+        "SCM_DO_BUILD_DURING_DEPLOYMENT=true"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]",
