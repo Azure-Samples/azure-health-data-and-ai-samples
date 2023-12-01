@@ -436,7 +436,7 @@
         "sourceContainerName": "[variables('ingestContainerName')]",
         "processedContainerName": "[variables('processedContainerName')]",
         "queueName": "[variables('queueName')]",
-        "storageUri": "https://{variables('storageAccountName')}.blob.core.windows.net/",
+        "storageUri": "[format('https://{0}.blob.core.windows.net/', variables('storageAccountName'))]",
         "AppInsightConnectionString": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').ConnectionString]",
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]",
         "SCM_DO_BUILD_DURING_DEPLOYMENT": true,
@@ -1356,21 +1356,6 @@
         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88')]",
         "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
         "description": "Assign queue data contributor role to App"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2020-04-01-preview",
-      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-      "name": "[guid('strgDataCont', variables('storageBlobDataContributorRole'))]",
-      "properties": {
-        "roleDefinitionId": "[variables('storageBlobDataContributorRole')]",
-        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
-        "description": "Assign blob data contributor role to App"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
