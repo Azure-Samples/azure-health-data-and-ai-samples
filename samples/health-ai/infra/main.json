@@ -184,8 +184,7 @@
         },
         "filter": {
           "includedEventTypes": [
-            "Microsoft.Storage.BlobCreated",
-            "Microsoft.Storage.BlobDeleted"
+            "Microsoft.Storage.BlobCreated"
           ],
           "subjectBeginsWith": "[format('/blobServices/default/containers/{0}', variables('ingestContainerName'))]",
           "enableAdvancedFilteringOnArrays": true
@@ -441,7 +440,7 @@
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(format('microsoft.insights/components/{0}', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]",
         "SCM_DO_BUILD_DURING_DEPLOYMENT": true,
         "ENABLE_ORYX_BUILD": true,
-        "WEBSITE_RUN_FROM_PACKAGE": "[variables('packageUri')]"
+        "WEBSITE_RUN_FROM_PACKAGE": "0"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]",
