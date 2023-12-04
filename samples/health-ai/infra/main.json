@@ -1452,7 +1452,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "functionFhirServiceRoleAssignment",
-      "resourceGroup": "[variables('fhirRg')]",
+      "resourceGroup": "[variables('resourcegroupname')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
