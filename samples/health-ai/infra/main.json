@@ -849,7 +849,7 @@
     {
       "type": "Microsoft.DataFactory/factories/triggers",
       "apiVersion": "2018-06-01",
-      "name": "[format('{0}/{1}', variables('dataFactoryName'), 'hourlytrigger7')]",
+      "name": "[format('{0}/{1}', variables('dataFactoryName'), 'hourlytrigger')]",
       "properties": {
         "description": "Trigger that runs hourly",
         "annotations": [],
@@ -1293,7 +1293,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.HealthcareApis/workspaces/{0}/dicomservices/{1}', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1])]",
-      "name": "[guid(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1]), variables('principalType'))]",
+      "name": "[guid(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1]), variables('principalType'), variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/58a3b984-7adf-4c20-983a-32417c86fbc8', variables('subscriptionid'))]",
         "principalId": "[reference(format('Microsoft.DataFactory/factories/{0}', variables('dataFactoryName')), '2018-06-01', 'Full').identity.principalId]",
@@ -1307,7 +1307,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.HealthcareApis/workspaces/{0}/dicomservices/{1}', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1])]",
-      "name": "[guid(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1]), variables('principalType'), 'reader')]",
+      "name": "[guid(resourceId('Microsoft.HealthcareApis/workspaces/dicomservices', split(variables('dicomservicename'), '/')[0], split(variables('dicomservicename'), '/')[1]), variables('principalType'), 'reader', variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/e89c7a3c-2f64-4fa1-a847-3e4c9ba4283a', variables('subscriptionid'))]",
         "principalId": "[reference(format('Microsoft.DataFactory/factories/{0}', variables('dataFactoryName')), '2018-06-01', 'Full').identity.principalId]",
@@ -1321,7 +1321,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2020-04-01-preview",
       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-      "name": "[guid(variables('storageAccountName'), variables('dataFactoryName'), variables('principalType'))]",
+      "name": "[guid(variables('storageAccountName'), variables('dataFactoryName'), variables('principalType'), variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[variables('storageBlobDataContributorRole')]",
         "principalId": "[reference(format('Microsoft.DataFactory/factories/{0}', variables('dataFactoryName')), '2018-06-01', 'Full').identity.principalId]",
@@ -1335,7 +1335,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2020-04-01-preview",
       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-      "name": "[guid(variables('storageAccountName'), variables('managedIdentityName'))]",
+      "name": "[guid(variables('storageAccountName'), variables('managedIdentityName'), variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[variables('storageBlobDataContributorRole')]",
         "principalId": "[reference(format('Microsoft.ManagedIdentity/userAssignedIdentities/{0}', variables('managedIdentityName')), '2023-01-31').principalId]",
@@ -1349,7 +1349,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2020-04-01-preview",
       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-      "name": "[guid('queueassignment',subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88'))]",
+      "name": "[guid('queueassignment',subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88'), variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88')]",
         "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
@@ -1364,7 +1364,7 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2020-04-01-preview",
       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-      "name": "[guid(variables('storageAccountName'), variables('storageQueueProcessingAppName'), variables('principalType'))]",
+      "name": "[guid(variables('storageAccountName'), variables('storageQueueProcessingAppName'), variables('principalType'), variables('prefixNameCleanShort'))]",
       "properties": {
         "roleDefinitionId": "[variables('storageBlobDataContributorRole')]",
         "principalId": "[reference(format('Microsoft.Web/sites/{0}', variables('storageQueueProcessingAppName')), '2021-03-01', 'Full').identity.principalId]",
@@ -1376,70 +1376,14 @@
       ]
     },
     {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "functionDicomServiceRoleAssignment",
-      "resourceGroup": "[variables('resourcegroupname')]",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '58a3b984-7adf-4c20-983a-32417c86fbc8'), variables('prefixNameCleanShort'))]",
+      "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', variables('workspaceName'), '/','dicomservices','/' , variables('dicomName'))]",
       "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "roleId": {
-            "value": "58a3b984-7adf-4c20-983a-32417c86fbc8"
-          },
-          "principalId": {
-            "value": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]"
-          },
-          "workspaceName": {
-            "value": "[variables('workspaceName')]"
-          },
-          "fhirname": {
-            "value": "[variables('dicomName')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.16.2.56959",
-              "templateHash": "15312434787615452365"
-            }
-          },
-          "parameters": {
-            "roleId": {
-              "type": "string"
-            },
-            "principalId": {
-              "type": "string"
-            },
-            "principalType": {
-              "type": "string",
-              "defaultValue": "ServicePrincipal"
-            },
-            "workspaceName": {
-              "type": "string"
-            },
-            "fhirname": {
-              "type": "string"
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "name": "[guid(parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
-              "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', parameters('workspaceName'), '/','dicomservices','/' , parameters('fhirname'))]",
-              "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '58a3b984-7adf-4c20-983a-32417c86fbc8')]",
-                "principalId": "[parameters('principalId')]"
-              }
-            }
-          ]
-        }
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '58a3b984-7adf-4c20-983a-32417c86fbc8')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
+        "principalType": "[variables('principalType')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
@@ -1447,82 +1391,175 @@
         "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]"
       ],
       "metadata": {
-        "description": "Setup access between FHIR and the deployment script managed identity"
+        "description": "Setup access between DICOM and the function app"
       }
     },
     {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "functionFhirServiceRoleAssignment",
-      "resourceGroup": "[variables('resourcegroupname')]",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd'), variables('prefixNameCleanShort'))]",
+      "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', variables('workspaceName'), '/','fhirservices','/' , variables('fhirname'))]",
       "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "roleId": {
-            "value": "5a1fc7df-4bf1-4951-a576-89034ee01acd"
-          },
-          "principalId": {
-            "value": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]"
-          },
-          "workspaceName": {
-            "value": "[variables('workspaceName')]"
-          },
-          "fhirname": {
-            "value": "[variables('fhirName')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.16.2.56959",
-              "templateHash": "15312434787615452365"
-            }
-          },
-          "parameters": {
-            "roleId": {
-              "type": "string"
-            },
-            "principalId": {
-              "type": "string"
-            },
-            "principalType": {
-              "type": "string",
-              "defaultValue": "ServicePrincipal"
-            },
-            "workspaceName": {
-              "type": "string"
-            },
-            "fhirname": {
-              "type": "string"
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "name": "[guid(parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
-              "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', parameters('workspaceName'), '/','fhirservices','/' , parameters('fhirname'))]",
-              "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd')]",
-                "principalId": "[parameters('principalId')]"
-              }
-            }
-          ]
-        }
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]",
+        "principalType": "[variables('principalType')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
         "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', variables('workspaceName'), variables('fhirName'))]"
       ],
       "metadata": {
-        "description": "Setup access between FHIR and the function managed identity"
+        "description": "Setup access between FHIR and the function app"
       }
     }
+    //{
+    //  "type": "Microsoft.Resources/deployments",
+    //  "apiVersion": "2022-09-01",
+    //  "name": "functionDicomServiceRoleAssignment",
+    //  "resourceGroup": "[variables('resourcegroupname')]",
+    //  "properties": {
+    //    "expressionEvaluationOptions": {
+    //      "scope": "inner"
+    //    },
+    //    "mode": "Incremental",
+    //    "parameters": {
+    //      "roleId": {
+    //        "value": "58a3b984-7adf-4c20-983a-32417c86fbc8"
+    //      },
+    //      "principalId": {
+    //        "value": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]"
+    //      },
+    //      "workspaceName": {
+    //        "value": "[variables('workspaceName')]"
+    //      },
+    //      "fhirname": {
+    //        "value": "[variables('dicomName')]"
+    //      }
+    //    },
+    //    "template": {
+    //      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    //      "contentVersion": "1.0.0.0",
+    //      "metadata": {
+    //        "_generator": {
+    //          "name": "bicep",
+    //          "version": "0.16.2.56959",
+    //          "templateHash": "15312434787615452365"
+    //        }
+    //      },
+    //      "parameters": {
+    //        "roleId": {
+    //          "type": "string"
+    //        },
+    //        "principalId": {
+    //          "type": "string"
+    //        },
+    //        "principalType": {
+    //          "type": "string",
+    //          "defaultValue": "ServicePrincipal"
+    //        },
+    //        "workspaceName": {
+    //          "type": "string"
+    //        },
+    //        "fhirname": {
+    //          "type": "string"
+    //        }
+    //      },
+    //      "resources": [
+    //        {
+    //          "type": "Microsoft.Authorization/roleAssignments",
+    //          "apiVersion": "2022-04-01",
+    //          "name": "[guid(parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
+    //          "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', parameters('workspaceName'), '/','dicomservices','/' , parameters('fhirname'))]",
+    //          "properties": {
+    //            "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '58a3b984-7adf-4c20-983a-32417c86fbc8')]",
+    //            "principalId": "[parameters('principalId')]"
+    //          }
+    //        }
+    //      ]
+    //    }
+    //  },
+    //  "dependsOn": [
+    //    "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
+    //    "[resourceId('Microsoft.HealthcareApis/workspaces', variables('workspaceName'))]",
+    //    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]"
+    //  ],
+    //  "metadata": {
+    //    "description": "Setup access between FHIR and the deployment script managed identity"
+    //  }
+    //},
+    //{
+    //  "type": "Microsoft.Resources/deployments",
+    //  "apiVersion": "2022-09-01",
+    //  "name": "functionFhirServiceRoleAssignment",
+    //  "resourceGroup": "[variables('resourcegroupname')]",
+    //  "properties": {
+    //    "expressionEvaluationOptions": {
+    //      "scope": "inner"
+    //    },
+    //    "mode": "Incremental",
+    //    "parameters": {
+    //      "roleId": {
+    //        "value": "5a1fc7df-4bf1-4951-a576-89034ee01acd"
+    //      },
+    //      "principalId": {
+    //        "value": "[reference(resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName')), '2021-03-01', 'full').identity.principalId]"
+    //      },
+    //      "workspaceName": {
+    //        "value": "[variables('workspaceName')]"
+    //      },
+    //      "fhirname": {
+    //        "value": "[variables('fhirName')]"
+    //      }
+    //    },
+    //    "template": {
+    //      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    //      "contentVersion": "1.0.0.0",
+    //      "metadata": {
+    //        "_generator": {
+    //          "name": "bicep",
+    //          "version": "0.16.2.56959",
+    //          "templateHash": "15312434787615452365"
+    //        }
+    //      },
+    //      "parameters": {
+    //        "roleId": {
+    //          "type": "string"
+    //        },
+    //        "principalId": {
+    //          "type": "string"
+    //        },
+    //        "principalType": {
+    //          "type": "string",
+    //          "defaultValue": "ServicePrincipal"
+    //        },
+    //        "workspaceName": {
+    //          "type": "string"
+    //        },
+    //        "fhirname": {
+    //          "type": "string"
+    //        }
+    //      },
+    //      "resources": [
+    //        {
+    //          "type": "Microsoft.Authorization/roleAssignments",
+    //          "apiVersion": "2022-04-01",
+    //          "name": "[guid(parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId')))]",
+    //          "scope": "[concat('Microsoft.HealthcareApis/workspaces', '/', parameters('workspaceName'), '/','fhirservices','/' , parameters('fhirname'))]",
+    //          "properties": {
+    //            "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd')]",
+    //            "principalId": "[parameters('principalId')]"
+    //          }
+    //        }
+    //      ]
+    //    }
+    //  },
+    //  "dependsOn": [
+    //    "[resourceId('Microsoft.Web/sites', variables('storageQueueProcessingAppName'))]",
+    //    "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', variables('workspaceName'), variables('fhirName'))]"
+    //  ],
+    //  "metadata": {
+    //    "description": "Setup access between FHIR and the function managed identity"
+    //  }
+    //}
   ]
 }
