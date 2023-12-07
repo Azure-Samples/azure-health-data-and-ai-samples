@@ -48,7 +48,8 @@ namespace StorageQueueProcessingApp
 
 			try
 			{
-				var cbclient = blobProcessor.GetCloudBlobClient();
+				var cbclient = blobProcessor.GetBlobServiceClient();
+
 				if (fileType.Equals("json"))
 				{
 					Stream myBlob = await blobProcessor.GetStreamForBlob(cbclient, container, fileName);
@@ -76,7 +77,7 @@ namespace StorageQueueProcessingApp
 						});
 						await blobProcessor.MoveTo(cbclient, container, destContainerName, fileName, fileName, logger);
 					}
-				}
+                }
 				else
 				{
 					BlobClient blobClient = blobProcessor.GetBlobClient(container, fileName);
@@ -103,7 +104,7 @@ namespace StorageQueueProcessingApp
 								});
 								await blobProcessor.MoveTo(cbclient, container, destContainerName, fileName, fileName, logger);
 							}
-						}
+                        }
 					}
 					else
 					{

@@ -1,20 +1,20 @@
 using Azure.Identity;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StorageQueueProcessingApp.Configuration;
-using System.Reflection;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using Microsoft.Net.Http.Headers;
+using Polly;
+using Polly.Extensions.Http;
+using StorageQueueProcessingApp.Configuration;
+using StorageQueueProcessingApp.DICOMClient;
 using StorageQueueProcessingApp.FHIRClient;
 using StorageQueueProcessingApp.Processors;
-using StorageQueueProcessingApp.DICOMClient;
-using Polly.Extensions.Http;
-using Polly;
-using Microsoft.Net.Http.Headers;
 using StorageQueueProcessingApp.Security;
+using System.Reflection;
 
 public class Program
 {
@@ -50,7 +50,8 @@ public class Program
 					services.AddTransient<TelemetryClient>();
 				}
 
-				services.AddTransient<IFHIRProcessor, FHIRProcessor>();
+
+                services.AddTransient<IFHIRProcessor, FHIRProcessor>();
 				services.AddTransient<IDICOMProcessor, DICOMProcessor>();
 				services.AddSingleton<IBlobProcessor, BlobProcessor>();
 				services.AddScoped<IFHIRClient, FHIRClient>();

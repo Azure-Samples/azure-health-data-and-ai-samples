@@ -31,7 +31,7 @@ namespace StorageQueueProcessingApp
 		}
 
 		[Function("ImportQueue")]
-		public async Task Run([QueueTrigger( "%queueName%", Connection = "storageConnection")] JsonObject blobCreatedEvent)
+		public async Task Run([QueueTrigger( "%queueName%")] JsonObject blobCreatedEvent)
 		{
 			_logger.LogInformation("ImportQueue Triggered");
 			try

@@ -11,6 +11,7 @@ namespace StorageQueueProcessingApp.Configuration
 
 		[JsonProperty("dicomUri")]
 		public Uri DicomUri { get; set; }
+
 		[JsonProperty("dicomResourceUri")]
 		public Uri DicomResourceUri { get; set; }
 
@@ -23,13 +24,10 @@ namespace StorageQueueProcessingApp.Configuration
 		[JsonProperty("storageAccountName")]
 		public string StorageAccountName { get; set; } = string.Empty;
 
-		[JsonProperty("storageConnection")]
-		public string StorageConnection { get; set; } = string.Empty;
-
 		[JsonProperty("storageUri")]
 		public string StorageUri { get; set; } = string.Empty;
 
-		[JsonProperty("AppInsightConnectionString")]
+        [JsonProperty("AppInsightConnectionString")]
 		public string AppInsightConnectionstring { get; set; } = string.Empty;
 
 		[JsonProperty("UserAgent")]
