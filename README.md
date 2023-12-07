@@ -72,7 +72,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [FHIR Service and Terminology Service Integraion](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
+| [FHIR Service and Terminology Service Integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the Azure Health Data Services FHIR service by providing a unified endpoint for the FHIR service as well as terminology operations. |
 
 ### MedTech service
 
