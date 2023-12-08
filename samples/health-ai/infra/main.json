@@ -275,7 +275,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhirAuthurl')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhir-auth-url')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -290,7 +290,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhirClientId')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhir-client-id')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -305,7 +305,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhirClientSecret')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhir-client-secret')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -320,7 +320,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhirUrl')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'fhir-url')]",
       "properties": {
         "contentType": "text/plain",
         "value": "[format('https://{0}-{1}.fhir.azurehealthcareapis.com', variables('workspaceName'), variables('fhirName'))]",
@@ -335,7 +335,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'aiApiKey')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'ai-api-key')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -350,7 +350,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'aiResourceName')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'ai-resource-name')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -365,7 +365,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'aiDeploymentName')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'ai-deployment-name')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
@@ -380,7 +380,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2023-07-01",
-      "name": "[format('{0}/{1}', variables('keyVaultName'), 'aiApiVersion')]",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'ai-api-version')]",
       "properties": {
         "contentType": "text/plain",
         "value": " ",
