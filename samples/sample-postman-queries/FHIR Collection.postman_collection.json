@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "95d55a5f-197d-4e94-ac57-94730b0ffae5",
+		"_postman_id": "b790bf95-11e9-4ddb-8947-a69bd5f9f303",
 		"name": "FHIR Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27213393"
@@ -21258,7 +21258,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apimUrl}}CodeSystem/$lookup?system=microsoft_ehr1_labs&code=HGB",
+							"raw": "{{apimUrl}}CodeSystem/$lookup?system=fhirserv_ehr_1_labs&code=HGB",
 							"host": [
 								"{{apimUrl}}CodeSystem"
 							],
@@ -21268,11 +21268,48 @@
 							"query": [
 								{
 									"key": "system",
-									"value": "microsoft_ehr1_labs"
+									"value": "fhirserv_ehr_1_labs"
 								},
 								{
 									"key": "code",
 									"value": "HGB"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lookup Snomed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apimUrl}}CodeSystem/$lookup?system=http://snomed.info/sct&code=33747003",
+							"host": [
+								"{{apimUrl}}CodeSystem"
+							],
+							"path": [
+								"$lookup"
+							],
+							"query": [
+								{
+									"key": "system",
+									"value": "http://snomed.info/sct"
+								},
+								{
+									"key": "code",
+									"value": "33747003"
 								}
 							]
 						}
@@ -21377,7 +21414,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apimUrl}}ConceptMap/$translate?code=HGB&system=microsoft_ehr1_labs&targetsystem=loinc",
+							"raw": "{{apimUrl}}ConceptMap/$translate?code=ALT&system=fhirserv_ehr_1_labs&targetsystem=loinc",
 							"host": [
 								"{{apimUrl}}ConceptMap"
 							],
@@ -21387,15 +21424,56 @@
 							"query": [
 								{
 									"key": "code",
-									"value": "HGB"
+									"value": "ALT"
 								},
 								{
 									"key": "system",
-									"value": "microsoft_ehr1_labs"
+									"value": "fhirserv_ehr_1_labs"
 								},
 								{
 									"key": "targetsystem",
 									"value": "loinc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Translate Snomed to cpt",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apimUrl}}ConceptMap/$translate?code=33747003&system=http://snomed.info/sct&targetsystem=http://www.ama-assn.org/go/cpt",
+							"host": [
+								"{{apimUrl}}ConceptMap"
+							],
+							"path": [
+								"$translate"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "33747003"
+								},
+								{
+									"key": "system",
+									"value": "http://snomed.info/sct"
+								},
+								{
+									"key": "targetsystem",
+									"value": "http://www.ama-assn.org/go/cpt"
 								}
 							]
 						}
@@ -21492,7 +21570,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apimUrl}}CodeSystem/$validate-code?code=HGB&url=microsoft_ehr1_labs",
+							"raw": "{{apimUrl}}CodeSystem/$validate-code?code=HGB&url=fhirserv_ehr_1_labs",
 							"host": [
 								"{{apimUrl}}CodeSystem"
 							],
@@ -21506,7 +21584,7 @@
 								},
 								{
 									"key": "url",
-									"value": "microsoft_ehr1_labs"
+									"value": "fhirserv_ehr_1_labs"
 								}
 							]
 						}
@@ -21535,6 +21613,34 @@
 							],
 							"path": [
 								"2.16.840.1.113883.18.179",
+								"$expand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Expand HCC",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apimUrl}}ValueSet/1d6a6836-0181-2027-4610-e0ecac62000b/$expand",
+							"host": [
+								"{{apimUrl}}ValueSet"
+							],
+							"path": [
+								"1d6a6836-0181-2027-4610-e0ecac62000b",
 								"$expand"
 							]
 						}
@@ -21657,9 +21763,6 @@
 				},
 				{
 					"name": "Find Matches exact=false",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -21671,14 +21774,14 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "<Parameters xmlns=\"http://hl7.org/fhir\">\r\n  <parameter>\r\n    <name value=\"system\"/>\r\n    <valueUri value=\"http://snomed.info/sct\"/>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"exact\"/>\r\n    <valueBoolean value=\"false\"/>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"property\"/>\r\n    <part>\r\n      <name value=\"code\"/>\r\n      <valueCode value=\"focus\"/>\r\n    </part>\r\n    <part>\r\n      <name value=\"value\"/>\r\n      <!-- Measurement finding -->\r\n      <valueCode value=\"118245000\"/>\r\n    </part>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"property\"/>\r\n    <part>\r\n      <name value=\"code\"/>\r\n      <!-- Interprets -->\r\n      <valueCode value=\"363714003\"/>\r\n    </part>\r\n    <part>\r\n      <name value=\"value\"/>\r\n      <!-- Bilirubin -->\r\n      <valueCode value=\"302787001\"/>\r\n    </part>\r\n  </parameter>\r\n</Parameters>",
+							"raw": "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"system\",\r\n            \"valueUri\": \"http://hl7.org/fhir/sid/icd-10-cm\"\r\n        },\r\n        {\r\n            \"name\": \"exact\",\r\n            \"valueBoolean\": false\r\n        },\r\n        {\r\n            \"name\": \"property\",\r\n            \"part\": {\r\n                \"name\": \"term\",\r\n                \"valueString\": \"CHF\"\r\n            }\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
-									"language": "xml"
+									"language": "json"
 								}
 							}
 						},
@@ -21696,45 +21799,6 @@
 				},
 				{
 					"name": "Find Matches exact=true",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{bearerToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "<Parameters xmlns=\"http://hl7.org/fhir\">\r\n  <parameter>\r\n    <name value=\"system\"/>\r\n    <valueUri value=\"http://snomed.info/sct\"/>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"exact\"/>\r\n    <valueBoolean value=\"true\"/>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"property\"/>\r\n    <part>\r\n      <name value=\"code\"/>\r\n      <valueCode value=\"focus\"/>\r\n    </part>\r\n    <part>\r\n      <name value=\"value\"/>\r\n      <!-- Measurement finding -->\r\n      <valueCode value=\"118245000\"/>\r\n    </part>\r\n  </parameter>\r\n  <parameter>\r\n    <name value=\"property\"/>\r\n    <part>\r\n      <name value=\"code\"/>\r\n      <!-- Interprets -->\r\n      <valueCode value=\"363714003\"/>\r\n    </part>\r\n    <part>\r\n      <name value=\"value\"/>\r\n      <!-- Bilirubin -->\r\n      <valueCode value=\"302787001\"/>\r\n    </part>\r\n  </parameter>\r\n</Parameters>",
-							"options": {
-								"raw": {
-									"language": "xml"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{apimUrl}}CodeSystem/$find-matches",
-							"host": [
-								"{{apimUrl}}CodeSystem"
-							],
-							"path": [
-								"$find-matches"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Closure",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -21750,20 +21814,20 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"resourceType\" : \"Parameters\",\r\n  \"parameter\" : [\r\n    {\r\n      \"name\" : \"name11\",\r\n      \"valueString\" : \"patient-problems11\"\r\n    },\r\n    {\r\n      \"name\" : \"concept\",\r\n      \"valueCoding\" : {\r\n        \"system\" : \"http://snomed.info/sct\",\r\n        \"code\" : \"22298006\"\r\n      }\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"system\",\r\n            \"valueUri\": \"http://hl7.org/fhir/sid/icd-10-cm\"\r\n        },\r\n        {\r\n            \"name\": \"exact\",\r\n            \"valueBoolean\": true\r\n        },\r\n        {\r\n            \"name\": \"property\",\r\n            \"part\": {\r\n                \"name\": \"term\",\r\n                \"valueString\": \"CHF\"\r\n            }\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
-									"language": "xml"
+									"language": "json"
 								}
 							}
 						},
 						"url": {
-							"raw": "{{apimUrl}}CodeSystem/$closure",
+							"raw": "{{apimUrl}}CodeSystem/$find-matches",
 							"host": [
 								"{{apimUrl}}CodeSystem"
 							],
 							"path": [
-								"$closure"
+								"$find-matches"
 							]
 						}
 					},
@@ -21816,7 +21880,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"resourceType\": \"Observation\",\r\n        \"id\": \"78a81b41-2bdf-44fb-b0a6-b49ee5590f3a\",\r\n        \"status\": \"final\",\r\n        \"category\": [\r\n          {\r\n            \"coding\": [\r\n              {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\r\n                \"code\": \"vital-signs\",\r\n                \"display\": \"vital-signs\"\r\n              }\r\n            ]\r\n          }\r\n        ],\r\n        \"code\": {\r\n          \"coding\": [\r\n            {\r\n              \"system\": \"microsoft_ehr1_labs\",\r\n              \"code\": \"ALT\",\r\n              \"display\": \"Alanine aminotransferase\"\r\n            },\r\n            {\r\n              \"system\": \"microsoft_ehr1_labs\",\r\n              \"code\": \"AST\",\r\n              \"display\": \"Aspartate aminotransferase\"\r\n            }\r\n          ]\r\n        },\r\n        \"subject\": {\r\n          \"reference\": \"Patient/PQC00000014\",\r\n          \"display\": \"Jason14 Test14\"\r\n        },\r\n        \"encounter\": {\r\n          \"reference\": \"Encounter/ce4af1ef-b57f-4d4c-929a-2cd11ecb7a5e\"\r\n        },\r\n        \"effectiveDateTime\": \"2014-11-09T10:13:00-05:00\",\r\n        \"issued\": \"2014-11-09T10:13:00.450-05:00\",\r\n        \"valueQuantity\": \r\n          {\r\n            \"value\": 50,\r\n            \"unit\": \"U/L\",\r\n            \"system\": \"http://unitsofmeasure.org\",\r\n            \"code\": \"U/L\"\r\n          }\r\n        \r\n      }",
+							"raw": "{\r\n        \"resourceType\": \"Observation\",\r\n        \"id\": \"78a81b41-2bdf-44fb-b0a6-b49ee5590f3a\",\r\n        \"status\": \"final\",\r\n        \"category\": [\r\n          {\r\n            \"coding\": [\r\n              {\r\n                \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\r\n                \"code\": \"vital-signs\",\r\n                \"display\": \"vital-signs\"\r\n              }\r\n            ]\r\n          }\r\n        ],\r\n        \"code\": {\r\n          \"coding\": [\r\n            {\r\n              \"system\": \"http://example.org/local-codes\",\r\n              \"code\": \"ALT\",\r\n              \"display\": \"Alanine aminotransferase\"\r\n            },\r\n            {\r\n              \"system\": \"http://example.org/local-codes\",\r\n              \"code\": \"AST\",\r\n              \"display\": \"Aspartate aminotransferase\"\r\n            }\r\n          ]\r\n        },\r\n        \"subject\": {\r\n          \"reference\": \"Patient/PQC00000014\",\r\n          \"display\": \"Jason14 Test14\"\r\n        },\r\n        \"encounter\": {\r\n          \"reference\": \"Encounter/ce4af1ef-b57f-4d4c-929a-2cd11ecb7a5e\"\r\n        },\r\n        \"effectiveDateTime\": \"2014-11-09T10:13:00-05:00\",\r\n        \"issued\": \"2014-11-09T10:13:00.450-05:00\",\r\n        \"valueQuantity\": \r\n          {\r\n            \"value\": 50,\r\n            \"unit\": \"U/L\",\r\n            \"system\": \"http://unitsofmeasure.org\",\r\n            \"code\": \"U/L\"\r\n          }\r\n        \r\n      }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -21830,6 +21894,44 @@
 							],
 							"path": [
 								"78a81b41-2bdf-44fb-b0a6-b49ee5590f3a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FHIR & EMPI Integration",
+			"item": [
+				{
+					"name": "Match Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"resourceType\": \"Parameters\",\r\n  \"parameter\": [\r\n    {\r\n      \"name\": \"resource\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"identifier\":[\r\n            {\r\n                 \"system\": \"urn:oid:2.16.840.1.113883.4.927\",\r\n                 \"value\": \"9A13A627AA01\"\r\n            }\r\n        ],\r\n        \"gender\": \"female\",\r\n        \"name\": [\r\n          {\r\n            \"family\": \"Smith\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"name\": \"count\",\r\n      \"valueInteger\": \"10\"\r\n    },\r\n    {\r\n      \"name\": \"onlyCertainMatches\",\r\n      \"valueBoolean\": \"true\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{empiconnectorurl}}/api/Match?code={{apikey}}",
+							"host": [
+								"{{empiconnectorurl}}"
+							],
+							"path": [
+								"api",
+								"Match"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "{{apikey}}"
+								}
 							]
 						}
 					},

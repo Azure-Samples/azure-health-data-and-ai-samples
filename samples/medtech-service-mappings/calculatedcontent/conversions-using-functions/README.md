@@ -206,8 +206,8 @@ Each element in the `data` array will be normalized according to the expressions
 ]
 ```
 
-To learn about using CalculatedContent templates, see [How to use CalculatedContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings).
+To learn about using CalculatedContent templates, see [How to use CalculatedContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-calculatedcontent-mappings)
 
-To lean about using custom functions within CalculatedContent templates, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions).
+To learn about using custom functions within CalculatedContent templates, see [How to use custom functions with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-custom-functions)
 
-To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).
+To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger)

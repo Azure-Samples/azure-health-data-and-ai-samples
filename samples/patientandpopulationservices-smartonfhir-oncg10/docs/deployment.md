@@ -49,6 +49,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     azd up
     ```
+    - Please note: This sample can only be deployed in EastUS2, WestUS2, or CentralUS regions. Please choose one of those regions when doing the deployment.  
 
 *NOTE:* This will take around 15 minutes to deploy.
 

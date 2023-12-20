@@ -151,8 +151,8 @@ The JsonPath matches on device messages produced by the device. Data is then ext
 ]
 ```
 
-To learn about using IotJsonPathContent templates, see [How to use IotJsonPathContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-iotjsonpathcontent-templates).
+To learn about using IotJsonPathContent templates, see [How to use IotJsonPathContent templates with the MedTech service device mapping](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-iotjsonpathcontent-templates)
 
-For a tutorial on deploying a MedTech service including an Azure IoT Hub with message routing enabled, see [Receive device messages through Azure IoT Hub](https://learn.microsoft.com/azure/healthcare-apis/iot/device-messages-through-iot-hub).
+For a tutorial on deploying the MedTech service including an Azure IoT Hub with message routing enabled, see [Receive device messages through Azure IoT Hub](https://learn.microsoft.com/azure/healthcare-apis/iot/device-messages-through-iot-hub)
 
-To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger).
+To learn about the Mapping debugger, see [How to use the MedTech service Mapping debugger](https://learn.microsoft.com/azure/healthcare-apis/iot/how-to-use-mapping-debugger)

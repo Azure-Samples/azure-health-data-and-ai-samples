@@ -1,8 +1,10 @@
-# Azure Health Data Services Samples Repo
+# Azure Health Data and AI Samples Repo
 
-The Azure Health Data Services Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data Services, learn how to use our products, and accelerate your implementations.
+The Azure Health Data and AI Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data and AI services, learn how to use our products, and accelerate your implementations.
 
-This project hosts open-source **samples** for Azure Health Data Services. To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview)
+This project hosts open-source **samples** for Azure Health Data and AI. 
+
+To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview)
 
 ## Samples
 
@@ -48,6 +50,12 @@ This project provides samples outlining example implementations of various use c
 | [Visualize Digital Quality Measures in PowerBI leveraging FHIR parquet data in Data Lake](samples/analytics-visualization) | Sample demonstrates how to calculate example quality measures from FHIR data by querying flattened FHIR parquet file data in Synapse Analytics and visualizing the results in Power BI.|
 | [Integrate Azure Health Data Services FHIR data with Delta Lake on Azure Databricks](samples/azuredatabricks-deltalake/) | Learn how to use Azure Databricks with Azure Health Data Services. Sample demonstrates how to automatically connect data from the FHIR Service into analytics platforms on Azure Databricks Delta Lake using the Analytics Connector. |
 
+### SMART on FHIR
+
+|Sample|Description|
+| --- | --- |
+| [SMART on FHIR sample](samples/smartonfhir) | Sample demonstrating using [SMART on FHIR](http://hl7.org/fhir/smart-app-launch/index.html) to interact with FHIR data in [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir).|
+
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 
 |Sample|Description|
@@ -64,7 +72,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [FHIR Service and Terminology Service Integraion](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the AHDS FHIR service by providing a unified endpoint for AHDS FHIR service as well as Terminology Operations. |
+| [FHIR Service and Terminology Service Integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the Azure Health Data Services FHIR service by providing a unified endpoint for the FHIR service as well as terminology operations. |
 
 ### MedTech service
 

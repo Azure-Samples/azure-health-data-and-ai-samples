@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApiPublisherEmail": {
+      "value": "${ApiPublisherEmail=youremail@onmicrosoft.com}"
+    },
+    "ApiPublisherName": {
+      "value": "${ApiPublisherName=Placeholder Name}"
+    },
+    "ContextAppClientId": {
+      "value": "${ContextAppClientId}"
+    },
+    "existingresourcegroupname": {
+      "value": ""
+    },
+    "FhirAudience": {
+      "value": "${FhirAudience}"
+    },    
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "name": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
+    }
+  }
+}
