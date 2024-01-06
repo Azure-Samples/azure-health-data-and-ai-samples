@@ -4,11 +4,18 @@ param appInsightsName string = 'dicomcastappinsights'
 @description('The name of the Azure DICOM Service.')
 param dicomServiceName string
 
+@description('The FHIR version.')
+@allowed([
+  'fhir-R4'
+  'fhir-Stu3'
+])
+param fhirServiceKind string = 'fhir-R4'
+
 @description('The name of the Azure FHIR Service.')
 param fhirServiceName string
 
 @description('The name of the Azure Function App that hosts DICOMcast.')
-param functionAppName string
+param functionAppName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 
 @description('The name of user-assigned managed identity used when communicating between the functions and healthcare services.')
 param identityName string = 'dicomcast${uniqueString(resourceGroup().id)}'
@@ -51,12 +58,22 @@ resource dicom 'Microsoft.HealthcareApis/workspaces/dicomservices@2023-02-28' = 
   parent: workspace
   name: dicomServiceName
   location: location
+  properties: {
+
+  }
 }
 
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-02-28' = {
   parent: workspace
   name: fhirServiceName
   location: location
+  kind: fhirServiceKind
+  properties: {
+    authenticationConfiguration: {
+      audience: 'https://${fhirServiceName}.azurehealthcareapis.com'
+      authority: uri(environment().authentication.loginEndpoint, subscription().tenantId)
+    }
+  }
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -80,11 +97,9 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
         }
         table: {
           enabled: true
-          keyType: 'Account'
         }
         queue: {
           enabled: true
-          keyType: 'Account'
         }
       }
       requireInfrastructureEncryption: false
@@ -157,7 +172,7 @@ resource monitoringMetricsPublisherRoleAssignment 'Microsoft.Authorization/roleA
   }
 }
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: functionAppName
   location: location
   sku: {
@@ -167,7 +182,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   properties: {}
 }
 
-resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
+resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   dependsOn: [
     dicomDataReaderRoleAssignment
     fhirDataContributorRoleAssignment
@@ -220,3 +235,14 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
     httpsOnly: true
   }
 }
+
+/*
+resource functionAppZipDeploy 'Microsoft.Web/sites/extensions@2021-02-01' = {
+  parent: functionApp
+  name: 'ZipDeploy'
+  location: location
+  properties: {
+    packageUri: packageUri
+  }
+}
+*/

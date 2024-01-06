@@ -77,20 +77,27 @@ internal sealed class ExampleDicomCastClient(
             return;
         }
 
-        Bundle transaction = await _transactionBuilder.CreateUpsertBundleAsync(dataset, cancellationToken);
-        Bundle response = await _fhirClient.TransactionAsync(transaction, cancellationToken) ?? throw new FhirOperationException("Received unexpected response from FHIR server", 0);
+        if (dataset.TryGetPatientId(out _))
+        {
+            Bundle transaction = await _transactionBuilder.CreateUpsertBundleAsync(dataset, cancellationToken);
+            Bundle response = await _fhirClient.TransactionAsync(transaction, cancellationToken) ?? throw new FhirOperationException("Received unexpected response from FHIR server", 0);
 
-        // Validate the operations where another process may have created the resource instead of us
-        bool interrupted = await response
-            .GetPagesAsync(_fhirClient)
-            .SelectMany(x => x.EnsureSuccessStatusCodes().Entry)
-            .Where(x => x.Resource is Patient or ImagingStudy or ImagingSelection)
-            .Where(x => x.Response.Annotation<HttpStatusCode>() == HttpStatusCode.Created)
-            .AnyAsync(cancellationToken);
+            // Validate the operations where another process may have created the resource instead of us
+            bool interrupted = await response
+                .GetPagesAsync(_fhirClient)
+                .SelectMany(x => x.EnsureSuccessStatusCodes().Entry)
+                .Where(x => x.Resource is Patient or ImagingStudy or ImagingSelection)
+                .Where(x => x.Response.Annotation<HttpStatusCode>() is HttpStatusCode.Created)
+                .AnyAsync(cancellationToken);
 
-        if (interrupted)
-            throw new InvalidOperationException("Another process created one or more resources related to the DICOM SOP instance.");
+            if (interrupted)
+                throw new InvalidOperationException("Another process created one or more resources related to the DICOM SOP instance.");
 
-        _logger.LogInformation("Successfully upserted all related FHIR resources.");
+            _logger.LogInformation("Successfully upserted all related FHIR resources.");
+        }
+        else
+        {
+            _logger.LogWarning("The DICOM SOP instance does not contain the patient ID tag (0010,0020).");
+        }
     }
 }
