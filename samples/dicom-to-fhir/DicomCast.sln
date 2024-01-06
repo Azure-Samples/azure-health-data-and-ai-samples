@@ -12,6 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{88B54E38
 		.globalconfig = .globalconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{228E3293-57AB-49C1-9BB4-02FCFDF84674}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\dicom-cast.bicep = Templates\dicom-cast.bicep
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
