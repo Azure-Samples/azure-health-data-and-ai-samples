@@ -1,5 +1,14 @@
 @description('The name of the Azure App Insights that contains DICOMcast telemetry.')
-param appInsightsName string = 'dicomcastappinsights'
+param appInsightsName string = 'dicomcast${uniqueString(resourceGroup().id)}'
+
+@description('The maximum number of events per batch sent from Azure Event Grid to the DICOMcast Azure Function.')
+param dicomEventMaxBatchSize int = 100
+
+@description('The name of the Azure Event Grid subscription that routes events to the DICOMcast Azure Function.')
+param dicomEventSubscriptionName string = 'dicomcast${uniqueString(resourceGroup().id)}'
+
+@description('The name of the Azure Event Grid System Topic for DICOM events.')
+param dicomEventTopicName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 
 @description('The name of the Azure DICOM Service.')
 param dicomServiceName string
@@ -24,7 +33,7 @@ param identityName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 param location string = resourceGroup().location
 
 @description('The name of the Azure Storage Account that maintains the state of Azure Functions.')
-param storageAccountName string = 'cast${uniqueString(resourceGroup().id)}'
+param storageAccountName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 
 @description('The Azure Storage Account type.')
 @allowed([
@@ -58,9 +67,7 @@ resource dicom 'Microsoft.HealthcareApis/workspaces/dicomservices@2023-02-28' = 
   parent: workspace
   name: dicomServiceName
   location: location
-  properties: {
-
-  }
+  properties: {}
 }
 
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-02-28' = {
@@ -233,6 +240,36 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
       minTlsVersion: '1.2'
     }
     httpsOnly: true
+  }
+}
+
+resource systemTopic 'Microsoft.EventGrid/systemTopics@2022-06-15' = {
+  name: dicomEventTopicName
+  location: location
+  properties: {
+    source: dicom.id
+    topicType: 'Microsoft.HealthcareApis.Workspaces.Dicomservices'
+  }
+}
+
+resource eventSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2022-06-15' = {
+  parent: systemTopic
+  name: dicomEventSubscriptionName
+  properties: {
+    destination: {
+      endpointType: 'AzureFunction'
+      properties: {
+        maxEventsPerBatch: dicomEventMaxBatchSize
+        resourceId: functionApp.id
+      }
+    }
+    filter: {
+      includedEventTypes: [
+        'Microsoft.HealthcareApis.DicomImageCreated'
+        'Microsoft.HealthcareApis.DicomImageDeleted'
+        'Microsoft.HealthcareApis.DicomImageUpdated'
+      ]
+    }
   }
 }
 
