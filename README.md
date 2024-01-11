@@ -72,7 +72,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 |------|-----------|
-|[Azure Active Directory B2C to grant access to the FHIR service](/fhir-aad-b2c/)| This sample provides ARM templates for [using Active Directory B2C to grant access to the FHIR service](https://learn.microsoft.com/azure/healthcare-apis/fhir/azure-ad-b2c-setup).
+|[Azure Active Directory B2C to grant access to the FHIR service](/samples/fhir-aad-b2c/)| This sample provides ARM templates for [using Active Directory B2C to grant access to the FHIR service](https://learn.microsoft.com/azure/healthcare-apis/fhir/azure-ad-b2c-setup).
 
 ### DICOM service
 
