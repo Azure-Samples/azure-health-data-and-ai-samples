@@ -1,5 +1,9 @@
 {
-  "workspace": {
-    "credential": "managedidentity"
+  "DICOM": {
+    "Credential": "ManagedIdentity",
+    "Version": 2
+  },
+  "FHIR": {
+    "Credential": "ManagedIdentity"
   }
 }

@@ -19,7 +19,7 @@ public class DicomWebClientOptions : FellowOakDicom.Network.Client.DicomClientOp
     public string? Service { get; set; }
 
     [Range(1, int.MaxValue)] // At the time of writing, only 1 and 2 are supported
-    public int Version { get; set; }
+    public int Version { get; set; } = 2;
 
     public string? Credential { get; set; }
 

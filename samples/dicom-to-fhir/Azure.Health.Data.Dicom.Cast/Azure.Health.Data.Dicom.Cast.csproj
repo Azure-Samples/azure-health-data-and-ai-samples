@@ -4,22 +4,23 @@
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
+    <Platforms>x64</Platforms>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.36.0" />
-    <PackageReference Include="Azure.Identity" Version="1.10.3" />
+    <PackageReference Include="Azure.Core" Version="1.37.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Azure.Messaging.EventGrid" Version="4.21.0" />
-    <PackageReference Include="fo-dicom" Version="5.1.1" />
-    <PackageReference Include="Hl7.Fhir.R5" Version="5.4.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.20.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.EventGrid" Version="3.4.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.16.1" />
+    <PackageReference Include="fo-dicom" Version="5.1.2" />
+    <PackageReference Include="Hl7.Fhir.R5" Version="5.5.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.20.1" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.EventGrid" Version="3.4.1" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.16.4" />
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
