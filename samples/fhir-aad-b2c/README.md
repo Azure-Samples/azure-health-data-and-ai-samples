@@ -1,4 +1,4 @@
-# Templates for FHIR service integration with Azure Active Directory B2C
+# ARM templates for FHIR service integration with Azure Active Directory B2C
 
 You can use the FHIR® service in Azure Health Data Services with Azure Active Directory B2C (Azure AD B2C). This capability gives healthcare organizations a secure and convenient way to grant access to the FHIR service with fine-grained access control for different users or groups, without creating or commingling user accounts in their organization’s Microsoft Entra ID tenant.
 
