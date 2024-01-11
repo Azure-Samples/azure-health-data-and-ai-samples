@@ -26,6 +26,9 @@ param fhirServiceName string
 @description('The name of the Azure Function App that hosts DICOMcast.')
 param functionAppName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 
+@description('The name of the Azure Function App that hosts DICOMcast.')
+param functionAppZip string = 'https://github.com/Azure-Samples/azure-health-data-and-ai-samples/blob/main/samples/dicom-to-fhir/templates/dicom-cast.zip'
+
 @description('The name of the healthcare workspace.')
 param healthcareWorkspaceName string
 
@@ -304,6 +307,7 @@ resource eventSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@
         resourceId: functionApp.id
       }
     }
+    eventDeliverySchema: 'CloudEventSchemaV1_0'
     filter: {
       includedEventTypes: [
         'Microsoft.HealthcareApis.DicomImageCreated'
@@ -314,13 +318,11 @@ resource eventSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@
   }
 }
 
-
 resource functionAppZipDeploy 'Microsoft.Web/sites/extensions@2021-02-01' = {
+  name:  'MSDeploy'
   parent: functionApp
-  name: 'ZipDeploy'
-  location: location
   properties: {
-    packageUri: packageUri
+    packageUri: functionAppZip
   }
 }
 
