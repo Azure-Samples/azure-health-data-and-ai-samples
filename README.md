@@ -2,7 +2,7 @@
 
 The Azure Health Data and AI Samples Repo is a set of sample apps and sample code provided to help you get started with Azure Health Data and AI services, learn how to use our products, and accelerate your implementations.
 
-This project hosts open-source **samples** for Azure Health Data and AI. 
+This project hosts open-source **samples** for Azure Health Data and AI.
 
 To learn more about Azure Health Data Services, please refer to the managed service documentation [here.](https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview)
 
@@ -62,17 +62,23 @@ This project provides samples outlining example implementations of various use c
 | --- | --- |
 | [Patient and Population Services (g)(10) (including SMART on FHIR) sample](samples/patientandpopulationservices-smartonfhir-oncg10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
 
-### DICOM service
-
-|Sample|Description|
-| --- | --- |
-| [DICOM service demo environment](/samples/dicom-demo-env/) | This sample provisions a full end-to-end demo environment of a simplified on-prem radiology network in an Azure resource group. Instructions are provided for configuring and using the DICOM router and ZFP viewer included in the environment. |
-
 ### FHIR Service and Terminology Service Integration
 
 |Sample|Description|
 | --- | --- |
 | [FHIR Service and Terminology Service Integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the Azure Health Data Services FHIR service by providing a unified endpoint for the FHIR service as well as terminology operations. |
+
+### Azure Active Directory B2C to grant access to the FHIR service
+
+|Sample|Description|
+|------|-----------|
+|[Azure Active Directory B2C to grant access to the FHIR service](/fhir-aad-b2c/)| This sample provides ARM templates for [using Active Directory B2C to grant access to the FHIR service](https://learn.microsoft.com/azure/healthcare-apis/fhir/azure-ad-b2c-setup).
+
+### DICOM service
+
+|Sample|Description|
+| --- | --- |
+| [DICOM service demo environment](/samples/dicom-demo-env/) | This sample provisions a full end-to-end demo environment of a simplified on-prem radiology network in an Azure resource group. Instructions are provided for configuring and using the DICOM router and ZFP viewer included in the environment. |
 
 ### MedTech service
 
