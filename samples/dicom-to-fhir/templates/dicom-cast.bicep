@@ -26,8 +26,8 @@ param fhirServiceName string
 @description('The name of the Azure Function App that hosts DICOMcast.')
 param functionAppName string = 'dicomcast${uniqueString(resourceGroup().id)}'
 
-@description('The name of the Azure Function App that hosts DICOMcast.')
-param functionAppZip string = 'https://github.com/Azure-Samples/azure-health-data-and-ai-samples/blob/main/samples/dicom-to-fhir/templates/dicom-cast.zip'
+@description('The URI for the DICOMcast ZIP file.')
+param functionAppZipUri string = 'https://github.com/Azure-Samples/azure-health-data-and-ai-samples/blob/main/samples/dicom-to-fhir/templates/dicom-cast.zip'
 
 @description('The name of the healthcare workspace.')
 param healthcareWorkspaceName string
@@ -220,7 +220,9 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   kind: 'linux'
   location: location
   name: functionAppName
-  properties: {}
+  properties: {
+    reserved: true
+  }
   sku: {
     name: 'Y1'
     tier: 'Dynamic'
@@ -267,12 +269,24 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
           value: managedIdentity.properties.clientId
         }
         {
+          name: 'DICOM__ClientId'
+          value: managedIdentity.properties.clientId
+        }
+        {
+          name: 'FHIR__ClientId'
+          value: managedIdentity.properties.clientId
+        }
+        {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~4'
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet-isolated'
+        }
+        {
+          name: 'WEBSITE_RUN_FROM_PACKAGE'
+          value: functionAppZipUri
         }
         {
           name: 'WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED'
@@ -291,8 +305,8 @@ resource systemTopic 'Microsoft.EventGrid/systemTopics@2022-06-15' = {
   location: location
   name: dicomEventTopicName
   properties: {
-    source: dicom.id
-    topicType: 'Microsoft.HealthcareApis.Workspaces.Dicomservices'
+    source: healthcareWorkspace.id
+    topicType: 'Microsoft.Healthcareapis.Workspaces'
   }
 }
 
@@ -317,12 +331,3 @@ resource eventSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@
     }
   }
 }
-
-resource functionAppZipDeploy 'Microsoft.Web/sites/extensions@2021-02-01' = {
-  name:  'MSDeploy'
-  parent: functionApp
-  properties: {
-    packageUri: functionAppZip
-  }
-}
-
