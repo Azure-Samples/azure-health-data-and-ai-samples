@@ -55,7 +55,7 @@
         },
         "smartAllowedDataActions": {
             "defaultValue": [
-                "Read, Write, Delete"
+                "Read"
             ],
             "type": "Array"
         }
