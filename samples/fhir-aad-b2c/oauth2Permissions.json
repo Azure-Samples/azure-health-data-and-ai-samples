@@ -1,18 +1,6 @@
 {
 	"oauth2Permissions": [
 		{
-			"adminConsentDescription": "Allows user to read, write and delete all resources in a patient's compartment.",
-			"adminConsentDisplayName": "patient.all.all",
-			"id": "0d1a5f28-49cb-4a16-97f5-106efd659dc8",
-			"isEnabled": true,
-			"lang": null,
-			"origin": "Application",
-			"type": "User",
-			"userConsentDescription": "Allows user to read, write and delete all resources in a patient's compartment.",
-			"userConsentDisplayName": "patient.all.all",
-			"value": "patient.all.all"
-		},
-		{
 			"adminConsentDescription": "Allows user to read all resources in a patient's compartment.",
 			"adminConsentDisplayName": "patient.all.read",
 			"id": "c71e9482-f052-461b-80e1-7cfeba7b2b12",
