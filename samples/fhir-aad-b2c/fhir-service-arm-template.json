@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "region": {
+            "allowedValues": [
+                "australiaeast",
+                "canadacentral",
+                "centralindia",
+                "eastus",
+                "eastus2",
+                "francecentral",
+                "germanywestcentral",
+                "japaneast",
+                "koreacentral",
+                "northcentralus",
+                "northeurope",
+                "qatarcentral",
+                "southafricanorth",
+                "southcentralus",
+                "southeastasia",
+                "swedencentral",
+                "switzerlandnorth",
+                "uksouth",
+                "ukwest",
+                "westcentralus",
+                "westeurope",
+                "westus2",
+                "westus3"
+            ],
+            "type": "String"
+        },
+        "workspaceName": {
+            "type": "String"
+        },
+        "fhirServiceName": {
+            "type": "String"
+        },
+        "dnsZoneName": {
+            "defaultValue": "azurehealthcareapis.com",
+            "type": "String"
+        },
+        "authorityUrl": {
+            "defaultValue": "https://login.microsoftonline.com",
+            "type": "String"
+        },
+        "tenantid": {
+            "type": "String"
+        },
+        "smartAuthorityUrl": {
+            "type": "String"
+        },
+        "smartClientId": {
+            "type": "String"
+        },
+        "smartAllowedDataActions": {
+            "defaultValue": [
+                "Read"
+            ],
+            "type": "Array"
+        }
+    },
+    "variables": {
+        "authority": "[Concat(parameters('authorityUrl'), '/', parameters('tenantid'))]",
+        "createManagedIdentity": true,
+        "managedIdentityType": {
+            "type": "SystemAssigned"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.HealthcareApis/workspaces",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('workspaceName')]",
+            "location": "[parameters('region')]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('workspaceName'), '/', parameters('fhirServiceName'))]",
+            "location": "[parameters('region')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('workspaceName'))]"
+            ],
+            "kind": "fhir-R4",
+            "identity": "[if(variables('createManagedIdentity'), variables('managedIdentityType'), json('null'))]",
+            "properties": {
+                "authenticationConfiguration": {
+                    "authority": "[variables('Authority')]",
+                    "audience": "[concat('https://', parameters('workspaceName'), '-', parameters('fhirServiceName'), '.fhir.', parameters('dnsZoneName'))]",
+                    "smartProxyEnabled": false,
+                    "smartIdentityProviders": [
+                        {
+                            "authority": "[parameters('smartAuthorityUrl')]",
+                            "applications": [
+                                {
+                                    "clientId": "[parameters('smartClientId')]",
+                                    "allowedDataActions": "[parameters('smartAllowedDataActions')]",
+                                    "audience": "[parameters('smartClientId')]"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "corsConfiguration": {
+                    "allowCredentials": false,
+                    "headers": [],
+                    "methods": [],
+                    "origins": []
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

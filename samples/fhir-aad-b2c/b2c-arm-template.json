@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "allowedValues": [
+                "United States",
+                "Europe",
+                "Asia Pacific",
+                "Australia"
+            ],
+            "type": "String",
+            "defaultValue": "United States"
+        },
+        "b2cName": {
+            "type": "String"
+        },
+        "skuName": {
+            "allowedValues": [
+                "Standard",
+                "PremiumP1",
+                "PremiumP2"
+            ],
+            "type": "String",
+            "defaultValue": "Standard"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.AzureActiveDirectory/b2cDirectories",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('b2cName'), '.onmicrosoft.com')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "A0"
+            },
+            "properties": {
+                "createTenantProperties": {
+                    "countryCode": "US",
+                    "displayName": "[parameters('b2cName')]"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
