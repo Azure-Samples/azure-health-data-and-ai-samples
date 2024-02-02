@@ -16,7 +16,10 @@
     },
     "FhirAudience": {
       "value": "${FhirAudience}"
-    },    
+    },
+    "fhirId": {
+      "value": ""
+    },
     "location": {
       "value": "${AZURE_LOCATION}"
     },
