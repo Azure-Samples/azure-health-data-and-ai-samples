@@ -17,7 +17,7 @@
     "FhirAudience": {
       "value": "${FhirAudience}"
     },
-    "fhirId": {
+    "fhirid": {
       "value": ""
     },
     "location": {

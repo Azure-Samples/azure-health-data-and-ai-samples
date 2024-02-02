@@ -45,12 +45,10 @@ param fhirId string
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
-
 // end optional configuration parameters
 
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
-//var fhirResourceIdSplit = empty(fhirId) > 0 ? split(fhirId,'/') : []
 var fhirResourceIdSplit = split(fhirId,'/')
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
@@ -58,9 +56,6 @@ var createFhirService = empty(fhirId) ? true : false
 var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
 var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
-
-
-//var fhirInstanceResourceGroup = empty(fhirid) ? newOrExistingResourceGroupName : fhirserviceRg
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -87,10 +82,12 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
 
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
 
+var fhirInstanceResourceGroup = empty(fhirId) ? newOrExistingResourceGroupName : fhirserviceRg
+
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
-  scope: resourceGroup(fhirserviceRg)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     createWorkspace: createWorkspace
     createFhirService: createFhirService
@@ -168,7 +165,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 @description('Setup identity connection between FHIR and the given contributors')
 module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirContrib'
-  scope: resourceGroup(fhirserviceRg)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
@@ -180,7 +177,7 @@ module fhirContributorIdentities './core/identity.bicep' =  [for principalId in 
 @description('Setup identity connection between FHIR and the given SMART users')
 module fhirSMARTIdentities './core/identity.bicep' =  [for principalId in  fhirSMARTPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirSmart'
-  scope: resourceGroup(fhirserviceRg)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
