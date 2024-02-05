@@ -49,25 +49,25 @@ Next you will need to clone this repository and prepare your environment for dep
         - `existingResourceGroupName` : This parameter allows the user to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}_rg' and deploy the sample. If the user provides an existing resource group, the sample will be deployed in that resource group.
                                         Note: An existing resource group should not have SMART on FHIR resource already deployed because multiple samples in the same resource group are not supported.
         - `fhirid`: This parameter allows user to decide whether to use existing FHIR service or create new one. Leaving this parameter empty will create new FHIR service. If user wish to use existing FHIR server then FHIR instance id need to be provided. Below are steps to retrieve the FHIR instance id 
-            - Navigate to your FHIR service.
-            - Click on properties in the left menu.
-            - Copy the ID field under essential.     
+            1. Navigate to your FHIR service.
+            2. Click on properties in the left menu.
+            3. Copy the ID field under essential.     
     - Some important considerations when using an existing FHIR service instance:
         - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
         - Enable the system-assigned status in the existing FHIR service.
-            - Navigate to your existing FHIR Service.
-            - Proceed to the identity blade.
-            - Enable the status.
-            - Click on save.
+            1. Navigate to your existing FHIR Service.
+            2. Proceed to the identity blade.
+            3. Enable the status.
+            4. Click on save.
             <br /><details><summary>Click to expand and see screenshots.</summary>
             ![](./images/deployment/7_Identity_enabled.png)
             </details><br />
      -Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps
-        - Navigate to your FHIR Resource App Registration.
-        - Proceed to the "Expose an API" blade and copy the Application ID URI. 
-        - Go to your existing FHIR Service.
-        - Proceed to the authentication blade. 
-        - Paste the URL into the Audience field.
+        1. Navigate to your FHIR Resource App Registration.
+        2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
+        3. Go to your existing FHIR Service.
+        4. Proceed to the authentication blade. 
+        5. Paste the URL into the Audience field.
         <br />
         <details>
         <summary>Click to expand and see screenshots.</summary>
