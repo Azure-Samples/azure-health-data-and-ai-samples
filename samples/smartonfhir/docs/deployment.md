@@ -45,37 +45,37 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
     - When running this command, you must select the subscription name and location from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
-    - The azd provision command will prompt users to enter values for the 'existingResourceGroupName' and 'fhirid' parameters. Users can provide values based on their requirements as below
-      - `existingResourceGroupName` : This parameter allows the user to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}_rg' and deploy the sample. If the user provides an existing resource group, the sample will be deployed in that resource group.
-               Note: An existing resource group should not have SMART on FHIR resource already deployed because multiple samples in the same resource group are not supported.
-      - `fhirid`: This parameter allows user to decide whether to use existing FHIR service or create new one. Leaving this parameter empty will create new FHIR service. If user wish to use existing FHIR server then FHIR instance id need to be provided. Below are steps to retrieve the FHIR instance id 
-                    1. Navigate to your FHIR service.
-                    2. Click on properties in the left menu.
-                    3. Copy the ID field under essential.                                                                                        
+    - The azd provision command will prompt users to enter values for the `existingResourceGroupName` and `fhirid` parameters. Users can provide values based on their requirements as below
+        - `existingResourceGroupName` : This parameter allows the user to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}_rg' and deploy the sample. If the user provides an existing resource group, the sample will be deployed in that resource group.
+                                        Note: An existing resource group should not have SMART on FHIR resource already deployed because multiple samples in the same resource group are not supported.
+        - `fhirid`: This parameter allows user to decide whether to use existing FHIR service or create new one. Leaving this parameter empty will create new FHIR service. If user wish to use existing FHIR server then FHIR instance id need to be provided. Below are steps to retrieve the FHIR instance id 
+            - Navigate to your FHIR service.
+            - Click on properties in the left menu.
+            - Copy the ID field under essential.     
     - Some important considerations when using an existing FHIR service instance:
-        1. The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the 'existingResourceGroupName' parameter.
-        2. Enable the system-assigned status in the existing FHIR service.
-            1. Navigate to your existing FHIR Service.
-            2. Proceed to the identity blade and Enable the status.
-            4. Click on save.
-          <br /> 
-          <details>
-          <summary>Click to expand and see screenshots.</summary>
-            ![](./images/7_Identity_enabled.png)
-          </details>
-        3. Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps
-            1. Navigate to your FHIR Resource App Registration.
-            2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
-            3. Go to your existing FHIR Service.
-            4. Proceed to the authentication blade. 
-            5. Paste the URL into the Audience field.
-          <br />
-          <details>
-          <summary>Click to expand and see screenshots.</summary>
-           ![](./images/7_fhirresourceappregistration_applicationurl.png)
-           ![](./images/7_fhirservice_audienceurl.png)
-          </details>
-    - You can continue the setup below. 
+        - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
+        - Enable the system-assigned status in the existing FHIR service.
+            - Navigate to your existing FHIR Service.
+            - Proceed to the identity blade.
+            - Enable the status.
+            - Click on save.
+            <br /><details><summary>Click to expand and see screenshots.</summary>
+            ![](./images/deployment/7_Identity_enabled.png)
+            </details><br />
+     -Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps
+        - Navigate to your FHIR Resource App Registration.
+        - Proceed to the "Expose an API" blade and copy the Application ID URI. 
+        - Go to your existing FHIR Service.
+        - Proceed to the authentication blade. 
+        - Paste the URL into the Audience field.
+        <br />
+        <details>
+        <summary>Click to expand and see screenshots.</summary>
+        ![](./images/deployment/7_fhirresourceappregistration_applicationurl.png)
+        ![](./images/deployment/7_fhirservice_audienceurl.png)
+        </details>
+        <br />
+     - You can continue the setup below. 
     ```
     azd up
     ```
