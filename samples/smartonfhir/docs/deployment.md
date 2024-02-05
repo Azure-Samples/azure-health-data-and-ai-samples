@@ -62,20 +62,17 @@ Next you will need to clone this repository and prepare your environment for dep
             <br /><details><summary>Click to expand and see screenshots.</summary>
             ![](./images/deployment/7_Identity_enabled.png)
             </details><br />
-     -Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps
+    - Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps
         1. Navigate to your FHIR Resource App Registration.
         2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
         3. Go to your existing FHIR Service.
         4. Proceed to the authentication blade. 
         5. Paste the URL into the Audience field.
-        <br />
-        <details>
-        <summary>Click to expand and see screenshots.</summary>
+        <br /><details><summary>Click to expand and see screenshots.</summary>
         ![](./images/deployment/7_fhirresourceappregistration_applicationurl.png)
         ![](./images/deployment/7_fhirservice_audienceurl.png)
-        </details>
-        <br />
-     - You can continue the setup below. 
+        </details><br />
+    - You can continue the setup below. 
     ```
     azd up
     ```
