@@ -6,6 +6,9 @@ param tenantId string
 param location string
 param audience string = ''
 param appTags object = {}
+param B2cAuthorityURL string
+param StandaloneAppClientId string
+param FhirResourceAppId string
 
 var loginURL = environment().authentication.loginEndpoint
 var authority = '${loginURL}${tenantId}'
@@ -20,6 +23,7 @@ resource healthWorkspace 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview
 resource healthWorkspaceExisting 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview' existing = if (!createWorkspace) {
   name: workspaceName
 }
+
 var newOrExistingWorkspaceName = createWorkspace ? healthWorkspace.name : healthWorkspaceExisting.name
 
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-preview' = if (createFhirService) {
@@ -36,6 +40,19 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-previ
       authority: authority
       audience: resolvedAudience
       smartProxyEnabled: false
+      smartIdentityProviders: [
+          {
+              authority: B2cAuthorityURL,
+              applications: 
+              [
+                  {
+                      clientId: StandaloneAppClientId,
+                      audience: FhirResourceAppId,
+                      allowedDataActions: ["Read"]
+                  }
+              ]
+          }
+      ]
     }
   }
 

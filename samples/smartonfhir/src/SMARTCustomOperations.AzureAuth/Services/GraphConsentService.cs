@@ -20,7 +20,18 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         public GraphConsentService(AzureAuthOperationsConfig configuration, GraphServiceClient graphServiceClient, ILogger<BaseContextAppService> logger) : base(configuration, logger)
         {
-            _graphServiceClient = graphServiceClient;
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+            var tenantId = configuration.B2C_Tenant_Id; 
+            var clientId = configuration.Standalone_App_ClientId;
+            // Add Standalone Public Client App's Secret
+            var clientSecret = "";
+            var options = new TokenCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+            };
+            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret, options);
+            _graphServiceClient = new GraphServiceClient(clientSecretCredential, scopes);
+            //_graphServiceClient = graphServiceClient;
             _logger = logger;
         }
 

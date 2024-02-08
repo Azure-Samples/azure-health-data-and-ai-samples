@@ -39,6 +39,21 @@ param FhirAudience string
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string 
 
+@description('Provide authority url to ensure that only authorized users can access sensitive patient information')
+param B2cAuthorityURL string
+
+@description('Provide standalone App registration Client Id to access your FHIR Service')
+param StandaloneAppClientId string
+
+@description('Provide Fhir Resource App registration Client Id to customize the access token sent to the FHIR Service')
+param FhirResourceAppId string
+
+@description('Provide B2C Tenant Id')
+param B2CTenantId string
+
+@description('smart on fhir with b2c')
+param smartonfhirwithb2c bool 
+
 @description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
 param createWorkspace bool = true
 
@@ -83,6 +98,9 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
   name: existingResourceGroupName
 }
 
+var B2cAuthorityURLvalue = empty(B2cAuthorityURL) ? null : B2cAuthorityURL
+var StandaloneAppClientIdvalue = empty(StandaloneAppClientId) ? null: StandaloneAppClientId
+var FhirResourceAppIdvalue = empty(StandaloneAppClientId)? null: FhirResourceAppId
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
 var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
@@ -101,6 +119,9 @@ module fhir 'core/fhir.bicep'= {
     tenantId: tenantId
     appTags: appTags
     audience: FhirAudience
+    B2cAuthorityURL: B2cAuthorityURLvalue
+    StandaloneAppClientId:StandaloneAppClientIdvalue
+    FhirResourceAppId:FhirResourceAppIdvalue
   }
 }
 
@@ -234,6 +255,10 @@ module contextStaticWebApp './app/contextApp.bicep' = {
   }
 }
 
+var b2ctenantnamesplit = smartonfhirwithb2c ? split(B2cAuthorityURL,'/') : ''  
+var b2ctenantendpoint = smartonfhirwithb2c ? b2ctenantnamesplit[3] : ''
+var b2ctenantname = smartonfhirwithb2c ? split(b2ctenantendpoint,'.') : ''  
+
 // These map to user secrets for local execution of the program
 output Location string = location
 output TenantId string = tenantId
@@ -245,7 +270,11 @@ output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
-output REACT_APP_AAD_APP_TENANT_ID string = tenantId
+output B2C_Tenant_Name = b2ctenantname
+output B2C_Authority_URL = B2cAuthorityURL
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
+output SmartonFhir_with_B2C bool = smartonfhirwithb2c
+output B2C_Tenant_Id = B2CTenantId
+output Standalone_App_ClientId = StandaloneAppClientId

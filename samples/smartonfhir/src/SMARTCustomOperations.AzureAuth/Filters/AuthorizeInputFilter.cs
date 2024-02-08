@@ -75,10 +75,9 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
-
             // Build the aad authorize url
-            var authUrl = "https://login.microsoftonline.com";
-            var authPath = $"{_configuration.TenantId}/oauth2/v2.0/authorize";
+            var authUrl = _configuration.SmartonFhir_with_B2C ? _configuration.B2C_Authority_URL : "https://login.microsoftonline.com";
+            var authPath = _configuration.SmartonFhir_with_B2C ? $"oauth2/v2.0/authorize" : $"{_configuration.TenantId}/oauth2/v2.0/authorize";
             var redirectUrl = $"{authUrl}/{authPath}";
             var redirect_querystring = launchContext.ToRedirectQueryString();
             var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
