@@ -52,6 +52,10 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? Standalone_App_ClientId { get; set; }
 
+        public string? Fhir_Resource_AppId { get; set; }
+
+        public string? B2C_Tenant_EndPoint { get; set; }
+
         public string? FhirAudience
         {
             get => _fhirAudience;

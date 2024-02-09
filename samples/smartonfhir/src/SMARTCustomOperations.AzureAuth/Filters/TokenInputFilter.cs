@@ -75,7 +75,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 
             // Setup new http client for token request
             string result = _configuration.B2C_Authority_URL.Replace("https://", "");
-            string tokenEndpoint = SmartonFhir_with_B2C ? $"https://{_configuration.B2C_Tenant_Name}.b2clogin.com/" : "https://login.microsoftonline.com/";
+            string tokenEndpoint = SmartonFhir_with_B2C ? $"https://{_configuration.B2C_Tenant_EndPoint}/" : "https://login.microsoftonline.com/";
             string tokenPath = SmartonFhir_with_B2C ? $"{result}/oauth2/v2.0/token" : $"{_configuration.TenantId}/oauth2/v2.0/token";
 
             context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);

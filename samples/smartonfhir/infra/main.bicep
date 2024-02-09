@@ -278,3 +278,5 @@ output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
 output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id = B2CTenantId
 output Standalone_App_ClientId = StandaloneAppClientId
+output Fhir_Resource_AppId = FhirResourceAppId
+output B2C_Tenant_EndPoint= b2ctenantendpoint

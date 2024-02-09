@@ -31,7 +31,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             _contextAppClientId = configuration.ContextAppClientId!;
             _fhirAudience = configuration.FhirAudience!;
             _tenantId = configuration.TenantId!;
-            _fhirResourceAppId = configuration.FhirResourceAppId!;
+            _fhirResourceAppId = configuration.Fhir_Resource_AppId;
             _smartonfhir_with_b2c = configuration.SmartonFhir_with_B2C;
             _b2c_authority_url= configuration.B2C_Authority_URL;
             _b2c_tenant_name = configuration.B2C_Tenant_Name;
@@ -47,7 +47,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             var validIssuers = new List<string>()
             {
                 $"https://{result}.com/{_tenantId}/",
-                $"https://{result}.b2clogin.com/{_tenantId}/v2.0/",
+                $"https://{result}.com/{_tenantId}/v2.0/",
                 $"https://login.windows.net/{_tenantId}/",
                 $"https://login.microsoft.com/{_tenantId}/",
                 $"https://sts.windows.net/{_tenantId}/",
