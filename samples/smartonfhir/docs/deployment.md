@@ -77,12 +77,12 @@ Next you will need to clone this repository and prepare your environment for dep
         ![](./images/deployment/7_fhirresourceappregistration_applicationurl.png)
         ![](./images/deployment/7_fhirservice_audienceurl.png)
         </details>
-    > [!IMPORTANT]
-    > If you are using an existing FHIR server, please note that in the above step, you needed to change the FHIR server Audience URL to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL. 
-    - You can continue the setup below. 
+> [!IMPORTANT]  
+> If you are using an existing FHIR server, please note that in the above step, you needed to change the FHIR server Audience URL to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
+    
 
 
-*NOTE:* This will take around 15 minutes to deploy.
+*NOTE:* This will take around 15 minutes to deploy. You can continue the setup below. 
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
