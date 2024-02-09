@@ -39,26 +39,23 @@ param FhirAudience string
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string 
 
-@description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
-param createWorkspace bool = true
-
-@description('Do you want to create a new FHIR Service or use an existing one?')
-param createFhirService bool = true
-
-@description('Name of Azure Health Data Services workspace to deploy or use. Leave blank for default.')
-param workspaceName string = ''
-
-@description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param fhirServiceName string = ''
+@description('Provide the exisiting fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
+param fhirId string 
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
-
 
 // end optional configuration parameters
 
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+var fhirResourceIdSplit = split(fhirId,'/')
+var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
+var createWorkspace = empty(fhirId) ? true : false
+var createFhirService = empty(fhirId) ? true : false
+var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
+var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
+var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -83,15 +80,14 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
   name: existingResourceGroupName
 }
 
-var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
-var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
-var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
+
+var fhirInstanceResourceGroup = empty(fhirId) ? newOrExistingResourceGroupName : fhirserviceRg
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
-  scope: resourceGroup(newOrExistingResourceGroupName)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     createWorkspace: createWorkspace
     createFhirService: createFhirService
@@ -169,7 +165,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 @description('Setup identity connection between FHIR and the given contributors')
 module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirContrib'
-  scope: resourceGroup(newOrExistingResourceGroupName)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
@@ -181,7 +177,7 @@ module fhirContributorIdentities './core/identity.bicep' =  [for principalId in 
 @description('Setup identity connection between FHIR and the given SMART users')
 module fhirSMARTIdentities './core/identity.bicep' =  [for principalId in  fhirSMARTPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirSmart'
-  scope: resourceGroup(newOrExistingResourceGroupName)
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
