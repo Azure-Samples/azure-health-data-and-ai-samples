@@ -36,7 +36,6 @@ Next you will need to clone this repository and prepare your environment for dep
     - *NOTE:* Environment name will be the prefix for all of your resources.
 1. [Create the FHIR Resource App Registration. Use the instructions here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
-    - Make sure to tell azd about this application with `azd env set ContextAppClientId <context app id>`.
 1. Set your deployment environment configuration.
     ```
     azd env set ApiPublisherName "Your Name"
