@@ -21,8 +21,8 @@
 	<outbound>
 		<base />
 		<set-body template="liquid">{
-            "issuer": "https://login.microsoftonline.com/{{TenantId}}/v2.0",
-            "jwks_uri": "https://login.microsoftonline.com/{{TenantId}}/discovery/v2.0/keys",
+            "issuer": "https://fhirb2ctenantdemo.b2clogin.com/f4d99379-e8ae-4628-8a55-d9c2e8add7c4/v2.0/",
+            "jwks_uri": "https://fhirb2ctenantdemo.b2clogin.com/fhirb2ctenantdemo.onmicrosoft.com/b2c_1_signupsignin1/discovery/v2.0/keys",
             "authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
             "token_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/token",
             "token_endpoint_auth_methods_supported": [

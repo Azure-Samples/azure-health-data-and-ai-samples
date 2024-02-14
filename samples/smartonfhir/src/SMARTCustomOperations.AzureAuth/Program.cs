@@ -60,7 +60,7 @@ namespace SMARTCustomOperations.AzureAuth
                     // Add services needed for Microsoft Graph
                     services.AddMicrosoftGraphClient(options =>
                     {
-                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.TenantId });
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.SmartonFhir_with_B2C ? config.B2C_Tenant_Id :config.TenantId });
                     });
                     services.AddScoped<GraphConsentService>();
 
@@ -87,7 +87,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = config.SmartonFhir_with_B2C ? new Uri($"https://{config.B2C_Tenant_Name}.b2clogin.com/{config.B2C_Tenant_Id}/v2.0/") : new Uri("https://login.microsoftonline.com")
+                        options.BaseAddress = config.SmartonFhir_with_B2C ? new Uri($"https://{config.B2C_Tenant_Name}.b2clogin.com/{config.B2C_Tenant_Id}/v2.0/") : new Uri("https://login.microsoftonline.com");
                         //options.BaseAddress = new Uri("https://login.microsoftonline.com");
                         //options.BaseAddress = new Uri("https://fhirb2ctenantdemo.b2clogin.com/f4d99379-e8ae-4628-8a55-d9c2e8add7c4/v2.0/");
                     });

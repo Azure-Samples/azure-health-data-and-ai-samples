@@ -98,9 +98,9 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
   name: existingResourceGroupName
 }
 
-var B2cAuthorityURLvalue = empty(B2cAuthorityURL) ? null : B2cAuthorityURL
-var StandaloneAppClientIdvalue = empty(StandaloneAppClientId) ? null: StandaloneAppClientId
-var FhirResourceAppIdvalue = empty(StandaloneAppClientId)? null: FhirResourceAppId
+var B2cAuthorityURLvalue = empty(B2cAuthorityURL) ? '' : B2cAuthorityURL
+var StandaloneAppClientIdvalue = empty(StandaloneAppClientId) ? '': StandaloneAppClientId
+var FhirResourceAppIdvalue = empty(StandaloneAppClientId)? '': FhirResourceAppId
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
 var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
@@ -184,6 +184,13 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     redisCacheId: redis.outputs.redisCacheId
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
+    b2cTenantId: B2CTenantId
+    b2cTenantName: b2ctenantname[0]
+    b2cTenantEndPoint: b2ctenantendpoint
+    fhirResourceAppId: FhirResourceAppId
+    b2cAuthorityUrl: B2cAuthorityURL
+    smartOnFhirWithB2C: smartonfhirwithb2c
+    standaloneAppClientId: StandaloneAppClientId
   }
 }
 
@@ -255,9 +262,9 @@ module contextStaticWebApp './app/contextApp.bicep' = {
   }
 }
 
-var b2ctenantnamesplit = smartonfhirwithb2c ? split(B2cAuthorityURL,'/') : ''  
-var b2ctenantendpoint = smartonfhirwithb2c ? b2ctenantnamesplit[3] : ''
-var b2ctenantname = smartonfhirwithb2c ? split(b2ctenantendpoint,'.') : ''  
+var b2ctenantnamesplit = split(B2cAuthorityURL,'/')  
+var b2ctenantendpoint = smartonfhirwithb2c ? b2ctenantnamesplit[2] : ''
+var b2ctenantname = smartonfhirwithb2c ? split(b2ctenantendpoint,'.') : ['']
 
 // These map to user secrets for local execution of the program
 output Location string = location
@@ -270,13 +277,17 @@ output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
-output B2C_Tenant_Name = b2ctenantname
-output B2C_Authority_URL = B2cAuthorityURL
+output B2C_Tenant_Name string = b2ctenantname[0]
+output B2C_Authority_URL string = B2cAuthorityURL
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
 output SmartonFhir_with_B2C bool = smartonfhirwithb2c
-output B2C_Tenant_Id = B2CTenantId
-output Standalone_App_ClientId = StandaloneAppClientId
-output Fhir_Resource_AppId = FhirResourceAppId
-output B2C_Tenant_EndPoint= b2ctenantendpoint
+output B2C_Tenant_Id string = B2CTenantId
+output Standalone_App_ClientId string = StandaloneAppClientId
+output Fhir_Resource_AppId string = FhirResourceAppId
+output B2C_Tenant_EndPoint string = b2ctenantendpoint
+output REACT_APP_AAD_APP_TENANT_ID string = tenantId
+output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
+output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
+output REACT_APP_B2C_Authority_URL string = B2cAuthorityURL

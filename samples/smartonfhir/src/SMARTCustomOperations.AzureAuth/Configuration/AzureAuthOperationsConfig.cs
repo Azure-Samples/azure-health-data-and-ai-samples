@@ -42,7 +42,7 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? TenantId { get; set; }
 
-        public bool? SmartonFhir_with_B2C { get; set; }
+        public bool SmartonFhir_with_B2C { get; set; }
 
         public string? B2C_Authority_URL { get; set; }
 

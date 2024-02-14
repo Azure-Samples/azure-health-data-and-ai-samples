@@ -26,7 +26,7 @@ resource healthWorkspaceExisting 'Microsoft.HealthcareApis/workspaces@2021-06-01
 
 var newOrExistingWorkspaceName = createWorkspace ? healthWorkspace.name : healthWorkspaceExisting.name
 
-resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-preview' = if (createFhirService) {
+resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if (createFhirService) {
   name: '${newOrExistingWorkspaceName}/${fhirServiceName}'
   location: location
   kind: 'fhir-R4'
@@ -42,13 +42,12 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-previ
       smartProxyEnabled: false
       smartIdentityProviders: [
           {
-              authority: B2cAuthorityURL,
-              applications: 
-              [
+              authority: B2cAuthorityURL
+              applications: [
                   {
-                      clientId: StandaloneAppClientId,
-                      audience: FhirResourceAppId,
-                      allowedDataActions: ["Read"]
+                      clientId: StandaloneAppClientId
+                      audience: FhirResourceAppId
+                      allowedDataActions: ['Read']
                   }
               ]
           }
