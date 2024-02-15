@@ -18,42 +18,13 @@ Changing an Microsoft Graph directory extensions is done through API requests to
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -b2cExtensionsAppId "<B2C_EXTENSION_APP_ID>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
 
     Mac/Linux:
     ```bash
-    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -b2cExtensionsAppId "<B2C_EXTENSION_APP_ID>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
-1. Make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
-    - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
-
-
-### Configure fhirUser mapping to token
-
-In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
-
-The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
-
-1. In the Azure Portal, on the **Attributes & Claims** section, select **Edit**
-2. Click **Add New Claim**
-3. Name the claim **fhirUser**
-4. Select **Directory schema extension** for Source
-5. Click the edit icon and select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
-6. Click **Add** then **Save**.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-<br />
-
-![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
-</details>
-
-
 
 ### Modify Application Manifest
 

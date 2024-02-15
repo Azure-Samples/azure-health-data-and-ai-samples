@@ -1,4 +1,4 @@
-# FHIR Resource App Registration
+# FHIR Resource App Registration In B2C Tenant
 
 This application registration is used to customize the access token sent to the FHIR Service. The SMART on FHIR logic inside Azure Health Data Services relies on the `fhirUser` claim inside the access token to restrict user access to their own compartment (e.g. patient can access their own data but not others). Microsoft is unable to allow custom claims mapping on the first-party Healthcare APIs application as it creates a [security hole for malicious applications](https://learn.microsoft.com/azure/active-directory/develop/reference-app-manifest#acceptmappedclaims-attribute). We must then create a custom application registration to protect the FHIR Service and change the audience in the FHIR Service to validate tokens against the custom application.
 
@@ -22,17 +22,6 @@ This application registration is used to customize the access token sent to the 
     Mac/Linux
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
-    ```
-1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
-    
-    Windows:
-    ```powershell
-    powershell ./scripts/Create-FhirUserDirectoryExtension.ps1
-    ```
-    
-    Mac/Linux
-    ```bash
-    pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
 1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 

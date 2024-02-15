@@ -12,7 +12,7 @@ param FhirResourceAppId string
 
 var loginURL = environment().authentication.loginEndpoint
 var authority = '${loginURL}${tenantId}'
-var resolvedAudience = length(audience) > 0 ? audience :  'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com'
+var resolvedAudience = 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com'
 
 resource healthWorkspace 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview' = if (createWorkspace) {
   name: workspaceName
