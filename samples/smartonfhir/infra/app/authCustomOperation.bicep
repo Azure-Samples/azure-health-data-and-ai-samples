@@ -55,6 +55,9 @@ param customOperationsFuncStorName string
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
 
+@description('Key Vault for storing application registrations secret')
+param keyVaultName string
+
 param redisCacheId string
 param redisCacheHostName string
 param redisApiVersion string
@@ -132,6 +135,7 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_Standalone_App_ClientId: standaloneAppClientId
     AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_B2C_Tenant_EndPoint: b2cTenantEndPoint
+    AZURE_KeyVaultName: keyVaultName
     AZURE_FhirAudience: fhirServiceAudience
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: redisConnectionString

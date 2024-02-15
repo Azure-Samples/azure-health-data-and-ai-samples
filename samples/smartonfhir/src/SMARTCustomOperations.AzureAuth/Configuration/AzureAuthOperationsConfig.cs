@@ -56,6 +56,8 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? B2C_Tenant_EndPoint { get; set; }
 
+        public string? KeyVaultName { get; set; }
+
         public string? FhirAudience
         {
             get => _fhirAudience;
