@@ -26,6 +26,14 @@ Make sure you have the pre-requisites listed below
   - Azure Active Directory test account to represent Patient persona. Make sure you have the object id of the user from Azure Active Directory.
   - Azure Active Directory test account to represent Provider persona. Make sure you have the object id of the user from Azure Active Directory.
 
+- **Azure B2C SetUp:**
+  - Follow below mentioned steps from [this document](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell) to setup Azure B2C.
+    - Create an Azure AD B2C tenant for the FHIR service
+    - Deploy an Azure AD B2C tenant by using an ARM template
+    - Add a test B2C user to the Azure AD B2C tenant
+    - Link a B2C user with the fhirUser custom user attribute
+    - Create a new B2C user flow
+
 ## 2. Prepare and deploy environment
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
