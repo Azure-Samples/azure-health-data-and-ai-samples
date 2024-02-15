@@ -4,11 +4,13 @@
 // -------------------------------------------------------------------------------------------------
 
 using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Models;
+using System.Drawing;
 
 namespace SMARTCustomOperations.AzureAuth.Services
 {
@@ -20,18 +22,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         public GraphConsentService(AzureAuthOperationsConfig configuration, GraphServiceClient graphServiceClient, ILogger<BaseContextAppService> logger) : base(configuration, logger)
         {
-            var scopes = new[] { "https://graph.microsoft.com/.default" };
-            var tenantId = configuration.B2C_Tenant_Id;
-            var clientId = configuration.Standalone_App_ClientId;
-            // Add Standalone Public Client App's Secret
-            var clientSecret = "";
-            var options = new TokenCredentialOptions
-            {
-                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-            };
-            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret, options);
-            _graphServiceClient = new GraphServiceClient(clientSecretCredential, scopes);
-            //_graphServiceClient = graphServiceClient;
+            _graphServiceClient = configuration.SmartonFhir_with_B2C ? B2CGraphServiceClient(configuration) : graphServiceClient;
             _logger = logger;
         }
 
@@ -226,6 +217,31 @@ namespace SMARTCustomOperations.AzureAuth.Services
             _logger.LogInformation($"Deleting OAuth2PermissionGrant {grantId}");
             await _graphServiceClient.Oauth2PermissionGrants[grantId].DeleteAsync();
             return;
+        }
+
+        private GraphServiceClient B2CGraphServiceClient(AzureAuthOperationsConfig config)
+        {
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+            var tenantId = config.B2C_Tenant_Id;
+            var clientId = config.Standalone_App_ClientId;
+            //var clientSecret = secret.Value.ToString();
+            var clientSecret = GetKeyVaultSecret(config.KeyVaultName);
+            var options = new TokenCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+            };
+            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret, options);
+            return new GraphServiceClient(clientSecretCredential, scopes);
+        }
+
+        private string GetKeyVaultSecret(string keyVaultName)
+        {
+            string keyVaultUrl = $"https://{keyVaultName}.vault.azure.net";
+            string secretName = "standalone-app-secret";
+            var credential = new DefaultAzureCredential();
+            var client = new SecretClient(new Uri(keyVaultUrl), credential);
+            KeyVaultSecret secret = client.GetSecret(secretName);
+            return secret.Value.ToString();
         }
     }
 }

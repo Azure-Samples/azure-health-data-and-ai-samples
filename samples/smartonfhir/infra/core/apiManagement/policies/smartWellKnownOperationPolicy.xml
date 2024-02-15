@@ -20,9 +20,21 @@
 	</backend>
 	<outbound>
 		<base />
+        <choose>
+            <when condition="@(bool.Parse("{{SmartOnFhirWithB2C}}"))">
+                <!-- Use B2C Tenant values if smartOnFhirwithB2C is true -->
+                <set-variable name="selectedIssuer" value="https://{{B2CTenantEndPoint}}/{{B2CTenantId}}/v2.0/" />
+                <set-variable name="selectedJwksUri" value="{{B2CAuthorityUrl}}" />
+            </when>
+            <otherwise>
+                <!-- Use Azure Tenant values if smartOnFhirwithB2C is false or not set -->
+                <set-variable name="selectedIssuer" value="https://login.microsoftonline.com/{{TenantId}}/v2.0" />
+                <set-variable name="selectedJwksUri" value="https://login.microsoftonline.com/{{TenantId}}" />
+            </otherwise>
+        </choose>
 		<set-body template="liquid">{
-            "issuer": "https://fhirb2ctenantdemo.b2clogin.com/f4d99379-e8ae-4628-8a55-d9c2e8add7c4/v2.0/",
-            "jwks_uri": "https://fhirb2ctenantdemo.b2clogin.com/fhirb2ctenantdemo.onmicrosoft.com/b2c_1_signupsignin1/discovery/v2.0/keys",
+            "issuer": "{{context.Variables['selectedIssuer']}}",
+            "jwks_uri": "{{context.Variables['selectedJwksUri']}}/discovery/v2.0/keys",
             "authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
             "token_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/token",
             "token_endpoint_auth_methods_supported": [

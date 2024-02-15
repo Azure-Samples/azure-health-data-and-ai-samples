@@ -83,6 +83,7 @@ var appTags = {
 var tenantId = subscription().tenantId
 
 // Add any extra principals that need to be able to access the Key Vault
+var keyVaultWriterPrincipals = [ principalId ]
 var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
 var createResourceGroup = empty(existingResourceGroupName) ? true : false
@@ -191,6 +192,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     b2cAuthorityUrl: B2cAuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
     standaloneAppClientId: StandaloneAppClientId
+    keyVaultName: keyVaultName
   }
 }
 
@@ -230,6 +232,10 @@ module apim './core/apiManagement.bicep'= {
     publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
+    smartOnFhirWithB2C: smartonfhirwithb2c
+    b2cTenantId: B2CTenantId
+    b2cAuthorityUrl: B2cAuthorityURL
+    b2cTenantEndPoint: b2ctenantendpoint
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
@@ -262,6 +268,20 @@ module contextStaticWebApp './app/contextApp.bicep' = {
   }
 }
 
+var keyVaultName = '${name}-kv'
+@description('KeyVault to hold backend service principal maps')
+module keyVault './core/keyVault.bicep' = {
+  name: 'vaultDeploy'
+  scope: rg
+  params: {
+    vaultName: keyVaultName
+    location: location
+    tenantId: tenantId
+    writerObjectIds: keyVaultWriterPrincipals
+    readerObjectIds: [ authCustomOperation.outputs.functionAppPrincipalId ]
+  }
+}
+
 var b2ctenantnamesplit = split(B2cAuthorityURL,'/')  
 var b2ctenantendpoint = smartonfhirwithb2c ? b2ctenantnamesplit[2] : ''
 var b2ctenantname = smartonfhirwithb2c ? split(b2ctenantendpoint,'.') : ['']
@@ -287,6 +307,7 @@ output B2C_Tenant_Id string = B2CTenantId
 output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
 output B2C_Tenant_EndPoint string = b2ctenantendpoint
+output KeyVaultName string = keyVaultName
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c

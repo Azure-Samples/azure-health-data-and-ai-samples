@@ -23,6 +23,18 @@ param publisherEmail string
 @description('Base URL of the FHIR Service')
 param fhirBaseUrl string
 
+@description('Condition to include B2C in SMART on FHIR')
+param smartOnFhirWithB2C bool
+
+@description('Azure B2C Directory tenant ID.')
+param b2cTenantId string
+
+@description('Azure B2C Directory tenant endpoint.')
+param b2cTenantEndPoint string
+
+@description('Azure B2C Directory authority url.')
+param b2cAuthorityUrl string
+
 @description('Base URL of the SMART Auth Custom Operation Function')
 param smartAuthFunctionBaseUrl string
 
@@ -90,6 +102,10 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
   params: {
     apiManagementServiceName: apiManagementServiceName
     tenantId: subscription().tenantId
+    smartOnFhirWithB2C: smartOnFhirWithB2C
+    b2cTenantId: b2cTenantId
+    b2cTenantEndPoint: b2cTenantEndPoint
+    b2cAuthorityUrl: b2cAuthorityUrl
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
     audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }
