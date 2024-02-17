@@ -74,9 +74,16 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             }
 
             // Setup new http client for token request
-            string tokenEndpoint = _configuration.SmartonFhir_with_B2C ? $"https://{_configuration.B2C_Tenant_EndPoint}/" : "https://login.microsoftonline.com/";
-            string result = _configuration.B2C_Authority_URL.Replace($"{tokenEndpoint}", "");
-            string tokenPath = _configuration.SmartonFhir_with_B2C ? $"{result}/oauth2/v2.0/token" : $"{_configuration.TenantId}/oauth2/v2.0/token";
+            //string tokenEndpoint = _configuration.SmartonFhir_with_B2C ? $"https://{_configuration.B2C_Tenant_EndPoint}/" : "https://login.microsoftonline.com/";
+            //string result = _configuration.B2C_Authority_URL.Replace($"{tokenEndpoint}", "");
+            //string tokenPath = _configuration.SmartonFhir_with_B2C ? $"{result}/oauth2/v2.0/token" : $"{_configuration.TenantId}/oauth2/v2.0/token";
+
+            string tokenEndpointUrl = _configuration.Token_Endpoint;
+            int splitIndex = tokenEndpointUrl.IndexOf('/', tokenEndpointUrl.IndexOf("//") + 2);
+
+            // Split the URL into two parts
+            string tokenEndpoint = tokenEndpointUrl.Substring(0, splitIndex + 1);
+            string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);
 
             context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
             context.Request.Content = tokenContext.ToFormUrlEncodedContent();

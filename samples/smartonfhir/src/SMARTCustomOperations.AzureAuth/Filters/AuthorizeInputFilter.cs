@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
+using SMARTCustomOperations.AzureAuth.Services;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -20,11 +21,13 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id = Guid.NewGuid().ToString();
+        private readonly AuthProviderService _authProviderService;
 
-        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration)
+        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AuthProviderService authProviderService, AzureAuthOperationsConfig configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            _authProviderService = authProviderService;
         }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
@@ -76,9 +79,10 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
             // Build the aad authorize url
-            var authUrl = _configuration.SmartonFhir_with_B2C ? _configuration.B2C_Authority_URL : "https://login.microsoftonline.com";
-            var authPath = _configuration.SmartonFhir_with_B2C ? $"oauth2/v2.0/authorize" : $"{_configuration.TenantId}/oauth2/v2.0/authorize";
-            var redirectUrl = $"{authUrl}/{authPath}";
+            //var authUrl = _configuration.SmartonFhir_with_B2C ? _configuration.B2C_Authority_URL : "https://login.microsoftonline.com";
+            //var authPath = _configuration.SmartonFhir_with_B2C ? $"oauth2/v2.0/authorize" : $"{_configuration.TenantId}/oauth2/v2.0/authorize";
+            //var redirectUrl = $"{authUrl}/{authPath}";
+            var redirectUrl = _configuration.Authorization_Endpoint;
             var redirect_querystring = launchContext.ToRedirectQueryString();
             var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
 

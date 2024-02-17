@@ -94,6 +94,12 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? CacheContainer { get; set; }
 
+        public string? Issuer { get; set; }
+
+        public string? Authorization_Endpoint { get; set; }
+
+        public string? Token_Endpoint { get; set; }
+
         public void Validate()
         {
             if (string.IsNullOrEmpty(ApiManagementHostName))
