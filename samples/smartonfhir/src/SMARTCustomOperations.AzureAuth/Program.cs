@@ -64,12 +64,7 @@ namespace SMARTCustomOperations.AzureAuth
                     });
                     services.AddScoped<GraphConsentService>();
 
-                    services.AddHttpClient<AuthProviderService>( "FHIRClient", htttpClient =>
-                    {
-                        htttpClient.BaseAddress = config.SmartonFhir_with_B2C ? new Uri($"{config.B2C_Authority_URL}/v2.0/") : new Uri($"https://login.microsoft.com/{config.TenantId}/v2.0/");
-                    });
-                    services.AddSingleton<AuthProviderService>();
-
+					services.AddHttpClient<IAuthProvider, AuthProvider>();
 
                     // Add cache for token context
                     services.AddMemoryCache();
