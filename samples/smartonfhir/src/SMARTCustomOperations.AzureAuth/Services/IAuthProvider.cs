@@ -9,6 +9,6 @@ namespace SMARTCustomOperations.AzureAuth.Services
 {
 	public interface IAuthProvider
 	{
-		Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(string authorityUrl);
+		Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(bool isB2CTenant);
 	}
 }

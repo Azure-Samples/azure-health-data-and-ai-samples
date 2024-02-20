@@ -80,8 +80,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             try
             {
 				// Retrieve OpenID configuration
-				var authorityUrl = _configuration.B2C_Authority_URL!;
-				var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(authorityUrl);
+				var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.SmartonFhir_with_B2C);
 
 				// Access properties from OpenIdConfiguration
 				string tokenEndpoint = openIdConfig.TokenEndpoint!;
