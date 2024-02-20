@@ -22,15 +22,15 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id;
-		private readonly IAuthProvider _authProvider;
+        private readonly IAuthProvider _authProvider;
 
-		public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
+        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
         {
             _logger = logger;
             _configuration = configuration;
             _id = Guid.NewGuid().ToString();
-			_authProvider = authProvider;
-		}
+            _authProvider = authProvider;
+        }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
 
@@ -79,21 +79,28 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Setup new http client for token request
             try
             {
-				// Retrieve OpenID configuration
-				var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.SmartonFhir_with_B2C);
+                // Retrieve OpenID configuration
+                var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.SmartonFhir_with_B2C);
 
-				// Access properties from OpenIdConfiguration
-				string tokenEndpoint = openIdConfig.TokenEndpoint!;
-				context.UpdateRequestUri(context.Request.Method, tokenEndpoint);
-				context.Request.Content = tokenContext.ToFormUrlEncodedContent();
-			}
+                // Access properties from OpenIdConfiguration
+                string tokenEndpointUrl = openIdConfig.TokenEndpoint!;
+
+                int splitIndex = tokenEndpointUrl.IndexOf('/', tokenEndpointUrl.IndexOf("//") + 2);
+
+                // Split the URL into two parts
+                string tokenEndpoint = tokenEndpointUrl.Substring(0, splitIndex + 1);
+                string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);
+
+                context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
+                context.Request.Content = tokenContext.ToFormUrlEncodedContent();
+            }
             catch (Exception ex)
             {
-				FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
-				OnFilterError?.Invoke(this, error);
-				return context.SetContextErrorBody(error, _configuration.Debug);
-			}            
-            
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
+            }
+
             // Origin header needed for clients using PKCE without a secret (SPA).
             if (requestData.AllKeys.Contains("code_verifier") && !requestData.AllKeys.Contains("client_secret"))
             {
