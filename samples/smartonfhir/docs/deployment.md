@@ -49,7 +49,7 @@ Next you will need to clone this repository and prepare your environment for dep
     azd env set ApiPublisherName "Your Name"
     azd env set ApiPublisherEmail "Your Email"
     ```
-1. [Create Standalone patient app](./ad-apps/inferno-test-app-registration.md).
+1. [Create Inferno Standalone Patient App.Use the instructions here](./ad-apps/inferno-test-app-registration.md).
 1. Login with the Azure Developer CLI. Specify the tenant where you want to deploy SMART on FHIR sample resource if you have more than one. `azd auth login` or `azd auth login --tenant-id <AD-tenant-id>`. Also login with the Azure CLI using `az login`.
 1. Finally, deploy your environment by running azd. This command will provision infrastructure and deploy code.  It will take about an hour.
     - During the execution of this command, you will need to select `subscription name` and `location` from the drop down to specify where all resources will get deployed. 
