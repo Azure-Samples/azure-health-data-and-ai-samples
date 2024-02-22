@@ -311,4 +311,4 @@ output KeyVaultName string = keyVaultName
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
-output REACT_APP_B2C_Authority_URL string = substring(B2cAuthorityURL, 0, length(B2cAuthorityURL) - 5)
+output REACT_APP_B2C_Authority_URL string = endsWith(B2cAuthorityURL, '/v2.0') ? replace(B2cAuthorityURL, '/v2.0', '') : B2cAuthorityURL
