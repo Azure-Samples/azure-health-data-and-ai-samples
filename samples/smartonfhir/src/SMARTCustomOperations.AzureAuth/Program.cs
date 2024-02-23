@@ -64,7 +64,7 @@ namespace SMARTCustomOperations.AzureAuth
                     });
                     services.AddScoped<GraphConsentService>();
 
-					services.AddHttpClient<IAuthProvider, AuthProvider>();
+                    services.AddHttpClient<IAuthProvider, AuthProvider>();
 
                     // Add cache for token context
                     services.AddMemoryCache();
@@ -89,7 +89,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = new Uri(config.B2C_Authority_URL!);                       
+                        options.BaseAddress = new Uri(config.Authority_URL!);
                     });
 
                     services.AddOutputFilter(typeof(TokenOutputFilter));

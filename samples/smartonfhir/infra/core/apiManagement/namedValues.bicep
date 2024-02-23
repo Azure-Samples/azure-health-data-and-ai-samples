@@ -1,9 +1,7 @@
 param apiManagementServiceName string
 param tenantId string
-param smartOnFhirWithB2C bool
-param b2cTenantId string
-param b2cTenantEndPoint string
-param b2cAuthorityUrl string
+param issuer string
+param jwksUri string
 param contextStaticAppBaseUrl string
 param audienceUrl string
 
@@ -15,35 +13,19 @@ resource tenantIdNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12
   }
 }
 
-resource smartOnFhirWithB2CNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
-  name: '${apiManagementServiceName}/smartOnFhirWithB2C'
+resource issuerNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  name: '${apiManagementServiceName}/issuer'
   properties: {
-    displayName: 'SmartOnFhirWithB2C'
-    value: '${smartOnFhirWithB2C}'
+    displayName: 'Issuer'
+    value: issuer
   }
 }
 
-resource b2cTenantIdNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
-  name: '${apiManagementServiceName}/b2cTenantId'
+resource jwksUriNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  name: '${apiManagementServiceName}/jwksUri'
   properties: {
-    displayName: 'B2CTenantId'
-    value: b2cTenantId
-  }
-}
-
-resource b2cTenantEndPointNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
-  name: '${apiManagementServiceName}/b2cTenantEndPoint'
-  properties: {
-    displayName: 'B2CTenantEndPoint'
-    value: b2cTenantEndPoint
-  }
-}
-
-resource b2cAuthorityUrlNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
-  name: '${apiManagementServiceName}/b2cAuthorityUrl'
-  properties: {
-    displayName: 'B2CAuthorityUrl'
-    value: b2cAuthorityUrl
+    displayName: 'JwksUri'
+    value: jwksUri
   }
 }
 

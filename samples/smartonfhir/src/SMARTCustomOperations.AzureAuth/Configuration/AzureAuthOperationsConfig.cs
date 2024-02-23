@@ -44,17 +44,13 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public bool SmartonFhir_with_B2C { get; set; }
 
-        public string? B2C_Authority_URL { get; set; }
-
-        public string? B2C_Tenant_Name { get; set; }
+        public string? Authority_URL { get; set; }
 
         public string? B2C_Tenant_Id { get; set; }
 
         public string? Standalone_App_ClientId { get; set; }
 
         public string? Fhir_Resource_AppId { get; set; }
-
-        public string? B2C_Tenant_EndPoint { get; set; }
 
         public string? KeyVaultName { get; set; }
 
@@ -99,6 +95,9 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         public string? Authorization_Endpoint { get; set; }
 
         public string? Token_Endpoint { get; set; }
+
+        // Only for testing 
+        public bool? IsCachedData { get; set; } = false;
 
         public void Validate()
         {

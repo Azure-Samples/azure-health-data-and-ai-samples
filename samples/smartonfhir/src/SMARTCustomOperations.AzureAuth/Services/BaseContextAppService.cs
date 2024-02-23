@@ -23,8 +23,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
         private readonly string _tenantId;
         private readonly string _fhirResourceAppId;
         private readonly bool _smartonfhir_with_b2c;
-        private readonly string _b2c_authority_url;
-        private readonly string _b2c_tenant_name;
+        private readonly string _authority_url;
         private readonly string _b2c_tenant_id;
 
         public BaseContextAppService(AzureAuthOperationsConfig configuration, ILogger<BaseContextAppService> logger)
@@ -35,8 +34,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             _tenantId = configuration.TenantId!;
             _fhirResourceAppId = configuration.Fhir_Resource_AppId!;
             _smartonfhir_with_b2c = configuration.SmartonFhir_with_B2C;
-            _b2c_authority_url= configuration.B2C_Authority_URL!;
-            _b2c_tenant_name = configuration.B2C_Tenant_Name!;
+            _authority_url = configuration.Authority_URL!;
             _b2c_tenant_id = configuration.B2C_Tenant_Id!;
         }
 
@@ -45,7 +43,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
         {
             ConfigurationManager<OpenIdConnectConfiguration> configManager =
                 new ConfigurationManager<OpenIdConnectConfiguration>(
-                    $"{_b2c_authority_url}/.well-known/openid-configuration",
+                    $"{_authority_url}/.well-known/openid-configuration",
                     new OpenIdConnectConfigurationRetriever());
 
             OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();

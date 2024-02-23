@@ -21,14 +21,14 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id = Guid.NewGuid().ToString();
-		private readonly IAuthProvider _authProvider;
+        private readonly IAuthProvider _authProvider;
 
-		public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
+        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
         {
             _logger = logger;
             _configuration = configuration;
-			_authProvider = authProvider;
-		}
+            _authProvider = authProvider;
+        }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
 
@@ -79,31 +79,31 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-			//Build authorize url
+            //Build authorize url
 
-			try
-			{
-				// Retrieve OpenID configuration
-				var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.B2C_Authority_URL!);
+            try
+            {
+                // Retrieve OpenID configuration
+                var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
 
-				// Access properties from OpenIdConfiguration
-				var redirectUrl = openIdConfig.AuthorizationEndpoint;
-				var redirect_querystring = launchContext.ToRedirectQueryString();
-				var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
+                // Access properties from OpenIdConfiguration
+                var redirectUrl = openIdConfig.AuthorizationEndpoint;
+                var redirect_querystring = launchContext.ToRedirectQueryString();
+                var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
 
-				context.StatusCode = HttpStatusCode.Redirect;
-				context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
+                context.StatusCode = HttpStatusCode.Redirect;
+                context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
 
-				context.Request.RequestUri = new Uri(newRedirectUrl);
+                context.Request.RequestUri = new Uri(newRedirectUrl);
 
-				await Task.CompletedTask;
-			}
-			catch (Exception ex)
-			{
-				FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
-				OnFilterError?.Invoke(this, error);
-				return context.SetContextErrorBody(error, _configuration.Debug);
-			}            
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
+            }
 
             return context;
         }

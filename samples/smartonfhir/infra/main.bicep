@@ -40,7 +40,7 @@ param FhirAudience string
 param existingResourceGroupName string 
 
 @description('Provide authority url to ensure that only authorized users can access sensitive patient information')
-param B2cAuthorityURL string
+param AuthorityURL string
 
 @description('Provide standalone App registration Client Id to access your FHIR Service')
 param StandaloneAppClientId string
@@ -99,7 +99,7 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
   name: existingResourceGroupName
 }
 
-var B2cAuthorityURLvalue = empty(B2cAuthorityURL) ? '' : B2cAuthorityURL
+var AuthorityURLvalue = empty(AuthorityURL) ? '' : AuthorityURL
 var StandaloneAppClientIdvalue = empty(StandaloneAppClientId) ? '': StandaloneAppClientId
 var FhirResourceAppIdvalue = empty(StandaloneAppClientId)? '': FhirResourceAppId
 var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
@@ -120,7 +120,7 @@ module fhir 'core/fhir.bicep'= {
     tenantId: tenantId
     appTags: appTags
     audience: FhirAudience
-    B2cAuthorityURL: B2cAuthorityURLvalue
+    AuthorityURL: AuthorityURLvalue
     StandaloneAppClientId:StandaloneAppClientIdvalue
     FhirResourceAppId:FhirResourceAppIdvalue
   }
@@ -186,10 +186,8 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
     b2cTenantId: B2CTenantId
-    b2cTenantName: b2ctenantname[0]
-    b2cTenantEndPoint: b2ctenantendpoint
     fhirResourceAppId: FhirResourceAppId
-    b2cAuthorityUrl: B2cAuthorityURL
+    authorityUrl: AuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
     standaloneAppClientId: StandaloneAppClientId
     keyVaultName: keyVaultName
@@ -232,10 +230,8 @@ module apim './core/apiManagement.bicep'= {
     publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
-    smartOnFhirWithB2C: smartonfhirwithb2c
-    b2cTenantId: B2CTenantId
-    b2cAuthorityUrl: B2cAuthorityURL
-    b2cTenantEndPoint: b2ctenantendpoint
+    issuer: issuer
+    jwksUri: jwksUri
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
@@ -282,9 +278,12 @@ module keyVault './core/keyVault.bicep' = {
   }
 }
 
-var b2ctenantnamesplit = split(B2cAuthorityURL,'/')  
-var b2ctenantendpoint = smartonfhirwithb2c ? b2ctenantnamesplit[2] : ''
-var b2ctenantname = smartonfhirwithb2c ? split(b2ctenantendpoint,'.') : ['']
+var tenantnamesplit = split(AuthorityURL,'/')  
+var tenantendpoint = smartonfhirwithb2c ? tenantnamesplit[2] : ''
+var b2ctenantname = smartonfhirwithb2c ? split(tenantendpoint,'.') : ['']
+
+var issuer = smartonfhirwithb2c ? 'https://${tenantendpoint}/${B2CTenantId}/v2.0/' : 'https://${tenantendpoint}/${tenantId}/v2.0'
+var jwksUri = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL
 
 // These map to user secrets for local execution of the program
 output Location string = location
@@ -298,7 +297,7 @@ output CacheConnectionString string = authCustomOperation.outputs.cacheConnectio
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
 output B2C_Tenant_Name string = b2ctenantname[0]
-output B2C_Authority_URL string = B2cAuthorityURL
+output Authority_URL string = AuthorityURL
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
@@ -306,9 +305,8 @@ output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id string = B2CTenantId
 output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
-output B2C_Tenant_EndPoint string = b2ctenantendpoint
 output KeyVaultName string = keyVaultName
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
-output REACT_APP_B2C_Authority_URL string = endsWith(B2cAuthorityURL, '/v2.0') ? replace(B2cAuthorityURL, '/v2.0', '') : B2cAuthorityURL
+output REACT_APP_Authority_URL string = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL

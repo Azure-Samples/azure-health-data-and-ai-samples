@@ -58,7 +58,7 @@ Next you will need to clone this repository and prepare your environment for dep
     - Provide parameter values as below 
         ```
          - B2CTenantId: <Tenant_ID_Of_B2C>
-         - B2cAuthorityURL: https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_USER_FLOW_NAME>
+         - AuthorityURL: https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_USER_FLOW_NAME>
          - FhirResourceAppId: <FHIR_RESOURCE_APP_ID_CREATED_IN_STEP_4>
          - StandaloneAppClientId: <STANDALONE_APP_ID_CREATED_IN_STEP_7>
          - smartonfhirwithb2c:  true 
