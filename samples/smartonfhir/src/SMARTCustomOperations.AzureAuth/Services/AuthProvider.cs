@@ -18,20 +18,8 @@ namespace SMARTCustomOperations.AzureAuth.Services
             _memoryCache = memoryCache;
         }
 
-        public async Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(bool isB2CTenant)
-        {
-            string authorityUrl = string.Empty;
-
-            if (!isB2CTenant)
-            {
-                // Set authority endpoints for AAD
-                authorityUrl = $"https://login.microsoftonline.com/{_configuration.TenantId}/v2.0";
-            }
-            else
-            {
-                authorityUrl = _configuration.B2C_Authority_URL!;
-            }
-
+        public async Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(string authorityUrl)
+        {           
             // Try to get the OpenID configuration from cache
             if (_memoryCache.TryGetValue(authorityUrl, out OpenIdConfiguration? cachedConfig))
             {
@@ -40,8 +28,6 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
             try
             {
-                //var client = _httpClient.CreateClient("openidclient");
-
                 var openIdConfigurationUrl = $"{authorityUrl.TrimEnd('/')}/.well-known/openid-configuration";
                 var response = await _httpClient.GetStringAsync(openIdConfigurationUrl);
 

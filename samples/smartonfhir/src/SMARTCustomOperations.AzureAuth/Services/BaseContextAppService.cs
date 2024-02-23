@@ -43,11 +43,9 @@ namespace SMARTCustomOperations.AzureAuth.Services
         // https://github.com/Azure-Samples/ms-identity-dotnet-webapi-azurefunctions/blob/master/Function/BootLoader.cs
         public async Task<ClaimsPrincipal> ValidateContextAccessTokenAsync(string accessToken)
         {
-            var authority = _smartonfhir_with_b2c ? $"{_b2c_authority_url}" : $"https://login.microsoftonline.com/{_tenantId}/v2.0";
-
             ConfigurationManager<OpenIdConnectConfiguration> configManager =
                 new ConfigurationManager<OpenIdConnectConfiguration>(
-                    $"{authority}/.well-known/openid-configuration",
+                    $"{_b2c_authority_url}/.well-known/openid-configuration",
                     new OpenIdConnectConfigurationRetriever());
 
             OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();

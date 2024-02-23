@@ -89,9 +89,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = config.SmartonFhir_with_B2C ? new Uri($"{config.B2C_Authority_URL}") : new Uri("https://login.microsoftonline.com");
-                        //options.BaseAddress = new Uri("https://login.microsoftonline.com");
-                        //options.BaseAddress = new Uri("https://fhirb2ctenantdemo.b2clogin.com/f4d99379-e8ae-4628-8a55-d9c2e8add7c4/v2.0/");
+                        options.BaseAddress = new Uri(config.B2C_Authority_URL!);                       
                     });
 
                     services.AddOutputFilter(typeof(TokenOutputFilter));
