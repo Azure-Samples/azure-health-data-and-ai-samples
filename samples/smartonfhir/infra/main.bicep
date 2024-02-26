@@ -39,6 +39,9 @@ param FhirAudience string
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string 
 
+@description('Provide the exisiting fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
+param fhirId string 
+
 @description('Provide authority url to ensure that only authorized users can access sensitive patient information')
 param AuthorityURL string
 
