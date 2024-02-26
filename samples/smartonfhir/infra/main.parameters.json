@@ -26,6 +26,9 @@
     "existingresourcegroupname": {
       "value": ""
     },
+    "fhirid": {
+      "value": ""
+    },
     "smartonfhirwithb2c": {
       "value": "${SmartonFhirwithB2C}"
     },
