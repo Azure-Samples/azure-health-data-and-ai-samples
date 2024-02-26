@@ -14,8 +14,8 @@
     "B2CTenantId": {
       "value": "${B2CTenantId}"
     },
-    "B2cAuthorityURL": {
-      "value": "${B2cAuthorityURL}"
+    "AuthorityURL": {
+      "value": "${AuthorityURL}"
     },
     "StandaloneAppClientId": {
       "value": "${StandaloneAppClientId}"
@@ -27,7 +27,7 @@
       "value": ""
     },
     "smartonfhirwithb2c": {
-      "value": ""
+      "value": "${SmartonFhirwithB2C}"
     },
     "FhirAudience": {
       "value": "${FhirAudience}"

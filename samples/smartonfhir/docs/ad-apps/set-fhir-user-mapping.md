@@ -18,12 +18,12 @@ Changing an Microsoft Graph directory extensions is done through API requests to
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -b2cExtensionsAppId "<B2C_EXTENSION_APP_ID>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for AAD pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
 
     Mac/Linux:
     ```bash
-    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -b2cExtensionsAppId "<B2C_EXTENSION_APP_ID>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for AAD pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
 
 ### Modify Application Manifest
