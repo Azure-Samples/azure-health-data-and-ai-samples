@@ -11,13 +11,16 @@
     "ContextAppClientId": {
       "value": "${ContextAppClientId}"
     },
+    "B2CTenantId": {
+      "value": "${B2CTenantId}"
+    },
     "B2cAuthorityURL": {
       "value": "${B2cAuthorityURL}"
     },
     "StandaloneAppClientId": {
       "value": "${StandaloneAppClientId}"
     },
-    "FhirResourceAppId ": {
+    "FhirResourceAppId": {
       "value": "${FhirResourceAppId}"
     },
     "existingresourcegroupname": {
