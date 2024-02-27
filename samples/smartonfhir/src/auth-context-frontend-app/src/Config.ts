@@ -13,7 +13,7 @@ import { LogLevel } from "@azure/msal-browser";
 export const msalConfig = {
     auth: {
         clientId: window.ENV_CONFIG.REACT_APP_AAD_APP_CLIENT_ID,
-        authority: window.ENV_CONFIG.REACT_APP_SmartonFhir_with_B2C ? window.ENV_CONFIG.REACT_APP_B2C_Authority_URL : `https://login.microsoftonline.com/${window.ENV_CONFIG.REACT_APP_AAD_APP_TenantId}`,
+        authority: window.ENV_CONFIG.REACT_APP_SmartonFhir_with_B2C ? window.ENV_CONFIG.REACT_APP_Authority_URL : `${window.ENV_CONFIG.REACT_APP_Authority_URL}`,
         redirectUri: window.location.protocol + "//" + window.location.host + window.location.pathname,
         knownAuthorities: window.ENV_CONFIG.REACT_APP_SmartonFhir_with_B2C ? [window.ENV_CONFIG.REACT_APP_B2C_Tenant_Name + ".b2clogin.com"] : [],  //Todo value will be null in smartonfhir so need to Check whether its failing in smartonfhir or not.
         postLogoutRedirectUri: "https://www.microsoft.com",

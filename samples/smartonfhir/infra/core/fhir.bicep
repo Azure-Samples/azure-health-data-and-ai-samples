@@ -6,7 +6,7 @@ param tenantId string
 param location string
 param audience string = ''
 param appTags object = {}
-param B2cAuthorityURL string
+param AuthorityURL string
 param StandaloneAppClientId string
 param FhirResourceAppId string
 
@@ -42,7 +42,7 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if
       smartProxyEnabled: false
       smartIdentityProviders: [
           {
-              authority: B2cAuthorityURL
+              authority: AuthorityURL
               applications: [
                   {
                       clientId: StandaloneAppClientId

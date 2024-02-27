@@ -1,6 +1,6 @@
 param (
     [Parameter(Mandatory=$true)]
-    [string]$b2cExtensionsAppId,
+    [string]$ApplicationId,
 
     [Parameter(Mandatory=$true)]
     [string]$UserObjectId,
@@ -9,7 +9,7 @@ param (
     [string]$FhirUserValue
 )
 
-$appIdFormatted = $b2cExtensionsAppId.Replace("-", "")
+$appIdFormatted = $ApplicationId.Replace("-", "")
 
 $token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
 

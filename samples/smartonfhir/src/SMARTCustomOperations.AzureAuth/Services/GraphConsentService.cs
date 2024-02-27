@@ -18,11 +18,13 @@ namespace SMARTCustomOperations.AzureAuth.Services
     {
         private readonly ILogger<BaseContextAppService> _logger;
         private readonly GraphServiceClient _graphServiceClient;
+        private readonly AzureAuthOperationsConfig _config;
         private readonly Dictionary<string, ServicePrincipal> _resourceServicePrincipals = new();
 
         public GraphConsentService(AzureAuthOperationsConfig configuration, GraphServiceClient graphServiceClient, ILogger<BaseContextAppService> logger) : base(configuration, logger)
         {
             _graphServiceClient = configuration.SmartonFhir_with_B2C ? B2CGraphServiceClient(configuration) : graphServiceClient;
+            _config = configuration;
             _logger = logger;
         }
 
@@ -174,9 +176,10 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         private async Task<List<OAuth2PermissionGrant>> GetUserAppOAuth2PermissionGrants(string requestingAppClientId, string userId)
         {
+            string filter = _config.SmartonFhir_with_B2C ? $"clientId eq '{requestingAppClientId}' and consentType eq 'AllPrincipals'" : $"clientId eq '{requestingAppClientId}' and consentType eq 'Principal' and principalId eq '{userId}'";
             var permissionPage = await _graphServiceClient.Oauth2PermissionGrants.GetAsync((rq) =>
             {
-                rq.QueryParameters.Filter = $"clientId eq '{requestingAppClientId}' and consentType eq 'Principal' and principalId eq '{userId}'";
+                rq.QueryParameters.Filter = filter;
             });
 
             return permissionPage!.Value!.ToList();

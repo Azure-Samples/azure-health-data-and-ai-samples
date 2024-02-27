@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
+using SMARTCustomOperations.AzureAuth.Services;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -20,11 +21,13 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id = Guid.NewGuid().ToString();
+        private readonly IAuthProvider _authProvider;
 
-        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration)
+        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
         {
             _logger = logger;
             _configuration = configuration;
+            _authProvider = authProvider;
         }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
@@ -75,19 +78,32 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
-            // Build the aad authorize url
-            var authUrl = _configuration.SmartonFhir_with_B2C ? _configuration.B2C_Authority_URL : "https://login.microsoftonline.com";
-            var authPath = _configuration.SmartonFhir_with_B2C ? $"oauth2/v2.0/authorize" : $"{_configuration.TenantId}/oauth2/v2.0/authorize";
-            var redirectUrl = $"{authUrl}/{authPath}";
-            var redirect_querystring = launchContext.ToRedirectQueryString();
-            var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
 
-            context.StatusCode = HttpStatusCode.Redirect;
-            context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
+            //Build authorize url
 
-            context.Request.RequestUri = new Uri(newRedirectUrl);
+            try
+            {
+                // Retrieve OpenID configuration
+                var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
 
-            await Task.CompletedTask;
+                // Access properties from OpenIdConfiguration
+                var redirectUrl = openIdConfig.AuthorizationEndpoint;
+                var redirect_querystring = launchContext.ToRedirectQueryString();
+                var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
+
+                context.StatusCode = HttpStatusCode.Redirect;
+                context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
+
+                context.Request.RequestUri = new Uri(newRedirectUrl);
+
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
+            }
 
             return context;
         }

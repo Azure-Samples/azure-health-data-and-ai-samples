@@ -6,7 +6,7 @@ This method of setting up application registrations is applicable to real SMART 
 
 The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret. The public client represents an application that cannot protect a secret. You will need to follow these instructions for the confidential client. 
 
-1. Create a new application in B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://oauth.pstmn.io/v1/callback`).
+1. If you have opted for AAD, create a new application registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -34,9 +34,9 @@ The Patient Standalone Launch application is a standard confidential client appl
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application)
+    - Microsoft Graph (Application) - Applicable only for B2C.
         - Application.Read.All
-        - DelegatedPermissionGrant.Read.All
+        - DelegatedPermissionGrant.Read.All 
 1. Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.

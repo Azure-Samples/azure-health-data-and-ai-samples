@@ -13,12 +13,6 @@ param tenantId string
 @description('Azure B2C Directory tenant ID.')
 param b2cTenantId string
 
-@description('Azure B2C Directory tenant name.')
-param b2cTenantName string
-
-@description('Azure B2C Directory tenant endpoint.')
-param b2cTenantEndPoint string
-
 @description('Azure AD/B2c Application ID for the FHIR resource application.')
 param fhirResourceAppId string
 
@@ -26,7 +20,7 @@ param fhirResourceAppId string
 param standaloneAppClientId string 
 
 @description('Azure B2C Directory authority url.')
-param b2cAuthorityUrl string
+param authorityUrl string
 
 @description('Condition to include B2C in SMART on FHIR')
 param smartOnFhirWithB2C bool
@@ -129,12 +123,10 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
     AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
-    AZURE_B2C_Authority_URL: b2cAuthorityUrl
-    AZURE_B2C_Tenant_Name: b2cTenantName
+    AZURE_Authority_URL: authorityUrl
     AZURE_B2C_Tenant_Id: b2cTenantId
     AZURE_Standalone_App_ClientId: standaloneAppClientId
     AZURE_Fhir_Resource_AppId: fhirResourceAppId
-    AZURE_B2C_Tenant_EndPoint: b2cTenantEndPoint
     AZURE_KeyVaultName: keyVaultName
     AZURE_FhirAudience: fhirServiceAudience
     AZURE_ContextAppClientId: contextAadApplicationId

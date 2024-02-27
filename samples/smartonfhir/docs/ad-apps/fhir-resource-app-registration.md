@@ -4,7 +4,7 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. Create a FHIR Resource Application Registration
+1. If you have opted for AAD, create a FHIR Resource Application Registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant.
     - Go to `App Registrations`
     - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
     - Click `Register` (ignore redirect URI).
@@ -22,6 +22,19 @@ This application registration is used to customize the access token sent to the 
     Mac/Linux
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
+    ```
+1. This step should only be carried out if you choose AAD. For Smart on FHIR implementation with B2C, you can skip the below command.
+   
+   Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
+    
+    Windows:
+    ```powershell
+    powershell ./scripts/Create-FhirUserDirectoryExtension.ps1
+    ```
+    
+    Mac/Linux
+    ```bash
+    pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
 1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
