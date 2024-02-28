@@ -5,7 +5,7 @@ The Auth Context Frontend Application is a sample React single-page application 
 ## Deployment (manual)
 
 1. If you have opted for AAD, create a new application registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant.
-1. Leave the application as a single tenant application. Add a single-page application (SPA) redirict URI of `http://localhost:3000`.
+1. Add a single-page application (SPA) redirict URI of `http://localhost:3000`.
     - Localhost is useful for debugging - we will add the Azure redirect URI after deployment.
 1. After registering the application, Include the following configuration only if you have opted for AAD. If you are implementing Smart on FHIR with B2C, you can omit this step.
     - Navigate to `Token Configuration`. 
@@ -25,11 +25,22 @@ The Auth Context Frontend Application is a sample React single-page application 
 
 <br />
 <details>
-<summary>Click to expand and see screenshots.</summary>
+<summary>Click to expand and see screenshots for AAD Reference.</summary>
 
 ![](./images/2_create_application_registration.png)
 ![](./images/2_create_application_registration_details.png)
 ![](./images/2_add_login_hint_claim.png)
 ![](./images/2_add_fhir_user_impersonation.png)
 ![](./images/2_add_fhir_user_impersonation_screen_2.png)
+</details>
+
+<br />
+<details>
+<summary>Click to expand and see screenshots for B2C Reference.</summary>
+
+![](./images/2_create_application_registration_b2c.png)
+![](./images/2_create_application_registration_details_b2c.png)
+![](./images/2_add_login_hint_claim_b2c.png)
+![](./images/2_add_fhir_user_impersonation_b2c.png)
+![](./images/2_add_fhir_user_impersonation_screen_2_b2c.png)
 </details>

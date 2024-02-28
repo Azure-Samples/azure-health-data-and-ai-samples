@@ -34,7 +34,15 @@ Make sure you have the pre-requisites listed below
     - [Add a test B2C user to the Azure AD B2C tenant](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
     - [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
     - [Create a new B2C user flow](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-a-new-b2c-user-flow)
-    - Add two more Application Claims in B2C User Flow in B2C along with fhirUser claim i.e. `Display Name` (It's Required to show user's name on Fronted Application) and `User's Object ID` (It's required to get token).
+    - Add two more Application Claims in B2C User Flow in B2C along with fhirUser claim, follow these steps:
+        - Navigate to Azure AD B2C.
+        - Select "User flows" from the menu.
+        - Choose the recently created user flow.
+        - Click on "Application claims."
+        - Select `Display Name` (necessary for displaying the user's name on the frontend application) and `User's Object ID` (essential for obtaining the token).    
+        <br /><details><summary>Click to expand and see screenshots.</summary>
+        ![](./ad-apps/images/b2c_applicationclaims.png)
+        </details>
 
 ## 2. Prepare and deploy environment
 
@@ -42,14 +50,17 @@ Next you will need to clone this repository and prepare your environment for dep
 
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir` folder.
 1. Login with the Azure CLI.
-   - If you opt for B2C use `az login --tenant <B2CTenantName> --allow-no-subscriptions`.
+   - If you opt for B2C use `az login --tenant <B2CTenantDomainName> --allow-no-subscriptions`.
    - If you opt for AAD use 
         ```
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
         ```
-1. Run `azd env new` to create a new deployment environment.
-    - *NOTE:* Environment name will be the prefix for all of your resources.
+1. Run `azd env new` to create a new deployment environment, keeping below points in mind.
+    - Environment name must not exceed 18 characters in length.
+    - Deployment fails if Environment name contains UpperCase Letters.
+    - Use numbers and lower-case letters only for Environment name.
+    - Environment name will be the prefix for all of your resources.
 1. [Create the FHIR Resource App Registration. Use the instructions here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
 1. Set your deployment environment configuration.
@@ -114,6 +125,11 @@ Next you will need to clone this repository and prepare your environment for dep
 *NOTE:* This will take around 15 minutes to deploy. You can continue the setup below. 
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
+
+### For AAD user only - Assign Role to the Deployed or Existing Fhir Service
+
+Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
+    - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
 
 ### Assign Permissions for the Auth Custom Operation API
 
