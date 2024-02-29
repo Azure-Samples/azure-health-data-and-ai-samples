@@ -13,10 +13,10 @@ param tenantId string
 @description('Azure B2C Directory tenant ID.')
 param b2cTenantId string
 
-@description('Azure AD/B2c Application ID for the FHIR resource application.')
+@description('Microsoft Entra Id/B2c Application ID for the FHIR resource application.')
 param fhirResourceAppId string
 
-@description('Azure AD/B2c Application ID for the Standalone Client application.')
+@description('Microsoft Entra Id/B2c Application ID for the Standalone Client application.')
 param standaloneAppClientId string 
 
 @description('Azure B2C Directory authority url.')
@@ -34,7 +34,7 @@ param smartFrontendAppUrl string
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
 param fhirServiceAudience string
 
-@description('Azure AD Application ID for the context application.')
+@description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
 @description('App Insights Instrumentation Key for the sample. (Optional)')

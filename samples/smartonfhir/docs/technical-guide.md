@@ -17,7 +17,7 @@ To successfully use this SMART on FHIR sample, your Azure environment must be se
 - Storage Account
   - Needed for Azure Function, assorted static assets, and configuration tables.
 - Azure Static Web Apps
-  - Needed for the Patient Standalone authorize flow to properly handle scopes. Azure AD does not support session based scoping. 
+  - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra Id does not support session based scoping. 
 
 ![](./images/smart-sample-overview-archdiagram.png)
 
