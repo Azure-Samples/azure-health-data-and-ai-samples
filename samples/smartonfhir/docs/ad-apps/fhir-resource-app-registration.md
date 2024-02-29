@@ -61,4 +61,3 @@ This application registration is used to customize the access token sent to the 
 ![](./images/fhir_resource_app_set_uri2_b2c.png)
 ![](./images/fhir_resource_app_manifest_b2c.png)
 </details>
-

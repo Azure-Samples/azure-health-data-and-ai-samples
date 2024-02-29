@@ -18,24 +18,21 @@ Changing an Microsoft Graph directory extensions is done through API requests to
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for AAD pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
 
     Mac/Linux:
     ```bash
-    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
+    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for AAD pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
-1. Make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
-    - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
 
-
-### Configure fhirUser mapping to token
+### For AAD user only - Configure fhirUser mapping to token
 
 In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
-1. In the Azure Portal, on the **Attributes * Claims** section, select **Edit**
+1. In the Azure Portal, on the **Attributes & Claims** section, select **Edit**
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source
@@ -51,23 +48,4 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
-</details>
-
-
-
-### Modify Application Manifest
-
-For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
-
-1. In the Azure Portal in Azure Active Directory, select **App registrations**
-2. Select your App registration from the list
-3. Select **Manifest** from the left-hand menu
-4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-<br />
-
-![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
 </details>

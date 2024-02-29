@@ -10,6 +10,21 @@ param appTags object
 @description('Azure Active Directory tenant ID for the FHIR Service.')
 param tenantId string
 
+@description('Azure B2C Directory tenant ID.')
+param b2cTenantId string
+
+@description('Azure AD/B2c Application ID for the FHIR resource application.')
+param fhirResourceAppId string
+
+@description('Azure AD/B2c Application ID for the Standalone Client application.')
+param standaloneAppClientId string 
+
+@description('Azure B2C Directory authority url.')
+param authorityUrl string
+
+@description('Condition to include B2C in SMART on FHIR')
+param smartOnFhirWithB2C bool
+
 @description('Name of the Azure API Management instance.')
 param apimName string
 
@@ -19,8 +34,8 @@ param smartFrontendAppUrl string
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
 param fhirServiceAudience string
 
-@description('Name of the Key Vault used to store the backend service credentials.')
-param backendServiceVaultName string
+@description('Key Vault for storing application registrations secret')
+param keyVaultName string
 
 @description('Azure AD Application ID for the context application.')
 param contextAadApplicationId string
@@ -107,8 +122,13 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
+    AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
+    AZURE_Authority_URL: authorityUrl
+    AZURE_B2C_Tenant_Id: b2cTenantId
+    AZURE_Standalone_App_ClientId: standaloneAppClientId
+    AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_FhirAudience: fhirServiceAudience
-    AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
+    AZURE_KeyVaultName: keyVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: redisConnectionString
     AZURE_Debug: 'true'
