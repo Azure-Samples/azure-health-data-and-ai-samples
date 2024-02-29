@@ -1,10 +1,10 @@
-# FHIR Resource App Registration In B2C Tenant
+# FHIR Resource App Registration
 
 This application registration is used to customize the access token sent to the FHIR Service. The SMART on FHIR logic inside Azure Health Data Services relies on the `fhirUser` claim inside the access token to restrict user access to their own compartment (e.g. patient can access their own data but not others). Microsoft is unable to allow custom claims mapping on the first-party Healthcare APIs application as it creates a [security hole for malicious applications](https://learn.microsoft.com/azure/active-directory/develop/reference-app-manifest#acceptmappedclaims-attribute). We must then create a custom application registration to protect the FHIR Service and change the audience in the FHIR Service to validate tokens against the custom application.
 
 ## Deployment (manual)
 
-1. If you have opted for AAD, create a FHIR Resource Application Registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant.
+1. If you have opted for Microsoft Entra Id, create a FHIR Resource Application Registration in the Microsoft Entra Id tenant. Otherwise, for B2C, create it in the B2C tenant.
     - Go to `App Registrations`
     - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
     - Click `Register` (ignore redirect URI).
@@ -23,7 +23,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step should only be carried out if you choose AAD. For Smart on FHIR implementation with B2C, you can skip the below command.
+1. This step should only be carried out if you choose Microsoft Entra Id. For Smart on FHIR implementation with B2C, you can skip the below command.
    
    Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
@@ -40,7 +40,7 @@ This application registration is used to customize the access token sent to the 
 
 <br />
 <details>
-<summary>Click to expand and see screenshots.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra Id Reference.</summary>
 
 ![](./images/fhir_resource_app_primary_domain.png)
 ![](./images/fhir_resource_app_new_app.png)
@@ -50,3 +50,14 @@ This application registration is used to customize the access token sent to the 
 ![](./images/fhir_resource_app_manifest.png)
 </details>
 
+<br />
+<details>
+<summary>Click to expand and see screenshots for B2C Reference.</summary>
+
+![](./images/fhir_resource_app_primary_domain_b2c.png)
+![](./images/fhir_resource_app_new_app_b2c.png)
+![](./images/fhir_resource_app_new_app2_b2c.png)
+![](./images/fhir_resource_app_set_uri_b2c.png)
+![](./images/fhir_resource_app_set_uri2_b2c.png)
+![](./images/fhir_resource_app_manifest_b2c.png)
+</details>
