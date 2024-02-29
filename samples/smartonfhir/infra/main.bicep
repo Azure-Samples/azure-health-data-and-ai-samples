@@ -262,7 +262,7 @@ module contextStaticWebApp './app/contextApp.bicep' = {
 
 var keyVaultName = '${name}-kv'
 @description('KeyVault to hold backend service principal maps')
-module keyVault './core/keyVault.bicep' = {
+module keyVault './core/keyVault.bicep' = if (smartonfhirwithb2c){
   name: 'vaultDeploy'
   scope: rg
   params: {
