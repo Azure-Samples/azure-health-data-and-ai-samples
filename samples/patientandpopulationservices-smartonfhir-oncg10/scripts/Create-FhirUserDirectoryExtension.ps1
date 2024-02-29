@@ -1,5 +1,5 @@
 <#
-    Creates a fhirUser directory extension in Azure AD. This is required for the FHIR Server to work with Azure AD authentication.
+    Creates a fhirUser directory extension in Microsoft Entra Id. This is required for the FHIR Server to work with Microsoft Entra Id authentication.
 #>
 param (
     [Parameter(Mandatory=$false)]

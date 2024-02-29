@@ -4,7 +4,7 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. If you have opted for AAD, create a FHIR Resource Application Registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant.
+1. If you have opted for Microsoft Entra Id, create a FHIR Resource Application Registration in the Microsoft Entra Id tenant. Otherwise, for B2C, create it in the B2C tenant.
     - Go to `App Registrations`
     - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
     - Click `Register` (ignore redirect URI).
@@ -23,7 +23,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step should only be carried out if you choose AAD. For Smart on FHIR implementation with B2C, you can skip the below command.
+1. This step should only be carried out if you choose Microsoft Entra Id. For Smart on FHIR implementation with B2C, you can skip the below command.
    
    Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
@@ -40,7 +40,7 @@ This application registration is used to customize the access token sent to the 
 
 <br />
 <details>
-<summary>Click to expand and see screenshots for AAD Reference.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra Id Reference.</summary>
 
 ![](./images/fhir_resource_app_primary_domain.png)
 ![](./images/fhir_resource_app_new_app.png)

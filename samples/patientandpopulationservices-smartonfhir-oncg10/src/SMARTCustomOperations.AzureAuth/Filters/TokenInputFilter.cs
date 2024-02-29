@@ -79,7 +79,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Setup new http client for token request
             try
             {
-                // Azure AD does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
+                //Microsoft Entra Id does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
                 if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
                 {
                     var castTokenContext = (BackendServiceTokenContext)tokenContext;
