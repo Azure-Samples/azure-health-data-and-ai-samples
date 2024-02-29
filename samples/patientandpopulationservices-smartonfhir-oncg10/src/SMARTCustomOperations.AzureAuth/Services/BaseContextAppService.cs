@@ -21,6 +21,10 @@ namespace SMARTCustomOperations.AzureAuth.Services
         private readonly string _contextAppClientId;
         private readonly string _fhirAudience;
         private readonly string _tenantId;
+        private readonly string _fhirResourceAppId;
+        private readonly bool _smartonfhir_with_b2c;
+        private readonly string _authority_url;
+        private readonly string _b2c_tenant_id;
 
         public BaseContextAppService(AzureAuthOperationsConfig configuration, ILogger<BaseContextAppService> logger)
         {
@@ -28,19 +32,30 @@ namespace SMARTCustomOperations.AzureAuth.Services
             _contextAppClientId = configuration.ContextAppClientId!;
             _fhirAudience = configuration.FhirAudience!;
             _tenantId = configuration.TenantId!;
+            _fhirResourceAppId = configuration.Fhir_Resource_AppId!;
+            _smartonfhir_with_b2c = configuration.SmartonFhir_with_B2C;
+            _authority_url = configuration.Authority_URL!;
+            _b2c_tenant_id = configuration.B2C_Tenant_Id!;
         }
 
         // https://github.com/Azure-Samples/ms-identity-dotnet-webapi-azurefunctions/blob/master/Function/BootLoader.cs
         public async Task<ClaimsPrincipal> ValidateContextAccessTokenAsync(string accessToken)
         {
-            var authority = $"https://login.microsoftonline.com/{_tenantId}/v2.0";
+            ConfigurationManager<OpenIdConnectConfiguration> configManager =
+                new ConfigurationManager<OpenIdConnectConfiguration>(
+                    $"{_authority_url}/.well-known/openid-configuration",
+                    new OpenIdConnectConfigurationRetriever());
+
+            OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();
+
+            var tenantId = _smartonfhir_with_b2c ? _b2c_tenant_id : _tenantId;
+
             var validIssuers = new List<string>()
             {
-                $"https://login.microsoftonline.com/{_tenantId}/",
-                $"https://login.microsoftonline.com/{_tenantId}/v2.0",
-                $"https://login.windows.net/{_tenantId}/",
-                $"https://login.microsoft.com/{_tenantId}/",
-                $"https://sts.windows.net/{_tenantId}/",
+                $"{config.Issuer}",
+                $"https://login.windows.net/{tenantId}/",
+                $"https://login.microsoft.com/{tenantId}/",
+                $"https://sts.windows.net/{tenantId}/",
             };
 
             // Debugging purposes only, set this to false for production
@@ -48,13 +63,6 @@ namespace SMARTCustomOperations.AzureAuth.Services
             {
                 Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
             }
-
-            ConfigurationManager<OpenIdConnectConfiguration> configManager =
-                new ConfigurationManager<OpenIdConnectConfiguration>(
-                    $"{authority}/.well-known/openid-configuration",
-                    new OpenIdConnectConfigurationRetriever());
-
-            OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();
 
             ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();
 
@@ -66,7 +74,9 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 ValidateIssuerSigningKey = true,
 
                 // App Id URI and AppId of this service application are both valid audiences.
-                ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}", _fhirAudience },
+
+                //ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}", _fhirAudience },
+                ValidAudiences = new[] { _contextAppClientId, _fhirResourceAppId, $"api://{_contextAppClientId}", $"api://{_fhirResourceAppId}", _fhirAudience },
 
                 // Support Azure AD V1 and V2 endpoints.
                 ValidIssuers = validIssuers,
