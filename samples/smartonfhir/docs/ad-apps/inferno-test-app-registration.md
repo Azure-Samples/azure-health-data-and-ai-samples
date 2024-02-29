@@ -6,7 +6,7 @@ This method of setting up application registrations is applicable to real SMART 
 
 The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret. The public client represents an application that cannot protect a secret. You will need to follow these instructions for the confidential client. 
 
-1. If you have opted for AAD, create a new application registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
+1. If you have opted for Microsoft Entra Id, create a new application registration in the Microsoft Entra Id tenant. Otherwise, for B2C, create it in the B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -40,7 +40,7 @@ The Patient Standalone Launch application is a standard confidential client appl
 1. Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
 
-<br /><details><summary>Click to expand and see screenshots for AAD Reference.</summary>
+<br /><details><summary>Click to expand and see screenshots for Microsoft Entra Id Reference.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_client_confidental_app_scopes.png)
 </details>

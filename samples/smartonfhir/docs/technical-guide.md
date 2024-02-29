@@ -60,7 +60,7 @@ Azure Health Data Services needs some modification to the capability statement a
     participant EHR
     participant APIM
     participant EHR Launch Handler
-    participant AAD
+    participant Microsoft Entra Id
 
     EHR -->> APIM: Send session state to cache
     EHR ->> EHR: User Launches App
@@ -71,14 +71,14 @@ Azure Health Data Services needs some modification to the capability statement a
     User/App ->> APIM:  Authorization Request
     APIM -->> APIM: Cache launch parameter
     APIM ->> EHR Launch Handler: Forward /authorize request    
-    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ AAD Transformed /authorize URL
-    User/App ->> AAD: /authorize request
-    note over EHR Launch Handler, AAD: Transformed to AAD Compatible Request
-    AAD -->> User/App: Authorization response (code)
+    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ Microsoft Entra Id Transformed /authorize URL
+    User/App ->> Microsoft Entra Id: /authorize request
+    note over EHR Launch Handler, Microsoft Entra Id: Transformed to Microsoft Entra Id Compatible Request
+    Microsoft Entra Id -->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> EHR Launch Handler: Forward /token request
-    EHR Launch Handler ->> AAD: POST /token on behalf of user
-    AAD ->> EHR Launch Handler: Access token response
+    EHR Launch Handler ->> Microsoft Entra Id: POST /token on behalf of user
+    Microsoft Entra Id ->> EHR Launch Handler: Access token response
     note over EHR Launch Handler: Handler will augment the /token response with proper scopes, context
     note over EHR Launch Handler: Handler will NOT create a new token
     EHR Launch Handler ->> APIM: Return token response
@@ -96,14 +96,14 @@ SMART standalone launch refers to when an app launches from outside an EHR sessi
 
 *I think (need to verify)* ONC (g)(10) does not require a patient picker, so it is out of scope for this sample. If we need it, it's not too bad.
 
-Azure Active Directory does not have a mechanism for selecting a subset of scopes when approving/denying an application. Due to this, we have to serve a custom scope selection interface for standalone launch scenarios.
+Microsoft Entra Id does not have a mechanism for selecting a subset of scopes when approving/denying an application. Due to this, we have to serve a custom scope selection interface for standalone launch scenarios.
 
 ```mermaid
   sequenceDiagram
     participant User/App
     participant APIM
     participant SMART Auth Custom Operations
-    participant AAD
+    participant Microsoft Entra Id
     participant FHIR
     participant Graph
     User/App ->> APIM: Discovery Request
@@ -122,13 +122,13 @@ Azure Active Directory does not have a mechanism for selecting a subset of scope
     end
 
     APIM ->> SMART Auth Custom Operations: Forward /authorize request    
-    SMART Auth Custom Operations ->> AAD: /authorize
-    note over SMART Auth Custom Operations, AAD: Limited scopes, transformed
-    AAD ->> User/App: Authorization response (code)
+    SMART Auth Custom Operations ->> Microsoft Entra Id: /authorize
+    note over SMART Auth Custom Operations, Microsoft Entra Id: Limited scopes, transformed
+    Microsoft Entra Id ->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> SMART Auth Custom Operations: Forward /token request
-    SMART Auth Custom Operations ->> AAD: POST /token on behalf of user
-    AAD ->> SMART Auth Custom Operations: Access token response
+    SMART Auth Custom Operations ->> Microsoft Entra Id: POST /token on behalf of user
+    Microsoft Entra Id ->> SMART Auth Custom Operations: Access token response
     note over SMART Auth Custom Operations: Handler will augment the /token response with proper scopes, context
     note over SMART Auth Custom Operations: Handler will NOT create a new token
     SMART Auth Custom Operations ->> APIM: Return token response

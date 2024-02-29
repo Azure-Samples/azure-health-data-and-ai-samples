@@ -10,9 +10,9 @@ For the Authorize Input Application, the browser console is the best place to st
 
 ## Common Issues
 
-### AAD Issues
+### Microsoft Entra Id Issues
 
-This sample makes some assumptions about AAD configuration. You may run into errors if your Azure Active Directory is not setup with the following:
+This sample makes some assumptions about Microsoft Entra Id configuration. You may run into errors if your Microsoft Entra Id is not setup with the following:
 
 - Allowing users to consent to scopes (this is needed for them to choose and store scopes).
 - Allowing developers to register applications.
