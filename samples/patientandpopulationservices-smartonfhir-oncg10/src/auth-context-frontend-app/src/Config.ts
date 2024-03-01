@@ -22,12 +22,12 @@ export const msalConfig = {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
         storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
     },
-    system: {
-        loggerOptions: {
-            loggerCallback: (level: LogLevel, message: string, containsPii: boolean) => {
-                if (containsPii) {
-                    return;
-                }
+    system: {	
+        loggerOptions: {	
+            loggerCallback: (level: LogLevel, message : string, containsPii : boolean) => {	
+                if (containsPii) {		
+                    return;		
+                }		
                 switch (level) {
                     case LogLevel.Error:
                         console.error(message);
@@ -43,12 +43,12 @@ export const msalConfig = {
                         return;
                     default:
                         return;
-                }
-            }
-        }
+                }	
+            }	
+        }	
     }
 };
 
-export const scopes: string[] = [`${window.ENV_CONFIG.REACT_APP_FHIR_RESOURCE_AUDIENCE}/user_impersonation`];
+export const scopes: string[] = window.ENV_CONFIG.REACT_APP_SmartonFhir_with_B2C ? [`${window.ENV_CONFIG.REACT_APP_FHIR_RESOURCE_AUDIENCE}/user_impersonation`] : [`${window.ENV_CONFIG.REACT_APP_FHIR_RESOURCE_AUDIENCE}//user_impersonation`];
 export const apiEndpoint: string = (window.location.host.includes("localhost") ? "http://localhost:7081/api" : `${window.ENV_CONFIG.REACT_APP_API_BASE_URL}/auth`) || "http://localhost:7071/api";
 //export const apiEndpoint: string = window.ENV_CONFIG.REACT_APP_API_BASE_URL ?? "http://localhost:7071/api";

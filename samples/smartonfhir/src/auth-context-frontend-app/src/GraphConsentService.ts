@@ -55,7 +55,7 @@ export async function getAppConsentInfo(clientId: string, scopes: string): Promi
     }));
   }
   catch (error: any) {
-    throw Error(`Fatal error while accessing Backend Application Consent API. Does the auth function app have access to Microsoft Entra Id? Check your application settings: ${error}`);
+    throw Error(`Fatal error while accessing Backend Application Consent API. Does the auth function app have access to Microsoft Entra ID? Check your application settings: ${error}`);
   }
 
   if (!response.ok) {

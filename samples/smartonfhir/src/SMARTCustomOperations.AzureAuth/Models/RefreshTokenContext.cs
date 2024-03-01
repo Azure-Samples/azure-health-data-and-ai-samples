@@ -15,7 +15,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
         /// Creates a RefreshTokenContext from the NameValueCollection from the HTTP request body.
         /// </summary>
         /// <param name="form">HTTP Form Encoded Body from Token Request.</param>
-        /// <param name="audience">Microsoft Entra Id audience for the FHIR Server.</param>
+        /// <param name="audience">Microsoft Entra ID audience for the FHIR Server.</param>
         public RefreshTokenContext(NameValueCollection form, string audience)
         {
             if (form["grant_type"] != GrantType.refresh_token.ToString())

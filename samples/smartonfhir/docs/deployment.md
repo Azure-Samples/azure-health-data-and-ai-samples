@@ -1,6 +1,6 @@
 # Sample Deployment: SMART on FHIR
 
-This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra Id configuration.
+This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID configuration.
 
 *Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
@@ -20,14 +20,14 @@ Make sure you have the pre-requisites listed below
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Microsoft Entra Id and Microsoft Graph to create Application Registrations, assign Microsoft Entra Id roles, and add custom data to user accounts.
+  - Elevated access in Microsoft Entra ID and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
 
 - **Test Accounts:**
-  - Microsoft Entra Id test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra Id.
-  - Microsoft Entra Id test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra Id.
+  - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
+  - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
 
 - **Azure B2C SetUp:**
-  - This setup is exclusively necessary for Smart on FHIR implementation with B2C. If you opt for Microsoft Entra Id, you can bypass this configuration.
+  - This setup is exclusively necessary for Smart on FHIR implementation with B2C. If you opt for Microsoft Entra ID, you can bypass this configuration.
   - Follow below mentioned steps:
     - [Create an Azure AD B2C tenant for the FHIR service](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-an-azure-ad-b2c-tenant-for-the-fhir-service)
     - [Deploy an Azure AD B2C tenant by using an ARM template](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
@@ -51,7 +51,7 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir` folder.
 1. Login with the Azure CLI.
    - If you opt for B2C use `az login --tenant <B2CTenantDomainName> --allow-no-subscriptions`.
-   - If you opt for Microsoft Entra Id use 
+   - If you opt for Microsoft Entra ID use 
         ```
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
@@ -78,7 +78,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     If you have opted for B2C, then set the deployment environment configuration.
     ```
-    azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra Id Tenant Id>/v2.0" 
+    azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
     ```
 1. Login with the Azure Developer CLI and start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
     ```
@@ -126,7 +126,7 @@ Next you will need to clone this repository and prepare your environment for dep
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
-### For Microsoft Entra Id user only - Assign Role to the Deployed or Existing Fhir Service
+### For Microsoft Entra ID user only - Assign Role to the Deployed or Existing Fhir Service
 
 Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
     - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
@@ -135,11 +135,11 @@ Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Servi
 
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. 
 
-If you have opted for Microsoft Entra Id - This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
+If you have opted for Microsoft Entra ID - This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
 
 1. Open the Azure Function for the SMART Auth Custom Operations. It will be suffixed by `aad-func`. Copy the Managed Identity for the next steps.
-1. Open Microsoft Entra Id and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
-1. Add the Azure Function Managed Identity to this Microsoft Entra Id role.
+1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
+1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
     <br />
     <details>
     <summary>Click to expand and see screenshots.</summary>
