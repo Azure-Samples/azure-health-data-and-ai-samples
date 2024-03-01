@@ -78,7 +78,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 //ValidAudiences = new[] { _contextAppClientId, $"api://{_contextAppClientId}", _fhirAudience },
                 ValidAudiences = new[] { _contextAppClientId, _fhirResourceAppId, $"api://{_contextAppClientId}", $"api://{_fhirResourceAppId}", _fhirAudience },
 
-                // Support Azure AD V1 and V2 endpoints.
+                // Support Microsoft Entra ID V1 and V2 endpoints.
                 ValidIssuers = validIssuers,
                 IssuerSigningKeys = config.SigningKeys,
             };

@@ -7,16 +7,16 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Microsoft Entra Id tenant ID for the FHIR Service.')
+@description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
 
 @description('Azure B2C Directory tenant ID.')
 param b2cTenantId string
 
-@description('Microsoft Entra Id/B2c Application ID for the FHIR resource application.')
+@description('Microsoft Entra ID/B2c Application ID for the FHIR resource application.')
 param fhirResourceAppId string
 
-@description('Microsoft Entra Id/B2c Application ID for the Standalone Client application.')
+@description('Microsoft Entra ID/B2c Application ID for the Standalone Client application.')
 param standaloneAppClientId string 
 
 @description('Azure B2C Directory authority url.')
