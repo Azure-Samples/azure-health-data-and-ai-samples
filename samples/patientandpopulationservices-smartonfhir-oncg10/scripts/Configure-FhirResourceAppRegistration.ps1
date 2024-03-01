@@ -1,5 +1,5 @@
 <#
-    Creates a fhirUser directory extension in Microsoft Entra ID. This is required for the FHIR Server to work with Microsoft Entra ID authentication.
+    Configure FHIR resource application registration manifest
 #>
 param (
     [Parameter(Mandatory=$false)]
@@ -10,7 +10,6 @@ $SCRIPT_PATH = Split-Path -parent $MyInvocation.MyCommand.Definition
 $SAMPLE_ROOT = (Get-Item $SCRIPT_PATH).Parent.FullName
 $ACCOUNT = ConvertFrom-Json "$(az account show -o json)"
 Write-Host "Using Azure Account logged in with the Azure CLI: $($ACCOUNT.name) - $($ACCOUNT.id)"
-
 
 if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
 
@@ -35,17 +34,17 @@ if (-not $FhirResourceAppId) {
     exit
 }
 
-$graphEndpoint = "https://graph.microsoft.com/v1.0"
-$appObjectId = (az ad app show --id $FhirResourceAppId --query "id" --output tsv)
-$extensionUrl = "$graphEndpoint/applications/$appObjectId/extensionProperties"
-$token = $(az account get-access-token --resource-type ms-graph --query accessToken --output tsv)
+$AppRoles = "$SCRIPT_PATH/manifest-json-contents/app-roles.json"
+$OAuth2Permissions = "$SCRIPT_PATH/manifest-json-contents/oauth2-permissions.json"
+ 
+    $APP_NAME=$(az ad app show --id $FhirResourceAppId --query 'displayName' --output tsv)
 
-$body = "{
-    `"name`": `"fhirUser`",
-    `"dataType`": `"String`",
-    `"targetObjects`": [`"User`"]
-}"
+$DOMAIN_INFO=$(az rest --method get --url 'https://graph.microsoft.com/v1.0/domains?$select=id')
+$DOMAIN_JSON = $DOMAIN_INFO | ConvertFrom-Json
+$PRIMARY_DOMAIN = $DOMAIN_JSON.value[0].id
 
-Invoke-RestMethod -Uri $extensionUrl -Headers @{Authorization = "Bearer $token"} -Method Post -Body $body -ContentType application/json
+azd env set FhirAudience "https://$APP_NAME.$PRIMARY_DOMAIN"
+
+az ad app update --id $FhirResourceAppId --identifier-uris "https://$APP_NAME.$PRIMARY_DOMAIN" --set appRoles=@$AppRoles api=@$OAuth2Permissions
 
 Write-Host "Done."
