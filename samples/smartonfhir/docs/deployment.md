@@ -76,7 +76,7 @@ Next you will need to clone this repository and prepare your environment for dep
     azd env set StandaloneAppClientId <STANDALONE_APP_ID_CREATED_IN_STEP_7>
     azd env set SmartonFhirwithB2C true
     ```
-    If you have opted for B2C, then set the deployment environment configuration.
+    If you have opted for Microsoft Entra ID, then set the deployment environment configuration.
     ```
     azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
     ```
@@ -128,7 +128,7 @@ Next you will need to clone this repository and prepare your environment for dep
 
 ### For Microsoft Entra ID user only - Assign Role to the Deployed or Existing Fhir Service
 
-Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
+Ensure your test user has the role `FHIR SMART User` assigned to your Existing or Deployed Fhir Service as part of this sample.
     - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
 
 ### Assign Permissions for the Auth Custom Operation API
@@ -136,14 +136,10 @@ Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Servi
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. 
 
 If you have opted for Microsoft Entra ID - This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
-
 1. Open the Azure Function for the SMART Auth Custom Operations. It will be suffixed by `aad-func`. Copy the Managed Identity for the next steps.
 1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
 1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
-    <br />
-    <details>
-    <summary>Click to expand and see screenshots.</summary>
-
+    <br /><details><summary>Click to expand and see screenshots.</summary>
     ![](./images/deployment/4_copy_function_managed_identity.png)
     ![](./images/deployment/4_open_application_administrator.png)
     ![](./images/deployment/4_assign_function_application_administrator.png)
@@ -151,13 +147,10 @@ If you have opted for Microsoft Entra ID - This requires granting the Azure Mana
     <br />
 
 If you have opted for B2C - This requires accessing the applications registered in B2C tenant Azure Function for the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
-
 1. In the resource group that matches your environment, open the KeyVault with the suffix -kv.
 1. Add a new secret that corresponds to the Standalone Application you just generated.
     - Name: `standalone-app-secret`
     - Secret: The secret you generated for the Standalone application
-
-<br />
 
 ### Set the Auth User Input Redirect URL
 
@@ -165,11 +158,7 @@ If you have opted for B2C - This requires accessing the applications registered 
 1. Copy the Gateway URL for the API Management instance.
 1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/deployment/4_save_redirect_uri.png)
 </details>
 <br />
