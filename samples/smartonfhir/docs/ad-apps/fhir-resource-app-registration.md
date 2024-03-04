@@ -23,7 +23,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step should only be carried out if you choose Microsoft Entra ID. For Smart on FHIR implementation with B2C, you can skip the below command.
+1. This step should only be carried out if you choose Microsoft Entra ID. However, in the context of Smart on FHIR implementation with B2C, you've already [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute) during Azure B2C setup.
    
    Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     

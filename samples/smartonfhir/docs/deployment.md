@@ -80,10 +80,13 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
     ```
-1. Login with the Azure Developer CLI and start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
+1. If you have opted for B2C, then Login with the Azure Developer CLI.
     ```
     az login --tenant <tenant-id>
     azd auth login --tenant-id <tenant-id>
+    ```
+1. Start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
+    ```
     azd up
     ```
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
@@ -146,7 +149,7 @@ If you have opted for Microsoft Entra ID - This requires granting the Azure Mana
     </details>
     <br />
 
-If you have opted for B2C - This requires accessing the applications registered in B2C tenant Azure Function for the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
+If you have opted for B2C - This is required to access the applications registered in the B2C tenant from Azure Function to perform the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
 1. In the resource group that matches your environment, open the KeyVault with the suffix -kv.
 1. Add a new secret that corresponds to the Standalone Application you just generated.
     - Name: `standalone-app-secret`
