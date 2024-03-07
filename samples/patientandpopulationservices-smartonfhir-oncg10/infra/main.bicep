@@ -64,6 +64,7 @@ param logAnalyticsName string = ''
 
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
 var fhirResourceIdSplit = split(fhirId,'/')
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
@@ -176,7 +177,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     apimName: apimName
     smartFrontendAppUrl: contextStaticWebApp.outputs.uri
     fhirServiceAudience: FhirAudience
-    keyVaultName: keyVaultName
+    backendServiceVaultName: backendServiceVaultName
     contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
@@ -185,7 +186,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     redisCacheId: redis.outputs.redisCacheId
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
-    b2cTenantId: B2CTenantId 
+     b2cTenantId: B2CTenantId
     fhirResourceAppId: FhirResourceAppId
     authorityUrl: AuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
@@ -279,13 +280,13 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
   }
 }
 
-var keyVaultName = '${name}-kv'
+var backendServiceVaultName = '${nameShort}-backkv'
 @description('KeyVault to hold backend service principal maps')
 module keyVault './core/keyVault.bicep' = {
   name: 'vaultDeploy'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
-    vaultName: keyVaultName
+    vaultName: backendServiceVaultName
     location: location
     tenantId: tenantId
     writerObjectIds: keyVaultWriterPrincipals
@@ -321,21 +322,22 @@ output FhirUrl string = fhirUrl
 output FhirAudience string = authCustomOperation.outputs.authCustomOperationAudience
 output ExportStorageAccountUrl string = 'https://${functionBase.outputs.storageAccountName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
+output BackendServiceKeyVaultStore string = backendServiceVaultName
 output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
 output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
-output B2C_Tenant_Name string = b2ctenantname[0]
-output Authority_URL string = AuthorityURL
+output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
+output B2C_Tenant_Name string = b2ctenantname[0]
+output Authority_URL string = AuthorityURL
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
 output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id string = B2CTenantId
 output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
 output KeyVaultName string = keyVaultName
-output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output REACT_APP_Authority_URL string = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL

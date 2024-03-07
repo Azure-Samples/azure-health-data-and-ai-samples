@@ -34,8 +34,8 @@ param smartFrontendAppUrl string
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
 param fhirServiceAudience string
 
-@description('Key Vault for storing application registrations secret')
-param keyVaultName string
+@description('Name of the Key Vault used to store the backend service credentials.')
+param backendServiceVaultName string
 
 @description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
@@ -128,7 +128,7 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_Standalone_App_ClientId: standaloneAppClientId
     AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_FhirAudience: fhirServiceAudience
-    AZURE_KeyVaultName: keyVaultName
+    AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: redisConnectionString
     AZURE_Debug: 'true'
