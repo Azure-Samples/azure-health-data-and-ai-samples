@@ -29,7 +29,7 @@ param ApiPublisherEmail string
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
 param ContextAppClientId string
 
-@description('Audience for SMART scopes in Microsoft Entra Id. Leave blank to use the PaaS Service URL.')
+@description('Audience for SMART scopes in Microsoft Entra ID. Leave blank to use the PaaS Service URL.')
 param FhirAudience string
 
 // end user required API gateway parameters
@@ -176,7 +176,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     apimName: apimName
     smartFrontendAppUrl: contextStaticWebApp.outputs.uri
     fhirServiceAudience: FhirAudience
-    backendServiceVaultName: backendServiceVaultName
+    keyVaultName: keyVaultName
     contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
@@ -185,19 +185,18 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     redisCacheId: redis.outputs.redisCacheId
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
-    b2cTenantId: B2CTenantId
+    b2cTenantId: B2CTenantId 
     fhirResourceAppId: FhirResourceAppId
     authorityUrl: AuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
     standaloneAppClientId: StandaloneAppClientId
-    keyVaultName: keyVaultName
   }
 }
 
 @description('Azure Health Data Services Toolkit export custom operation function app')
 module exportCustomOperation './app/exportCustomOperation.bicep' = {
   name: 'exportCustomOperationDeploy'
-  scope: resourceGroup(fhirInstanceResourceGroup)
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     name: name
     location: location
@@ -286,7 +285,7 @@ module keyVault './core/keyVault.bicep' = {
   name: 'vaultDeploy'
   scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
-    vaultName: backendServiceVaultName
+    vaultName: keyVaultName
     location: location
     tenantId: tenantId
     writerObjectIds: keyVaultWriterPrincipals
@@ -322,8 +321,6 @@ output FhirUrl string = fhirUrl
 output FhirAudience string = authCustomOperation.outputs.authCustomOperationAudience
 output ExportStorageAccountUrl string = 'https://${functionBase.outputs.storageAccountName}.blob.${environment().suffixes.storage}'
 output ApiManagementHostName string = apim.outputs.apimHostName
-output BackendServiceKeyVaultStore string = backendServiceVaultName
-output KeyVaultName string = keyVaultName
 output ContextAppClientId string = ContextAppClientId
 output CacheConnectionString string = authCustomOperation.outputs.cacheConnectionString
 output AzureAuthCustomOperationManagedIdentityId string = authCustomOperation.outputs.functionAppPrincipalId
@@ -337,6 +334,7 @@ output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id string = B2CTenantId
 output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
+output KeyVaultName string = keyVaultName
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c

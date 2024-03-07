@@ -73,8 +73,6 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
             }
         }
 
-        public string? KeyVaultName { get; set; }
-
         public string? ContextAppClientId { get; set; }
 
         // Only for static environment config service - not for production.

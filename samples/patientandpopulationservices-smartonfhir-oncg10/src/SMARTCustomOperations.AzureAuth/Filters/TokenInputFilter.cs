@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Net;
 using System.Net.Http.Headers;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
@@ -22,13 +23,15 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id;
+        private readonly IAsymmetricAuthorizationService _asymmetricAuthorizationService;
         private readonly IAuthProvider _authProvider;
 
-        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
+        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAsymmetricAuthorizationService asymmetricAuthorizationService, IAuthProvider authProvider)
         {
             _logger = logger;
             _configuration = configuration;
             _id = Guid.NewGuid().ToString();
+            _asymmetricAuthorizationService = asymmetricAuthorizationService;
             _authProvider = authProvider;
         }
 
@@ -88,20 +91,20 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 else
                 {
                     context.Request.Content = tokenContext.ToFormUrlEncodedContent();
-                } 
+                }
 
                 // Retrieve OpenID configuration
                 var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
 
                 // Access properties from OpenIdConfiguration
                 string tokenEndpointUrl = openIdConfig.TokenEndpoint!;
-                
+
                 int splitIndex = tokenEndpointUrl.IndexOf('/', tokenEndpointUrl.IndexOf("//") + 2);
 
                 // Split the URL into two parts
                 string tokenEndpoint = tokenEndpointUrl.Substring(0, splitIndex + 1);
-                string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);        
-                 
+                string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);
+
                 context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
                 context.Request.Content = tokenContext.ToFormUrlEncodedContent();
             }
@@ -110,6 +113,17 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
+            }
+
+            // Azure AD does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
+            if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
+            {
+                var castTokenContext = (BackendServiceTokenContext)tokenContext;
+                context = await HandleBackendService(context, castTokenContext);
+            }
+            else
+            {
+                context.Request.Content = tokenContext.ToFormUrlEncodedContent();
             }
 
             // Origin header needed for clients using PKCE without a secret (SPA).
