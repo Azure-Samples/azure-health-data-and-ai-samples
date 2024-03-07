@@ -36,7 +36,7 @@ The Patient Standalone Launch application is a standard confidential client appl
         - offline_access
     - Microsoft Graph (Application) - Applicable only for B2C.
         - Application.Read.All
-        - DelegatedPermissionGrant.Read.All 
+        - DelegatedPermissionGrant.ReadWrite.All 
 1. Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
 
