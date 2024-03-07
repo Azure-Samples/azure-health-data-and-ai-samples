@@ -337,7 +337,7 @@ output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id string = B2CTenantId
 output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
-output KeyVaultName string = keyVaultName
+
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
 output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output REACT_APP_Authority_URL string = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL

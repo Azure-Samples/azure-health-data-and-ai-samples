@@ -228,7 +228,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
             var tenantId = config.B2C_Tenant_Id;
             var clientId = config.Standalone_App_ClientId;
             //var clientSecret = secret.Value.ToString();
-            var clientSecret = GetKeyVaultSecret(config.KeyVaultName);
+            var clientSecret = GetKeyVaultSecret(config.BackendServiceKeyVaultStore);
             var options = new TokenCredentialOptions
             {
                 AuthorityHost = AzureAuthorityHosts.AzurePublicCloud

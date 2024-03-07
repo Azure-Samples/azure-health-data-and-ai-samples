@@ -174,7 +174,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         {
             return context.Request.Content == null ||
                 !context.Request.Content.Headers.GetValues("Content-Type")
-                .Any(x => string.Equals(x, "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase));
+                .Any(x => string.Equals(x.Split(";").FirstOrDefault(), "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

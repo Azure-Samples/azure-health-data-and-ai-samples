@@ -52,7 +52,7 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? Fhir_Resource_AppId { get; set; }
 
-        public string? KeyVaultName { get; set; }
+        public string? BackendServiceKeyVaultStore { get; set; }
 
         public string? FhirAudience
         {
