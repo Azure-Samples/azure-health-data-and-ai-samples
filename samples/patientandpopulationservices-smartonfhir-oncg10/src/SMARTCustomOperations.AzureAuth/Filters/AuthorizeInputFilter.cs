@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
-using SMARTCustomOperations.AzureAuth.Services;
 
 namespace SMARTCustomOperations.AzureAuth.Filters
 {
@@ -21,13 +20,11 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly ILogger _logger;
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id = Guid.NewGuid().ToString();
-        private readonly IAuthProvider _authProvider;
 
-        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration, IAuthProvider authProvider)
+        public AuthorizeInputFilter(ILogger<AuthorizeInputFilter> logger, AzureAuthOperationsConfig configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _authProvider = authProvider;
         }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
@@ -79,31 +76,19 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-            //Build authorize url
+            // Build the aad authorize url
+            var authUrl = "https://login.microsoftonline.com";
+            var authPath = $"{_configuration.TenantId}/oauth2/v2.0/authorize";
+            var redirectUrl = $"{authUrl}/{authPath}";
+            var redirect_querystring = launchContext.ToRedirectQueryString();
+            var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
 
-            try
-            {
-                // Retrieve OpenID configuration
-                var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
+            context.StatusCode = HttpStatusCode.Redirect;
+            context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
 
-                // Access properties from OpenIdConfiguration
-                var redirectUrl = openIdConfig.AuthorizationEndpoint;
-                var redirect_querystring = launchContext.ToRedirectQueryString();
-                var newRedirectUrl = $"{redirectUrl}?{redirect_querystring}";
+            context.Request.RequestUri = new Uri(newRedirectUrl);
 
-                context.StatusCode = HttpStatusCode.Redirect;
-                context.Headers.Add(new HeaderNameValuePair("Location", newRedirectUrl, CustomHeaderType.ResponseStatic));
-
-                context.Request.RequestUri = new Uri(newRedirectUrl);
-
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
-                OnFilterError?.Invoke(this, error);
-                return context.SetContextErrorBody(error, _configuration.Debug);
-            }
+            await Task.CompletedTask;
 
             return context;
         }

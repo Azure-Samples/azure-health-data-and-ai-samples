@@ -19,13 +19,13 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         public KeyVaultClientConfiguratinService(AzureAuthOperationsConfig config, ILogger<AsymmetricAuthorizationService> logger)
         {
-            if (string.IsNullOrEmpty(config.KeyVaultName))
+            if (string.IsNullOrEmpty(config.BackendServiceKeyVaultStore))
             {
-                throw new ConfigurationErrorsException("KeyVaultName must be set to use the KeyVaultClientConfiguratinService.");
+                throw new ConfigurationErrorsException("BackendServiceKeyVaultStore must be set to use the KeyVaultClientConfiguratinService.");
             }
 
-            _vaultName = config.KeyVaultName!;
-            _vaultUrl = "https://" + config.KeyVaultName! + ".vault.azure.net";
+            _vaultName = config.BackendServiceKeyVaultStore!;
+            _vaultUrl = "https://" + config.BackendServiceKeyVaultStore! + ".vault.azure.net";
             _logger = logger;
         }
 

@@ -4,9 +4,9 @@ To successfully test ONC (g)(10) with Inferno, you will need to create four sepa
 
 ## Patient Standalone Confidential Client / Public Client Applications
 
-The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret. The public client represents an application that cannot protect a secret. You will need to follow these instructions for the confidential client. 
+The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret (section 1 & 2 of the test). The public client represents an application that cannot protect a secret (section 9 of the test). You will need to follow these instructions twice - once for the confidential client (web) and once for the public client (spa). 
 
-1. If you have opted for AAD, create a new application registration in the AAD tenant. Otherwise, for B2C, create it in the B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
+1. Create a new application in Azure Active Directory. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -34,20 +34,18 @@ The Patient Standalone Launch application is a standard confidential client appl
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for B2C.
-        - Application.Read.All
-        - DelegatedPermissionGrant.Read.All 
-1. Grant admin consent for app permissions.
-1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
+1. Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
-<br /><details><summary>Click to expand and see screenshots for AAD Reference.</summary>
-        ![](./images/5_confidential_client_1.png)        
-        ![](./images/5_client_confidental_app_scopes.png)
-    </details>
-<br /><details><summary>Click to expand and see screenshots for B2C Reference.</summary>
-        ![](./images/5_confidential_client_1_b2c.png)
-        ![](./images/5_client_confidental_app_scopes_b2c.png)
-    </details>
+<br />
+<details>
+<summary>Click to expand and see screenshots.</summary>
+<br />
+
+![](./images/5_confidential_client_1.png)
+![](./images/5_client_confidental_app_scopes.png)
+</details>
+<br />
 
 ## EHR Launch Confidential Client Application
 
@@ -83,11 +81,15 @@ The EHR launch confidential client application is a standard confidential client
         - offline_access
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
-<br /><details><summary>Click to expand and see screenshots.</summary>
-    ![](./images/5_confidential_client_1.png)
 
-    ![](./images/5_ehr_confidental_app_scopes.png)
-    </details>
+<br />
+<details>
+<summary>Click to expand and see screenshots.</summary>
+
+![](./images/5_confidential_client_1.png)
+![](./images/5_ehr_confidental_app_scopes.png)
+</details>
+<br />
 
 ## Backend Service Client Application
 
@@ -106,20 +108,18 @@ Azure Active Directory does not support RSA384 and/or ES384 which is required by
     - Secret: The secret you generated for the application
     - Tags: Make sure to add the tag `jwks_url` with the backend service JWKS URL. For Inferno testing, this is: https://inferno.healthit.gov/suites/custom/g10_certification/.well-known/jwks.json
 1. Save the client id for later testing.
-<br /><details><summary>Click to expand and see screenshots.</summary>
-    ![](./images/5_create_backend_services_app.png)
 
-    ![](./images/5_add_backend_role_assignment_1.png)
+<br />
+<details>
+<summary>Click to expand and see screenshots.</summary>
 
-    ![](./images/5_assign_backend_application.png)
+![](./images/5_create_backend_services_app.png)
+![](./images/5_add_backend_role_assignment_1.png)
+![](./images/5_assign_backend_application.png)
+![](./images/5_create_backend_secret.png)
+![](./images/5_copy_backend_secret.png)
+![](./images/5_keyvault_reg.png)
+![](./images/5_keyvault_create_secret.png)
+![](./images/5_keyvault_secret_details.png)
 
-    ![](./images/5_create_backend_secret.png)
-
-    ![](./images/5_copy_backend_secret.png)
-
-    ![](./images/5_keyvault_reg.png)
-
-    ![](./images/5_keyvault_create_secret.png)
-
-    ![](./images/5_keyvault_secret_details.png)
-    </details>
+</details>

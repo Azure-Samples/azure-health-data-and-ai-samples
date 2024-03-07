@@ -18,72 +18,72 @@ import { Stack } from "@fluentui/react";
 export const msalInstance = new PublicClientApplication(msalConfig);
 
 const appStyle: IStackStyles = {
-    root: {
-        width: '800px'
-    }
+  root: {
+      width: '800px'
+  }
 }
 export const App: FC = () => {
+  
+// Check if there are already accounts in the browser session
+  // If so, set the first account as the active account
+  const accounts = msalInstance.getAllAccounts();
+  if (accounts && accounts.length == 0) {
+    console.log("no account")
+  } else if (accounts && accounts.length > 1)
+  {
+    console.log("multiple accounts")
+  }
+  else
+  {
+    msalInstance.setActiveAccount(accounts[0]);
+  }
 
-    // Check if there are already accounts in the browser session
-    // If so, set the first account as the active account
-    const accounts = msalInstance.getAllAccounts();
-    if (accounts && accounts.length == 0) {
-        console.log("no account")
-    } else if (accounts && accounts.length > 1)
-    {
-        console.log("multiple accounts")
+
+  msalInstance.addEventCallback((event: EventMessage) => {
+    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
+
+      // Set the active account - this simplifies token acquisition
+      const authResult = event.payload as AuthenticationResult;
+      msalInstance.setActiveAccount(authResult.account);       
     }
-    else
+    else if (event.eventType == EventType.LOGIN_FAILURE)
     {
-        msalInstance.setActiveAccount(accounts[0]);
+      console.log(event);
     }
+  });
 
 
-    msalInstance.addEventCallback((event: EventMessage) => {
-        if (event.eventType === EventType.LOGIN_SUCCESS && event.payload || event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS && event.payload) {
+  const authRequest = {
+    scopes: scopes,
+    prompt: 'login'
+  };
 
-            // Set the active account - this simplifies token acquisition
-            const authResult = event.payload as AuthenticationResult;
-            msalInstance.setActiveAccount(authResult.account);
-        }
-        else if (event.eventType == EventType.LOGIN_FAILURE)
-        {
-            console.log(event);
-        }
-    });
+  initializeIcons();
 
-
-    const authRequest = {
-        scopes: scopes,
-        prompt: 'login'
-    };
-
-    initializeIcons();
-
-    return (
-        <MsalProvider instance={msalInstance}>
-            <MsalAuthenticationTemplate
-                interactionType={InteractionType.Redirect}
-                authenticationRequest={authRequest}
-                errorComponent={AuthError}
-                loadingComponent={AuthLoading}
-            >
-                <ThemeProvider>
-                    <ProvideAppContext>
-                        <Stack styles={appStyle}>
-                            <Stack.Item>
-                                <Header></Header>
-                            </Stack.Item>
-                            <Stack.Item grow={1}>
-                                <div></div>
-                            </Stack.Item>
-                            <Stack.Item grow={1}>
-                                <Home />
-                            </Stack.Item>
-                        </Stack>
-                    </ProvideAppContext>
-                </ThemeProvider>
-            </MsalAuthenticationTemplate>
-        </MsalProvider>
-    );
+  return (
+    <MsalProvider instance={msalInstance}>
+      <MsalAuthenticationTemplate
+        interactionType={InteractionType.Redirect}
+        authenticationRequest={authRequest}
+        errorComponent={AuthError}
+        loadingComponent={AuthLoading}
+      >
+        <ThemeProvider>
+          <ProvideAppContext>
+              <Stack styles={appStyle}>
+                <Stack.Item>
+                  <Header></Header>
+                </Stack.Item>
+                <Stack.Item grow={1}>
+                  <div></div>
+                </Stack.Item>
+                <Stack.Item grow={1}>
+                  <Home />
+                </Stack.Item>
+              </Stack>
+          </ProvideAppContext>
+        </ThemeProvider>
+      </MsalAuthenticationTemplate>
+    </MsalProvider>
+  );
 }

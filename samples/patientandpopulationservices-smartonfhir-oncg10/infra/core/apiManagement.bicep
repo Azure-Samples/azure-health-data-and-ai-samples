@@ -23,12 +23,6 @@ param publisherEmail string
 @description('Base URL of the FHIR Service')
 param fhirBaseUrl string
 
-@description('Issuer uri of openid-configuration endpoint')
-param issuer string
-
-@description('Jwks_uri of openid-configuration endpoint')
-param jwksUri string
-
 @description('Base URL of the SMART Auth Custom Operation Function')
 param smartAuthFunctionBaseUrl string
 
@@ -100,8 +94,6 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
   params: {
     apiManagementServiceName: apiManagementServiceName
     tenantId: subscription().tenantId
-    issuer: issuer
-    jwksUri: jwksUri
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
     audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }

@@ -1,4 +1,4 @@
-## 4. Add sample data and US Core resources
+## 5. Add sample data and US Core resources
 
 The Inferno (g)(10) suite requires both the US Core profile and data to be loaded in order to pass the test. 
 

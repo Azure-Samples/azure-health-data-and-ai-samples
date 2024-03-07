@@ -57,14 +57,16 @@ namespace SMARTCustomOperations.AzureAuth
                     // Add configuration
                     services.AddSingleton<AzureAuthOperationsConfig>(config);
 
+                    // Add services needed for backend services
+                    services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
+                    services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
+
                     // Add services needed for Microsoft Graph
                     services.AddMicrosoftGraphClient(options =>
                     {
-                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.SmartonFhir_with_B2C ? config.B2C_Tenant_Id : config.TenantId });
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.TenantId });
                     });
                     services.AddScoped<GraphConsentService>();
-
-                    services.AddHttpClient<IAuthProvider, AuthProvider>();
 
                     // Add cache for token context
                     services.AddMemoryCache();
@@ -89,7 +91,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = new Uri(config.Authority_URL!);
+                        options.BaseAddress = new Uri("https://login.microsoftonline.com");
                     });
 
                     services.AddOutputFilter(typeof(TokenOutputFilter));
