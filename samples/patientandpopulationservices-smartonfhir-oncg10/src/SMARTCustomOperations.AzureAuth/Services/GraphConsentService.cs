@@ -176,10 +176,10 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
         private async Task<List<OAuth2PermissionGrant>> GetUserAppOAuth2PermissionGrants(string requestingAppClientId, string userId)
         {
-            string filter = _config.SmartonFhir_with_B2C ? $"clientId eq '{requestingAppClientId}' and consentType eq 'AllPrincipals'" : $"clientId eq '{requestingAppClientId}' and consentType eq 'Principal' and principalId eq '{userId}'";
+           // string filter = _config.SmartonFhir_with_B2C ? $"clientId eq '{requestingAppClientId}' and consentType eq 'AllPrincipals'" : $"clientId eq '{requestingAppClientId}' and consentType eq 'Principal' and principalId eq '{userId}'";
             var permissionPage = await _graphServiceClient.Oauth2PermissionGrants.GetAsync((rq) =>
             {
-                rq.QueryParameters.Filter = filter;
+                rq.QueryParameters.Filter = $"clientId eq '{requestingAppClientId}' and consentType eq 'Principal' and principalId eq '{userId}'";
             });
 
             return permissionPage!.Value!.ToList();
