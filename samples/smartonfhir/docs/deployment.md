@@ -32,17 +32,7 @@ Make sure you have the pre-requisites listed below
     - [Create an Azure AD B2C tenant for the FHIR service](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-an-azure-ad-b2c-tenant-for-the-fhir-service)
     - [Deploy an Azure AD B2C tenant by using an ARM template](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
     - [Add a test B2C user to the Azure AD B2C tenant](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
-    - [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
-    - [Create a new B2C user flow](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-a-new-b2c-user-flow)
-    - Add two more Application Claims in B2C User Flow in B2C along with fhirUser claim, follow these steps:
-        - Navigate to Azure AD B2C.
-        - Select "User flows" from the menu.
-        - Choose the recently created user flow.
-        - Click on "Application claims."
-        - Select `Display Name` (necessary for displaying the user's name on the frontend application) and `User's Object ID` (essential for obtaining the token).    
-        <br /><details><summary>Click to expand and see screenshots.</summary>
-        ![](./ad-apps/images/b2c_applicationclaims.png)
-        </details>
+    - [Create custom user flow using custom policy](../docs/create-custom-policy.md)
 
 ## 2. Prepare and deploy environment
 
@@ -72,7 +62,7 @@ Next you will need to clone this repository and prepare your environment for dep
 1. If you have opted for B2C, then set the deployment environment configuration.
     ```
     azd env set B2CTenantId <Tenant_ID_Of_B2C>
-    azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_USER_FLOW_NAME>/v2.0"
+    azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_CUSTOM_USER_FLOW_NAME>/v2.0"
     azd env set StandaloneAppClientId <STANDALONE_APP_ID_CREATED_IN_STEP_7>
     azd env set SmartonFhirwithB2C true
     ```
