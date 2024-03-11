@@ -7,8 +7,23 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Azure Active Directory tenant ID for the FHIR Service.')
+@description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
+
+@description('Azure B2C Directory tenant ID.')
+param b2cTenantId string
+
+@description('Microsoft Entra ID/B2c Application ID for the FHIR resource application.')
+param fhirResourceAppId string
+
+@description('Microsoft Entra ID/B2c Application ID for the Standalone Client application.')
+param standaloneAppClientId string 
+
+@description('Azure B2C Directory authority url.')
+param authorityUrl string
+
+@description('Condition to include B2C in SMART on FHIR')
+param smartOnFhirWithB2C bool
 
 @description('Name of the Azure API Management instance.')
 param apimName string
@@ -19,7 +34,7 @@ param smartFrontendAppUrl string
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
 param fhirServiceAudience string
 
-@description('Azure AD Application ID for the context application.')
+@description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
 @description('App Insights Instrumentation Key for the sample. (Optional)')
@@ -33,6 +48,9 @@ param customOperationsFuncStorName string
 
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
+
+@description('Key Vault for storing application registrations secret')
+param keyVaultName string
 
 param redisCacheId string
 param redisCacheHostName string
@@ -104,6 +122,12 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
+    AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
+    AZURE_Authority_URL: authorityUrl
+    AZURE_B2C_Tenant_Id: b2cTenantId
+    AZURE_Standalone_App_ClientId: standaloneAppClientId
+    AZURE_Fhir_Resource_AppId: fhirResourceAppId
+    AZURE_KeyVaultName: keyVaultName
     AZURE_FhirAudience: fhirServiceAudience
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: redisConnectionString

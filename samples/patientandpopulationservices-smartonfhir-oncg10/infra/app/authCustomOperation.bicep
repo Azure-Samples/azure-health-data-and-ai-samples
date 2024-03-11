@@ -7,8 +7,23 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Azure Active Directory tenant ID for the FHIR Service.')
+@description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
+
+@description('Azure B2C Directory tenant ID.')
+param b2cTenantId string
+
+@description('Microsoft Entra ID/B2c Application ID for the FHIR resource application.')
+param fhirResourceAppId string
+
+@description('Microsoft Entra ID/B2c Application ID for the Standalone Client application.')
+param standaloneAppClientId string 
+
+@description('Azure B2C Directory authority url.')
+param authorityUrl string
+
+@description('Condition to include B2C in SMART on FHIR')
+param smartOnFhirWithB2C bool
 
 @description('Name of the Azure API Management instance.')
 param apimName string
@@ -22,7 +37,7 @@ param fhirServiceAudience string
 @description('Name of the Key Vault used to store the backend service credentials.')
 param backendServiceVaultName string
 
-@description('Azure AD Application ID for the context application.')
+@description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
 @description('App Insights Instrumentation Key for the sample. (Optional)')
@@ -107,6 +122,11 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
+    AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
+    AZURE_Authority_URL: authorityUrl
+    AZURE_B2C_Tenant_Id: b2cTenantId
+    AZURE_Standalone_App_ClientId: standaloneAppClientId
+    AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_FhirAudience: fhirServiceAudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_ContextAppClientId: contextAadApplicationId

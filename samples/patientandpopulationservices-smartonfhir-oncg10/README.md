@@ -1,6 +1,6 @@
 # Azure ONC (g)(10) SMART on FHIR Sample
 
-This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg) and Azure Active Directory can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
+This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg) and Microsoft Entra ID can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
 - [Health Level 7 (HL7®) Version 4.0.1 Fast Healthcare Interoperability Resources Specification (FHIR®)](http://hl7.org/fhir/directory.html)
 - [United States Core Data for Interoperability (USCDI)](https://www.healthit.gov/isa/us-core-data-interoperability-uscdi)
 - [HL7® FHIR® Bulk Data Access (Flat FHIR®) (V1.0.1:STU 1)](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/)
@@ -12,18 +12,18 @@ While Azure Health Data Services is the core of this sample, some custom behavio
 
 ## Sample Deployment
 
-Deployment of this sample requires the creation of supporting Azure services, custom code deployed to Azure Function Apps, and setup in Azure Active Directory. For detailed deployment instructions, check out the [deployment document here](./docs/deployment.md).
+Deployment of this sample requires the creation of supporting Azure services, custom code deployed to Azure Function Apps, and setup in Microsoft Entra ID. For detailed deployment instructions, check out the [deployment document here](./docs/deployment.md).
 
 This sample is targeted at application developers who are already using Azure Health Data Services or Azure API for FHIR.
 
-You will need an Azure Subscription with Owner privileges and Azure Active Directory Global Administrator privileges.
+You will need an Azure Subscription with Owner privileges and Microsoft Entra ID Global Administrator privileges.
 
 ## Sample Components
 
 The below components are deployed with this sample. At a high level:
 
 - Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
-- Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Azure Active Directory](https://learn.microsoft.com/azure/active-directory/fundamentals/active-directory-whatis) with custom code to enable some specific requirements..
+- Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements..
 - Bulk Data Export is handled mostly by FHIR Service with some custom code to enable users to access the files they've exported per the Bulk Data Implementation Guide.
   - While FHIR Service supports `$export` operations, Azure does not support accessing the files using the same access token used for FHIR Service.
 - All FHIR data operations are handled by [FHIR Service in Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/overview). Azure API for FHIR would also fit here

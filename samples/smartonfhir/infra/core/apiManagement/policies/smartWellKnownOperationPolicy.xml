@@ -21,8 +21,8 @@
 	<outbound>
 		<base />
 		<set-body template="liquid">{
-            "issuer": "https://login.microsoftonline.com/{{TenantId}}/v2.0",
-            "jwks_uri": "https://login.microsoftonline.com/{{TenantId}}/discovery/v2.0/keys",
+            "issuer": "{{Issuer}}",
+            "jwks_uri": "{{JwksUri}}/discovery/v2.0/keys",
             "authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
             "token_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/token",
             "token_endpoint_auth_methods_supported": [

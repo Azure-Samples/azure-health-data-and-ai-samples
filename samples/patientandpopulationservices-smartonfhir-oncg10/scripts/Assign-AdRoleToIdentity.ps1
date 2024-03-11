@@ -1,7 +1,7 @@
-$clientId = "YOUR_CLIENT_ID" # Replace with your Azure AD client ID
-$tenantId = "YOUR_TENANT_ID" # Replace with your Azure AD tenant ID
+$clientId = "YOUR_CLIENT_ID" # Replace with your Microsoft Entra ID client ID
+$tenantId = "YOUR_TENANT_ID" # Replace with yourMicrosoft Entra ID tenant ID
 $objectId = "YOUR_OBJECT_ID" # Replace with the object ID of the managed identity
-$roleName = "ROLE_NAME" # Replace with the name of the Azure AD role you want to grant
+$roleName = "ROLE_NAME" # Replace with the name of the Microsoft Entra ID role you want to grant
 
 # Construct the URL for the request
 $url = "https://graph.microsoft.com/v1.0/roleManagement/$objectId/appRoleAssignments"

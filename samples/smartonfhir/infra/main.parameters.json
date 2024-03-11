@@ -11,14 +11,29 @@
     "ContextAppClientId": {
       "value": "${ContextAppClientId}"
     },
+    "B2CTenantId": {
+      "value": "${B2CTenantId}"
+    },
+    "AuthorityURL": {
+      "value": "${AuthorityURL}"
+    },
+    "StandaloneAppClientId": {
+      "value": "${StandaloneAppClientId}"
+    },
+    "FhirResourceAppId": {
+      "value": "${FhirResourceAppId}"
+    },
     "existingresourcegroupname": {
       "value": ""
     },
-    "FhirAudience": {
-      "value": "${FhirAudience}"
-    },
     "fhirid": {
       "value": ""
+    },
+    "smartonfhirwithb2c": {
+      "value": "${SmartonFhirwithB2C}"
+    },
+    "FhirAudience": {
+      "value": "${FhirAudience}"
     },
     "location": {
       "value": "${AZURE_LOCATION}"
