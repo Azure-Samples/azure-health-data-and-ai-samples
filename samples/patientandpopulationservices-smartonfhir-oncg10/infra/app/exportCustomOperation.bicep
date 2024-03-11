@@ -7,7 +7,7 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Azure Active Directory tenant ID for the FHIR Service.')
+@description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
 
 @description('Name of the Azure API Management instance.')

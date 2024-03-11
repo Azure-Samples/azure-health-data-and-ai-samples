@@ -31,7 +31,7 @@ Changing an Microsoft Graph directory extensions is done through API requests to
 
 ### Configure fhirUser mapping to token
 
-In the Azure Portal under Azure Active Directory, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
+In the Azure Portal under Microsoft Entra ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
@@ -59,7 +59,7 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 
 For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
 
-1. In the Azure Portal in Azure Active Directory, select **App registrations**
+1. In the Azure Portal in Microsoft Entra ID, select **App registrations**
 2. Select your App registration from the list
 3. Select **Manifest** from the left-hand menu
 4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.

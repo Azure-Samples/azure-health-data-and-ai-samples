@@ -27,7 +27,7 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
                         s.StartsWith("launch", StringComparison.InvariantCulture) ||
                         s == "fhirUser")
                     {
-                        // Azure AD v2.0 uses fully qualified scope URIs
+                        // Microsoft Entra ID v2.0 uses fully qualified scope URIs
                         // and does not allow '/'. Therefore, we need to
                         // replace '/' with '.' in the scope URI
                         var formattedScope = s.Replace("/", ".", StringComparison.InvariantCulture);
