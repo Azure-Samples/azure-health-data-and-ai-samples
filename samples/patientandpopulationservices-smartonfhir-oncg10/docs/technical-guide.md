@@ -20,9 +20,9 @@ To successfully use this ONC (g)(10) sample, your Azure environment must be setu
 - Storage Account
   - Needed for Azure Function, assorted static assets, and configuration tables.
 - Azure KeyVault
-  - Needed for JWKS authentication since Azure AD does not support the RSA384 or ES384 encryption algorithms.
+  - Needed for JWKS authentication since Microsoft Entra ID does not support the RSA384 or ES384 encryption algorithms.
 - Azure Static Web Apps
-  - Needed for the Patient Standalone authorize flow to properly handle scopes. Azure AD does not support session based scoping. 
+  - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping. 
 
 ![](./images/overview-architecture.png)
 
@@ -65,7 +65,7 @@ Azure Health Data Services needs some modification to the capability statement a
     participant EHR
     participant APIM
     participant EHR Launch Handler
-    participant AAD
+    participant Microsoft Entra ID
 
     EHR -->> APIM: Send session state to cache
     EHR ->> EHR: User Launches App
@@ -76,14 +76,14 @@ Azure Health Data Services needs some modification to the capability statement a
     User/App ->> APIM:  Authorization Request
     APIM -->> APIM: Cache launch parameter
     APIM ->> EHR Launch Handler: Forward /authorize request    
-    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ AAD Transformed /authorize URL
-    User/App ->> AAD: /authorize request
-    note over EHR Launch Handler, AAD: Transformed to AAD Compatible Request
-    AAD -->> User/App: Authorization response (code)
+    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ Microsoft Entra ID Transformed /authorize URL
+    User/App ->> Microsoft Entra ID: /authorize request
+    note over EHR Launch Handler, Microsoft Entra ID: Transformed to Microsoft Entra ID Compatible Request
+    Microsoft Entra ID -->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> EHR Launch Handler: Forward /token request
-    EHR Launch Handler ->> AAD: POST /token on behalf of user
-    AAD ->> EHR Launch Handler: Access token response
+    EHR Launch Handler ->> Microsoft Entra ID: POST /token on behalf of user
+    Microsoft Entra ID ->> EHR Launch Handler: Access token response
     note over EHR Launch Handler: Handler will augment the /token response with proper scopes, context
     note over EHR Launch Handler: Handler will NOT create a new token
     EHR Launch Handler ->> APIM: Return token response
@@ -101,14 +101,14 @@ SMART standalone launch refers to when an app launches from outside an EHR sessi
 
 *I think (need to verify)* ONC (g)(10) does not require a patient picker, so it is out of scope for this sample. If we need it, it's not too bad.
 
-Azure Active Directory does not have a mechanism for selecting a subset of scopes when approving/denying an application. Due to this, we have to serve a custom scope selection interface for standalone launch scenarios.
+Microsoft Entra ID does not have a mechanism for selecting a subset of scopes when approving/denying an application. Due to this, we have to serve a custom scope selection interface for standalone launch scenarios.
 
 ```mermaid
   sequenceDiagram
     participant User/App
     participant APIM
     participant SMART Auth Custom Operations
-    participant AAD
+    participant Microsoft Entra ID
     participant FHIR
     participant Graph
     User/App ->> APIM: Discovery Request
@@ -127,13 +127,13 @@ Azure Active Directory does not have a mechanism for selecting a subset of scope
     end
 
     APIM ->> SMART Auth Custom Operations: Forward /authorize request    
-    SMART Auth Custom Operations ->> AAD: /authorize
-    note over SMART Auth Custom Operations, AAD: Limited scopes, transformed
-    AAD ->> User/App: Authorization response (code)
+    SMART Auth Custom Operations ->> Microsoft Entra ID: /authorize
+    note over SMART Auth Custom Operations, Microsoft Entra ID: Limited scopes, transformed
+    Microsoft Entra ID ->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> SMART Auth Custom Operations: Forward /token request
-    SMART Auth Custom Operations ->> AAD: POST /token on behalf of user
-    AAD ->> SMART Auth Custom Operations: Access token response
+    SMART Auth Custom Operations ->> Microsoft Entra ID: POST /token on behalf of user
+    Microsoft Entra ID ->> SMART Auth Custom Operations: Access token response
     note over SMART Auth Custom Operations: Handler will augment the /token response with proper scopes, context
     note over SMART Auth Custom Operations: Handler will NOT create a new token
     SMART Auth Custom Operations ->> APIM: Return token response
@@ -144,7 +144,7 @@ Azure Active Directory does not have a mechanism for selecting a subset of scope
 
 Backend Service Authorization is part of the [FHIR Bulk Data Access Implementation Guide](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html). Backend services are intended to be used by developers of backend services (clients) that autonomously (or semi-autonomously) need to access resources from FHIR servers that have pre-authorized defined scopes of access. It is a combination of a client registration process (using JSON Web Keys), token generation without the sharing of secrets, and using SMART on FHIR with `system` scopes to access data.
 
-SMART Backend Services requires that FHIR servers allow client asymmetric authentication with RSA384 and/or ES384. Active Directory does not support this natively today, so the SMART Auth Custom Operations has code to handle these backend authorization request. This code in the SMART auth handlers function is responsible for validating the backend service authentication request, creating an Azure Active Directory token using the matching secret in Azure KeyVault, and returning the token to the backend service for use when calling Azure Health Data Services.
+SMART Backend Services requires that FHIR servers allow client asymmetric authentication with RSA384 and/or ES384. Active Directory does not support this natively today, so the SMART Auth Custom Operations has code to handle these backend authorization request. This code in the SMART auth handlers function is responsible for validating the backend service authentication request, creating an Microsoft Entra ID token using the matching secret in Azure KeyVault, and returning the token to the backend service for use when calling Azure Health Data Services.
 
 ### Backend Service Registration
 
@@ -177,7 +177,7 @@ Client registration is an out-of-band process required before backend services c
 
     note over SMART Auth Custom Operations: Validate assertion
     alt Granted
-        note over SMART Auth Custom Operations: Generate AAD token using secret
+        note over SMART Auth Custom Operations: Generate Microsoft Entra ID token using secret
         SMART Auth Custom Operations -->> APIM: Token Response
         APIM -->> Backend Service: Access Token Response
         Backend Service ->> APIM: Request Resources

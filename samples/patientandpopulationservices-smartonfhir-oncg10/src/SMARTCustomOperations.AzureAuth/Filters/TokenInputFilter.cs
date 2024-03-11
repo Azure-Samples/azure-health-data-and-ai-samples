@@ -24,18 +24,20 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id;
         private readonly IAsymmetricAuthorizationService _asymmetricAuthorizationService;
+        private readonly IAuthProvider _authProvider;
 
-        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAsymmetricAuthorizationService asymmetricAuthorizationService)
+        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAsymmetricAuthorizationService asymmetricAuthorizationService, IAuthProvider authProvider)
         {
             _logger = logger;
             _configuration = configuration;
             _id = Guid.NewGuid().ToString();
             _asymmetricAuthorizationService = asymmetricAuthorizationService;
+            _authProvider = authProvider;
         }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
 
-        public string Name => nameof(AuthorizeInputFilter);
+        public string Name => nameof(TokenInputFilter);
 
         public StatusType ExecutionStatusType => StatusType.Normal;
 
@@ -78,9 +80,40 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             }
 
             // Setup new http client for token request
-            string tokenEndpoint = "https://login.microsoftonline.com/";
-            string tokenPath = $"{_configuration.TenantId}/oauth2/v2.0/token";
-            context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
+            try
+            {
+                //Microsoft Entra ID does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
+                if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
+                {
+                    var castTokenContext = (BackendServiceTokenContext)tokenContext;
+                    context = await HandleBackendService(context, castTokenContext);
+                }
+                else
+                {
+                    context.Request.Content = tokenContext.ToFormUrlEncodedContent();
+                }
+
+                // Retrieve OpenID configuration
+                var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
+
+                // Access properties from OpenIdConfiguration
+                string tokenEndpointUrl = openIdConfig.TokenEndpoint!;
+
+                int splitIndex = tokenEndpointUrl.IndexOf('/', tokenEndpointUrl.IndexOf("//") + 2);
+
+                // Split the URL into two parts
+                string tokenEndpoint = tokenEndpointUrl.Substring(0, splitIndex + 1);
+                string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);
+
+                context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
+                context.Request.Content = tokenContext.ToFormUrlEncodedContent();
+            }
+            catch (Exception ex)
+            {
+                FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.BadRequest);
+                OnFilterError?.Invoke(this, error);
+                return context.SetContextErrorBody(error, _configuration.Debug);
+            }
 
             // Azure AD does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
             if (tokenContext.GetType() == typeof(BackendServiceTokenContext))

@@ -1,5 +1,5 @@
 <#
-    Creates a fhirUser directory extension in Azure AD. This is required for the FHIR Server to work with Azure AD authentication.
+    Creates a fhirUser directory extension in Microsoft Entra ID. This is required for the FHIR Server to work with Microsoft Entra ID authentication.
 #>
 param (
     [Parameter(Mandatory=$false)]
@@ -20,7 +20,7 @@ if ([string]::IsNullOrWhiteSpace($FhirResourceAppId)) {
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
     $AZD_ENVIRONMENT | foreach {
         $name, $value = $_.split('=')
-        if ([string]::IsNullOrWhiteSpace($name) +or $name.Contains('#')) {
+        if ([string]::IsNullOrWhiteSpace($name) -or $name.Contains('#')) {
             continue
         }
         
