@@ -1,0 +1,189 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "FHIR Terminology",
+        "description": "",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "your fhir service url as a backend"
+        }
+    ],
+    "paths": {
+        "/*": {
+            "get": {
+                "summary": "FHIR server",
+                "operationId": "get",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post FHIR server",
+                "operationId": "post",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "put": {
+                "summary": "Put FHIR Server",
+                "operationId": "put",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete FHIR server",
+                "operationId": "delete",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/CodeSystem/*": {
+            "get": {
+                "summary": "Get CodeSystem",
+                "operationId": "codesystem",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post CodeSystem",
+                "operationId": "code",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "put": {
+                "summary": "Put CodeSystem",
+                "operationId": "put-codesystem",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete CodeSystem",
+                "operationId": "delete-codesystem",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/ValueSet/*": {
+            "get": {
+                "summary": "Get ValueSet",
+                "operationId": "valueset",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post ValueSet",
+                "operationId": "value",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "put": {
+                "summary": "Put ValueSet",
+                "operationId": "put-valueset",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete ValueSet",
+                "operationId": "delete-valueset",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/ConceptMap/*": {
+            "get": {
+                "summary": "Get ConceptMap",
+                "operationId": "conceptmap",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post ConceptMap",
+                "operationId": "concept",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "put": {
+                "summary": "Put ConceptMap",
+                "operationId": "put-conceptmap",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete ConceptMap",
+                "operationId": "delete-conceptmap",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}
