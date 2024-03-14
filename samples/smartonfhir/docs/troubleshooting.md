@@ -10,9 +10,9 @@ For the Authorize Input Application, the browser console is the best place to st
 
 ## Common Issues
 
-### AAD Issues
+### Microsoft Entra ID Issues
 
-This sample makes some assumptions about AAD configuration. You may run into errors if your Azure Active Directory is not setup with the following:
+This sample makes some assumptions about Microsoft Entra ID configuration. You may run into errors if your Microsoft Entra ID is not setup with the following:
 
 - Allowing users to consent to scopes (this is needed for them to choose and store scopes).
 - Allowing developers to register applications.
@@ -57,7 +57,7 @@ To find out more, information, check out:
 ### Adding scopes to the FHIR resource app
 - You can add a new scope in the "oauth2Permissions" array in the manifest.json file of the FHIR resource app.
 - Or, you can also add it from the "Expose an API" blade of the FHIR resource app by clicking on "Add a scope" button.
-- Once added, these scopes would be available for adding as permission from the "API permissions" blade on required AD application.
+- Once added, these scopes would be available for adding as permission from the "API permissions" blade on required Microsoft Entra ID application.
 
 <br />
 <details>

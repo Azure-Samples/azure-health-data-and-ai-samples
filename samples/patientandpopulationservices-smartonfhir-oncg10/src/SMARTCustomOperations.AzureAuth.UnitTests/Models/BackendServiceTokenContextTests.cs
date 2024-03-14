@@ -41,7 +41,7 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Models
             Assert.Equal(tokenBodyCol["client_assertion_type"], contextParsed.ClientAssertionType);
             Assert.Equal(tokenBodyCol["client_assertion"], contextParsed.ClientAssertion);
 
-            // Scopes must point to the ./default endpoint for the audience according to AAD client credentials flow
+            // Scopes must point to the ./default endpoint for the audience according to Microsoft Entra ID client credentials flow
             string expectedScope = $"{_audience}/.default";
             Assert.Equal(expectedScope, contextParsed.Scope);
 
@@ -57,7 +57,7 @@ namespace SMARTCustomOperations.AzureAuth.UnitTests.Models
                 Assert.Fail("Validation failed. " + ex);
             }
 
-            // This request is not going to AAD so we expect this to throw an exception.
+            // This request is not going to Microsoft Entra ID so we expect this to throw an exception.
             Assert.Throws<InvalidOperationException>(() => contextParsed.ToFormUrlEncodedContent());
 
             // Test serialization logic
