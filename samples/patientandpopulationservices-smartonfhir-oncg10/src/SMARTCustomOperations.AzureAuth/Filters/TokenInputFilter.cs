@@ -82,7 +82,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             string tokenPath = $"{_configuration.TenantId}/oauth2/v2.0/token";
             context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
 
-            // Azure AD does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
+            // Microsoft Entra ID does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
             if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
             {
                 var castTokenContext = (BackendServiceTokenContext)tokenContext;

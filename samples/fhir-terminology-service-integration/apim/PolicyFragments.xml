@@ -1,0 +1,32 @@
+<!--
+    IMPORTANT:
+    - Policy fragment are included as-is whenever they are referenced.
+    - If using variables. Ensure they are setup before use.
+    - Copy and paste your code here or simply start coding
+-->
+<fragment>
+	<choose>
+		<when condition="@(context.Request.Url.Path.Contains("lookup") || context.Request.Url.Path.Contains("validate-code") || context.Request.Url.Path.Contains("expand") || context.Request.Url.Path.Contains("translate") || context.Request.Url.Path.Contains("subsumes") || context.Request.Url.Path.Contains("find-matches") || context.Request.Url.Path.Contains("closure"))">
+			<send-request ignore-error="false" response-variable-name="bearerToken" mode="new">
+				<set-url>your token url</set-url>
+				<set-method>POST</set-method>
+				<set-header name="ContetntType" exists-action="override">
+					<value>application/x-www-form-urlencoded</value>
+				</set-header>
+				<set-body>
+                    @{return "your token request body";}
+                </set-body>
+			</send-request>
+			<set-variable name="token" value="@((String)((IResponse)context.Variables["bearerToken"]).Body.As<JObject>()["access_token"])" />
+			<!--<get-authorization-context provider-id="wolters-kluwer" authorization-id="wolters-kluwer" context-variable-name="auth-context" identity-type="managed" ignore-error="false" />-->
+			<set-backend-service base-url="your terminology service url" />
+			<!-- Attach the token to the backend call -->
+			<set-header name="Authorization" exists-action="override">
+				<value>@("Bearer " + context.Variables["token"])</value>
+			</set-header>
+			<set-header name="another-header" exists-action="override">
+				<value>another-header-value</value>
+			</set-header>
+		</when>
+	</choose>
+</fragment>

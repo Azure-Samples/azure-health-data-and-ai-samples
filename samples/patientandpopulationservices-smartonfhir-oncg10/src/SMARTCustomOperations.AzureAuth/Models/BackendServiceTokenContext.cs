@@ -16,7 +16,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
         /// Creates a RefreshTokenContext from the NameValueCollection from the HTTP request body.
         /// </summary>
         /// <param name="form">HTTP Form Encoded Body from Token Request.</param>
-        /// <param name="audience">Azure Active Directory audience for the FHIR Server.</param>
+        /// <param name="audience">Microsoft Entra ID audience for the FHIR Server.</param>
         public BackendServiceTokenContext(NameValueCollection form, string audience)
         {
             if (form["grant_type"] != GrantType.client_credentials.ToString())
@@ -26,7 +26,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
             GrantType = GrantType.client_credentials;
 
-            // Since there is no user interaction involved, AAD only accepts the .default scope. It will give
+            // Since there is no user interaction involved, Microsoft Entra ID only accepts the .default scope. It will give
             // the application the approved scopes.
             // AADSTS1002012
             Scope = $"{audience}/.default";
@@ -46,7 +46,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public override FormUrlEncodedContent ToFormUrlEncodedContent()
         {
-            throw new InvalidOperationException("ClientConfidentialAsync cannot be encoded to Form URL Content since this flow does not interact with Azure Active Directory.");
+            throw new InvalidOperationException("ClientConfidentialAsync cannot be encoded to Form URL Content since this flow does not interact with Microsoft Entra ID.");
         }
 
         public override void Validate()

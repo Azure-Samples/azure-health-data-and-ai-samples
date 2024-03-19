@@ -1,6 +1,6 @@
 # Sample Deployment: Azure Health Data Services ONC (g)(10) & SMART on FHIR
 
-This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Azure Active Directory configuration.
+This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID configuration.
 
 *Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
@@ -20,11 +20,11 @@ Make sure you have the pre-requisites listed below
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Azure Active Directory (AD) and Microsoft Graph to create Application Registrations, assign Azure Active Directory roles, and add custom data to user accounts.
+  - Elevated access in Microsoft Entra ID (AD) and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
 
 - **Test Accounts:**
-  - Azure Active Directory test account to represent Patient persona. Make sure you have the object id of the user from Azure Active Directory.
-  - Azure Active Directory test account to represent Provider persona. Make sure you have the object id of the user from Azure Active Directory.
+  - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
+  - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
 
 ## 2. Prepare and deploy environment
 
@@ -55,13 +55,13 @@ Next you will need to clone this repository and prepare your environment for dep
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
-### Assign Azure AD Permissions for the Auth Custom Operation API
+### Assign Microsoft Entra ID Permissions for the Auth Custom Operation API
 
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
 
 1. Open the Azure Function for the SMART Auth Custom Operations. It will be suffixed by `aad-func`. Copy the Managed Identity for the next steps.
-1. Open Azure Active Directory and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
-1. Add the Azure Function Managed Identity to this AAD role.
+1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
+1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
 
 <br />
 <details>
@@ -88,9 +88,9 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 </details>
 <br />
 
-## 4. Create Inferno Test Applications in Azure Active Directory
+## 4. Create Inferno Test Applications in Microsoft Entra ID
 
-We will need to create four separate Azure AD Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Azure Active Directory applications, [read this](https://learn.microsoft.com/azure/active-directory/develop/security-best-practices-for-app-registration).
+We will need to create four separate Microsoft Entra ID Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Microsoft Entra ID applications, [read this](https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration).
 
 Follow the directions on the [Inferno Test App Registration Page](./ad-apps/inferno-test-app-registration.md) for instructions on registering the needed Azure Applications for the Inferno (g)(10) tests.
 - Standalone Patient App (Confidential Client)

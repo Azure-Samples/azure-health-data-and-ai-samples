@@ -7,7 +7,7 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Azure Active Directory tenant ID for the FHIR Service.')
+@description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
 
 @description('Name of the Azure API Management instance.')
@@ -19,7 +19,7 @@ param smartFrontendAppUrl string
 @description('Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)')
 param fhirServiceAudience string
 
-@description('Azure AD Application ID for the context application.')
+@description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
 @description('App Insights Instrumentation Key for the sample. (Optional)')
