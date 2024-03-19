@@ -96,7 +96,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             }
 
             // Ensure the OID provided in the cache body matches the user's access token.
-            var userId = userPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")!.Value;
+            var userId = userPrincipal.FindFirst(_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
             if (launchCacheObject.UserId != userId)
             {
                 _logger?.LogError($"User provided oid {launchCacheObject.UserId} does not match token oid {userId}.");
