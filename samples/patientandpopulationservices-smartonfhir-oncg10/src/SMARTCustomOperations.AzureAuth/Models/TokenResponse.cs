@@ -173,7 +173,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 if (fhirUserSplit.Length >= 2)
                 {
                     var localFhirUser = fhirUserSplit.Skip(Math.Max(0, fhirUserSplit.Count() - 2));
-                    if (String.Equals(fhirUserSplit.First(), "patient", StringComparison.InvariantCultureIgnoreCase))
+                    if (String.Equals(localFhirUser.First(), "patient", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return localFhirUser.Last();
                     }
