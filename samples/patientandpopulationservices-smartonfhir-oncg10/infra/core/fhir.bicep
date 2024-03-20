@@ -38,7 +38,7 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-previ
       audience: resolvedAudience
       smartProxyEnabled: false
     }
-    exportConfiguration: {
+     exportConfiguration: {
       storageAccountName: exportStorageAccount.name
     }
   }
