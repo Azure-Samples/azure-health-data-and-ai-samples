@@ -36,14 +36,9 @@ This application registration is used to customize the access token sent to the 
     ```
 1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/fhir_resource_app_primary_domain.png)
-![](./images/fhir_resource_app_new_app.png)
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/fhir_resource_app_new_app2.png)
 ![](./images/fhir_resource_app_set_uri.png)
-![](./images/fhir_resource_app_set_uri2.png)
 ![](./images/fhir_resource_app_manifest.png)
+![](./images/fhir_resource_app_manifest_2.png)
 </details>
