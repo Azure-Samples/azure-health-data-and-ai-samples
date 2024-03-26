@@ -123,6 +123,7 @@ module fhir 'core/fhir.bicep'= {
     AuthorityURL: AuthorityURLvalue
     StandaloneAppClientId:StandaloneAppClientIdvalue
     FhirResourceAppId:FhirResourceAppIdvalue
+    smartOnFhirWithB2C: smartonfhirwithb2c
   }
 }
 
