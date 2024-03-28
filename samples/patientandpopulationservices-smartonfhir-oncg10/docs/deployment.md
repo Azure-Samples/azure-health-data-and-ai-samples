@@ -70,6 +70,7 @@ Next you will need to clone this repository and prepare your environment for dep
     If you have opted for Microsoft Entra ID, then set the deployment environment configuration.
     ```
     azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
+    azd env set SmartonFhirwithB2C false
     ```
 1. If you have opted for B2C, then Login with the Azure Developer CLI.
     ```
@@ -82,7 +83,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
-    - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName`, `fhirid` and `smartonfhirwithb2c` parameters:
+    - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName` and `fhirid` parameters:
         - `B2CTenantId` : This parameter takes Tenant ID of your B2C Tenant which you deployed earlier.
             - Note: If you have opted for Microsoft Entra ID you can skip this parameter.
         - `StandaloneAppClientId` : This parameter takes Application ID / Client ID of Inferno Standalone Patient App which you created earlier.
@@ -93,8 +94,7 @@ Next you will need to clone this repository and prepare your environment for dep
         - `fhirid`: This parameter allows you to decide whether to use an existing FHIR service or create a new one. Leaving this parameter empty will create a new FHIR service. If you wish to use an existing FHIR server, input the FHIR instance ID. Below are steps to retrieve the FHIR instance ID: 
             1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
-            3. Copy the "Id" field under the "Essentials" group.   
-        - `smartonfhirwithb2c`: This parameter takes boolean value. If you have opted for B2C then select True and if you have opted for Microsoft Entra ID then select False.     
+            3. Copy the "Id" field under the "Essentials" group.      
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
             - Enable the system-assigned status in the existing FHIR service, Follow the below steps:
