@@ -45,7 +45,10 @@ Next you will need to clone this repository and prepare your environment for dep
     azd env set ApiPublisherEmail "Your Email"
     ```
 1. Start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
-    - When running this command, you must select the subscription name and location from the drop-down menus to specify the deployment location for all resources. 
+     ```
+    azd up
+    ```
+    - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
     - The azd provision command will prompt users to enter values for the `existingResourceGroupName` and `fhirid` parameters. Users can provide values based on their requirements as below
         - `existingResourceGroupName` : This parameter allows the user to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}-rg' and deploy the sample. If the user provides an existing resource group, the sample will be deployed in that resource group.
@@ -64,16 +67,22 @@ Next you will need to clone this repository and prepare your environment for dep
             <br /><details><summary>Click to expand and see screenshots.</summary>
             ![](./images/deployment/7_Identity_enabled.png)
             </details>
-        - Replace the FHIR Server Audience URL with FHIR Resource Application Registration Application ID URL which was created earlier for this SMART on FHIR sample, Follow the below steps:
+         - If you are creating a new FHIR server as part of the SMART on FHIR deployment, you can skip the below steps as the SMART on FHIR sample requires the FHIR server Audience URL to match the FHIR Resource Application Registration ID URL (which you created in Step 4 above). When you deploy the SMART on FHIR sample with a new FHIR server, the sample will automatically change the FHIR server Audience URL for you. If you use an existing FHIR server, you will need to do these steps manually. 
             1. Navigate to your FHIR Resource App Registration.
             2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
             3. Go to your existing FHIR Service.
             4. Proceed to the authentication blade. 
             5. Paste the URL into the Audience field.
-            <br /><details><summary>Click to expand and see screenshots.</summary>
-            ![](./images/deployment/7_fhirresourceappregistration_applicationurl.png)
-            ![](./images/deployment/7_fhirservice_audienceurl.png)
-            </details>
+        <br /><details><summary>Click to expand and see screenshots.</summary>
+        ![](./images/deployment/7_fhirresourceappregistration_applicationurl.png)
+        ![](./images/deployment/7_fhirservice_audienceurl.png)
+        </details>
+> [!IMPORTANT]  
+> If you are using an existing FHIR server, please note that in the above step, you needed to change the FHIR server Audience URL to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
+
+
+
+*NOTE:* This will take around 15 minutes to deploy. You can continue the setup below. 
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
 
