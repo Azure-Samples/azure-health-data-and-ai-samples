@@ -25,6 +25,9 @@ Changing an Microsoft Graph directory extensions is done through API requests to
     ```bash
     pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "Patient/PatientA"
     ```
+1. If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
+    - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
+
 
 ### For Microsoft Entra ID user only - Configure fhirUser mapping to token
 
@@ -39,7 +42,6 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 5. Click the edit icon and select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
 6. Click **Add** then **Save**.
 
-<br />
 <details>
 <summary>Click to expand and see screenshots.</summary>
 <br />
@@ -48,4 +50,22 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
+</details>
+
+<br />
+
+### For Microsoft Entra ID user only - Modify Application Manifest
+
+For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
+
+1. In the Azure Portal in Microsoft Entra ID, select **App registrations**
+2. Select your App registration from the list
+3. Select **Manifest** from the left-hand menu
+4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.
+
+<details>
+<summary>Click to expand and see screenshots.</summary>
+<br />
+
+![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
 </details>

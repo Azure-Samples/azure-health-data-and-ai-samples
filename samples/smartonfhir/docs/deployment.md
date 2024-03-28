@@ -59,7 +59,7 @@ Next you will need to clone this repository and prepare your environment for dep
     azd env set ApiPublisherName "Your Name"
     azd env set ApiPublisherEmail "Your Email"
     ```
-1. [Create Inferno Standalone Patient App. Use the instructions here](./ad-apps/inferno-test-app-registration.md).
+1. If you have opted for B2C, then [Create Inferno Standalone Patient App. Use the instructions here](./ad-apps/inferno-test-app-registration.md).
 1. If you have opted for B2C, then set the deployment environment configuration.
     ```
     azd env set B2CTenantId <Tenant_ID_Of_B2C>
@@ -82,14 +82,19 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
-    - The azd provision command will prompt you to enter values for the `existingResourceGroupName` and `fhirid` parameters:
+    - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName`, `fhirid` and `smartonfhirwithb2c` parameters:
+        - `B2CTenantId` : This parameter takes Tenant ID of your B2C Tenant which you deployed earlier.
+            - Note: If you have opted for Microsoft Entra ID you can skip this parameter.
+        - `StandaloneAppClientId` : This parameter takes Application ID / Client ID of Inferno Standalone Patient App which you created earlier.
+            - Note: If you have opted for Microsoft Entra ID you can skip this parameter. 
         - `existingResourceGroupName` : This parameter allows you to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}-rg' and deploy the sample. If you provide an existing resource group, the sample will be deployed in that resource group.
           - Note: If you are using an existing resource group, make sure that it does not already have a SMART on FHIR resource already deployed, because multiple samples in the same resource group are not supported.
           - Note: SMART on FHIR will need to be deployed in the same resource group as the associated FHIR server. 
         - `fhirid`: This parameter allows you to decide whether to use an existing FHIR service or create a new one. Leaving this parameter empty will create a new FHIR service. If you wish to use an existing FHIR server, input the FHIR instance ID. Below are steps to retrieve the FHIR instance ID: 
             1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
-            3. Copy the "Id" field under the "Essentials" group.     
+            3. Copy the "Id" field under the "Essentials" group.   
+        - `smartonfhirwithb2c`: This parameter takes boolean value. If you have opted for B2C then select True and if you have opted for Microsoft Entra ID then select False.  
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
             - Enable the system-assigned status in the existing FHIR service, Follow the below steps:

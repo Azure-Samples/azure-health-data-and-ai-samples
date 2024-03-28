@@ -39,6 +39,7 @@ The Patient Standalone Launch application is a standard confidential client appl
         - DelegatedPermissionGrant.ReadWrite.All 
 1. Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
+1. If you have opted for Microsoft Entra ID, then follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 <br /><details><summary>Click to expand and see screenshots for Microsoft Entra ID Reference.</summary>
         ![](./images/5_confidential_client_1.png)        
