@@ -35,7 +35,7 @@ While you can use the full URL in the request, it's recommended that you store t
 ![A screenshot that shows postman configurations](../images/postman/Postman-Authorization-Tab.png)
 
 1. Choose **Get New Access Token** at the bottom of the page.
-1. The system asks for user sign-in credentials.  
+1. The system asks for user sign-in credentials. Provide credentails of test user created for patient/practitioner based on test case. 
 1. When you receive the token, choose **Use Token**.
 1. Ensure the token is in the Authorization Header of the REST call.
 1. Use this token to access FHIR resources based on the scopes specified in the environment variable.
