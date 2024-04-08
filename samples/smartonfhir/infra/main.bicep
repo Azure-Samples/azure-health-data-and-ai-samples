@@ -68,7 +68,6 @@ var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : name
 var fhirResourceIdSplit = split(fhirId,'/')
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
-var createFhirService = empty(fhirId) ? true : false
 var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
 var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
@@ -109,7 +108,6 @@ module fhir 'core/fhir.bicep'= {
   scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     createWorkspace: createWorkspace
-    createFhirService: createFhirService
     workspaceName: workspaceNameResolved
     fhirServiceName: fhirNameResolved
     location: location

@@ -1,5 +1,4 @@
 param createWorkspace bool
-param createFhirService bool
 param workspaceName string
 param fhirServiceName string
 param exportStoreName string
@@ -50,7 +49,7 @@ var authenticationConfiguration = smartOnFhirWithB2C ? {
   smartProxyEnabled: false
 }
 
-resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if (createFhirService) {
+resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = {
   name: '${newOrExistingWorkspaceName}/${fhirServiceName}'
   location: location
   kind: 'fhir-R4'
@@ -84,17 +83,14 @@ module exportFhirRoleAssignment './identity.bicep'= {
   name: 'fhirExportRoleAssignment'
   params: {
     #disable-next-line BCP053
-    principalId: createFhirService ? fhir.identity.principalId : fhirExisting.identity.principalId
-    fhirId: createFhirService ? fhir.id : fhirExisting.id
+    principalId: fhir.identity.principalId
+    fhirId: fhir.id
     roleType: 'storageBlobContributor'
   }
 }
 
-resource fhirExisting 'Microsoft.HealthcareApis/workspaces/fhirservices@2021-06-01-preview' existing = if (!createFhirService) {
-  name: '${newOrExistingWorkspaceName}/${fhirServiceName}'
-}
 
-output fhirId string = createFhirService ? fhir.id : fhirExisting.id
+output fhirId string = fhir.id
 #disable-next-line BCP053
-output fhirIdentity string = createFhirService ? fhir.identity.principalId : fhirExisting.identity.principalId
+output fhirIdentity string = fhir.identity.principalId
 output exportStorageUrl string = exportStorageAccount.properties.primaryEndpoints.blob

@@ -68,7 +68,6 @@ var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
 var fhirResourceIdSplit = split(fhirId,'/')
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
-var createFhirService = empty(fhirId) ? true : false
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -112,7 +111,6 @@ module fhir 'core/fhir.bicep'= {
   scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     createWorkspace: createWorkspace
-    createFhirService: createFhirService
     workspaceName: workspaceNameResolved
     fhirServiceName: fhirNameResolved
     exportStoreName: functionBase.outputs.storageAccountName
