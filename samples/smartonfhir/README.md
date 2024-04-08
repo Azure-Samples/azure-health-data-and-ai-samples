@@ -9,7 +9,7 @@ As a pre-requisite to the sample deployment, you will need to have
 
 The below components will be deployed with this sample.
 1. Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
-2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID]https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements.
+2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements.
 
 **As a next step, follow the steps listed in the [Deployment document](./docs/deployment.md). This document provides detailed deployment instructions.**
 

@@ -118,3 +118,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 </details>
 <br />
 
+## 4. Use Postman to access FHIR resource via SMART on FHIR sample
+
+Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman/configure-postman.md) for instructions to access FHIR resources via SMART on FHIR using postman.
+
