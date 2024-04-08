@@ -8,6 +8,7 @@ This application registration is used to customize the access token sent to the 
     - Go to `App Registrations`
     - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
     - Click `Register` (ignore redirect URI).
+
 1. Inform your Azure Developer CLI environment of this application with:
     ```
     azd env set FhirResourceAppId <FHIR Resource App Id>

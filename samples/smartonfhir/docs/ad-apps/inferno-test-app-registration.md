@@ -6,7 +6,7 @@ To successfully test ONC (g)(10) with Inferno, you will need to create four sepa
 
 The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret (section 1 & 2 of the test). The public client represents an application that cannot protect a secret (section 9 of the test). You will need to follow these instructions twice - once for the confidential client (web) and once for the public client (spa). 
 
-1. Create a new application in Azure Active Directory. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. Create a new application in Microsoft Entra ID. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -51,7 +51,7 @@ The Patient Standalone Launch application is a standard confidential client appl
 
 The EHR launch confidential client application is a standard confidential client application which represents an application that can protect a secret (section 3 of the test).
 
-1. Create a new application in Azure Active Directory. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. Create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource Application (Delegated)
         - fhirUser
@@ -93,9 +93,9 @@ The EHR launch confidential client application is a standard confidential client
 
 ## Backend Service Client Application
 
-Azure Active Directory does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
+Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
-1. Create a new application in Azure Active Directory. No platform or redirect URL is needed.
+1. Create a new application in Microsoft Entra ID. No platform or redirect URL is needed.
 1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)

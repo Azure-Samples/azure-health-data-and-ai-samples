@@ -29,7 +29,7 @@ param ApiPublisherEmail string
 @description('ClientId for the context static app registration for this FHIR Service (you must create this)')
 param ContextAppClientId string
 
-@description('Audience for SMART scopes in Azure Active Directory. Leave blank to use the PaaS Service URL.')
+@description('Audience for SMART scopes in Microsoft Entra ID. Leave blank to use the PaaS Service URL.')
 param FhirAudience string
 
 // end user required API gateway parameters

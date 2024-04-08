@@ -33,6 +33,7 @@ This architecture explains how a web application communicates with a terminology
  * [Azure Developer CLI](https://docs.microsoft.com/azure/developer/azure-developer-cli/get-started?tabs=bare-metal%2Cwindows&pivots=programming-language-csharp#prerequisites)
 	  
  * Postman installed locally. For more information about Postman, see [Get Started with Postman](https://www.getpostman.com/).
+ * Clone the repo.
 
 ### Prerequisite check
 
@@ -51,12 +52,65 @@ This sample uses an Azure APIM which acts as Common Endpoint Application for Ext
 	The APIM routes $validate-code, $lookup, $translate, $expand, $find-matches, $subsumes and $closure operations to a third party terminology service and routes Search Observation and Save Observation operations to AHDS FHIR Service.
 
 	- Useful links for APIM:
-		1.	How to create [Azure APIM instance](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance).
-		2. How to add [API](https://learn.microsoft.com/en-us/azure/api-management/add-api-manually) in Azure APIM instance.
-		3. Azure APIM [Policies](https://learn.microsoft.com/en-us/azure/api-management/policies/)
-		4. How to configure [authentication and authorization](https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview) in APIM.
+		1. [About Azure APIM](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
+		2. [Useful APIM terminologies](https://learn.microsoft.com/en-us/azure/api-management/api-management-terminology)
+		3. [Azure APIM backends](https://learn.microsoft.com/en-us/azure/api-management/backends?tabs=bicep)
+		4. How to add [API](https://learn.microsoft.com/en-us/azure/api-management/add-api-manually) in Azure APIM instance.
+		5. Azure APIM [Policies](https://learn.microsoft.com/en-us/azure/api-management/policies/)
+		6. How to configure [authentication and authorization](https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview) in APIM.
 
-	__Note:__ The APIM uses client Id and client secret for authenticating calls to terminology service. APIM will need changes in case external terminology service uses different kind of authentication.
+	__Note:__ In this sample, The APIM uses client Id and client secret for authenticating calls to external third party terminology service. APIM will need changes in case external third party  terminology service uses different kind of authentication.
+
+## Azure APIM sample details:
+Here we will go through high level steps to create an Azure APIM instance with Backend, Policies and APIs, somilar to the one used for this sample.
+
+1. Create Azure APIM Instance
+Create an Azure APIM instance following steps [here](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) and come back for next step.
+2. Create APIs:
+	
+	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+	b. Open file "FHIR Terminology.openapi+json.json" in Editor.
+	c. Add your fhir service url for backend at hoghlighted place and save the file.
+		![](./images/CreateAPI1.png)
+	d. Go to "APIs" tab, click on "Add API" and select "OpenAPI" from "Create from definition" section as highlighted below:
+		
+		![](./images/CreateAPI.png)
+		
+	e. In the new popup window, click on "Select a file" and browse file "FHIR Terminology.openapi+json.json" at loaction (../samples/fhir-terminology-service-integration/apim).
+		
+		![](./images/CreateAPI2.png)
+		
+	f. After you select the file, fileds will be filled with values as shown below, you can change values of "Display Name" and "Name" fileds. Click on "Create".
+		
+		![](./images/CreateAPI3.png)
+		
+	g. As shown below, API willget created with list of operations and backend is fhir service url for all operations.
+		
+		![](./images/CreateAPI4.png)
+
+	
+3. Create Policy Fragment:
+	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P teminology service requirements.
+		![](./images/Policy1.png)
+	c. After you are done editing save the changes and copy all the text.
+	d. Go back to your APIM instance and go to "Polict Fragments" tab, click on "Create", new popup will open, Enter polict name, description and add copied text for policy and click in "Create".
+		![](./images/Policy2.png)
+	d. Once policy is successfully created, you can see it in "Polict Fragments" tab.
+		![](./images/Policy3.png)
+
+4. Add Policy to API operations:
+	a. Go to "APIs" tab select "FHIR Terminology" select an operation to apply the policy and click on "Add Policy" in "inbound processing" section as shown below:
+		![](./images/AddPolicy1.png)
+	b. Select Other policies option as highlighted:
+		![](./images/AddPolicy2.png)
+	c. In xml, Add a code fragment to include policy fragment "RedirectToterminology", as shown and click on "Save":
+		![](./images/AddPolicy3.png)
+	d. Policy is added to API operation in inbound processing as shown:
+		![](./images/AddPolicy4.png)
+
+Following the above steps and sample templates users can create more APIs, Operations and Policies as needed.
+
 
 - **Static Web App (UI) and Postman queries**
 
