@@ -23,7 +23,7 @@ You will need an Azure Subscription with Owner privileges and Microsoft Entra ID
 The below components are deployed with this sample. At a high level:
 
 - Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
-- Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Microsoft Entra ID][(https://learn.microsoft.com/azure/active-directory/fundamentals/active-directory-whatis)](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements..
+- Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements..
 - Bulk Data Export is handled mostly by FHIR Service with some custom code to enable users to access the files they've exported per the Bulk Data Implementation Guide.
 - While FHIR Service supports `$export` operations, Azure does not support accessing the files using the same access token used for FHIR Service.
 - All FHIR data operations are handled by [FHIR Service in Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/overview). Azure API for FHIR would also fit here

@@ -36,17 +36,11 @@ param FhirAudience string
 
 // start optional configuration parameters
 
-@description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
-param createWorkspace bool = true
+@description('Name of your existing resource group (leave blank to create a new one)')
+param existingResourceGroupName string 
 
-@description('Do you want to create a new FHIR Service or use an existing one?')
-param createFhirService bool = true
-
-@description('Name of Azure Health Data Services workspace to deploy or use. Leave blank for default.')
-param workspaceName string = ''
-
-@description('Name of the FHIR service to deloy or use. Leave blank for default.')
-param fhirServiceName string = ''
+@description('Provide the exisiting fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
+param fhirId string 
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
@@ -68,23 +62,35 @@ var tenantId = subscription().tenantId
 var keyVaultWriterPrincipals = [ principalId ]
 var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
-
+var createResourceGroup = empty(existingResourceGroupName) ? true : false
 
 @description('Resource group to deploy sample in.')
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {
   name: '${name}-rg'
   location: location
   tags: appTags
 }
 
-var workspaceNameResolved = length(workspaceName) > 0 ? workspaceName : '${replace(nameCleanShort, '-', '')}health'
-var fhirNameResolved = length(fhirServiceName) > 0 ? workspaceName : 'fhirdata'
+var fhirResourceIdSplit = split(fhirId,'/')
+var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
+var createWorkspace = empty(fhirId) ? true : false
+var createFhirService = empty(fhirId) ? true : false
+var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
+var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
+
+resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' existing = if (!createResourceGroup) {
+  name: existingResourceGroupName
+}
+
+var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
+
+var fhirInstanceResourceGroup = empty(fhirId) ? newOrExistingResourceGroupName : fhirserviceRg
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
   name: 'azure-health-data-services'
-  scope: rg
+  scope: resourceGroup(fhirInstanceResourceGroup)
   params: {
     createWorkspace: createWorkspace
     createFhirService: createFhirService
@@ -106,7 +112,7 @@ var logAnalyticsNameResolved = length(logAnalyticsName) > 0 ? logAnalyticsName :
 @description('Deploy monitoring and logging')
 module monitoring 'core/monitoring.bicep'= {
   name: 'monitoringDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     logAnalyticsName: logAnalyticsNameResolved
     appInsightsName: appInsightsName
@@ -118,7 +124,7 @@ module monitoring 'core/monitoring.bicep'= {
 @description('Deploy base resources needed for function app based custoom operations.')
 module functionBase 'core/functionHost.bicep' = {
   name: 'functionBaseDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     appTags: appTags
     location: location
@@ -130,7 +136,7 @@ module functionBase 'core/functionHost.bicep' = {
 @description('Deploy Redis Cache for use as External Cache for APIM')
 module redis './core/redisCache.bicep'= {
   name: 'redisCacheDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     apiManagementServiceName: apimName
     location: location
@@ -140,7 +146,7 @@ module redis './core/redisCache.bicep'= {
 @description('Azure Health Data Services Toolkit auth custom operation function app')
 module authCustomOperation './app/authCustomOperation.bicep' = {
   name: 'authCustomOperationDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     name: name
     location: location
@@ -164,7 +170,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 @description('Azure Health Data Services Toolkit export custom operation function app')
 module exportCustomOperation './app/exportCustomOperation.bicep' = {
   name: 'exportCustomOperationDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     name: name
     location: location
@@ -182,7 +188,7 @@ module exportCustomOperation './app/exportCustomOperation.bicep' = {
 @description('Setup identity connection between FHIR and the given contributors')
 module fhirContributorIdentities './core/identity.bicep' =  [for principalId in  fhirContributorPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirContrib'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
@@ -194,7 +200,7 @@ module fhirContributorIdentities './core/identity.bicep' =  [for principalId in 
 @description('Setup identity connection between FHIR and the given SMART users')
 module fhirSMARTIdentities './core/identity.bicep' =  [for principalId in  fhirSMARTPrincipals: {
   name: 'fhirIdentity-${principalId}-fhirSmart'
-  scope: rg
+  scope:resourceGroup(newOrExistingResourceGroupName)
   params: {
     fhirId: fhir.outputs.fhirId
     principalId: principalId
@@ -206,7 +212,7 @@ module fhirSMARTIdentities './core/identity.bicep' =  [for principalId in  fhirS
 @description('Setup identity connection between Export functon app and export storage account')
 module exportFhirRoleAssignment './core/identity.bicep'= {
   name: 'fhirExportRoleAssignment'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     principalId: exportCustomOperation.outputs.functionAppPrincipalId
     fhirId: fhir.outputs.fhirId
@@ -219,7 +225,7 @@ var apimName = '${name}-apim'
 @description('Deploy Azure API Management for the FHIR gateway')
 module apim './core/apiManagement.bicep'= {
   name: 'apiManagementDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     apiManagementServiceName: apimName
     publisherEmail: ApiPublisherEmail
@@ -236,7 +242,7 @@ module apim './core/apiManagement.bicep'= {
 @description('Link Redis Cache to APIM')
 module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
   name: 'apimRedisLinkDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     apiManagementServiceName: apimName
     redisApiVersion: redis.outputs.redisApiVersion
@@ -249,7 +255,7 @@ var backendServiceVaultName = '${nameShort}-backkv'
 @description('KeyVault to hold backend service principal maps')
 module keyVault './core/keyVault.bicep' = {
   name: 'vaultDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     vaultName: backendServiceVaultName
     location: location
@@ -263,7 +269,7 @@ var authorizeStaticWebAppName = '${name}-contextswa'
 @description('Static web app for SMART Context UI')
 module contextStaticWebApp './app/contextApp.bicep' = {
   name: 'staticWebAppDeploy'
-  scope: rg
+  scope: resourceGroup(newOrExistingResourceGroupName)
   params: {
     staticWebAppName: authorizeStaticWebAppName
     location: location
@@ -290,3 +296,4 @@ output REACT_APP_AAD_APP_CLIENT_ID string = ContextAppClientId
 output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
+output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName

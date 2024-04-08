@@ -5,7 +5,9 @@ The fhirUser claim mapping informs the calling application of the user's FHIR id
 For testing this sample with the Inferno (g)(10) test suite, the `fhirUser` claims mapping needs to be added to:
 - FHIR Resource Application
 - Inferno Patient Standalone Confidential Client
+- Inferno Patient Public Confidential Client
 - Inferno EHR Launch Confidential Client
+- Backend Service Client Application
 
 
 ## Add fhirUser claim to your test users
@@ -42,18 +44,13 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 5. Click the edit icon and select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
 6. Click **Add** then **Save**.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-<br />
-
+*NOTE:* This configuration needs to be applied to the FHIR resource application as well as to all four Inferno applications.
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
 ![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
 </details>
-
-
 
 ### Modify Application Manifest
 
@@ -64,10 +61,7 @@ For the Application Registration to allow custom claims, the *acceptMappedClaims
 3. Select **Manifest** from the left-hand menu
 4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-<br />
-
+*NOTE:* This configuration needs to be applied to the FHIR resource application as well as to all four Inferno applications.
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
 </details>

@@ -4,27 +4,25 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. Find your Primary Domain in Microsoft Entra ID
-    - Open Microsoft Entra ID in the Azure Portal
-    - Note your `Primary Domain` in the Overview blade of Microsoft Entra ID.
 1. Create a FHIR Resource Application Registration
     - Go to `App Registrations`
     - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
     - Click `Register` (ignore redirect URI).
-1. Set the application URL
-    - Go to `Expose an API` blade.
-    - Set the application URL to https://<app-registration-name>.<Microsoft Entra ID Primary Domain>.
-        - For example `https://my-app-1.mytenant.onmicrosoft.com`.
-        - Save the `Application URL` for later.
-1. Add all the applicable FHIR Scopes.
-    - Go to the Manifest blade for your application.
-    - Change `acceptMappedClaims` from null to true.
-    - Copy the `appRoles` JSON element from [fhir-app-manifest.json](./fhir-app-manifest.json) to the `appRoles` JSON element in your application manifest.
-    - Copy the `oauth2Permissions` JSON element from [fhir-app-manifest.json](./fhir-app-manifest.json) to the `oauth2Permissions` JSON element in your application manifest.
+
 1. Inform your Azure Developer CLI environment of this application with:
     ```
-    azd env set FhirAudience <FHIR Resource Application ID URI>
     azd env set FhirResourceAppId <FHIR Resource App Id>
+    ```
+1. Run below command to configure a FHIR Resource Application Registration.
+    
+    Windows:
+    ```powershell
+    powershell ./scripts/Configure-FhirResourceAppRegistration.ps1
+    ```
+    
+    Mac/Linux
+    ```bash
+    pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
 1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
@@ -39,15 +37,9 @@ This application registration is used to customize the access token sent to the 
     ```
 1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
-![](./images/fhir_resource_app_primary_domain.png)
-![](./images/fhir_resource_app_new_app.png)
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/fhir_resource_app_new_app2.png)
 ![](./images/fhir_resource_app_set_uri.png)
-![](./images/fhir_resource_app_set_uri2.png)
 ![](./images/fhir_resource_app_manifest.png)
+![](./images/fhir_resource_app_manifest_2.png)
 </details>
-

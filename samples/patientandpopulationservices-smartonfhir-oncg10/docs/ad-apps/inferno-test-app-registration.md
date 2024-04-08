@@ -36,16 +36,10 @@ The Patient Standalone Launch application is a standard confidential client appl
         - offline_access
 1. Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-<br />
-
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_client_confidental_app_scopes.png)
 </details>
-<br />
 
 ## EHR Launch Confidential Client Application
 
@@ -80,16 +74,10 @@ The EHR launch confidential client application is a standard confidential client
         - openid
         - offline_access
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
-1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_ehr_confidental_app_scopes.png)
 </details>
-<br />
 
 ## Backend Service Client Application
 
@@ -108,11 +96,7 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
     - Secret: The secret you generated for the application
     - Tags: Make sure to add the tag `jwks_url` with the backend service JWKS URL. For Inferno testing, this is: https://inferno.healthit.gov/suites/custom/g10_certification/.well-known/jwks.json
 1. Save the client id for later testing.
-
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_create_backend_services_app.png)
 ![](./images/5_add_backend_role_assignment_1.png)
 ![](./images/5_assign_backend_application.png)
@@ -121,5 +105,4 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 ![](./images/5_keyvault_reg.png)
 ![](./images/5_keyvault_create_secret.png)
 ![](./images/5_keyvault_secret_details.png)
-
 </details>
