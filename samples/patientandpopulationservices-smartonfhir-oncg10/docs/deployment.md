@@ -51,12 +51,13 @@ Next you will need to clone this repository and prepare your environment for dep
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
     - The azd provision command will prompt users to enter values for the `existingResourceGroupName` and `fhirid` parameters. Users can provide values based on their requirements as below
-        - `existingResourceGroupName` : This parameter allows the user to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}-rg' and deploy the sample. If the user provides an existing resource group, the sample will be deployed in that resource group.
-                                        Note: An existing resource group should not have SMART on FHIR resource already deployed because multiple samples in the same resource group are not supported.
-        - `fhirid`: This parameter allows user to decide whether to use existing FHIR service or create new one. Leaving this parameter empty will create new FHIR service. If user wish to use existing FHIR server then FHIR instance id need to be provided. Below are steps to retrieve the FHIR instance id: 
-            1. Navigate to your FHIR service.
+        - `existingResourceGroupName` : This parameter allows you to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}-rg' and deploy the sample. If you provide an existing resource group, the sample will be deployed in that resource group.
+          - Note: If you are using an existing resource group, make sure that it does not already have a SMART on FHIR resource already deployed, because multiple samples in the same resource group are not supported.
+          - Note: SMART on FHIR will need to be deployed in the same resource group as the associated FHIR server. 
+        - `fhirid`: This parameter allows you to decide whether to use an existing FHIR service or create a new one. Leaving this parameter empty will create a new FHIR service. If you wish to use an existing FHIR server, input the FHIR instance ID. Below are steps to retrieve the FHIR instance ID: 
+            1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
-            3. Copy the ID field under essential.     
+            3. Copy the "Id" field under the "Essentials" group. 
     - Some important considerations when using an existing FHIR service instance:
         - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
         - Enable the system-assigned status in the existing FHIR service, Follow the below steps:
@@ -67,7 +68,8 @@ Next you will need to clone this repository and prepare your environment for dep
             <br /><details><summary>Click to expand and see screenshots.</summary>
             ![](./images/deployment/7_Identity_enabled.png)
             </details>
-         - If you are creating a new FHIR server as part of the SMART on FHIR deployment, you can skip the below steps as the SMART on FHIR sample requires the FHIR server Audience URL to match the FHIR Resource Application Registration ID URL (which you created in Step 4 above). When you deploy the SMART on FHIR sample with a new FHIR server, the sample will automatically change the FHIR server Audience URL for you. If you use an existing FHIR server, you will need to do these steps manually. 
+         - If you are creating a new FHIR server as part of the SMART on FHIR deployment, you can skip this step. However, if you are using an existing FHIR server, you will need to complete this step:  
+            The SMART on FHIR sample requires the FHIR server Audience URL to match the FHIR Resource Application Registration ID URL (which you created in Step 4 above). When you deploy the SMART on FHIR sample with a new FHIR server, the sample will automatically change the FHIR server Audience URL for you. If you use an existing FHIR server, you will need to do this step manually. 
             1. Navigate to your FHIR Resource App Registration.
             2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
             3. Go to your existing FHIR Service.
