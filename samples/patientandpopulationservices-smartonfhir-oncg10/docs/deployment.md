@@ -23,8 +23,12 @@ Make sure you have the pre-requisites listed below
   - Elevated access in Microsoft Entra ID and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
 
 - **Test Accounts:**
-  - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
-  - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
+  - For Microsoft Entra ID:
+    - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
+    - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
+  - For Azure B2C:
+    - Azure B2C test account to represent Patient persona. Make sure you have the object id of the user from Azure B2C.
+    - Azure B2C test account to represent Provider persona. Make sure you have the object id of the user from Azure B2C.
 
 - **Azure B2C SetUp:**
   - This setup is exclusively necessary for Smart on FHIR implementation with B2C. If you opt for Microsoft Entra ID, you can bypass this configuration.
@@ -97,27 +101,25 @@ Next you will need to clone this repository and prepare your environment for dep
             3. Copy the "Id" field under the "Essentials" group.      
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
-            - Enable the system-assigned status in the existing FHIR service, Follow the below steps:
-                1. Navigate to your existing FHIR Service in Azure Portal.
-                2. Proceed to the Identity blade.
-                3. Enable the status.
-                4. Click on save.
-            <br /><details><summary>Click to expand and see screenshots.</summary>
-            ![](./ad-apps/images/7_Identity_enabled.png)
-            </details>
-    - If you are creating a new FHIR server as part of the SMART on FHIR deployment, you can skip this step. However, if you are using an existing FHIR server, you will need to complete this step:  
-    The SMART on FHIR sample requires the FHIR server Audience URL to match the FHIR Resource Application Registration ID URL (which you created in Step 4 above). When you deploy the SMART on FHIR sample with a new FHIR server, the sample will automatically change the FHIR server Audience URL for you. If you use an existing FHIR server, you will need to do this step manually. 
-        1. Navigate to your FHIR Resource App Registration.
-        2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
-        3. Go to your existing FHIR Service.
-        4. Proceed to the authentication blade. 
-        5. Paste the URL into the Audience field.
-        <br /><details><summary>Click to expand and see screenshots.</summary>
-        ![](./ad-apps/images/7_fhirresourceappregistration_applicationurl.png)
-        ![](./ad-apps/images/7_fhirservice_audienceurl.png)
-        </details>
+1. Add fhirUser claim to your test users. You will need to add the `fhirUser` claim to each of your test user accounts. For the patient test user, the `fhirUser` needs to be `<Complete Fhir Url>/Patient/PatientA` to collaborate with the sample data. For the practitioner test user, the `fhirUser` needs to be `<Complete Fhir Url>/Practitioner/PractitionerC1`.
+
+   Changing an Microsoft Graph directory extensions is done through API requests to Microsoft Graph. You can use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will just need the `object id` of your patient test user. In a production scenario, you would integrate this into your user registration process.
+
+    1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
+    
+        Windows:
+        ```powershell
+        powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url>/Patient/PatientA"
+        ```
+
+        Mac/Linux:
+        ```bash
+        pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url>/Patient/PatientA"
+        ```
+    1. If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
+        - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
 > [!IMPORTANT]  
-> If you are using an existing FHIR server, please note that in the above step, you needed to change the FHIR server Audience URL to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
+> If you are using an existing FHIR server, please note that while deployment the FHIR server Audience URL has changed to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
 
 
 
@@ -173,6 +175,7 @@ If you have opted for B2C - This requires accessing the applications registered 
 </details>
 <br />
 
+*NOTE:* Changes made to Application Registration in Azure B2C Tenant takes time to reflect.
 ## 4. Create Inferno Test Applications in Microsoft Entra ID
 
 We will need to create four separate Microsoft Entra ID Applications to run the Inferno (g)(10) test suite. It's best practice to register an Azure Application for each client application that will need to access your FHIR Service. This will allow for granular control of data access per application for the tenant administrator and the users. For more information about best practices for Microsoft Entra ID applications, [read this](https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration).
