@@ -43,6 +43,9 @@
     },
     "smartonfhirwithb2c": {
       "value": "${SmartonFhirwithB2C}"
+    },
+    "oncEnabled": {
+      "value": "${oncEnabled}"
     }
   }
 }

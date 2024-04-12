@@ -57,6 +57,9 @@ param B2CTenantId string
 @description('smart on fhir with b2c')
 param smartonfhirwithb2c bool 
 
+@description('Is ONC enabled')
+param oncEnabled bool
+
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
@@ -260,6 +263,7 @@ module apim './core/apiManagement.bicep'= {
     fhirBaseUrl: fhirUrl
     issuer: issuer
     jwksUri: jwksUri
+    oncEnabled: oncEnabled
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     exportFunctionBaseUrl: 'https://${name}-exp-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri

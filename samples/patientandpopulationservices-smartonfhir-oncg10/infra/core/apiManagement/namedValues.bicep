@@ -4,6 +4,7 @@ param issuer string
 param jwksUri string
 param contextStaticAppBaseUrl string
 param audienceUrl string
+param oncEnabled bool
 
 resource tenantIdNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
   name: '${apiManagementServiceName}/tenantId'
@@ -37,10 +38,18 @@ resource contextStaticAppNamedValue 'Microsoft.ApiManagement/service/namedValues
   }
 }
 
-resource audienceNamedVAlue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+resource audienceNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
   name: '${apiManagementServiceName}/Audience'
   properties: {
     displayName: 'Audience'
     value: '${audienceUrl}/smart'
+  }
+}
+
+resource oncEnabledValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  name: '${apiManagementServiceName}/oncEnabled'
+  properties: {
+    displayName: 'oncEnabled'
+    value: toLower('${oncEnabled}')
   }
 }
