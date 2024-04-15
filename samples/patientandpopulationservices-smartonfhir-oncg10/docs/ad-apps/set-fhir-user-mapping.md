@@ -5,7 +5,9 @@ The fhirUser claim mapping informs the calling application of the user's FHIR id
 For testing this sample with the Inferno (g)(10) test suite, the `fhirUser` claims mapping needs to be added to:
 - FHIR Resource Application
 - Inferno Patient Standalone Confidential Client
+- Inferno Patient Standalone Public Client
 - Inferno EHR Launch Confidential Client
+- Inferno Backend Service Client Application
 
 ### For Microsoft Entra ID user only - Configure fhirUser mapping to token
 
