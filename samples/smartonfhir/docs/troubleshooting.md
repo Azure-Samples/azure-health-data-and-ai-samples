@@ -50,20 +50,27 @@ This is usually an issue with Azure API Management. Either an API configuration 
 
 To find out more, information, check out:
 
-- The request information and trace logs in Azure Application Insights. 
+- The request information and trace logs in Azure Application Insights.
 - This could be an issue with the Authorize User Input static app. Check the browser developer tools for more details.
 - Ensure your Azure Deployment of the sample was successful.
 
 ### Adding scopes to the FHIR resource app
+
 - You can add a new scope in the "oauth2Permissions" array in the manifest.json file of the FHIR resource app.
 - Or, you can also add it from the "Expose an API" blade of the FHIR resource app by clicking on "Add a scope" button.
 - Once added, these scopes would be available for adding as permission from the "API permissions" blade on required Microsoft Entra ID application.
 
-<br />
-<details>
-<summary>Click to expand and see screenshots.</summary>
-
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/troubleshooting/AddingScopesFromManifest.png)
 ![](./images/troubleshooting/AddingScopesFromExposeAnAPI.png)
+</details><br />
+
+### Resolving Client Authentication Error in Standalone App
+
+- This error occurs when some files are not properly copied over or some configuration variables are not properly set when deploying the sample.
+- To resolve this issue, simply rerun the `azd up` command in the terminal where the app was initially deployed. No additional steps are required.
+- The error is displayed in the screenshot below.
+
+<br /><details><summary>Click to expand and see screenshots.</summary>
+![](./images/troubleshooting/ClientAuthError.png)
 </details>
-<br />
