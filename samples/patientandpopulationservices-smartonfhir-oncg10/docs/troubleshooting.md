@@ -54,9 +54,9 @@ To find out more, information, check out:
 - This could be an issue with the Authorize User Input static app. Check the browser developer tools for more details.
 - Ensure your Azure Deployment of the sample was successful.
 
-### Resolving Client Authentication Error in Standalone App
+### Getting ClientAuthError on launching the sample app for the first time
 
-- This error occurs when some files are not properly copied over or some configuration variables are not properly set when deploying the sample.
+- This error occurs while launching the sample app for the first time, it arises when some files are not properly copied over or some configuration variables are not properly set when deploying the sample.
 - To resolve this issue, simply rerun the `azd up` command in the terminal where the app was initially deployed. No additional steps are required.
 - The error is displayed in the screenshot below.
 
