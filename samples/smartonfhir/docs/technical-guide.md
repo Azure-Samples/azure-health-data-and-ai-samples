@@ -7,17 +7,17 @@ This document describes how this SMART on FHIR sample works with Azure Health Da
 
 To successfully use this SMART on FHIR sample, your Azure environment must be setup with the below resources.
 
-- Azure Health Data Services with a FHIR Service
-- Azure API Management
-- Azure Function
+- Microsoft Entra ID is a cloud-based solution that helps organizations manage and secure identities for multicloud and hybrid environments. Microsoft Entra Identity manages user and application authentication and authorization for SMART on FHIR applications, ensuring secure access control to healthcare data by handling identity verification, OAuth 2.0 token issuance, and the management of access scopes and roles, all while supporting integration with other Azure services.
+- Azure Health Data Services with a FHIR Service acts as the backend that stores and retrieves FHIR resources. It supports the integration of SMART on FHIR apps, enabling them to perform a wide range of clinical and analytical operations on health data. This includes querying patient records, updating information, and interoperating with other clinical systems—all within the security and compliance frameworks offered by Azure.
+- Azure API Management is a cloud-based service from Microsoft that helps businesses manage and secure their Application Programming Interfaces (APIs). APIM is used to manage the interactions between client applications and the Azure API for FHIR. It can enforce usage policies, validate tokens, provide caching, log API calls, and handle rate limiting. This ensures that the FHIR server is only accessed via secure and controlled paths.
+- Smart Auth Function App is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The Smart Auth Function App typically handles tasks such as generating and validating tokens, managing sessions, and possibly transforming claims or other security-related operations needed to integrate SMART on FHIR apps securely with Azure Health Data Service (FHIR).
   - Needed for certain SMART operations not supported by the FHIR Service or specific to your EHR.
     - Standalone Launch Handler enables the auth flow for standalone launch scenarios.
     - EHR Launch Handler enables the auth flow for EHR launch scenarios.
-    - Backend Services Auth Handler enables the auth flow for SMART backend services scenarios.
-- Storage Account
+- Azure Storage Accounts provide scalable cloud storage for data, including blobs, file shares, queues, and tables.
   - Needed for Azure Function, assorted static assets, and configuration tables.
-- Azure Static Web Apps
-  - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping. 
+- Auth Context Frontend App basically uses Web App Service to deploy UI for user Authorization. The Auth Context Frontend App facilitates the OAuth2 authorization flow. It interacts with Azure Active Directory (AAD) to authenticate users and obtain consent for the required scopes, thereby ensuring that applications receive appropriate access to health data based on user permissions.
+  - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping.
 
 ![](./images/smart-sample-overview-archdiagram.png)
 

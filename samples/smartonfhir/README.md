@@ -8,8 +8,12 @@ As a pre-requisite to the sample deployment, you will need to have
 * Deployed Azure Health Data Services (FHIR Service) or Azure API for FHIR service. If you do not have one, the SMART on FHIR sample will deploy a Azure Health Data Services FHIR server for you. 
 
 The below components will be deployed with this sample.
-1. Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
-2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) with custom code to enable some specific requirements.
+1. User initiates Authentication by calling APIM endpoint managed by [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview) which also handles routing and SMART Conformance.
+2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), so frontend app interacts with Entra ID to authenticate the user and after successful authentication, the user provide scopes/permissions to access FHIR Service.
+3. User can select the required scopes and grant consent to the selected scopes.
+4. Access Token is returned after granting consent to the scope.
+5. The SMART on FHIR app sends an API request to the FHIR Server via Azure API Management where the access token is attached to this request to validate the user's identity and permissions.
+
 
 **As a next step, follow the steps listed in the [Deployment document](./docs/deployment.md). This document provides detailed deployment instructions.**
 
