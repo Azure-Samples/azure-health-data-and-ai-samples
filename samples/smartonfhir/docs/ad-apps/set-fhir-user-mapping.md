@@ -7,7 +7,6 @@ For testing this sample with the Inferno (g)(10) test suite, the `fhirUser` clai
 - Inferno Patient Standalone Confidential Client
 - Inferno Patient Standalone Public Client
 - Inferno EHR Launch Confidential Client
-- Inferno Backend Service Client Application
 
 ### For Microsoft Entra ID user only - Configure fhirUser mapping to token
 
