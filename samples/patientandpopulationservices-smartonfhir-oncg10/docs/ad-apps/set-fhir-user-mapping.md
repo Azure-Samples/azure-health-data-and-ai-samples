@@ -7,7 +7,6 @@ For testing this sample with the Inferno (g)(10) test suite, the `fhirUser` clai
 - Inferno Patient Standalone Confidential Client
 - Inferno Patient Public Confidential Client
 - Inferno EHR Launch Confidential Client
-- Backend Service Client Application
 
 
 ## Add fhirUser claim to your test users
