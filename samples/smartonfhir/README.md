@@ -37,7 +37,7 @@ Wroking of the sample at high level
 Read through [the technical guide](./docs/technical-guide.md) to understand integration of deployed components with Azure Health Data Services, FHIR service.
 
 
-![](/docs/images/smart-sample-overview-archdiagram.png)
+![](./docs/images/smart-sample-overview-archdiagram.png)
 
 
 ## Sample Support
