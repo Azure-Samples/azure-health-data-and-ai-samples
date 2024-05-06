@@ -5,6 +5,7 @@ param jwksUri string
 param contextStaticAppBaseUrl string
 param audienceUrl string
 param oncEnabled bool
+param SmartOnFhirWithB2C bool
 
 resource tenantIdNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
   name: '${apiManagementServiceName}/tenantId'
@@ -51,5 +52,13 @@ resource oncEnabledValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01
   properties: {
     displayName: 'oncEnabled'
     value: toLower('${oncEnabled}')
+  }
+}
+
+resource SmartOnFhirWithB2CValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  name: '${apiManagementServiceName}/SmartOnFhirWithB2C'
+  properties: {
+    displayName: 'SmartOnFhirWithB2C'
+    value: toLower('${SmartOnFhirWithB2C}')
   }
 }

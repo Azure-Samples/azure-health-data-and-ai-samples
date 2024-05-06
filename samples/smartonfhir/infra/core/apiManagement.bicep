@@ -35,6 +35,8 @@ param smartAuthFunctionBaseUrl string
 @description('Base URL of the static webapp with Authorize Context Handles')
 param contextStaticAppBaseUrl string
 
+@description('Is SmartOnFhir deployed with B2C ')
+param SmartOnFhirWithB2C bool
 
 @description('Instrumentation key for App Insights used with APIM')
 param appInsightsInstrumentationKey string
@@ -98,6 +100,7 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
     tenantId: subscription().tenantId
     issuer: issuer
     jwksUri: jwksUri
+    SmartOnFhirWithB2C: SmartOnFhirWithB2C
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
     audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }
