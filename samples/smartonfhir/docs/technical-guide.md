@@ -8,12 +8,13 @@ This document describes how this SMART on FHIR sample works with Azure Health Da
 To successfully use this SMART on FHIR sample, your Azure environment must be setup with the below resources.
 
 - Azure Health Data Services with a FHIR Service
+  - FHIR Service acts as the backend that stores and retrieves FHIR resources.
 - Azure API Management
+  - Used to manage the interactions between client applications and the Azure API for FHIR.
 - Azure Function
   - Needed for certain SMART operations not supported by the FHIR Service or specific to your EHR.
     - Standalone Launch Handler enables the auth flow for standalone launch scenarios.
     - EHR Launch Handler enables the auth flow for EHR launch scenarios.
-    - Backend Services Auth Handler enables the auth flow for SMART backend services scenarios.
 - Storage Account
   - Needed for Azure Function, assorted static assets, and configuration tables.
 - Azure Static Web Apps
