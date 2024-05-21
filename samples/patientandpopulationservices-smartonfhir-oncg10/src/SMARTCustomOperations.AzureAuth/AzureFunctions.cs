@@ -52,5 +52,13 @@ namespace SMARTCustomOperations.AzureAuth
 
             return await _pipeline.ExecuteAsync(req);
         }
+
+        [Function("ServiceBase")]
+        public async Task<HttpResponseData> RunServiceBase([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "service-base")] HttpRequestData req)
+        {
+            _logger.LogInformation("ServiceBase function pipeline started.");
+
+            return await _pipeline.ExecuteAsync(req);
+        }
     }
 }

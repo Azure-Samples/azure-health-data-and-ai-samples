@@ -94,6 +94,7 @@ namespace SMARTCustomOperations.AzureAuth
                         options.BaseAddress = new Uri("https://login.microsoftonline.com");
                     });
 
+                    services.AddOutputFilter(typeof(ServiceBaseOutputFilter));
                     services.AddOutputFilter(typeof(TokenOutputFilter));
                 })
                 .Build();
