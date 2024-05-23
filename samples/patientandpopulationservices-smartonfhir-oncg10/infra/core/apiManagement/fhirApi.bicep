@@ -202,6 +202,23 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     }
   }
 
+  resource getServiceBaseEndpoint 'operations' = {
+    name: 'getServiceBaseEndpoint'
+    properties: {
+      displayName: 'GET Service Base'
+      method: 'GET'
+      urlTemplate: '/service-base'
+    }
+
+    resource getServiceBaseEndpointPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('./policies/serviceBaseUrlPolicy.xml')
+      }
+    }
+  }
+
   resource smartApiDiagnostics 'diagnostics' = {
     name: 'applicationinsights'
     properties: {
