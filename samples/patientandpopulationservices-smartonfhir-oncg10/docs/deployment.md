@@ -31,7 +31,7 @@ Make sure you have the pre-requisites listed below
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `patientandpopulationservices-smartonfhir-oncg10` folder.
-1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd login` or `azd login --tenant-id <tenant-id>`.
+1. Login with the Azure Developer CLI. Specify the tenant if you have more than one. `azd auth login` or `azd auth login --tenant-id <tenant-id>`. Also login with the Azure CLI using `az login`.
 1. Run `azd env new` to create a new deployment environment, keeping below points in mind.
     - Environment name must not exceed 18 characters in length.
     - Deployment fails if Environment name contains UpperCase Letters.

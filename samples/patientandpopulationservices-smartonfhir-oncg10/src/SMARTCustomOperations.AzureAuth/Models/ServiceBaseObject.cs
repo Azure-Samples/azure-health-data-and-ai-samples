@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 namespace SMARTCustomOperations.AzureAuth.Models
 {
     public class ServiceBaseObject
-    {
+    {   
         public class Bundle
         {
             [JsonPropertyName("resourceType")]
-            public string? ResourceType { get; set; } = "Bundle";
+            public string ResourceType { get; set; } = "Bundle";
             [JsonPropertyName("id")]
-            public string? Id { get; set; }
+            public string? Id { get; set; } = "de159614104bd3b6e8d88d740e043f64";
             [JsonPropertyName("type")]
             public string? Type { get; set; } = "collection";
             [JsonPropertyName("entry")]
@@ -24,12 +24,14 @@ namespace SMARTCustomOperations.AzureAuth.Models
             public T? Resource { get; set; }
         }
 
+        [JsonDerivedType(typeof(Organization))]
+        [JsonDerivedType(typeof(Endpoint))]
         public abstract class ResourceBase
         {
             [JsonPropertyName("resourceType")]
             public string? ResourceType { get; set; }
             [JsonPropertyName("id")]
-            public string? Id { get; set; }
+            public string Id { get; set; }
         }
 
         public class Organization : ResourceBase
@@ -37,9 +39,12 @@ namespace SMARTCustomOperations.AzureAuth.Models
             public Organization()
             {
                 ResourceType = "Organization";
+                Id = "eaccf0de-c238-4140-9cb6-c9c59f0e5fb3";
             }
             [JsonPropertyName("identifier")]
             public List<IdentifierClass>? Identifier { get; set; }
+            [JsonPropertyName("active")]
+            public bool? Active { get; set; }
             [JsonPropertyName("name")]
             public string? Name { get; set; }
             [JsonPropertyName("address")]
@@ -81,13 +86,14 @@ namespace SMARTCustomOperations.AzureAuth.Models
             public Endpoint()
             {
                 ResourceType = "Endpoint";
+                Id = "a1aa7db0-daf6-42d7-bba5-583b6869ccd2";
             }
             [JsonPropertyName("status")]
             public string? Status { get; set; }
             [JsonPropertyName("connectionType")]
             public ConnectionTypeClass? ConnectionType { get; set; }
             [JsonPropertyName("name")]
-            public string? Name { get; set; }
+            public string? Name { get; set; } = "Health Intersections CarePlan Hub";
             [JsonPropertyName("payloadType")]
             public List<PayloadTypeClass>? PayloadType { get; set; }
             [JsonPropertyName("address")]

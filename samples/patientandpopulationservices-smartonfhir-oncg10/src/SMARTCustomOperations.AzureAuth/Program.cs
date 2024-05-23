@@ -59,6 +59,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     // Add services needed for backend services
                     services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
+                    services.AddScoped<IBundleGeneratorService, BundleGeneratorService>();
                     services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
 
                     // Add services needed for Microsoft Graph

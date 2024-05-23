@@ -5,6 +5,7 @@
 
 using System.Configuration;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Models;
 using SMARTCustomOperations.AzureAuth.Services;
 
 namespace AzureADAutSMARTCustomOperations.AzureAuthhProxy.Services
@@ -33,6 +34,16 @@ namespace AzureADAutSMARTCustomOperations.AzureAuthhProxy.Services
             var data = new BackendClientConfiguration(_config.TestBackendClientId!, _config.TestBackendClientSecret!, _config.TestBackendClientJwks!);
 
             return Task.FromResult(data);
+        }
+
+        public Task<ServiceBaseObject.Endpoint> FetchEndpointConfiguration(List<string> keys)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceBaseObject.Organization> FetchOrganizationConfiguration(List<string> keys, string endpointId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
