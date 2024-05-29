@@ -59,7 +59,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     // Add services needed for backend services
                     services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
-                    services.AddScoped<IBundleGeneratorService, BundleGeneratorService>();
+                    services.AddScoped<IServiceBaseUrlBundleGeneratorService, ServiceBaseUrlBundleGeneratorService>();
                     services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
 
                     // Add services needed for Microsoft Graph
@@ -95,7 +95,7 @@ namespace SMARTCustomOperations.AzureAuth
                         options.BaseAddress = new Uri("https://login.microsoftonline.com");
                     });
 
-                    services.AddOutputFilter(typeof(ServiceBaseOutputFilter));
+                    services.AddOutputFilter(typeof(ServiceBaseUrlListOutputFilter));
                     services.AddOutputFilter(typeof(TokenOutputFilter));
                 })
                 .Build();

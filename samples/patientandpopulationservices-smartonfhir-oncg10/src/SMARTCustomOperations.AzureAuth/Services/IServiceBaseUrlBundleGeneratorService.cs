@@ -2,8 +2,8 @@ using SMARTCustomOperations.AzureAuth.Models;
 
 namespace SMARTCustomOperations.AzureAuth.Services
 {
-    public interface IBundleGeneratorService
+    public interface IServiceBaseUrlBundleGeneratorService
     {
-        public Task<ServiceBaseObject.Bundle> CreateBundle();
+        public Task<Bundle> CreateBundle();
     }
 }
