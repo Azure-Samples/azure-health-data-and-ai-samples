@@ -2,8 +2,10 @@ using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
 using SMARTCustomOperations.AzureAuth.Services;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -41,23 +43,31 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context;
             }
 
-            _logger?.LogInformation("Entered {Name}", Name);
+			_logger?.LogInformation("Entered {Name}", Name);
 
-            Bundle bundleObj = await _bundleGeneratorService.CreateBundle();
-
-            var options = new JsonSerializerOptions
+			try
             {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
+				Bundle bundleObj = await _bundleGeneratorService.CreateBundle();
 
-            string jsonString = JsonSerializer.Serialize(bundleObj, options); 
+				var options = new JsonSerializerOptions
+				{
+					WriteIndented = true,
+					DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+				};
 
-            context.ContentString = jsonString;
-            context.StatusCode = System.Net.HttpStatusCode.OK;
+				string jsonString = JsonSerializer.Serialize(bundleObj, options);
+
+				context.ContentString = jsonString;
+				context.StatusCode = System.Net.HttpStatusCode.OK;
+			}
+            catch (Exception ex)
+            {
+				FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError);
+				OnFilterError?.Invoke(this, error);
+				return context.SetContextErrorBody(error, _configuration.Debug);
+			}
 
             await Task.CompletedTask;
-
             return context;
         }
     }

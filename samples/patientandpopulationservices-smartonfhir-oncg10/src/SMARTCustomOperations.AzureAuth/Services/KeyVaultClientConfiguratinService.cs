@@ -45,8 +45,8 @@ namespace SMARTCustomOperations.AzureAuth.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Unexpected error encountered while accessing KeyVault for client {clientId}", ex);
-                throw new UnauthorizedAccessException($"KeyVault error when trying to {clientId}", ex);
+				_logger.LogError("Unexpected error encountered while accessing KeyVault for client {ClientId}", ex);
+				throw new UnauthorizedAccessException($"KeyVault error when trying to {clientId}", ex);
             }
         }
 
@@ -75,12 +75,12 @@ namespace SMARTCustomOperations.AzureAuth.Services
 					throw new UnauthorizedAccessException($"KeyVault could not find the secret with the names {key}", ex);
 				}
 
-				_logger.LogError($"Unexpected error encountered while accessing KeyVault for keys {key}", ex);
+				_logger.LogError("Unexpected error encountered while accessing KeyVault for keys {key}", key);
 				throw new UnauthorizedAccessException($"KeyVault error finding the keys with the names {key}", ex);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Unexpected error encountered while accessing KeyVault for keys {key}", ex);
+				_logger.LogError("Unexpected error encountered while accessing KeyVault for keys {key}", ex);
 				throw new UnauthorizedAccessException($"KeyVault error when trying to {key}", ex);
 			}
 

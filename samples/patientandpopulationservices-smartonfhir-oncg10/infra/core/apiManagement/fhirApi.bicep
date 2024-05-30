@@ -205,7 +205,7 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
   resource getServiceBaseEndpoint 'operations' = {
     name: 'getServiceBaseEndpoint'
     properties: {
-      displayName: 'GET Service Base'
+      displayName: 'GET Service Base URL List'
       method: 'GET'
       urlTemplate: '/service-base'
     }
