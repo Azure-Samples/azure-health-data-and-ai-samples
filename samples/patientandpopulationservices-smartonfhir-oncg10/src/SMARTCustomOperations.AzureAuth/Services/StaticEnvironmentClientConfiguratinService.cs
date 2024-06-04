@@ -4,6 +4,8 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Configuration;
+using Azure;
+using Azure.Security.KeyVault.Secrets;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Services;
 
@@ -34,5 +36,10 @@ namespace AzureADAutSMARTCustomOperations.AzureAuthhProxy.Services
 
             return Task.FromResult(data);
         }
-    }
+
+		public Task<Response<KeyVaultSecret>> FetchSecretAsync(string key)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
