@@ -1,0 +1,47 @@
+{
+  "resourceType": "Patient",
+  "meta": {
+    "tag": [
+      {
+        "system": "https://somecompany/tenantid",
+        "code": "org1234"
+      }
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://epic.org",
+      "value": "PAT567890"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Alice Williams",
+      "family": "Williams",
+      "given": [ "Alice" ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "612-555-4444",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "alice@bedrock.com"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "2000-05-10",
+  "address": [
+    {
+      "use": "home",
+      "line": [ "789 Oak Lane" ],
+      "city": "Springfield",
+      "state": "IL",
+      "postalCode": "67890"
+    }
+  ]
+}

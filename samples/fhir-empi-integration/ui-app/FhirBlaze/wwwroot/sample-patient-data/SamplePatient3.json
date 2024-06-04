@@ -1,0 +1,52 @@
+{
+  "resourceType": "Patient",
+  "meta": {
+    "tag": [
+      {
+        "system": "https://somecompany/tenantid",
+        "code": "org1234"
+      }
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://epic.org",
+      "value": "PAT987654"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Johnson Sarah",
+      "family": "Johnson",
+      "given": [
+        "Sarah"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "612-333-333",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "sarah@bedrock.com"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1992-09-08",
+  "address": [
+    {
+      "use": "home",
+      "line": [
+        "1235 Gravel Road"
+      ],
+      "city": "Bedrock",
+      "state": "GA",
+      "postalCode": "31111",
+      "country": "USA"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "resourceType": "Patient",
+  "meta": {
+    "tag": [
+      {
+        "system": "https://somecompany/tenantid",
+        "code": "org1234"
+      }
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://epic.org",
+      "value": "PAT54321"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Jane Thompson",
+      "family": "Thompson",
+      "given": [
+        "Jane"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "612-222-222",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "jane@bedrock.com"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1985-05-15",
+  "address": [
+    {
+      "use": "home",
+      "line": [
+        "1235 Gravel Road"
+      ],
+      "city": "Bedrock",
+      "state": "GA",
+      "postalCode": "31111",
+      "country": "USA"
+    }
+  ]
+}
