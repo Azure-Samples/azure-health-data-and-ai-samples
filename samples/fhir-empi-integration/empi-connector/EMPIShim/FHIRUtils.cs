@@ -32,7 +32,7 @@ namespace EMPIShim
     public static class FHIRUtils
     {
         //AD Settings
-        private static bool isMsi = Utils.GetBoolEnvironmentVariable("FS-ISMSI", false);
+        private static bool isMsi = Utils.GetBoolEnvironmentVariable("FS-ISMSI");
         private static string resource = Utils.GetEnvironmentVariable("FS-RESOURCE");
         private static string tenant = Utils.GetEnvironmentVariable("FS-TENANT-NAME");
         private static string clientid = Utils.GetEnvironmentVariable("FS-CLIENT-ID");
