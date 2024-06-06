@@ -9,5 +9,6 @@ namespace FhirBlaze.SharedComponents
 	public class EMPIConnectorConnection
 	{
 		public string EMPIConnectorUri { get; set; }
+		public string EMPIConnectorAPIKey { get; set; }
 	}
 }

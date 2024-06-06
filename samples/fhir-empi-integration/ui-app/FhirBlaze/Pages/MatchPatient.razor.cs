@@ -30,12 +30,12 @@ namespace FhirBlaze.Pages
 		[Inject]
 		IFhirService fhirService { get; set; }
 
-        [Inject]
-        private IConfiguration _config { get; set; }
+		[Inject]
+		private IConfiguration _config { get; set; }
 
-        [CascadingParameter] public IModalService Modal { get; set; } = default!;
+		[CascadingParameter] public IModalService Modal { get; set; } = default!;
 
-        private string jsonResource = string.Empty;
+		private string jsonResource = string.Empty;
 		private string matchPatientResult = string.Empty;
 		private string matchPaitentJson = string.Empty;
 		private string patientWithHighScore = string.Empty;
@@ -45,9 +45,9 @@ namespace FhirBlaze.Pages
 		private string msgPatientDeleted = string.Empty;
 		private string selectedPatientResource = string.Empty;
 		private bool isLoading = false;
-        
 
-        [CascadingParameter]
+
+		[CascadingParameter]
 		private Task<AuthenticationState> authenticationStateTask { get; set; }
 
 		private LoadPatientModel loadPatientModel = new LoadPatientModel();
@@ -56,7 +56,7 @@ namespace FhirBlaze.Pages
 
 		private IQueryable<LoadPatientModel> patients;
 
-        private async Task SearchAndLoadPatient()
+		private async Task SearchAndLoadPatient()
 		{
 			msgPatientDeleted = string.Empty;
 			var internalAuth = Convert.ToBoolean(_config["InternalAuth"]);
@@ -176,9 +176,9 @@ namespace FhirBlaze.Pages
 			msgPatientUpdated = string.Empty;
 			msgPatientDeleted = string.Empty;
 			isLoading = true;
-            var internalAuth = Convert.ToBoolean(_config["InternalAuth"]);
+			var internalAuth = Convert.ToBoolean(_config["InternalAuth"]);
 
-            try
+			try
 			{
 				if (!await CheckAuthentication() && !internalAuth)
 				{
@@ -357,17 +357,17 @@ namespace FhirBlaze.Pages
 		{
 			StateHasChanged();
 			isLoading = true;
-            var internalAuth = Convert.ToBoolean(_config["InternalAuth"]);
+			var internalAuth = Convert.ToBoolean(_config["InternalAuth"]);
 
-            try
+			try
 			{
 				if (!await CheckAuthentication() && !internalAuth)
-                {
+				{
 					ShowLoginModal();
 				}
-                else if (!string.IsNullOrEmpty(jsonResource))
+				else if (!string.IsNullOrEmpty(jsonResource))
 				{
-                    var fhirResponse = await fhirService.CreatePatientsAsync(jsonResource);
+					var fhirResponse = await fhirService.CreatePatientsAsync(jsonResource);
 					if (fhirResponse.IsSuccessStatusCode)
 					{
 						msgNewPatientAdded = "New patient added to FHIR and EMPI successfully!!!";
@@ -588,7 +588,7 @@ namespace FhirBlaze.Pages
 					),
 					new JObject(
 						new JProperty("name", "onlyCertainMatches"),
-						new JProperty("valueBoolean", "true")
+						new JProperty("valueBoolean", "false")
 					)
 				))
 			);

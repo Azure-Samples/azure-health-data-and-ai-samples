@@ -131,22 +131,32 @@
 			<input type="button" class="btn btn-primary btnstyle" value="Match Patient" @onclick="GetAllPatientMatch" />
 		</div>
 	</div>
-	<div class="col text-left">
-		<h6 class="font-weight-bold">FHIR Service Response with EMPI Matching Result</h6>
+	<div class="row m-2">
+		<div class="col text-left">
+			<h6 class="font-weight-bold">FHIR Service Response with EMPI Matching Result</h6>
+		</div>
 	</div>
 	<div class="grid">
-		<QuickGrid Items="@patients">
-			<TemplateColumn Title="Actions">
-				@* <button class="btn btn-primary btnstyle" onclick="@(() => PopulateSelectedPatientModel(context))" style="width: 65px">Select</button> *@
-				<input type="button" class="btn btn-primary btnstylesmall" @onclick="@(() => PopulateSelectedPatientModel(context))" value="Select" />
-			</TemplateColumn>
-			@* <PropertyColumn Property="@(p => p.FhirId)" hidden="true"/> *@
-			<PropertyColumn Property="@(p => p.Identifier)" Sortable="true" />
-			<PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
-			<PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
-			<PropertyColumn Property="@(p => p.Gender)" Sortable="true" />
-			<PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
-		</QuickGrid>
+		@if(!matchPatientResultFound)
+		{
+			<h6 class="ml-4">@matchPaitentJson</h6>
+		}
+		else
+		{
+			<QuickGrid Items="@patients" Class="mx-3 mt-1">
+				<TemplateColumn Title="Actions">
+					<button type="button" class="btn btn-primary text-center ml-2 p-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" onclick="@(() => PopulateSelectedPatientModel(context))">
+						<img src="/img/pen_icon.svg" alt="select-button" width="24" height="24" />
+					</button>
+				</TemplateColumn>
+				@* <PropertyColumn Property="@(p => p.FhirId)" hidden="true"/> *@
+				<PropertyColumn Property="@(p => p.Identifier)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.Gender)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+			</QuickGrid>
+		}
 	</div>	
 	@if (!matchPatientResultFound)
 	{

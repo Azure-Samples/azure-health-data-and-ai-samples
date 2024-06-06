@@ -11,7 +11,7 @@ namespace FhirBlaze.SharedComponents.Services
 		private readonly EMPIConnectorConnection _eMPIConnection;
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<EMPIConnectorService> _logger;
-		public EMPIConnectorService(EMPIConnectorConnection eMPIConnectorConnection, 
+		public EMPIConnectorService(EMPIConnectorConnection eMPIConnectorConnection,
 			IHttpClientFactory httpClientFactory, ILogger<EMPIConnectorService> logger)
 		{
 			_eMPIConnection = eMPIConnectorConnection;
@@ -27,7 +27,7 @@ namespace FhirBlaze.SharedComponents.Services
 				{
 					_logger.LogInformation($"Calling PostAsync");
 					//add code as a querystring with below url. currently it is removed as it does not allow to push the code to repo with this secret.
-					httpResponseMessage = await PostAsync(@"api/Match", requestBody);
+					httpResponseMessage = await PostAsync($@"api/Match?code={_eMPIConnection.EMPIConnectorAPIKey}", requestBody);
 					_logger.LogError($"Response : {httpResponseMessage.Content}");
 				}
 			}
