@@ -82,17 +82,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Setup new http client for token request
             try
             {
-                //Microsoft Entra ID does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
-                if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
-                {
-                    var castTokenContext = (BackendServiceTokenContext)tokenContext;
-                    context = await HandleBackendService(context, castTokenContext);
-                }
-                else
-                {
-                    context.Request.Content = tokenContext.ToFormUrlEncodedContent();
-                }
-
                 // Retrieve OpenID configuration
                 var openIdConfig = await _authProvider.GetOpenIdConfigurationAsync(_configuration.Authority_URL!);
 
@@ -106,7 +95,6 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 string tokenPath = tokenEndpointUrl.Substring(splitIndex + 1);
 
                 context.UpdateRequestUri(context.Request.Method, tokenEndpoint, tokenPath);
-                context.Request.Content = tokenContext.ToFormUrlEncodedContent();
             }
             catch (Exception ex)
             {
