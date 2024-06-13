@@ -6,7 +6,7 @@
         <rewrite-uri template="/authorize" copy-unmatched-params="true" />
         <!-- When standalone launch, redirect to context static app (if not from there already) -->
         <choose>
-            <when condition="@(!bool.Parse("{{SmartOnFhirWithB2C}}") && context.Request.OriginalUrl.QueryString.Contains("launch") && context.Request.OriginalUrl.Query.GetValueOrDefault("user") != "true" )">
+            <when condition="@(context.Request.OriginalUrl.QueryString.Contains("launch") && context.Request.OriginalUrl.Query.GetValueOrDefault("user") != "true" )">
                 <return-response>
                     <set-status code="303" reason="Redirecting" />
                     <set-header name="Location" exists-action="override">

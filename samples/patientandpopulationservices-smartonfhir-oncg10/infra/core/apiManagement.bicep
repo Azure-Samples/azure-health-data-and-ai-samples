@@ -41,9 +41,6 @@ param contextStaticAppBaseUrl string
 @description('Is ONC enabled')
 param oncEnabled bool
 
-@description('Is SmartOnFhir deployed with B2C ')
-param SmartOnFhirWithB2C bool
-
 @description('Instrumentation key for App Insights used with APIM')
 param appInsightsInstrumentationKey string
 
@@ -108,7 +105,6 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
     issuer: issuer
     jwksUri: jwksUri
     oncEnabled: oncEnabled
-    SmartOnFhirWithB2C: SmartOnFhirWithB2C
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
     audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }

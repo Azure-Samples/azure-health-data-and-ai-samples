@@ -264,7 +264,6 @@ module apim './core/apiManagement.bicep'= {
     issuer: issuer
     jwksUri: jwksUri
     oncEnabled: oncEnabled
-    SmartOnFhirWithB2C: smartonfhirwithb2c
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     exportFunctionBaseUrl: 'https://${name}-exp-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
