@@ -19,5 +19,6 @@ namespace FhirBlaze.SharedComponents.Services
         Task<HttpResponseMessage> SaveObservation(string id, string observationJson);
 
         Task<HttpResponseMessage> ResetObservations(string content);
+        Task<HttpResponseMessage> BatchTranslateCode(string content);
     }
 }

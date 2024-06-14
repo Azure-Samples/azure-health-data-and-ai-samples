@@ -167,7 +167,7 @@ namespace FhirBlaze.SharedComponents.Services
                 return _fhirResponse;
             }
         }
-
+         
         private async Task<string> FetchToken()
         {
             string accessToken = string.Empty;
@@ -261,6 +261,30 @@ namespace FhirBlaze.SharedComponents.Services
             try
             {
                 httpResponseMessage = await PostAsync(observationBundle);
+            }
+            catch
+            {
+                throw;
+            }
+            return httpResponseMessage;
+        }
+
+
+        public async Task<HttpResponseMessage> BatchTranslateCode(string content)
+        {
+            HttpResponseMessage httpResponseMessage;
+            try
+            {
+                string cacheToken = await FetchToken();
+                if (cacheToken != "")
+                {
+                    httpResponseMessage = await PostAsync(content);
+                }
+                else
+                {
+                      httpResponseMessage = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    httpResponseMessage.Content = new StringContent("Unauthorized: Access is denied due to invalid credentials.");
+                }
             }
             catch
             {
