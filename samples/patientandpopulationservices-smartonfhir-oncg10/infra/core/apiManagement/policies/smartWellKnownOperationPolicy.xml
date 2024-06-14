@@ -20,37 +20,39 @@
 	</backend>
 	<outbound>
 		<base />
-		<set-body template="liquid">{
-            "issuer": "https://login.microsoftonline.com/{{TenantId}}/v2.0",
-            "jwks_uri": "https://login.microsoftonline.com/{{TenantId}}/discovery/v2.0/keys",
-            "authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
-            "token_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/token",
-            "token_endpoint_auth_methods_supported": [
-                "client_secret_basic",
-                "private_key_jwt"
-            ],
-            "grant_types_supported": [
-                "authorization_code",
-                "client_credentials"
-            ],
-            "scopes_supported": ["openid", "profile", "launch", "launch/patient", "patient/*.rs", "user/*.rs", "offline_access", "fhirUser", "need_patient_banner", "smart_style_url"],
-            "response_types_supported": ["code"],
-            "code_challenge_methods_supported": ["S256"],
-            "capabilities": [
-                "launch-ehr",
-                "permission-patient",
-                "client-public",
-                "client-confidential-symmetric",
-                "context-ehr-patient",
-                "sso-openid-connect",
-                "launch-standalone",
-                "context-standalone-patient",
-                "permission-offline",
-                "context-banner",
-                "context-style",
-                "permission-user"
-            ]
-        }</set-body>
+		<set-body template="liquid">
+			{
+			"issuer": "{{Issuer}}",
+			"jwks_uri": "{{JwksUri}}/discovery/v2.0/keys",
+			"authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
+			"token_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/token",
+			"token_endpoint_auth_methods_supported": [
+			"client_secret_basic",
+			"private_key_jwt"
+			],
+			"grant_types_supported": [
+			"authorization_code",
+			"client_credentials"
+			],
+			"scopes_supported": ["openid", "profile", "launch", "launch/patient", "patient/*.rs", "user/*.rs", "offline_access", "fhirUser", "need_patient_banner", "smart_style_url"],
+			"response_types_supported": ["code"],
+			"code_challenge_methods_supported": ["S256"],
+			"capabilities": [
+			"launch-ehr",
+			"permission-patient",
+			"client-public",
+			"client-confidential-symmetric",
+			"context-ehr-patient",
+			"sso-openid-connect",
+			"launch-standalone",
+			"context-standalone-patient",
+			"permission-offline",
+			"context-banner",
+			"context-style",
+			"permission-user"
+			]
+			}
+		</set-body>
 		<set-header name="Content-Type" exists-action="override">
 			<value>application/json</value>
 		</set-header>

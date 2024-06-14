@@ -1,0 +1,20 @@
+<!--
+    IMPORTANT:
+    - Policy fragment are included as-is whenever they are referenced.
+    - If using variables. Ensure they are setup before use.
+    - Copy and paste your code here or simply start coding
+-->
+<fragment>
+	<choose>
+		<when condition="@(!bool.Parse("{{oncEnabled}}"))">
+			<return-response>
+				<set-status code="403" reason="Forbidden" />
+				<set-body template="liquid">
+                    {
+                        "message": "You cannot access this endpoint."
+                    }
+                </set-body>
+			</return-response>
+		</when>
+	</choose>
+</fragment>
