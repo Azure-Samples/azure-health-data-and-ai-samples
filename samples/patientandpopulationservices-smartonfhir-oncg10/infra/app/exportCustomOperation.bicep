@@ -63,8 +63,9 @@ resource exportCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     reserved: true
     clientAffinityEnabled: false
     siteConfig: {
-      linuxFxVersion: 'dotnet-isolated|6.0'
-      use32BitWorkerProcess: false
+      // linuxFxVersion: 'dotnet-isolated|6.0'
+      // use32BitWorkerProcess: false
+      alwaysOn: true
     }
     
   }

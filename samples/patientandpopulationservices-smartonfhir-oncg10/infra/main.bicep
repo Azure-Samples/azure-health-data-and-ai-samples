@@ -249,6 +249,9 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
     redisCacheHostName: redis.outputs.redisCacheHostName
     redisCacheId: redis.outputs.redisCacheId
   }
+  dependsOn:[
+    apim
+  ]
 }
 
 var backendServiceVaultName = '${nameShort}-backkv'
