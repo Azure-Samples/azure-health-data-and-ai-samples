@@ -109,12 +109,10 @@
         </div>
     </div>
     <div>
-        @if (tsFhirModel != null && (!string.IsNullOrEmpty(tsFhirModel.observationJson) || !string.IsNullOrEmpty(tsFhirModel.LookUpAndTranslateJson)))
-        { 
-@*            <TextDiff ShowWhiteSpace=true OldText="@tsFhirModel.observationJson" NewText="@tsFhirModel.LookUpAndTranslateJson" CollapseContent="true" MaxHeight="350">
-            </TextDiff> *@
-            <textarea readonly placeholder="JSON Output/formatted fields" @bind="@tsFhirModel.observationJson" style="width:500px" />
-            <textarea readonly placeholder="JSON Output/formatted fields" @bind="@tsFhirModel.LookUpAndTranslateJson" style="width:500px" />
+        @if (tsFhirModel != null && (!string.IsNullOrEmpty(tsFhirModel.batchJson) || !string.IsNullOrEmpty(tsFhirModel.LookUpAndTranslateJson)))
+        {
+            <TextDiff ShowWhiteSpace=true OldText="@tsFhirModel.batchJson" NewText="@tsFhirModel.LookUpAndTranslateJson" CollapseContent="true" MaxHeight="350">
+            </TextDiff>
          }
         
     </div>

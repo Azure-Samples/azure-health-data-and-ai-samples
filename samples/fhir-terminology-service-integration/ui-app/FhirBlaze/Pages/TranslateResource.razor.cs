@@ -287,7 +287,7 @@ namespace FhirBlaze.Pages
                 }
                 if (Convert.ToString(sourceCode["system"]).Contains("local-codes"))
                 {
-                    var systemurl = "microsoft_ehr1_labs";
+                    var systemurl = "fhirapis_ehr_1_labs";
                     var translateResponse = await apmService.TranslateCode((string)sourceCode["code"], systemurl, "loinc");
 
                     if (translateResponse.IsSuccessStatusCode)
