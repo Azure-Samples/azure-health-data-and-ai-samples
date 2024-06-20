@@ -1,5 +1,3 @@
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Fquickstarts%2Fmicrosoft.storage%2Fstorage-account-create%2Fazuredeploy.json)
-
 # External Enterprise Master Patient Index (EMPI) Service integration with AHDS FHIR service
 
 
@@ -88,8 +86,31 @@ The postman queries to demonstare Common Endpoint Application (APIM) routing cal
 
 1. After launching UI application user will be redirected to below landing page, Click on login, select/enter username and password.
 
-    <img src="./images/UI1.png" height="380">
+    <img src="./docs/images/image1.png" height="380">
 
 2. On successful login, user can see the username in top right corner as highlighted.
 
-	<img src="./images/UI2.png" height="380">
+	<img src="./docs/images/image2.png" height="380">
+
+3. Submit form to find Sample Patient.
+
+	<img src="./docs/images/image3.png" height="380">
+
+4. Sample Patient Found. 
+	<img src="./docs/images/image4.png" height="380">
+5. Sample Patient Not Found
+	<img src="./docs/images/image5.png" height="380">
+6. No Match found for the above Patient
+	<img src="./docs/images/image6.png" height="380">
+7. Patient Added Successfully
+	<img src="./docs/images/image7.png" height="380">
+8. Match Patient Success
+	<img src="./docs/images/image8.png" height="380">
+9. Select Patient to Update
+	<img src="./docs/images/image9.png" height="380">
+10. Update Patient Form Result Success
+	<img src="./docs/images/image10.png" height="380">
+11. Delete Pop-Up
+	<img src="./docs/images/image11.png" height="380">
+12. Successful Deletion Message
+	<img src="./docs/images/image12.png" height="380">
