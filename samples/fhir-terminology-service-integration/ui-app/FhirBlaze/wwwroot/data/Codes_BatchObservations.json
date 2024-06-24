@@ -1,0 +1,7 @@
+{
+  "Codes": [
+    "icd9cm-001.1=>icd10cm",
+    "icd9cm-001.1=>icd10cm_&_icd10cm-A00.1",
+    "icd10cm_validate_code"
+  ]
+} 

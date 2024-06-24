@@ -33,6 +33,10 @@ namespace FhirBlaze.Pages
         [Parameter]
         public CodingEntry tsCodingEntry { get; set; }
 
+        [Parameter]
+        public BatchValidateModel? tsBatchValidateModel { get; set; }
+        [Parameter]
+        public CodingValidateEntry tsCodingValidateEntry { get; set; }
         [Inject]
         IJSRuntime runtime { get; set; }
 
@@ -45,6 +49,7 @@ namespace FhirBlaze.Pages
             {
                 tsFhirModel = new TSFhirModel();
                 tsBatchTraslateModel = new BatchTranslateModel();
+                tsBatchValidateModel = new BatchValidateModel();
             }
 
         }
@@ -56,9 +61,10 @@ namespace FhirBlaze.Pages
                 tsFhirModel.observationJson = string.Empty;
                 tsFhirModel.LookUpAndTranslateJson = string.Empty;
                 tsFhirModel.batchJson = string.Empty;
-                tsBatchTraslateModel = new BatchTranslateModel(); 
-              // fetch data from json and display to ui 
-              var observations = await Http.GetStringAsync("data/BatchTranslateData.json");
+                tsBatchTraslateModel = new BatchTranslateModel();
+                tsBatchValidateModel = new BatchValidateModel();
+                // fetch data from json and display to ui 
+                var observations = await Http.GetStringAsync("data/BatchObservation.json");
                 JObject bundleObject = JObject.Parse(observations);
 
                 JObject codeObject = bundleObject.GetValue(codeSystem) as JObject;
@@ -66,9 +72,20 @@ namespace FhirBlaze.Pages
                 {
                     if (codeObject.ContainsKey("entry"))
                     {
+                        JObject convertedObj;
                         JArray entryArray = (JArray)codeObject["entry"];
-                        tsBatchTraslateModel= GetConvertedRequest(entryArray);
-                         JObject convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                        string urlValue = (string)entryArray[0]["request"]["url"];
+                        if (urlValue.Contains("validate"))
+                        {
+                            tsBatchValidateModel = GetConvertedValidateRequest(entryArray);
+                            convertedObj = JObject.FromObject(tsBatchValidateModel);
+                        }
+                        else
+                        {
+                            tsBatchTraslateModel = GetConvertedTranslatedRequest(entryArray);
+                            convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                        }
+
                         tsFhirModel.observationJson = codeObject.ToString();
                         tsFhirModel.batchJson = convertedObj.ToString();
                         StateHasChanged();
@@ -95,14 +112,29 @@ namespace FhirBlaze.Pages
                 //if (translatedCode.IsSuccessStatusCode)
                 //{
                 //  var translateJsonResponse = translatedCode.Content.ReadAsStringAsync().Result;
-                var translateJsonResponse = await Http.GetStringAsync("data/tempResponse.json");
+                //  var translateJsonResponse = await Http.GetStringAsync("data/tempResponse.json");
+                var translateJsonResponse = await Http.GetStringAsync("data/tempValidateResponse.json");
                 JObject translatedJobject = JObject.Parse(translateJsonResponse);
                 if (translatedJobject.ContainsKey("entry"))
                 {
-                    JArray entryArrayResponse = (JArray)translatedJobject["entry"];
-                    tsBatchTraslateModel = new BatchTranslateModel();
-                    tsBatchTraslateModel = GetConvertedResponse(entryArrayResponse);
-                    JObject convertedObj = JObject.FromObject(tsBatchTraslateModel);    
+                    JObject convertedObj = null;
+                    JToken urlParameter = translatedJobject.SelectToken("$.parameter[?(@.name == 'match')]");
+                    if (urlParameter != null)
+                    {
+                        JArray entryArrayResponse = (JArray)translatedJobject["entry"];
+                        tsBatchTraslateModel = new BatchTranslateModel();
+                        tsBatchTraslateModel = GetConvertedResponse(entryArrayResponse);
+                        convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                    }
+                    else
+                    {
+                        JArray entryArrayResponse = (JArray)translatedJobject["entry"];
+                        tsBatchValidateModel = new BatchValidateModel();
+                        tsBatchValidateModel = GetConvertedValidateResponse(entryArrayResponse);
+                        convertedObj = JObject.FromObject(tsBatchValidateModel);
+                    }
+
+
                     tsFhirModel.LookUpAndTranslateJson = convertedObj.ToString();
                     StateHasChanged();
                 }
@@ -122,12 +154,16 @@ namespace FhirBlaze.Pages
                 Console.WriteLine(e.Message); //manage the cancel search
             }
         }
-         
-        private BatchTranslateModel GetConvertedRequest(JArray entryArray)
+
+        private BatchTranslateModel GetConvertedTranslatedRequest(JArray entryArray)
         {
-            try {
+            try
+            {
+                // check for req - translate or validate
+                string test1 = entryArray.ToString();
                 foreach (var entry in entryArray)
                 {
+
                     tsCodingEntry = new CodingEntry();
                     JObject resourceObject = (JObject)entry["resource"];
                     string test = resourceObject.ToString();
@@ -148,6 +184,57 @@ namespace FhirBlaze.Pages
             catch (Exception ex)
             {
                 return tsBatchTraslateModel;
+            }
+        }
+
+        private BatchValidateModel GetConvertedValidateRequest(JArray entryArray)
+        {
+            try
+            {
+                // check for req - translate or validate
+                string test1 = entryArray.ToString();
+                foreach (var entry in entryArray)
+                {
+                    //string test2 = entry.ToString();
+                    tsCodingValidateEntry = new CodingValidateEntry();
+                    JObject resourceObject = (JObject)entry["resource"];
+                    string test = resourceObject.ToString();
+
+                    tsCodingValidateEntry.code = (string)resourceObject["parameter"]
+                    .FirstOrDefault(p => (string)p["name"] == "code")?["valueString"];
+
+                    JToken urlParameter = resourceObject.SelectToken("$.parameter[?(@.name == 'url')]");
+                    if (urlParameter != null)
+                    {
+                        tsCodingValidateEntry.url = (resourceObject["parameter"]
+                        .FirstOrDefault(p => (string)p["name"] == "url")?["valueUri"]?.ToString());
+                    }
+
+                    JToken urlDate = resourceObject.SelectToken("$.parameter[?(@.name == 'date')]");
+                    if (urlDate != null)
+                    {
+                        tsCodingValidateEntry.date = (resourceObject["parameter"]
+                        .FirstOrDefault(p => (string)p["name"] == "date")?["valueDateTime"]?.ToString());
+                    }
+                    JToken urlSystem = resourceObject.SelectToken("$.parameter[?(@.name == 'system')]");
+                    if (urlSystem != null)
+                    {
+                        tsCodingValidateEntry.system = (resourceObject["parameter"]
+                        .FirstOrDefault(p => (string)p["name"] == "system")?["valueString"]?.ToString());
+                    }
+                    JToken urlValueSetVersion = resourceObject.SelectToken("$.parameter[?(@.name == 'valueSetVersion')]");
+                    if (urlValueSetVersion != null)
+                    {
+                        tsCodingValidateEntry.valueSetVersion = (resourceObject["parameter"]
+                        .FirstOrDefault(p => (string)p["name"] == "valueSetVersion")?["valueString"]?.ToString());
+                    }
+                    tsBatchValidateModel.Coding.Add(tsCodingValidateEntry);
+                }
+                return tsBatchValidateModel;
+            }
+            catch (Exception ex)
+            {
+                return tsBatchValidateModel;
             }
         }
 
@@ -177,8 +264,48 @@ namespace FhirBlaze.Pages
                 return tsBatchTraslateModel;
             }
             catch (Exception ex)
-            { 
+            {
                 return tsBatchTraslateModel;
+            }
+        }
+
+
+        private BatchValidateModel GetConvertedValidateResponse(JArray entryArray)
+        {
+            try
+            {
+                foreach (var entry in entryArray)
+                {
+                    tsCodingValidateEntry = new CodingValidateEntry();
+                    JObject resourceObject = (JObject)entry["response"];
+                    string test = resourceObject.ToString();
+
+                    tsCodingValidateEntry.result = (string)resourceObject["outcome"]["parameter"]
+                            .FirstOrDefault(p => (string)p["name"] == "result")
+                            ?["valueBoolean"];
+
+                    JToken urlresult = resourceObject.SelectToken("$.outcome.parameter[?(@.name == 'message')]");
+                    if (urlresult != null)  
+                    {
+                        tsCodingValidateEntry.message = (string)resourceObject["outcome"]["parameter"]
+                                .FirstOrDefault(p => (string)p["name"] == "message")
+                                ?["valueString"];
+                    }
+
+                    JToken urldisplay = resourceObject.SelectToken("$.outcome.parameter[?(@.name == 'display')]");
+                    if (urldisplay != null)
+                    {
+                        tsCodingValidateEntry.display = (string)resourceObject["outcome"]["parameter"]
+                            .FirstOrDefault(p => (string)p["name"] == "display")
+                            ?["valueString"];
+                    }
+                    tsBatchValidateModel.Coding.Add(tsCodingValidateEntry);
+                }
+                return tsBatchValidateModel;
+            }
+            catch (Exception ex)
+            {
+                return tsBatchValidateModel;
             }
         }
     }

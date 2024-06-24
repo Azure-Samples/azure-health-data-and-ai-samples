@@ -19,4 +19,29 @@ namespace FhirBlaze.Model
         public string targetsystem { get; set; }
         public string display { get; set; }
     }
+
+
+    public class BatchValidateModel
+    {
+        public List<CodingValidateEntry> Coding { get; set; }
+        public BatchValidateModel()
+        {
+            Coding = new List<CodingValidateEntry>();
+        }
+    }
+
+    public class CodingValidateEntry
+    {
+        public string code { get; set; }
+        public string? url { get; set; }
+        public string? date { get; set; }
+        public string system { get; set; }
+        public string? valueSetVersion { get; set; }
+        public string? result { get; set; }
+        public string? message { get; set; }
+        public string? display { get; set; }
+
+
+        
+    }
 }

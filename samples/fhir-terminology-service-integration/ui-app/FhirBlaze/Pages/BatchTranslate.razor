@@ -132,7 +132,14 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        var Codes = await Http.GetStringAsync("data/Codes_BatchTranslate.json");
+        var Codes = string.Empty;
+        // using (HttpClient client = new HttpClient())
+        // {
+        //       Codes = await client.GetStringAsync("data/Codes_BatchTranslate.json");
+        //     // string jsonString = await client.GetStringAsync(url);
+        //     // Console.WriteLine(jsonString); // Print or process the fetched JSON data
+        // }
+        Codes = await Http.GetStringAsync("data/Codes_BatchObservations.json");
         JObject bundleObject = JObject.Parse(Codes);
         tsFhirModel.Codelist = bundleObject["Codes"].Select(code => code.ToString()).ToList();
         StateHasChanged();
