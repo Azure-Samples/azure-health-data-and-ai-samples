@@ -79,6 +79,7 @@ namespace FhirBlaze.Pages
                         {
                             tsBatchValidateModel = GetConvertedValidateRequest(entryArray);
                             convertedObj = JObject.FromObject(tsBatchValidateModel);
+                            convertedObj = RemoveNullParameters(convertedObj);
                         }
                         else
                         {
@@ -132,9 +133,13 @@ namespace FhirBlaze.Pages
                         tsBatchValidateModel = new BatchValidateModel();
                         tsBatchValidateModel = GetConvertedValidateResponse(entryArrayResponse);
                         convertedObj = JObject.FromObject(tsBatchValidateModel);
+                        convertedObj = RemoveNullParameters(convertedObj); // to remove empty parameter
+
+
+
                     }
 
-
+                    string test5=convertedObj.ToString();
                     tsFhirModel.LookUpAndTranslateJson = convertedObj.ToString();
                     StateHasChanged();
                 }
@@ -280,7 +285,7 @@ namespace FhirBlaze.Pages
                     JObject resourceObject = (JObject)entry["response"];
                     string test = resourceObject.ToString();
 
-                    tsCodingValidateEntry.result = (string)resourceObject["outcome"]["parameter"]
+                    tsCodingValidateEntry.result = (bool)resourceObject["outcome"]["parameter"]
                             .FirstOrDefault(p => (string)p["name"] == "result")
                             ?["valueBoolean"];
 
@@ -307,6 +312,25 @@ namespace FhirBlaze.Pages
             {
                 return tsBatchValidateModel;
             }
+        }
+
+        private JObject RemoveNullParameters(JObject obj)
+        {
+            JArray codingArray = (JArray)obj["Coding"];
+             
+            foreach (JObject codingObject in codingArray.Children<JObject>().ToList())
+            { 
+                var propertiesToRemove = codingObject.Properties()
+                    .Where(p => p.Value.Type == JTokenType.Null)
+                    .Select(p => p.Name)
+                    .ToList();
+
+                foreach (var propertyName in propertiesToRemove)
+                {
+                    codingObject.Remove(propertyName);
+                }
+            }
+            return obj;
         }
     }
 }

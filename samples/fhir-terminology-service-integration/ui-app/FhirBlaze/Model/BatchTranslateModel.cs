@@ -33,13 +33,13 @@ namespace FhirBlaze.Model
     public class CodingValidateEntry
     {
         public string code { get; set; }
-        public string? url { get; set; }
-        public string? date { get; set; }
+        public string url { get; set; }
+        public string date { get; set; }
         public string system { get; set; }
-        public string? valueSetVersion { get; set; }
-        public string? result { get; set; }
-        public string? message { get; set; }
-        public string? display { get; set; }
+        public string valueSetVersion { get; set; }
+        public bool? result { get; set; }
+        public string message { get; set; }
+        public string display { get; set; }
 
 
         
