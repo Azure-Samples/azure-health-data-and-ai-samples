@@ -1,0 +1,143 @@
+﻿@page "/BatchOperation"
+@using FhirBlaze.Model;
+<style style=""></style>
+<PageTitle>BatchOperation</PageTitle>
+@inject HttpClient Http
+@using System.Net.Http
+@using System.Text.Json
+@using Newtonsoft.Json.Linq
+
+<style>
+    .btnstyle {
+        /*width: 90px;*/
+        background-color: #348ce5
+    }
+
+    .margintop {
+        margin-top: 5px
+    }
+
+    .clsleft {
+        width: 45%;
+        float: left;
+        /*margin-left: 2%;*/
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 370px;
+        padding: 5px;
+        background: #f3f3f3;
+        border-radius: 4px;
+        resize: vertical;
+        white-space: pre;
+        word-wrap: normal;
+    }
+
+    div.clsright {
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 2%;
+    }
+
+    .grid-container {
+        display: grid;
+        column-gap: 5px;
+        row-gap: 5px;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .diff-panes {
+        max-height: 400px !important;
+        overflow: scroll !important;
+    }
+
+    .diff-expand-notice{
+        display:none;
+    }
+
+    .line-text {
+        white-space: normal !important;
+    }
+</style>
+
+<form>
+    <div>
+        <div>
+            <div class="row">
+                <div class="col">
+                    <h5 style="font-weight:bold">Search Code for BatchOperation </h5>
+                    <label></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex">
+                    <div class="col">
+                        <select style="width:221px" for="Name" class="form-control" placeholder="Code system" @onchange="OnCodeSystemSelected" >
+
+                            <option value="" disabled selected>Code system</option>
+                            @if (tsFhirModel.Codelist != null){
+                            @foreach (var CodeSystem in tsFhirModel.Codelist)
+                            {
+                                <option value="@CodeSystem">@CodeSystem </option>
+                            }
+                            }
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="button" class="btn btn-primary btnstyle" value="Batch Operation" @onclick="BatchOperationMethod" style="width:160px" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+    
+    <div style="margin-top:2px">
+        <div class="row">
+            <div style="margin-right: -20px;" class="col-6">
+                <label>Original Resource</label>
+            </div>
+            <div class="col">
+                <label>Translated Resource</label>
+            </div>
+            
+        </div>
+    </div>
+    <div>
+        @if (tsFhirModel != null && (!string.IsNullOrEmpty(tsFhirModel.batchJson) || !string.IsNullOrEmpty(tsFhirModel.LookUpAndTranslateJson)))
+        {
+            <TextDiff ShowWhiteSpace=true OldText="@tsFhirModel.batchJson" NewText="@tsFhirModel.LookUpAndTranslateJson" CollapseContent="true" MaxHeight="350">
+            </TextDiff>
+         }
+        
+    </div>
+
+</form>
+
+
+
+
+@code {
+    private string selectedCodeSystem;
+
+    private void OnCodeSystemSelected(ChangeEventArgs e)
+    {
+        selectedCodeSystem = e.Value.ToString();
+        GetBatchDetails(selectedCodeSystem);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var Codes = string.Empty;
+        Codes = await Http.GetStringAsync("data/Codes_BatchObservations.json");
+        JObject bundleObject = JObject.Parse(Codes);
+        tsFhirModel.Codelist = bundleObject["Codes"].Select(code => code.ToString()).ToList();
+        StateHasChanged();
+    }
+   
+}
+

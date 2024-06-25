@@ -40,8 +40,5 @@ namespace FhirBlaze.Model
         public bool? result { get; set; }
         public string message { get; set; }
         public string display { get; set; }
-
-
-        
     }
 }
