@@ -20,7 +20,7 @@ Make sure you have the pre-requisites listed below
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Microsoft Entra ID and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
+  - Elevated access in Microsoft Entra ID, Azure B2C and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
 
 - **Test Accounts:**
   - For Microsoft Entra ID:
@@ -76,6 +76,10 @@ Next you will need to clone this repository and prepare your environment for dep
     azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
     azd env set SmartonFhirwithB2C false
     ```
+1. If you have opted for ONC g(10), then set oncEnabled variable as true or false.
+    ```
+    azd env set oncEnabled <true/false>
+    ```
 1. If you have opted for B2C, then Login with the Azure Developer CLI.
     ```
     az login --tenant <tenant-id>
@@ -104,7 +108,7 @@ Next you will need to clone this repository and prepare your environment for dep
 1. Add fhirUser claim to your test users. You will need to add the `fhirUser` claim to each of your test user accounts. For the patient test user, the `fhirUser` needs to be `<Complete Fhir Url>/Patient/PatientA` to collaborate with the sample data. For the practitioner test user, the `fhirUser` needs to be `<Complete Fhir Url>/Practitioner/PractitionerC1`.
 
    Changing an Microsoft Graph directory extensions is done through API requests to Microsoft Graph. You can use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will just need the `object id` of your patient test user. In a production scenario, you would integrate this into your user registration process.
-
+    - **Note** - If you have opted for Smart on FHIR with B2C then you need to login to your B2C tenant before running the script. Follow step [2.2](#2-prepare-and-deploy-environment) to login to your B2C tenant.
     1. Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
         Windows:

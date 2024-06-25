@@ -37,7 +37,7 @@ The Patient Standalone Launch application is a standard confidential client appl
     - Microsoft Graph (Application) - Applicable only for B2C.
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. Grant admin consent for app permissions.
+1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
 1. If you have opted for Microsoft Entra ID, then follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
@@ -95,10 +95,10 @@ The EHR launch confidential client application is a standard confidential client
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
 1. If you have opted for Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. Otherwise for B2C, create it in the B2C tenant. No platform or redirect URL is needed.
-1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
+1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
-        - user.all.read
+        - user.all.all
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
