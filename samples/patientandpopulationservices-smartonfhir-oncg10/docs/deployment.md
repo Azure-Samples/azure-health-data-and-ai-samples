@@ -39,6 +39,14 @@ Make sure you have the pre-requisites listed below
     - [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
     - [Create custom user flow using custom policy](../docs/create-custom-policy.md)
 
+**Prerequisites for Using VNet and Private Link:**
+  - To utilize this sample with Virtual Network (VNet) and Private Link, ensure the following configurations.
+    1. API Management (APIM): Deploy in the Premium tier.
+    2. App Service Plan: Deploy in the Standard tier.
+    3. Function Apps and App Service Plan: Use Windows as the operating system.
+
+  - Please update the respective Bicep templates with these configurations before deployment.
+
 ## 2. Prepare and deploy environment
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
