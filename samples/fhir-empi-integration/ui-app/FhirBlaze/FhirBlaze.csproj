@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<UserSecretsId>d5d6b92a-009f-4333-aa32-2607d1ed3efc</UserSecretsId>
+		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,7 +21,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.3" />
+		<PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Graph.Beta" Version="4.6.0-preview" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.4.1" />
@@ -43,6 +44,7 @@
 	
 	<ItemGroup>
 		<TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+		<TrimmerRootAssembly Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
 	</ItemGroup>
 	
 	<ItemGroup>
