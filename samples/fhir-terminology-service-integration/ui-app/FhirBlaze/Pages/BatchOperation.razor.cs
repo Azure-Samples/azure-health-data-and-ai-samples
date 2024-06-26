@@ -49,7 +49,7 @@ namespace FhirBlaze.Pages
                 tsBatchTraslateModel = new BatchTranslateModel();
                 tsBatchValidateModel = new BatchValidateModel();
                 // fetch data from json and display to ui 
-                var observations = await Http.GetStringAsync("data/BatchObservation1.json");
+                var observations = await Http.GetStringAsync("data/BatchObservation.json");
                 JObject bundleObject = JObject.Parse(observations);
 
                 JObject codeObject = bundleObject.GetValue(codeSystem) as JObject;
@@ -92,46 +92,49 @@ namespace FhirBlaze.Pages
                 // Temp comment for offline testing 
 
                 JObject jtranslatedCode = new JObject();
-                //JObject bundleObject = JObject.Parse(tsFhirModel.observationJson);
-                //var translatedCode = await apmService.BatchTranslateCode(bundleObject.ToString());
-                //if (translatedCode.IsSuccessStatusCode)
-                //{
-                //  var translateJsonResponse = translatedCode.Content.ReadAsStringAsync().Result;
-                //  var translateJsonResponse = await Http.GetStringAsync("data/tempResponse.json");
-                var translateJsonResponse = await Http.GetStringAsync("data/tempValidateResponse.json");
-                JObject translatedJobject = JObject.Parse(translateJsonResponse);
-                if (translatedJobject.ContainsKey("entry"))
+                JObject bundleObject = JObject.Parse(tsFhirModel.observationJson);
+                var translatedCode = await apmService.BatchTranslateCode(bundleObject.ToString());
+                if (translatedCode.IsSuccessStatusCode)
                 {
-                    JObject convertedObj = null;
-                    JToken urlParameter = translatedJobject.SelectToken("$.parameter[?(@.name == 'match')]");
-                    if (urlParameter != null)
+                    var translateJsonResponse = translatedCode.Content.ReadAsStringAsync().Result;
+                    //  var translateJsonResponse = await Http.GetStringAsync("data/tempResponse.json");
+                    // var translateJsonResponse = await Http.GetStringAsync("data/tempValidateResponse.json");
+                    JObject translatedJobject = JObject.Parse(translateJsonResponse);
+                    if (translatedJobject.ContainsKey("entry"))
                     {
-                        JArray entryArrayResponse = (JArray)translatedJobject["entry"];
-                        tsBatchTraslateModel = new BatchTranslateModel();
-                        tsBatchTraslateModel = GetConvertedResponse(entryArrayResponse);
-                        convertedObj = JObject.FromObject(tsBatchTraslateModel);
-                    }
-                    else
-                    {
-                        JArray entryArrayResponse = (JArray)translatedJobject["entry"];
-                        tsBatchValidateModel = new BatchValidateModel();
-                        tsBatchValidateModel = GetConvertedValidateResponse(entryArrayResponse);
-                        convertedObj = JObject.FromObject(tsBatchValidateModel);
-                        convertedObj = RemoveNullParameters(convertedObj); // to remove empty parameter
-                    }
+                        JObject convertedObj = null;
+                        var t = translatedJobject.ToString();
+                        //                        JToken urlParameter = translatedJobject.SelectToken("$entry[0].response.outcome.parameter[?(@.name == 'match')]");
+                        JToken urlParameter = translatedJobject.SelectToken("$.entry[0].response.outcome.parameter[?(@.name == 'match')]");
+                        if (urlParameter != null)
+                        {
+                            JArray entryArrayResponse = (JArray)translatedJobject["entry"];
+                            tsBatchTraslateModel = new BatchTranslateModel();
+                            tsBatchTraslateModel = GetConvertedResponse(entryArrayResponse);
+                            convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                        }
+                        else
+                        {
+                            JArray entryArrayResponse = (JArray)translatedJobject["entry"];
+                            tsBatchValidateModel = new BatchValidateModel();
+                            tsBatchValidateModel = GetConvertedValidateResponse(entryArrayResponse);
+                            convertedObj = JObject.FromObject(tsBatchValidateModel);
+                            convertedObj = RemoveNullParameters(convertedObj); // to remove empty parameter
+                        }
 
-                    tsFhirModel.LookUpAndTranslateJson = convertedObj.ToString();
+                        tsFhirModel.LookUpAndTranslateJson = convertedObj.ToString();
+                        StateHasChanged();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error Code :" + translatedCode.StatusCode.ToString());
+                    Console.WriteLine(translatedCode.Content.ReadAsStringAsync().Result);
+                    tsFhirModel.batchJson = "Received error response.";
+                    tsFhirModel.LookUpAndTranslateJson = string.Empty;
                     StateHasChanged();
                 }
-                // need to uncomment once check with APIM
-                //else
-                //{
-                //    Console.WriteLine("Error Code :" + translatedCode.StatusCode.ToString());
-                //    Console.WriteLine(translatedCode.Content.ReadAsStringAsync().Result);
-                //    tsFhirModel.observationJson = "Received error response.";
-                //    tsFhirModel.LookUpAndTranslateJson = string.Empty;
-                //    StateHasChanged();
-                //}
+
             }
             catch (Exception e)
             {
@@ -255,7 +258,7 @@ namespace FhirBlaze.Pages
                 {
                     tsCodingValidateEntry = new CodingValidateEntry();
                     JObject resourceObject = (JObject)entry["response"];
-                    
+
                     tsCodingValidateEntry.result = (bool)resourceObject["outcome"]["parameter"]
                             .FirstOrDefault(p => (string)p["name"] == "result")
                             ?["valueBoolean"];
