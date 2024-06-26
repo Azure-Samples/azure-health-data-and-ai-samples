@@ -28,6 +28,8 @@ param customOperationsFuncStorName string
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
 
+param enableVNetSupport bool
+
 @description('Name for the Function App to deploy the Export Custom Operations to')
 var exportCustomOperationsFunctionAppName = '${name}-exp-func'
 
@@ -46,6 +48,13 @@ resource symbolicname 'Microsoft.Storage/storageAccounts/tableServices/tables@20
   parent: funcTableService
 }
 
+var siteConfig = enableVNetSupport ? {
+  alwaysOn: true
+} : {
+  linuxFxVersion: 'dotnet-isolated|6.0'
+  use32BitWorkerProcess: false
+}
+
 @description('Azure Function used to run export custom operations using the Azure Health Data Services Toolkit')
 resource exportCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   name: exportCustomOperationsFunctionAppName
@@ -62,11 +71,7 @@ resource exportCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: hostingPlanId
     reserved: true
     clientAffinityEnabled: false
-    siteConfig: {
-      linuxFxVersion: 'dotnet-isolated|6.0'
-      use32BitWorkerProcess: false
-    }
-    
+    siteConfig: siteConfig
   }
 
   tags: union(appTags, {'azd-service-name': 'export'})
