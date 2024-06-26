@@ -29,7 +29,7 @@ Make sure you have the pre-requisites listed below
 - **Prerequisites for Using VNet and Private Link:**
   - To utilize this sample with Virtual Network (VNet) and Private Link, ensure the following configurations.
     1. API Management (APIM): Deploy in the Premium tier.
-    2. App Service Plan: Deploy in the Standard tier.
+    2. App Service Plan and Static Web App: Deploy in the Standard tier.
     3. Function Apps and App Service Plan: Use Windows as the operating system.
 
   - Please update the respective Bicep templates with these configurations before deployment.
