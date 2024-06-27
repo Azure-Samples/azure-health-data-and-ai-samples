@@ -70,6 +70,7 @@ namespace FhirBlaze.Pages
                         {
                             tsBatchTraslateModel = TranslateRequestConversion(entryArray);
                             convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                            convertedObj = RemoveNullParameters(convertedObj);
                         }
 
                         tsFhirModel.observationJson = codeObject.ToString();
@@ -106,6 +107,7 @@ namespace FhirBlaze.Pages
                             tsBatchTraslateModel = new BatchTranslateModel();
                             tsBatchTraslateModel = TranslateResponseConversion(entryArrayResponse);
                             convertedObj = JObject.FromObject(tsBatchTraslateModel);
+                            convertedObj = RemoveNullParameters(convertedObj);
                         }
                         else
                         {
