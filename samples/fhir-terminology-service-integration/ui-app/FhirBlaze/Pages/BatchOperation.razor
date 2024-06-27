@@ -133,7 +133,7 @@
     protected override async Task OnInitializedAsync()
     {
         var Codes = string.Empty;
-        Codes = await Http.GetStringAsync("data/Codes_BatchObservations.json");
+        Codes = await Http.GetStringAsync("data/Codes_BatchOperation.json");
         JObject bundleObject = JObject.Parse(Codes);
         tsFhirModel.Codelist = bundleObject["Codes"].Select(code => code.ToString()).ToList();
         StateHasChanged();

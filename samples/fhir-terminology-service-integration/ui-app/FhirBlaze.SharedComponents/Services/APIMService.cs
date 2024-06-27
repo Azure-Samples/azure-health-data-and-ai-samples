@@ -1,17 +1,8 @@
-﻿using Azure.Core;
-using Hl7.Fhir.Model;
-using Hl7.Fhir.Rest;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using static Microsoft.Graph.CoreConstants;
 
 namespace FhirBlaze.SharedComponents.Services
 {
@@ -270,7 +261,7 @@ namespace FhirBlaze.SharedComponents.Services
         }
 
 
-        public async Task<HttpResponseMessage> BatchTranslateCode(string content)
+        public async Task<HttpResponseMessage> BatchOperationCall(string content)
         {
             HttpResponseMessage httpResponseMessage;
             try

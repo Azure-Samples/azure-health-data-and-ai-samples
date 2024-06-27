@@ -49,8 +49,8 @@ namespace FhirBlaze.Pages
                 tsBatchTraslateModel = new BatchTranslateModel();
                 tsBatchValidateModel = new BatchValidateModel();
                 // fetch data from json and display to ui 
-                var observations = await Http.GetStringAsync("data/BatchObservation.json");
-                JObject bundleObject = JObject.Parse(observations);
+                var batchOperation = await Http.GetStringAsync("data/BatchOperation.json");
+                JObject bundleObject = JObject.Parse(batchOperation);
 
                 JObject codeObject = bundleObject.GetValue(codeSystem) as JObject;
                 if (codeObject != null)
@@ -62,13 +62,13 @@ namespace FhirBlaze.Pages
                         string urlValue = (string)entryArray[0]["request"]["url"];
                         if (urlValue.Contains("validate"))
                         {
-                            tsBatchValidateModel = GetConvertedValidateRequest(entryArray);
+                            tsBatchValidateModel = ValidateRequestConversion(entryArray);
                             convertedObj = JObject.FromObject(tsBatchValidateModel);
                             convertedObj = RemoveNullParameters(convertedObj);
                         }
                         else
                         {
-                            tsBatchTraslateModel = GetConvertedTranslatedRequest(entryArray);
+                            tsBatchTraslateModel = TranslateRequestConversion(entryArray);
                             convertedObj = JObject.FromObject(tsBatchTraslateModel);
                         }
 
@@ -89,39 +89,32 @@ namespace FhirBlaze.Pages
             JArray array = new JArray();
             try
             {
-                // Temp comment for offline testing 
-
                 JObject jtranslatedCode = new JObject();
                 JObject bundleObject = JObject.Parse(tsFhirModel.observationJson);
-                var translatedCode = await apmService.BatchTranslateCode(bundleObject.ToString());
+                var translatedCode = await apmService.BatchOperationCall(bundleObject.ToString());
                 if (translatedCode.IsSuccessStatusCode)
                 {
                     var translateJsonResponse = translatedCode.Content.ReadAsStringAsync().Result;
-                    //  var translateJsonResponse = await Http.GetStringAsync("data/tempResponse.json");
-                    // var translateJsonResponse = await Http.GetStringAsync("data/tempValidateResponse.json");
                     JObject translatedJobject = JObject.Parse(translateJsonResponse);
                     if (translatedJobject.ContainsKey("entry"))
                     {
                         JObject convertedObj = null;
-                        var t = translatedJobject.ToString();
-                        //                        JToken urlParameter = translatedJobject.SelectToken("$entry[0].response.outcome.parameter[?(@.name == 'match')]");
                         JToken urlParameter = translatedJobject.SelectToken("$.entry[0].response.outcome.parameter[?(@.name == 'match')]");
                         if (urlParameter != null)
                         {
                             JArray entryArrayResponse = (JArray)translatedJobject["entry"];
                             tsBatchTraslateModel = new BatchTranslateModel();
-                            tsBatchTraslateModel = GetConvertedResponse(entryArrayResponse);
+                            tsBatchTraslateModel = TranslateResponseConversion(entryArrayResponse);
                             convertedObj = JObject.FromObject(tsBatchTraslateModel);
                         }
                         else
                         {
                             JArray entryArrayResponse = (JArray)translatedJobject["entry"];
                             tsBatchValidateModel = new BatchValidateModel();
-                            tsBatchValidateModel = GetConvertedValidateResponse(entryArrayResponse);
+                            tsBatchValidateModel = ValidateResponseConversion(entryArrayResponse);
                             convertedObj = JObject.FromObject(tsBatchValidateModel);
                             convertedObj = RemoveNullParameters(convertedObj); // to remove empty parameter
                         }
-
                         tsFhirModel.LookUpAndTranslateJson = convertedObj.ToString();
                         StateHasChanged();
                     }
@@ -142,7 +135,7 @@ namespace FhirBlaze.Pages
             }
         }
 
-        private BatchTranslateModel GetConvertedTranslatedRequest(JArray entryArray)
+        private BatchTranslateModel TranslateRequestConversion(JArray entryArray)
         {
             try
             {
@@ -172,7 +165,7 @@ namespace FhirBlaze.Pages
             }
         }
 
-        private BatchValidateModel GetConvertedValidateRequest(JArray entryArray)
+        private BatchValidateModel ValidateRequestConversion(JArray entryArray)
         {
             try
             {
@@ -220,7 +213,7 @@ namespace FhirBlaze.Pages
             }
         }
 
-        private BatchTranslateModel GetConvertedResponse(JArray entryArray)
+        private BatchTranslateModel TranslateResponseConversion(JArray entryArray)
         {
             try
             {
@@ -250,7 +243,7 @@ namespace FhirBlaze.Pages
             }
         }
 
-        private BatchValidateModel GetConvertedValidateResponse(JArray entryArray)
+        private BatchValidateModel ValidateResponseConversion(JArray entryArray)
         {
             try
             {
