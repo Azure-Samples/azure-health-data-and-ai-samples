@@ -291,7 +291,7 @@ namespace FhirBlaze.Pages
             foreach (JObject codingObject in codingArray.Children<JObject>().ToList())
             {
                 var propertiesToRemove = codingObject.Properties()
-                    .Where(p => p.Value.Type == JTokenType.Null)
+                    .Where(p => p.Value.Type == JTokenType.Null|| (p.Value.Type == JTokenType.String && string.IsNullOrEmpty((string)p.Value)))
                     .Select(p => p.Name)
                     .ToList();
 
