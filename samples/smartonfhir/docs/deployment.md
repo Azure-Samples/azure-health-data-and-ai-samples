@@ -26,14 +26,6 @@ Make sure you have the pre-requisites listed below
   - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
   - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
 
-- **Prerequisites for Using VNet and Private Link:**
-  - To utilize this sample with Virtual Network (VNet) and Private Link, ensure the following configurations.
-    1. API Management (APIM): Deploy in the Premium tier.
-    2. App Service Plan and Static Web App: Deploy in the Standard tier.
-    3. Function Apps and App Service Plan: Use Windows as the operating system.
-
-  - Please update the respective Bicep templates with these configurations before deployment.
-
 ## 2. Prepare and deploy environment
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
