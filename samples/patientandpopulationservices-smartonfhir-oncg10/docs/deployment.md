@@ -39,14 +39,6 @@ Make sure you have the pre-requisites listed below
     - [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
     - [Create custom user flow using custom policy](../docs/create-custom-policy.md)
 
-**Prerequisites for Using VNet and Private Link:**
-  - To utilize this sample with Virtual Network (VNet) and Private Link, ensure the following configurations.
-    1. API Management (APIM): Deploy in the Premium tier.
-    2. App Service Plan: Deploy in the Standard tier.
-    3. Function Apps and App Service Plan: Use Windows as the operating system.
-
-  - Please update the respective Bicep templates with these configurations before deployment.
-
 ## 2. Prepare and deploy environment
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
@@ -99,7 +91,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
-    - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName` and `fhirid` parameters:
+    - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName`, `fhirid` and `enableVNetSupport` parameters:
         - `B2CTenantId` : This parameter takes Tenant ID of your B2C Tenant which you deployed earlier.
             - Note: If you have opted for Microsoft Entra ID you can skip this parameter.
         - `StandaloneAppClientId` : This parameter takes Application ID / Client ID of Inferno Standalone Patient App which you created earlier.
@@ -111,6 +103,10 @@ Next you will need to clone this repository and prepare your environment for dep
             1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
             3. Copy the "Id" field under the "Essentials" group.      
+        - `enableVNetSupport`: This parameter accepts a boolean (true/false) value, enabling integration of Virtual Network and Private Link in the deployed sample. When set to true, the following resources are deployed in the Standard/Premium tier to enable private endpoint creation necessary for Virtual Network Support:
+          1. API Management (APIM): Deployed in the Premium tier.
+          2. App Service Plan and Static Web App: Deployed in the Standard tier.
+          3. Function Apps and App Service Plan: Utilizes Windows as the operating system. 
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
 1. Add fhirUser claim to your test users. You will need to add the `fhirUser` claim to each of your test user accounts. For the patient test user, the `fhirUser` needs to be `<Complete Fhir Url>/Patient/PatientA` to collaborate with the sample data. For the practitioner test user, the `fhirUser` needs to be `<Complete Fhir Url>/Practitioner/PractitionerC1`.
