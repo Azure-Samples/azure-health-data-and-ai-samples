@@ -40,6 +40,7 @@ param hostingPlanId string
 param redisCacheId string
 param redisCacheHostName string
 param redisApiVersion string
+param enableVNetSupport bool
 
 @description('Name for the Function App to deploy the SDK custom operations to.')
 var authCustomOperationsFunctionAppName = '${name}-aad-func'
@@ -51,6 +52,23 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' exist
 
   resource blobService 'blobServices@2021-06-01' = {
     name: 'default'
+  }
+}
+
+var siteConfig = enableVNetSupport ? {
+  alwaysOn: true
+  cors: {
+    allowedOrigins: [
+      smartFrontendAppUrl
+    ]
+  }
+} : {
+  linuxFxVersion: 'dotnet-isolated|6.0'
+  use32BitWorkerProcess: false
+  cors: {
+    allowedOrigins: [
+      smartFrontendAppUrl
+    ]
   }
 }
 
@@ -70,16 +88,7 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: hostingPlanId
     reserved: true
     clientAffinityEnabled: false
-    siteConfig: {
-      linuxFxVersion: 'dotnet-isolated|6.0'
-      use32BitWorkerProcess: false
-      cors: {
-        allowedOrigins: [
-          smartFrontendAppUrl
-        ]
-      }
-    }
-    
+    siteConfig: siteConfig
   }
 
   tags: union(appTags, {'azd-service-name': 'auth'})
