@@ -1,8 +1,31 @@
 {
-  "icd9cm-001.1=>icd10cm": {
+  "icd9cm-001.1=>icd10cm&Local-GLU=>Loinc": {
     "resourceType": "Bundle",
     "type": "batch",
     "entry": [
+      {
+        "resource": {
+          "resourceType": "Parameters",
+          "parameter": [
+            {
+              "name": "code",
+              "valueString": "GLU"
+            },
+            {
+              "name": "system",
+              "valueUri": "fhirapis_ehr_1_labs"
+            },
+            {
+              "name": "targetsystem",
+              "valueUri": "loinc"
+            }
+          ]
+        },
+        "request": {
+          "method": "POST",
+          "url": "ConceptMap/$translate"
+        }
+      },
       {
         "resource": {
           "resourceType": "Parameters",
@@ -116,7 +139,7 @@
       }
     ]
   },
-  "icd10cm_validate_code": {
+  "Batch_Validate": {
     "resourceType": "Bundle",
     "type": "batch",
     "entry": [
