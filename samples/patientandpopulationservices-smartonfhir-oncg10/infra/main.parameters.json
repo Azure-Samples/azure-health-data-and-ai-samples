@@ -46,6 +46,9 @@
     },
     "oncEnabled": {
       "value": "${oncEnabled}"
+    },
+    "enableVNetSupport":{
+      "value": ""
     }
   }
 }

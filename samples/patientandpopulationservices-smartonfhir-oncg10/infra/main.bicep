@@ -63,6 +63,9 @@ param oncEnabled bool
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
+@description('Deploy sample with Virtual Network')
+param enableVNetSupport bool
+
 // end optional configuration parameters
 
 var nameClean = replace(name, '-', '')
@@ -154,6 +157,7 @@ module functionBase 'core/functionHost.bicep' = {
     location: location
     name: name
     nameCleanShort: nameCleanShort
+    enableVNetSupport: enableVNetSupport
   }
 }
 
@@ -193,6 +197,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     authorityUrl: AuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
     standaloneAppClientId: StandaloneAppClientId
+    enableVNetSupport: enableVNetSupport
   }
 }
 
@@ -211,6 +216,7 @@ module exportCustomOperation './app/exportCustomOperation.bicep' = {
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
+    enableVNetSupport: enableVNetSupport
   }
 }
 
@@ -268,6 +274,7 @@ module apim './core/apiManagement.bicep'= {
     exportFunctionBaseUrl: 'https://${name}-exp-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
     appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+    enableVNetSupport: enableVNetSupport
   }
 }
 
@@ -281,6 +288,9 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
     redisCacheHostName: redis.outputs.redisCacheHostName
     redisCacheId: redis.outputs.redisCacheId
   }
+  dependsOn:[
+    apim
+  ]
 }
 
 var backendServiceVaultName = '${nameShort}-backkv'
@@ -308,6 +318,7 @@ module contextStaticWebApp './app/contextApp.bicep' = {
     appTags: union(appTags, {
       'azd-service-name': 'context'
     })
+    enableVNetSupport: enableVNetSupport
   }
 }
 

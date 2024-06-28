@@ -2,6 +2,7 @@ param name string
 param nameCleanShort string
 param location string
 param appTags object
+param enableVNetSupport bool
 
 
 @description('Name for the storage account needed for Custom Operation Function Apps')
@@ -21,18 +22,26 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
 @description('Name for the App Service used to host Custom Operation Function Apps.')
 var customOperationsAppServiceName = '${name}-appserv'
 
+var sku = enableVNetSupport ? {
+  name: 'S1'
+  tier: 'Standard'
+} : {
+  name: 'Y1'
+  tier: 'Dynamic'
+}
+
+var properties = enableVNetSupport ? {}
+: {
+  reserved: true
+}
+
 @description('App Service used to run Azure Function')
 resource hostingPlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: customOperationsAppServiceName
   location: location
   kind: 'functionapp'
-  sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
-  }
-  properties: {
-    reserved: true
-  }
+  sku: sku
+  properties: properties
   tags: appTags
 }
 

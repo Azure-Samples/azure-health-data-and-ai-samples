@@ -1,7 +1,11 @@
 param staticWebAppName string
 param location string
 param appTags object = {}
-param sku object = {
+param enableVNetSupport bool
+param sku object = enableVNetSupport ? {
+  name: 'Standard'
+  tier: 'Standard'
+} : {
   name: 'Free'
   tier: 'Free'
 }
