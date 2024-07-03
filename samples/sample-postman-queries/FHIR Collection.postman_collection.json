@@ -21898,6 +21898,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "BatchOperation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"resourceType\": \"Bundle\",\r\n  \"type\": \"batch\",\r\n  \"entry\": [\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Parameters\",\r\n        \"parameter\": [\r\n          {\r\n            \"name\": \"code\",\r\n            \"valueString\": \"J45.0\"\r\n          },\r\n          {\r\n            \"name\": \"url\",\r\n            \"valueUri\": \"http://hl7.org/fhir/sid/icd-10-cm\"\r\n          },\r\n          {\r\n            \"name\": \"date\",\r\n            \"valueDateTime\": \"2023-10-26\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"CodeSystem/$validate-code\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Parameters\",\r\n        \"parameter\": [\r\n          {\r\n            \"name\": \"code\",\r\n            \"valueString\": \"A00.0\"\r\n          },\r\n          {\r\n            \"name\": \"date\",\r\n            \"valueDateTime\": \"2023-10-26\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"CodeSystem/icd10cm/$validate-code\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Parameters\",\r\n        \"parameter\": [\r\n          {\r\n            \"name\": \"code\",\r\n            \"valueString\": \"697971008\"\r\n          },\r\n          {\r\n            \"name\": \"system\",\r\n            \"valueString\": \"snomed\"\r\n          },\r\n          {\r\n            \"name\": \"date\",\r\n            \"valueDateTime\": \"2023-11-22\"\r\n          },\r\n          {\r\n            \"name\": \"valueSetVersion\",\r\n            \"valueString\": \"f82497b6-018b-67b0-a42c-beccac620003\"\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"ValueSet/f82497b6-018b-6762-abbd-35ecac620003/$validate-code\"\r\n      }\r\n    },\r\n    {\r\n      \"resource\": {\r\n        \"resourceType\": \"Parameters\",\r\n        \"parameter\": [\r\n          {\r\n            \"name\": \"code\",\r\n            \"valueString\": \"001.1\"\r\n          },\r\n          {\r\n            \"name\": \"system\",\r\n            \"valueUri\": \"icd9cm\"\r\n          },\r\n          {\r\n            \"name\": \"targetsystem\",\r\n            \"valueUri\": \"icd10cm\"\r\n          },\r\n          {\r\n            \"name\": \"dependency\",\r\n            \"resource\": {\r\n              \"resourceType\": \"Parameters\",\r\n              \"parameter\": [\r\n                {\r\n                  \"name\": \"element\",\r\n                  \"valueUri\": \"icd9cm_icd10cm_equals\"\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        ]\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"ConceptMap/$translate\"\r\n      }\r\n    },\r\n    {\r\n      \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"ConceptMap/$translate?code=001.1&system=icd9cm&targetsystem=icd10cm\"\r\n      }\r\n    },\r\n    {\r\n      \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"/CodeSystem/icd10cm/$validate-code?code=A00.0&date=2023-11-06\"\r\n      }\r\n    },\r\n    {\r\n      \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"/CodeSystem/$validate-code?code=A00.0&url=icd10cm&date=2023-10-26\"\r\n      }\r\n    },\r\n    {\r\n      \"request\": {\r\n        \"method\": \"GET\",\r\n        \"url\": \"ValueSet/f82497b6-018b-6762-abbd-35ecac620003/$validate-code?code=A00.0&system=icd10cm&valueSetVersion=f82497b6-018b-67b0-a42c-beccac620003&date=2023-11-22\"\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apimUrl}}",
+							"host": [
+								"{{apimUrl}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
