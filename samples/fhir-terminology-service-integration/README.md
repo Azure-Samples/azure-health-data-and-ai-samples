@@ -69,9 +69,12 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 2. Create APIs:
 	
 	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+
 	b. Open file "FHIR Terminology.openapi+json.json" in Editor.
+
 	c. Add your fhir service url for backend at hoghlighted place and save the file.
 		![](./images/CreateAPI1.png)
+
 	d. Go to "APIs" tab, click on "Add API" and select "OpenAPI" from "Create from definition" section as highlighted below:
 		![](./images/CreateAPI.png)
 		
@@ -86,7 +89,9 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 
 	
 3. Create Policy Fragment:
+
 	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+
 	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P teminology service requirements.
 		![](./images/Policy0.png)
 
@@ -96,19 +101,24 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	d. After you are done editing save the changes and copy all the text.
 	e. Go back to your APIM instance and go to "Polict Fragments" tab, click on "Create", new popup will open, Enter polict name, description and add copied text for policy and click in "Create".
 		![](./images/Policy2.png)
+
 	f. Once policy is successfully created, you can see it in "Polict Fragments" tab.
 		![](./images/Policy3.png)
 
 4. Add Policy to API operations:
+
 	a. Go to "APIs" tab select "FHIR Terminology" select an operation to apply the policy and click on "Add Policy" in "inbound processing" section as shown below:
 		![](./images/AddPolicy1.png)
 
 	b. Add cors in Policy in "inbound processing" section as shown below:
 	  	![](./images/corsPolicy.png)
+
 	c. Select Other policies option as highlighted:
 		![](./images/AddPolicy2.png)
+
 	d. In xml, Add a code fragment to include policy fragment "RedirectToterminology", as shown and click on "Save":
 		![](./images/AddPolicy3.png)
+		
 	e. Policy is added to API operation in inbound processing as shown:
 		![](./images/AddPolicy4.png)
 
