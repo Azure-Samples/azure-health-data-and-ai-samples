@@ -62,7 +62,7 @@ This sample uses an Azure APIM which acts as Common Endpoint Application for Ext
 	__Note:__ In this sample, The APIM uses client Id and client secret for authenticating calls to external third party terminology service. APIM will need changes in case external third party  terminology service uses different kind of authentication.
 
 ## Azure APIM sample details:
-Here we will go through high level steps to create an Azure APIM instance with Backend, Policies and APIs, somilar to the one used for this sample.
+Here we will go through high level steps to create an Azure APIM instance with Backend, Policies and APIs, similar to the one used for this sample.
 
 1. Create Azure APIM Instance
 Create an Azure APIM instance following steps [here](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) and come back for next step.
@@ -72,8 +72,9 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 
 	b. Open file "FHIR Terminology.openapi+json.json" in Editor.
 
-	c. Add your fhir service url for backend at hoghlighted place and save the file.
+	c. Add your fhir service url for backend at highlighted place and save the file.
 		![](./images/CreateAPI1.png)
+
 
 	d. Go to "APIs" tab, click on "Add API" and select "OpenAPI" from "Create from definition" section as highlighted below:
 		![](./images/CreateAPI.png)
@@ -81,7 +82,7 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	e. In the new popup window, click on "Select a file" and browse file "FHIR Terminology.openapi+json.json" at loaction (../samples/fhir-terminology-service-integration/apim).
 		![](./images/CreateAPI2.png)
 		
-	f. After you select the file, fileds will be filled with values as shown below, you can change values of "Display Name" and "Name" fileds. Click on "Create".
+	f. After you select the file, fields will be filled with values as shown below, you can change values of "Display Name" and "Name" fields. Click on "Create".
 		![](./images/CreateAPI3.png)
 		
 	g. As shown below, API willget created with list of operations and backend is fhir service url for all operations.
@@ -95,14 +96,14 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P teminology service requirements.
 		![](./images/Policy0.png)
 
-	c. Add below condition in PolicyFragments
+	c. Add below condition in PolicyFragments.
 	 	![](./images/Policy1.png)
 
 	d. After you are done editing save the changes and copy all the text.
-	e. Go back to your APIM instance and go to "Polict Fragments" tab, click on "Create", new popup will open, Enter polict name, description and add copied text for policy and click in "Create".
+	e. Go back to your APIM instance and go to "Policy Fragments" tab, click on "Create", new popup will open, Enter policy name, description and add copied text for policy and click in "Create".
 		![](./images/Policy2.png)
 
-	f. Once policy is successfully created, you can see it in "Polict Fragments" tab.
+	f. Once policy is successfully created, you can see it in "Policy Fragments" tab.
 		![](./images/Policy3.png)
 
 4. Add Policy to API operations:
@@ -110,7 +111,7 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	a. Go to "APIs" tab select "FHIR Terminology" select an operation to apply the policy and click on "Add Policy" in "inbound processing" section as shown below:
 		![](./images/AddPolicy1.png)
 
-	b. Add cors in Policies in "inbound processing" section as shown below:
+	b. Add the UI app URL to the CORS policies in the "Inbound Processing" section as shown below:
 	  	![](./images/corsPolicy.png)
 
 	c. Select Other policies option as highlighted:
@@ -157,13 +158,13 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 3. First/Landing page is "Lookup and Translate". It allows user to perform lookup and translate operations on terminology service.
 
-4. For Lookup, Enter code & select code system, Click on lookup button to get the�code details from terminology service.
+4. For Lookup, Enter code & select code system, Click on lookup button to get the code details from terminology service.
 
 	<img src="./images/image3.png" height="380">
 
 	The reponse json is shown in "Response" text area and some important details from response are also shown in table at bottom of the page for easy readability.
 
-5. For Translate, Enter code, select source system & target system, Click on�Translate button to get the default Terminology mappings between source code and target code.
+5. For Translate, Enter code, select source system & target system, Click on Translate button to get the default Terminology mappings between source code and target code.
 
 	<img src="./images/image4.png" height="380">
 
@@ -209,6 +210,6 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 	<img src="./images/image12.png" height="380">	
 
-15. Select Batch_Validate value from dropdown,to to validate the�code details from terminology service.
+15. Select Batch_Validate value from dropdown,to to validate the code details from terminology service.
 
 	<img src="./images/image13.png" height="380">	
