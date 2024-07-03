@@ -110,7 +110,7 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	a. Go to "APIs" tab select "FHIR Terminology" select an operation to apply the policy and click on "Add Policy" in "inbound processing" section as shown below:
 		![](./images/AddPolicy1.png)
 
-	b. Add cors in Policy in "inbound processing" section as shown below:
+	b. Add cors in Policies in "inbound processing" section as shown below:
 	  	![](./images/corsPolicy.png)
 
 	c. Select Other policies option as highlighted:
@@ -118,7 +118,7 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 
 	d. In xml, Add a code fragment to include policy fragment "RedirectToterminology", as shown and click on "Save":
 		![](./images/AddPolicy3.png)
-		
+
 	e. Policy is added to API operation in inbound processing as shown:
 		![](./images/AddPolicy4.png)
 
