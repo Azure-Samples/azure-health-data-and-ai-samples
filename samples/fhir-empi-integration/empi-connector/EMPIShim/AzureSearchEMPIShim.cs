@@ -21,6 +21,7 @@ namespace EMPIShim
 	internal class AzureSearchEMPIShim : IEMPIProvider
 	{
 		private static string fsurl = Utils.GetEnvironmentVariable("FS-URL");
+		private string searchIndex = Environment.GetEnvironmentVariable("SEARCH_INDEX");
 		private static HttpClient _empiclient = new HttpClient();
 		public async Task<MatchResult> RunMatch(JObject criteria, ILogger log)
 		{
@@ -122,7 +123,6 @@ namespace EMPIShim
 
 			// Create a new SearchIndexClient
 			SearchIndexClient indexClient = new SearchIndexClient(endpoint, credential);
-			string searchIndex = Environment.GetEnvironmentVariable("SEARCH_INDEX"); ;
 			SearchClient searchClient = indexClient.GetSearchClient(searchIndex);
 			searchOptions.IncludeTotalCount = true;
 			searchOptions.QueryType = SearchQueryType.Full;
@@ -225,7 +225,7 @@ namespace EMPIShim
 						}
 								((JArray)o["value"]).Add(fhirresource);
 						log.LogInformation(o.ToString(Newtonsoft.Json.Formatting.Indented));
-						var url = Environment.GetEnvironmentVariable("SEARCH_ENDPOINT") + "/indexes/fhir-patient-index/docs/index?api-version=2023-11-01";
+						var url = Environment.GetEnvironmentVariable("SEARCH_ENDPOINT") + $"/indexes/{searchIndex}/docs/index?api-version=2023-11-01";
 						var empiRequest = new HttpRequestMessage(HttpMethod.Post, url);
 						empiRequest.Headers.Add("api-key", Utils.GetEnvironmentVariable("SEARCH_API_KEY"));
 						empiRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -243,7 +243,7 @@ namespace EMPIShim
 					deleteObj["@search.action"] = "delete";
 					deleteObj["id"] = fhirid;
 					((JArray)o1["value"]).Add(deleteObj);
-					var url1 = Environment.GetEnvironmentVariable("SEARCH_ENDPOINT") + "/indexes/fhir-patient-index/docs/index?api-version=2023-11-01";
+					var url1 = Environment.GetEnvironmentVariable("SEARCH_ENDPOINT") + $"/indexes/{searchIndex}/docs/index?api-version=2023-11-01";
 					var empiRequest1 = new HttpRequestMessage(HttpMethod.Post, url1);
 					empiRequest1.Headers.Add("api-key", Utils.GetEnvironmentVariable("SEARCH_API_KEY"));
 					empiRequest1.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
