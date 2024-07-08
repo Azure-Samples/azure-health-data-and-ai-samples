@@ -37,6 +37,7 @@ param hostingPlanId string
 param redisCacheId string
 param redisCacheHostName string
 param redisApiVersion string
+param enableVNetSupport bool
 
 @description('Name for the Function App to deploy the SDK custom operations to.')
 var authCustomOperationsFunctionAppName = '${name}-aad-func'
@@ -51,11 +52,29 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' exist
   }
 }
 
+var siteConfig = enableVNetSupport ? {
+  netFrameworkVersion: 'v8.0'
+  use32BitWorkerProcess: false
+  cors: {
+    allowedOrigins: [
+      smartFrontendAppUrl
+    ]
+  }
+} : {
+  linuxFxVersion: 'dotnet-isolated|8.0'
+  use32BitWorkerProcess: false
+  cors: {
+    allowedOrigins: [
+      smartFrontendAppUrl
+    ]
+  }
+}
+
 @description('Azure Function used to run auth flow custom operations using the Azure Health Data Services Toolkit')
 resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   name: authCustomOperationsFunctionAppName
   location: location
-  kind: 'functionapp,linux'
+  kind: enableVNetSupport ? 'functionapp' : 'functionapp,linux'
 
   identity: {
     type: 'SystemAssigned'
@@ -65,18 +84,9 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     httpsOnly: true
     enabled: true
     serverFarmId: hostingPlanId
-    reserved: true
+    reserved: !enableVNetSupport
     clientAffinityEnabled: false
-    siteConfig: {
-      linuxFxVersion: 'dotnet-isolated|6.0'
-      use32BitWorkerProcess: false
-      cors: {
-        allowedOrigins: [
-          smartFrontendAppUrl
-        ]
-      }
-    }
-    
+    siteConfig: siteConfig
   }
 
   tags: union(appTags, {'azd-service-name': 'auth'})

@@ -20,6 +20,9 @@
     "fhirid": {
       "value": ""
     },
+    "enableVNetSupport":{
+      "value": ""
+    },
     "location": {
       "value": "${AZURE_LOCATION}"
     },
