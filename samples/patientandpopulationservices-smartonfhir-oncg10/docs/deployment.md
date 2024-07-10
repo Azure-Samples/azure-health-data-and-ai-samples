@@ -58,10 +58,21 @@ Next you will need to clone this repository and prepare your environment for dep
             1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
             3. Copy the "Id" field under the "Essentials" group.
-        - `enableVNetSupport`: This parameter accepts a boolean (true/false) value, enabling integration of Virtual Network and Private Link in the deployed sample. When set to true, the following resources are deployed in the Standard/Premium tier to enable private endpoint creation necessary for Virtual Network Support:
-          1. API Management (APIM): Deployed in the Premium tier.
-          2. App Service Plan and Static Web App: Deployed in the Standard tier.
-          3. Function Apps and App Service Plan: Utilizes Windows as the operating system. 
+        - `enableVNetSupport`: This parameter accepts a boolean (true/false) value. 
+        
+            When set to false, the follwing resorces are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
+            1. API Management (APIM): Deployed in the Consumption tier.
+            2. App Service Plan : Deployed in the Dynamic tier. 
+            3. Static Web App: Deployed in the Free tier.
+            4. Function Apps and App Service Plan: Utilizes Linux as the operating system.
+        
+            When set to true, the following resources are deployed in the Standard/Premium tier to enable private endpoint creation necessary for Virtual Network Support. 
+            1. API Management (APIM): Deployed in the Premium tier.
+            2. App Service Plan and Static Web App: Deployed in the Standard tier.
+            3. Function Apps and App Service Plan: Utilizes Windows as the operating system. 
+
+          *NOTE:* This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group.
+
     - Some important considerations when using an existing FHIR service instance:
         - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
         - Enable the system-assigned status in the existing FHIR service, Follow the below steps:
