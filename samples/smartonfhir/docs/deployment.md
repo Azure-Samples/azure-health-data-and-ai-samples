@@ -15,7 +15,7 @@ Make sure you have the pre-requisites listed below
   - [Azure Developer CLI Version 1.2.0 or Greater](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node Version 18.17.1/ NPM Version 10.2.0](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
-  - [.NET SDK Version 7.0.400](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
+  - [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
   - [PowerShell Version 5.1.22621.2428 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
 
 - **Access:**
@@ -47,7 +47,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     - When running this command, you must select the subscription name and location from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
-    - The azd provision command will prompt you to enter values for the `existingResourceGroupName` and `fhirid` parameters:
+    - The azd provision command will prompt you to enter values for the `existingResourceGroupName`, `fhirid` and `enableVNetSupport` parameters:
         - `existingResourceGroupName` : This parameter allows you to decide whether to deploy this sample in an existing resource group or to create a new resource group and deploy the sample. Leaving this parameter empty will create a new resource group named '{env_name}-rg' and deploy the sample. If you provide an existing resource group, the sample will be deployed in that resource group.
           - Note: If you are using an existing resource group, make sure that it does not already have a SMART on FHIR resource already deployed, because multiple samples in the same resource group are not supported.
           - Note: SMART on FHIR will need to be deployed in the same resource group as the associated FHIR server. 
@@ -55,6 +55,20 @@ Next you will need to clone this repository and prepare your environment for dep
             1. Navigate to your FHIR service in Azure Portal.
             2. Click on properties in the left menu.
             3. Copy the "Id" field under the "Essentials" group.     
+        - `enableVNetSupport`: This parameter accepts a boolean (true/false) value. 
+        
+            When set to false, the follwing resorces are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
+            1. API Management (APIM): Deployed in the Consumption tier.
+            2. App Service Plan : Deployed in the Dynamic tier. 
+            3. Static Web App: Deployed in the Free tier.
+            4. Function Apps and App Service Plan: Utilizes Linux as the operating system.
+        
+            When set to true, the following resources are deployed in the Standard/Premium tier to enable private endpoint creation necessary for Virtual Network Support. 
+            1. API Management (APIM): Deployed in the Premium tier.
+            2. App Service Plan and Static Web App: Deployed in the Standard tier.
+            3. Function Apps and App Service Plan: Utilizes Windows as the operating system. 
+
+          *NOTE:* This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group. 
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
             - Enable the system-assigned status in the existing FHIR service, Follow the below steps:
