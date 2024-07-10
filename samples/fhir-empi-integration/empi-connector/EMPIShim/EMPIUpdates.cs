@@ -30,8 +30,9 @@ namespace EMPIShim
         private static IEMPIProvider _provider = Utils.EMPIProviderGetInstance(Utils.GetEnvironmentVariable("EMPIProvider", "EMPIShim.NoOpEMPIProvider"));
 
         [FunctionName("EMPIUpdates")]
-        public static async Task Run([EventHubTrigger("empievents", Connection = "evconnect")] EventData[] events, ILogger log)
+        public static async Task Run([EventHubTrigger("empieventhub", Connection = "evconnect")] EventData[] events, ILogger log)
         {
+            log.LogInformation($"Empi Updates triggered");
             var exceptions = new List<Exception>();
 
             foreach (EventData eventData in events)
