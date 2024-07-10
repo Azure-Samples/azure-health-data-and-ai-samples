@@ -49,9 +49,10 @@ resource symbolicname 'Microsoft.Storage/storageAccounts/tableServices/tables@20
 }
 
 var siteConfig = enableVNetSupport ? {
-  alwaysOn: true
+  netFrameworkVersion: 'v8.0'
+  use32BitWorkerProcess: false
 } : {
-  linuxFxVersion: 'dotnet-isolated|6.0'
+  linuxFxVersion: 'dotnet-isolated|8.0'
   use32BitWorkerProcess: false
 }
 
@@ -59,7 +60,7 @@ var siteConfig = enableVNetSupport ? {
 resource exportCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   name: exportCustomOperationsFunctionAppName
   location: location
-  kind: 'functionapp,linux'
+  kind: enableVNetSupport ? 'functionapp' : 'functionapp,linux'
 
   identity: {
     type: 'SystemAssigned'
@@ -69,7 +70,7 @@ resource exportCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     httpsOnly: true
     enabled: true
     serverFarmId: hostingPlanId
-    reserved: true
+    reserved: !enableVNetSupport
     clientAffinityEnabled: false
     siteConfig: siteConfig
   }
