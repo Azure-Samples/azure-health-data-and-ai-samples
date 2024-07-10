@@ -71,14 +71,15 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' exist
 }
 
 var siteConfig = enableVNetSupport ? {
-  alwaysOn: true
+  netFrameworkVersion: 'v8.0'
+  use32BitWorkerProcess: false
   cors: {
     allowedOrigins: [
       smartFrontendAppUrl
     ]
   }
 } : {
-  linuxFxVersion: 'dotnet-isolated|6.0'
+  linuxFxVersion: 'dotnet-isolated|8.0'
   use32BitWorkerProcess: false
   cors: {
     allowedOrigins: [
@@ -91,7 +92,7 @@ var siteConfig = enableVNetSupport ? {
 resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
   name: authCustomOperationsFunctionAppName
   location: location
-  kind: 'functionapp,linux'
+  kind: enableVNetSupport ? 'functionapp' : 'functionapp,linux'
 
   identity: {
     type: 'SystemAssigned'
@@ -101,7 +102,7 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
     httpsOnly: true
     enabled: true
     serverFarmId: hostingPlanId
-    reserved: true
+    reserved: !enableVNetSupport
     clientAffinityEnabled: false
     siteConfig: siteConfig
   }
