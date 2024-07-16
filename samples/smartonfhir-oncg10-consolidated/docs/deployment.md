@@ -1,6 +1,6 @@
 # Sample Deployment: Azure Health Data Services ONC (g)(10) & SMART on FHIR
 
-This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID configuration.
+This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, Azure B2C, and Microsoft Entra ID configuration.
 
 *Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
@@ -12,7 +12,7 @@ Make sure you have the pre-requisites listed below
 - **Installation:**
   - [Git](https://git-scm.com/) to access the files in this repository.
   - [Azure CLI Version 2.51.0 or Greater](https://learn.microsoft.com/cli/azure/install-azure-cli) to run scripts that interact with Azure.
-  - [Azure Developer CLI Version 1.2.0 or Greater](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
+  - [Azure Developer CLI Version 1.9.0 or Greater](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node Version 18.17.1/ NPM Version 10.2.0](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
@@ -43,7 +43,7 @@ Make sure you have the pre-requisites listed below
 
 Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
 
-1. Use the terminal or your git client to clone this repo. Open a terminal to the `patientandpopulationservices-smartonfhir-oncg10` folder.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `smartonfhir-oncg10-consolidated` folder.
 1. Login with the Azure CLI.
    - If you opt for B2C use `az login --tenant <B2CTenantDomainName> --allow-no-subscriptions`.
    - If you opt for Microsoft Entra ID use 
@@ -201,7 +201,7 @@ We will need to create four separate Microsoft Entra ID Applications to run the 
 Follow the directions on the [Inferno Test App Registration Page](./ad-apps/inferno-test-app-registration.md) for instructions on registering the needed Azure Applications for the Inferno (g)(10) tests.
 - Standalone Patient App (Confidential Client)
 - EHR Practitioner App (Confidential Client)
-- Backend Service Client
+- Backend Service Client (*Not supported for Azure B2C*)
 - Standalone Patient App (Public Client)
 
 ## 5. Add sample data and US Core resources
