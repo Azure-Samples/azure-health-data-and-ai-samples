@@ -92,7 +92,7 @@ The EHR launch confidential client application is a standard confidential client
 
 ## Backend Service Client Application
 > *Note:* 
-> *The Backend Service Client Application (section 7 of the test i.e. Multi-Patient Test) is currently not supported for Azure B2C configurations but is expected to be available in the future.* 
+> *The Backend Service Client Application (section 7 of the test i.e. Multi-Patient API Test) is currently not supported for Azure B2C configurations but is expected to be available in the future.* 
 
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
