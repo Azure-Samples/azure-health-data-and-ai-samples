@@ -68,6 +68,12 @@ This project provides samples outlining example implementations of various use c
 | --- | --- |
 | [FHIR Service and Terminology Service Integration](/samples/fhir-terminology-service-integration/) | Sample shows how an external terminology service can be used in conjunction with the Azure Health Data Services FHIR service by providing a unified endpoint for the FHIR service as well as terminology operations. |
 
+### FHIR Service and EMPI Integration
+
+|Sample|Description|
+| --- | --- |
+| [FHIR Service and EMPI Integration](/samples/fhir-empi-integration/) | Sample shows how an Enterprise Master Patient Index (EMPI) service can be used in conjunction with the Azure Health Data Services FHIR service by providing a unified endpoint for the FHIR service as well as patient matching operations. |
+
 ### Azure Active Directory B2C to grant access to the FHIR service
 
 |Sample|Description|

@@ -15,7 +15,7 @@ This architecture explains how a web application communicates with a EMPI servic
 - **Event Hub**: It can process and store events, data and telemetry produced by FHIR Service.
 - **Events**: Events allow you to subscribe to and receive notifications of changes to health data in the FHIR service
 - **EMPI Connector App**: It executes $match operation and handles Events triggered.
-- **EMPI service**: It contains demographic data for patients
+- **EMPI service**: This is a sample service for demonstration of patient matching that contains demographic data for sample patients.
 - **AHDS FHIR service**: AHDS FHIR Service, contains healthcare data including patients
 
 
@@ -32,7 +32,7 @@ This architecture explains how a web application communicates with a EMPI servic
 
  * Working External EMPI Service URL and authentication details.
 
- * [.NET 6.0](https://dotnet.microsoft.com/download)
+ * [.NET 8.0](https://dotnet.microsoft.com/download)
 
  * [Azure Command-Line Interface (CLI)](https://docs.microsoft.com/cli/azure/install-azure-cli)
 
@@ -42,7 +42,7 @@ This architecture explains how a web application communicates with a EMPI servic
 
  ### Prerequisite check
 
-- In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 6.0 or later.
+- In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 8.0 or later.
 - Run `az --version` and `azd version` to check that you have the appropriate Azure command-line tools installed.
 - Login to the Azure CLI
 - Launch Postman app.
@@ -51,13 +51,12 @@ This architecture explains how a web application communicates with a EMPI servic
 
 UI application and Postman queries use common endpoint for EMPI service operations and FHIR service Operations.
 
-The UI application demonstartes $match and CRUD operations for patient, those operations are routed to external EMPI service by EMPI Connector app. 
+The UI application demonstrates $match and CRUD operations for patient, those operations are routed to external EMPI service by EMPI Connector app. 
 
 The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
 
 ### Postman Queries
-
-The postman queries to demonstare Common Endpoint Application routing calls to external EMPI service and AHDS FHIR Service via single endpoint are available under `FHIR-EMPI  Integration` folder in `Fhir-EMPI Collection` postman collection available in this repo. For Queries in this collection, we are using APIM URL as our base URL and auth token of FHIR service to authenticate requests.
+The postman queries to demonstrate EMPI API call for $match operation is available in `FHIR Collection` postman collection [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo.
 
 ## Setting up application locally 
 ### Visual Studio
