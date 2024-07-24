@@ -1,9 +1,4 @@
-﻿using Hl7.Fhir.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FhirBlaze.SharedComponents.Services
@@ -19,5 +14,6 @@ namespace FhirBlaze.SharedComponents.Services
         Task<HttpResponseMessage> SaveObservation(string id, string observationJson);
 
         Task<HttpResponseMessage> ResetObservations(string content);
+        Task<HttpResponseMessage> BatchOperationCall(string content);
     }
 }

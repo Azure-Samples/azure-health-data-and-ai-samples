@@ -24,5 +24,10 @@ namespace FhirBlaze.Model
 
         public string Message { get; set; } = string.Empty;
 
+        public List<string> Codelist { get; set; }  = new List<string>();
+        public string batchJson { get; set; } = string.Empty;
+        public string batchTranslateJson { get; set; } = string.Empty;
+
+
     }
 }

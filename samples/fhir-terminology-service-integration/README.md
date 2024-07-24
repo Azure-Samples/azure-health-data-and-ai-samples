@@ -26,7 +26,7 @@ This architecture explains how a web application communicates with a terminology
 
  * Working External Terminology Service URL and authentication details.
 
- * [.NET 6.0](https://dotnet.microsoft.com/download)
+ * [.NET 8.0](https://dotnet.microsoft.com/download)
 
  * [Azure Command-Line Interface (CLI)](https://docs.microsoft.com/cli/azure/install-azure-cli)
 
@@ -37,7 +37,7 @@ This architecture explains how a web application communicates with a terminology
 
 ### Prerequisite check
 
-- In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 6.0 or later.
+- In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 8.0 or later.
 - Run `az --version` and `azd version` to check that you have the appropriate Azure command-line tools installed.
 - Login to the Azure CLI
 
@@ -62,51 +62,65 @@ This sample uses an Azure APIM which acts as Common Endpoint Application for Ext
 	__Note:__ In this sample, The APIM uses client Id and client secret for authenticating calls to external third party terminology service. APIM will need changes in case external third party  terminology service uses different kind of authentication.
 
 ## Azure APIM sample details:
-Here we will go through high level steps to create an Azure APIM instance with Backend, Policies and APIs, somilar to the one used for this sample.
+Here we will go through high level steps to create an Azure APIM instance with Backend, Policies and APIs, similar to the one used for this sample.
 
 1. Create Azure APIM Instance
 Create an Azure APIM instance following steps [here](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) and come back for next step.
 2. Create APIs:
 	
 	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+
 	b. Open file "FHIR Terminology.openapi+json.json" in Editor.
-	c. Add your fhir service url for backend at hoghlighted place and save the file.
+
+	c. Add your fhir service url for backend at highlighted place and save the file.
 		![](./images/CreateAPI1.png)
+
+
 	d. Go to "APIs" tab, click on "Add API" and select "OpenAPI" from "Create from definition" section as highlighted below:
-		
 		![](./images/CreateAPI.png)
 		
 	e. In the new popup window, click on "Select a file" and browse file "FHIR Terminology.openapi+json.json" at loaction (../samples/fhir-terminology-service-integration/apim).
-		
 		![](./images/CreateAPI2.png)
 		
-	f. After you select the file, fileds will be filled with values as shown below, you can change values of "Display Name" and "Name" fileds. Click on "Create".
-		
+	f. After you select the file, fields will be filled with values as shown below, you can change values of "Display Name" and "Name" fields. Click on "Create".
 		![](./images/CreateAPI3.png)
 		
 	g. As shown below, API willget created with list of operations and backend is fhir service url for all operations.
-		
 		![](./images/CreateAPI4.png)
 
 	
 3. Create Policy Fragment:
+
 	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
+
 	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P teminology service requirements.
-		![](./images/Policy1.png)
-	c. After you are done editing save the changes and copy all the text.
-	d. Go back to your APIM instance and go to "Polict Fragments" tab, click on "Create", new popup will open, Enter polict name, description and add copied text for policy and click in "Create".
+		![](./images/Policy0.png)
+
+	c. Add below condition in PolicyFragments.
+	 	![](./images/Policy1.png)
+
+	d. After you are done editing save the changes and copy all the text.
+	e. Go back to your APIM instance and go to "Policy Fragments" tab, click on "Create", new popup will open, Enter policy name, description and add copied text for policy and click in "Create".
 		![](./images/Policy2.png)
-	d. Once policy is successfully created, you can see it in "Polict Fragments" tab.
+
+	f. Once policy is successfully created, you can see it in "Policy Fragments" tab.
 		![](./images/Policy3.png)
 
 4. Add Policy to API operations:
+
 	a. Go to "APIs" tab select "FHIR Terminology" select an operation to apply the policy and click on "Add Policy" in "inbound processing" section as shown below:
 		![](./images/AddPolicy1.png)
-	b. Select Other policies option as highlighted:
+
+	b. Add the UI app URL to the CORS policies in the "Inbound Processing" section as shown below:
+	  	![](./images/corsPolicy.png)
+
+	c. Select Other policies option as highlighted:
 		![](./images/AddPolicy2.png)
-	c. In xml, Add a code fragment to include policy fragment "RedirectToterminology", as shown and click on "Save":
+
+	d. In xml, Add a code fragment to include policy fragment "RedirectToterminology", as shown and click on "Save":
 		![](./images/AddPolicy3.png)
-	d. Policy is added to API operation in inbound processing as shown:
+
+	e. Policy is added to API operation in inbound processing as shown:
 		![](./images/AddPolicy4.png)
 
 Following the above steps and sample templates users can create more APIs, Operations and Policies as needed.
@@ -116,7 +130,7 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 	UI application and Postman queries use common APIM endpoint for termonology service operations and FHIR service Operations.
 
-	The UI application demonstartes $lookup and $translate operations, those operations are routed to external terminology service by APIM. 
+	The UI application demonstartes $lookup ,$translate operations and $Batch Translate operations, those operations are routed to external terminology service by APIM. 
 
 	The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
 
@@ -144,13 +158,13 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 3. First/Landing page is "Lookup and Translate". It allows user to perform lookup and translate operations on terminology service.
 
-4. For Lookup, Enter code & select code system, Click on lookup button to get the�code details from terminology service.
+4. For Lookup, Enter code & select code system, Click on lookup button to get the code details from terminology service.
 
 	<img src="./images/image3.png" height="380">
 
 	The reponse json is shown in "Response" text area and some important details from response are also shown in table at bottom of the page for easy readability.
 
-5. For Translate, Enter code, select source system & target system, Click on�Translate button to get the default Terminology mappings between source code and target code.
+5. For Translate, Enter code, select source system & target system, Click on Translate button to get the default Terminology mappings between source code and target code.
 
 	<img src="./images/image4.png" height="380">
 
@@ -186,5 +200,16 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 12. Click on the search button again to verify reset of `Observation` resource.
 
-	<img src="./images/Image10.png" height="380">
+	<img src="./images/image10.png" height="380">
+
+13. For Batch Translate, select a code for Batch Operation from the dropdown, which contains multiple codes for translation. It's a combination of the source system, target system, and code
+
+	<img src="./images/image11.png" height="380">	
 	
+14. Click on Batch Operation,to get the default Terminology mappings between source code and target code in batch.
+
+	<img src="./images/image12.png" height="380">	
+
+15. Select Batch_Validate value from dropdown,to to validate the code details from terminology service.
+
+	<img src="./images/image13.png" height="380">	
