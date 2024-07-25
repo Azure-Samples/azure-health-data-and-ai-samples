@@ -106,3 +106,26 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 ![](./images/5_keyvault_create_secret.png)
 ![](./images/5_keyvault_secret_details.png)
 </details>
+
+## Inferno Public Service Base URL
+
+This repository contains a sample code to validate conformance to the HTI-1 rule from the API Condition and Maintenance of Certification. The test suite, known as **Service Base URL Test Suite**, ensures that Certified API Developers with patient-facing apps publish their service base URLs and related organizational details in the specified format. Specifically, it checks that the service base URLs are publicly accessible and formatted according to the FHIR 4.0.1 standard, and that the necessary organizational details are correctly referenced and bundled. This sample provides a public endpoint to pass the test suite.
+
+Before executing the test, follow these steps to configure your environment:
+
+1. **Create Secrets in Key Vault**:
+    - In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
+    - Add the following secrets along with their values for the Endpoint resource:
+        - `status` = active
+        - `connectionType` = http://terminology.hl7.org/CodeSystem/endpoint-connection-type
+        - `address` = Your Fhir Service URL without /metadata
+    - Add the following secrets along with their values for the Organization resource:
+        - `active` = true
+        - `name` = Health Intersections CarePlan Hub
+        - `location` = USA
+        - `identifier` = http://hl7.org/fhir/sid/us-npi
+    - Ensure that the names of the secrets are exactly as provided above with no uppercase letters or alterations.
+
+2. **Sample Endpoint**:
+    - Use the following URL `{apim-url}/smart/service-base` to test Service Base URL Test Suite. 
+    - Replace `{apim-url}` with your deployed APIM service url in the resource group.

@@ -28,6 +28,9 @@
     },
     "fhirid": {
       "value": ""
+    },
+    "enableVNetSupport":{
+      "value": ""
     }
   }
 }
