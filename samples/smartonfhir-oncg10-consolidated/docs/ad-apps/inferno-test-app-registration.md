@@ -91,10 +91,12 @@ The EHR launch confidential client application is a standard confidential client
     </details>
 
 ## Backend Service Client Application
+> *Note:* 
+> *The Backend Service Client Application (section 7 of the test i.e. Multi-Patient API Test) is currently not supported for Azure B2C configurations but is expected to be available in the future.* 
 
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
-1. If you have opted for Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. Otherwise for B2C, create it in the B2C tenant. No platform or redirect URL is needed.
+1. If you have opted for Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. No platform or redirect URL is needed.
 1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)

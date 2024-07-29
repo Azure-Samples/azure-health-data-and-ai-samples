@@ -19,3 +19,7 @@ services:
     dist: build
     language: js
     host: staticwebapp
+hooks:
+  postprovision:
+    shell: sh
+    run: npm run setbuildenv --prefix src/auth-context-frontend-app 
