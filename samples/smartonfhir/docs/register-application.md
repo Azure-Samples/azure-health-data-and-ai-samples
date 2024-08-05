@@ -1,6 +1,6 @@
 ## Patient Application Registration
 
-1. Follow this [document]("https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate") to create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
+1. Follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -33,7 +33,7 @@
 
 ## Practitioner Application Registration
 
-1. Follow this [document]("https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate") to create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://oauth.pstmn.io/v1/callback`).
+1. Follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource Application (Delegated)
         - fhirUser
