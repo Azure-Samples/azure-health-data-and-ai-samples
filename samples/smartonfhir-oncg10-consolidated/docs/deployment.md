@@ -1,6 +1,6 @@
 # Sample Deployment: Azure Health Data Services ONC (g)(10) & SMART on FHIR
 
-This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, Azure B2C, and Microsoft Entra ID configuration.
+This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID or Azure AD B2C configuration.
 
 *Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
@@ -20,37 +20,41 @@ Make sure you have the pre-requisites listed below
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
-  - Elevated access in Microsoft Entra ID, Azure B2C and Microsoft Graph to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
+  - Elevated access in Microsoft Graph and Microsoft Entra ID or Azure AD B2C to create Application Registrations, assign Microsoft Entra ID roles, and add custom data to user accounts.
 
-- **Test Accounts:**
-  - For Microsoft Entra ID:
-    - Microsoft Entra ID test account to represent Patient persona. Make sure you have the object id of the user from Microsoft Entra ID.
-    - Microsoft Entra ID test account to represent Provider persona. Make sure you have the object id of the user from Microsoft Entra ID.
-  - For Azure B2C:
-    - Azure B2C test account to represent Patient persona. Make sure you have the object id of the user from Azure B2C.
-    - Azure B2C test account to represent Provider persona. Make sure you have the object id of the user from Azure B2C.
+- **Test Accounts/Users for Microsoft Entra ID or Azure B2C:**
+
+    To effectively test the application, you need to create two test accounts/users: one for the Patient persona and one for the Provider persona. You can choose to create these accounts in either Microsoft Entra ID or Azure B2C.
+  - Create Test Accounts For Microsoft Entra ID:
+    - Follow this [link](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-create-delete-users#create-a-new-user) to create two new Test Account/User for Patient and Provider persona. 
+    - Make sure you have the object id of both the accounts/users from Microsoft Entra ID.
+  - Create Test Accounts For Azure B2C:
+    - Follow this [link](https://learn.microsoft.com/en-us/azure/active-directory-b2c/manage-users-portal#create-a-consumer-user) to create two new Test Account/User for Patient and Provider persona. 
+    - Make sure you have the object id of both the accounts/users from Azure B2C.
+  - Using Existing Accounts (only for Microsoft Entra ID):
+    - If you prefer, you can use the same account for both deployment and testing. In this case, ensure the account is appropriately mapped to the Patient and Provider personas as needed.
 
 - **Azure B2C SetUp:**
   - This setup is exclusively necessary for Smart on FHIR implementation with B2C. If you opt for Microsoft Entra ID, you can bypass this configuration.
   - Follow below mentioned steps:
-    - [Create an Azure AD B2C tenant for the FHIR service](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-an-azure-ad-b2c-tenant-for-the-fhir-service)
-    - [Deploy an Azure AD B2C tenant by using an ARM template](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
-    - [Add a test B2C user to the Azure AD B2C tenant](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
-    - [Link a B2C user with the fhirUser custom user attribute](https://review.learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
+    - [Create an Azure AD B2C tenant for the FHIR service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#create-an-azure-ad-b2c-tenant-for-the-fhir-service)
+    - [Deploy an Azure AD B2C tenant by using an ARM template](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
+    - [Add a test B2C user to the Azure AD B2C tenant](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
+    - [Link a B2C user with the fhirUser custom user attribute](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute)
     - [Create custom user flow using custom policy](../docs/create-custom-policy.md)
 
 ## 2. Prepare and deploy environment
 
-Next you will need to clone this repository and prepare your environment for deployment by creating two required Azure App Registrations and configuring your environment to use them.
+Next you will need to clone this repository and prepare your environment for deployment by creating required Azure App Registrations and configuring your environment to use them.
 
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `smartonfhir-oncg10-consolidated` folder.
 1. Login with the Azure CLI.
-   - If you opt for B2C use `az login --tenant <B2CTenantDomainName> --allow-no-subscriptions`.
    - If you opt for Microsoft Entra ID use 
         ```
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
         ```
+   - If you opt for B2C use `az login --tenant <B2CTenantDomainName> --allow-no-subscriptions`.
 1. Run `azd env new` to create a new deployment environment, keeping below points in mind.
     - Environment name must not exceed 18 characters in length.
     - Deployment fails if Environment name contains UpperCase Letters.
@@ -58,23 +62,24 @@ Next you will need to clone this repository and prepare your environment for dep
     - Environment name will be the prefix for all of your resources.
 1. [Create the FHIR Resource App Registration. Use the instructions here](./ad-apps/fhir-resource-app-registration.md). Record the application id and application url for later.
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.
+1. If you have opted for B2C, then [Create Inferno Standalone Patient App. Use the instructions here](./ad-apps/inferno-test-app-registration.md).
 1. Set your deployment environment configuration.
     ```
     azd env set ApiPublisherName "Your Name"
     azd env set ApiPublisherEmail "Your Email"
     ```
-1. If you have opted for B2C, then [Create Inferno Standalone Patient App. Use the instructions here](./ad-apps/inferno-test-app-registration.md).
-1. If you have opted for B2C, then set the deployment environment configuration.
+1. 
+    If you have opted for Microsoft Entra ID, then set the deployment environment configuration.
+    ```
+    azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
+    azd env set SmartonFhirwithB2C false
+    ```
+    If you have opted for B2C, then set the deployment environment configuration.
     ```
     azd env set B2CTenantId <Tenant_ID_Of_B2C>
     azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_USER_FLOW_NAME>/v2.0"
     azd env set StandaloneAppClientId <STANDALONE_APP_ID_CREATED_IN_STEP_7>
     azd env set SmartonFhirwithB2C true
-    ```
-    If you have opted for Microsoft Entra ID, then set the deployment environment configuration.
-    ```
-    azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
-    azd env set SmartonFhirwithB2C false
     ```
 1. If you have opted for ONC g(10), then set oncEnabled variable as true or false.
     ```
@@ -86,6 +91,9 @@ Next you will need to clone this repository and prepare your environment for dep
     azd auth login --tenant-id <tenant-id>
     ```
 1. Start the deployment of your environment by running the 'azd' command. This action will provision the infrastructure as well as deploy the code, which is expected to take about an hour.
+
+    *Note:-* When running the `azd up` command, you will be prompted to provide various values. A detailed explanation of these prompts is provided below.
+
     ```
     azd up
     ```
@@ -119,6 +127,13 @@ Next you will need to clone this repository and prepare your environment for dep
             *NOTE:* This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group.
         - Some important considerations when using an existing FHIR service instance:
             - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
+
+> [!IMPORTANT]  
+> If you are using an existing FHIR server, please note that while deployment the FHIR server Audience URL has changed to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
+
+
+
+*NOTE:* This will take around 15 minutes to deploy. You can continue the setup below after deployment.             
 1. Add fhirUser claim to your test users. You will need to add the `fhirUser` claim to each of your test user accounts. For the patient test user, the `fhirUser` needs to be `<Complete Fhir Url>/Patient/PatientA` to collaborate with the sample data. For the practitioner test user, the `fhirUser` needs to be `<Complete Fhir Url>/Practitioner/PractitionerC1`.
 
    Changing an Microsoft Graph directory extensions is done through API requests to Microsoft Graph. You can use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will just need the `object id` of your patient test user. In a production scenario, you would integrate this into your user registration process.
@@ -136,27 +151,16 @@ Next you will need to clone this repository and prepare your environment for dep
         ```
     1. If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
         - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
-> [!IMPORTANT]  
-> If you are using an existing FHIR server, please note that while deployment the FHIR server Audience URL has changed to the new Application Registration ID URL. If you have downstream apps that were using the previous FHIR server Audience URL, you will need to update those to point to the new URL.  
-
-
-
-*NOTE:* This will take around 15 minutes to deploy. You can continue the setup below. 
 
 ## 3. Complete Setup of FHIR Resource and Auth Context Frontend Applications
-
-### For Microsoft Entra ID user only - Assign Role to the Deployed or Existing Fhir Service
-
-Ensure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
-    - This role is what enables the SMART scope logic with your access token scopes in the FHIR Service.
-
 ### Assign Permissions for the Auth Custom Operation API
 
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. 
 
 If you have opted for Microsoft Entra ID - This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
 
-1. Open the Azure Function for the SMART Auth Custom Operations. It will be suffixed by `aad-func`. Copy the Managed Identity for the next steps.
+1. Open the Azure Function for the SMART Auth Custom Operations. It will be suffixed by `aad-func`. 
+1. From the left navbar open `Identity` -> `System assigned`. Copy the Object(principal) ID for the next steps.
 1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
 1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
     <br />
@@ -169,9 +173,9 @@ If you have opted for Microsoft Entra ID - This requires granting the Azure Mana
     </details>
     <br />
 
-If you have opted for B2C - This requires accessing the applications registered in B2C tenant Azure Function for the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
+If you have opted for B2C - This requires accessing the applications registered in B2C tenant for the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
 
-1. In the resource group that matches your environment, open the KeyVault with the suffix -kv.
+1. In the resource group that matches your environment, open the KeyVault with the suffix `-kv`.
 1. Add a new secret that corresponds to the Standalone Application you just generated.
     - Name: `standalone-app-secret`
     - Secret: The secret you generated for the Standalone application
@@ -182,7 +186,8 @@ If you have opted for B2C - This requires accessing the applications registered 
 
 1. Open the resource group created by step 3. Find the Azure API Management instance.
 1. Copy the Gateway URL for the API Management instance.
-1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
+1. Open your Application Registration for the Auth Context Frontend you created before deployment. 
+1. The Application Registration already contains a redirect URI `http://localhost:3000` that you can use for local debugging. You should add a new redirect URI in the format `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to include the trailing slash.
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />

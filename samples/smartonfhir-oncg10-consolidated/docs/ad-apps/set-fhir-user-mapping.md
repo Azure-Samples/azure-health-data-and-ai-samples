@@ -18,7 +18,7 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source
-5. Click the edit icon and select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
+5. Select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
 6. Click **Add** then **Save**.
 
 <details>
@@ -35,7 +35,7 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 
 ### For Microsoft Entra ID user only - Modify Application Manifest
 
-For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true**. To update your application manifest:
+For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true** (*if it is already true, you can skip this step*). To update your application manifest:
 
 1. In the Azure Portal in Microsoft Entra ID, select **App registrations**
 2. Select your App registration from the list

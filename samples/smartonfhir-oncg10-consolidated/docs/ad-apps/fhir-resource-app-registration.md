@@ -6,7 +6,7 @@ This application registration is used to customize the access token sent to the 
 
 1. If you have opted for Microsoft Entra ID, create a FHIR Resource Application Registration in the Microsoft Entra ID tenant. Otherwise, for B2C, create it in the B2C tenant.
     - Go to `App Registrations`
-    - Create a new application. It's easiest if this matches the name of your Azure Developer CLI environment.
+    - Create a new application. Name the App Registration same as your Azure Developer CLI environment name. For reference, see the step [2.3](../deployment.md/#2-prepare-and-deploy-environment/) where you set the environment name.
     - Click `Register` (ignore redirect URI).
 1. Inform your Azure Developer CLI environment of this application with:
     ```
@@ -36,7 +36,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
-1. Follow the **Configure fhirUser mapping to token** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
+1. Follow the **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
 <br />
 <details>

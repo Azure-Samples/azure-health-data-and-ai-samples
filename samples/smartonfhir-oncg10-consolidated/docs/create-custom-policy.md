@@ -4,7 +4,8 @@ This document guides you through the steps needed to create Custom Policy in Azu
 
 - Flow the below mentioned steps: 
     - [Create Signing and Encryption Key](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#add-signing-and-encryption-keys-for-identity-experience-framework-applications)
-    - [Create Identity Experience Framework applications](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-identity-experience-framework-applications)
+    - [Create Identity Experience Framework application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-identity-experience-framework-applications)
+    - [Create Proxy Identity Experience Framework application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-the-proxyidentityexperienceframework-application)
 
 
     - Update the custom policies provided at [location](../docs/b2c-custom-policy/).
