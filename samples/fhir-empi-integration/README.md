@@ -7,7 +7,7 @@ Sample shows how an external EMPI service can be used in conjunction with the AH
 This architecture explains how a web application communicates with a EMPI service and FHIR service via an EMPI Connector (Azure Function App).
 
 
-![](./docs/images/Architecture.png)
+![](./docs/images/ArchitectureNew.png)
 
 
 ## The Architecture components
@@ -17,6 +17,19 @@ This architecture explains how a web application communicates with a EMPI servic
 - **EMPI Connector App**: It executes $match operation and handles Events triggered.
 - **EMPI service**: This is a sample service for demonstration of patient matching that contains demographic data for sample patients.
 - **AHDS FHIR service**: AHDS FHIR Service, contains healthcare data including patients
+
+## Operation Sequence
+
+The Sequence diagram show the the order of communication among the components for Match, Add, update and Delete patient operations.
+
+### Match and Add Patient
+
+![](./docs/images/Sequence1.png)
+
+### Match and Update/Delete Patient
+
+![](./docs/images/Sequence2.png)
+
 
 
 ## Prerequisites
