@@ -4,9 +4,13 @@ To successfully test ONC (g)(10) with Inferno, you will need to create four sepa
 
 ## Patient Standalone Confidential Client / Public Client Applications
 
-The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret (section 1 & 2 of the test). The public client represents an application that cannot protect a secret (section 9 of the test). You will need to follow these instructions twice - once for the confidential client (web) and once for the public client (spa). 
+The Patient Standalone Launch application consists of two types of client applications:
+1. **Confidential Client (Web):** This application can protect a secret and is used for sections 1 & 2 of the test.
+1. **Public Client (SPA):** This application cannot protect a secret and is used for section 9 of the test.
 
-1. If you have opted for Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. Otherwise for B2C, create it in the B2C tenant. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+You will need to follow the instructions below twice—once for the confidential client and once for the public client: 
+
+1. If you have opted for Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. Otherwise for B2C, create it in the B2C tenant. Make sure to select platform (Note : Create Confidential Client application with Web platform and Public Client application with SPA platform) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -82,6 +86,10 @@ The EHR launch confidential client application is a standard confidential client
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
+    - Microsoft Graph (Application) - Applicable only for B2C.
+        - Application.Read.All
+        - DelegatedPermissionGrant.ReadWrite.All
+1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 <br /><details><summary>Click to expand and see screenshots.</summary>

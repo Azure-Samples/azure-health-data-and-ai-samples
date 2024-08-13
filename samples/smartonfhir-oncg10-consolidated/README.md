@@ -1,4 +1,4 @@
-# Azure ONC (g)(10) & SMART on FHIR Consolidated Sample
+# Azure SMART on FHIR & ONC (g)(10) Consolidated Sample
 
 This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), along with either Microsoft Entra ID or Azure AD B2C, can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
 - [Health Level 7 (HL7®) Version 4.0.1 Fast Healthcare Interoperability Resources Specification (FHIR®)](http://hl7.org/fhir/directory.html)
@@ -16,11 +16,28 @@ Deployment of this sample requires the creation of supporting Azure services, cu
 
 This sample is targeted at application developers who are already using Azure Health Data Services or Azure API for FHIR.
 
-You will need an Azure Subscription with Owner privileges and Microsoft Entra ID Global Administrator privileges or Azure AD B2C tenant.
-
 ## Sample Components
 
-The below components are deployed with this sample. At a high level:
+The below components are deployed with this sample. 
+
+The below components will be deployed with this sample.
+1. Azure Health Data Services with a FHIR Service
+    - FHIR Service acts as the backend that stores and retrieves FHIR resources. It supports the integration of SMART on FHIR apps, enabling them to perform a wide range of clinical and analytical operations on health data. This includes querying patient records, updating information, and interoperating with other clinical systems—all within the security and compliance frameworks offered by Azure.
+2. Azure API Management
+    - APIM is a cloud-based service from Microsoft that helps businesses manage and secure their Application Programming Interfaces (APIs). APIM is used to manage the interactions between client applications and the Azure API for FHIR. It can enforce usage policies, validate tokens, provide caching, log API calls, and handle rate limiting. This ensures that the FHIR server is only accessed via secure and controlled paths.
+3. Smart Auth Function App
+    - This is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The Smart Auth Function App typically handles tasks such as generating and validating tokens, managing sessions, and possibly transforming claims or other security-related operations needed to integrate SMART on FHIR apps securely with Azure Health Data Service (FHIR).
+        - Needed for certain SMART operations not supported by the FHIR Service or specific to your EHR.
+            - Standalone Launch Handler enables the auth flow for standalone launch scenarios.
+            - EHR Launch Handler enables the auth flow for EHR launch scenarios.
+4. Azure Storage Account
+    - Needed for Azure Function, assorted static assets, and configuration tables.
+5. Auth Context Frontend App
+    - This app basically uses Web App Service to deploy UI for user Authorization. The Auth Context Frontend App facilitates the OAuth2 authorization flow. It interacts with Azure Active Directory (AAD) to authenticate users and obtain consent for the required scopes, thereby ensuring that applications receive appropriate access to health data based on user permissions.
+     - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping.
+
+
+Wroking of the sample at high level:
 
 - Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
 - Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) or [Azure AD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) with custom code to enable some specific requirements. 

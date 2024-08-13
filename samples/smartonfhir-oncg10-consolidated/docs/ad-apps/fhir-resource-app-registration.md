@@ -4,9 +4,9 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. If you have opted for Microsoft Entra ID, create a FHIR Resource Application Registration in the Microsoft Entra ID tenant. Otherwise, for B2C, create it in the B2C tenant.
+1. If you have chosen Microsoft Entra ID, register a FHIR Resource Application in your Microsoft Entra ID tenant. If you have chosen Azure B2C, register the application in your B2C tenant instead.
     - Go to `App Registrations`
-    - Create a new application. Name the App Registration same as your Azure Developer CLI environment name. For reference, see the step [2.3](../deployment.md/#2-prepare-and-deploy-environment/) where you set the environment name.
+    - Create a new application and name the App Registration to match your Azure Developer CLI environment name. For reference, see step [2.3](../deployment.md/#2-prepare-and-deploy-environment/) where you set the environment name.
     - Click `Register` (ignore redirect URI).
 1. Inform your Azure Developer CLI environment of this application with:
     ```
@@ -23,7 +23,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step should only be carried out if you choose Microsoft Entra ID. For Smart on FHIR implementation with B2C, you can skip the below command.
+1. This step is required only for Microsoft Entra ID. For SMART on FHIR implementations with B2C, this command can be skipped.
    
    Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
@@ -36,7 +36,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
-1. Follow the **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
+1. Follow the steps in **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token. Note that this is required only for Microsoft Entra ID and not for Azure B2C.
 
 <br />
 <details>
