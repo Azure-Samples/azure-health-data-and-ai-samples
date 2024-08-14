@@ -48,7 +48,7 @@ Wroking of the sample at high level:
 
 For more details of how the pieces work together, check out [the technical guide](./docs/technical-guide.md).
 
-![](./docs/images/overview-architecture.png)
+<img src="./docs/images/overview-architecture.png" height="700" >
 
 ## Sample Support
 

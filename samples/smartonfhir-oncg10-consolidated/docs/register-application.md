@@ -33,6 +33,7 @@
         - DelegatedPermissionGrant.ReadWrite.All 
 1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
+1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 6](./deployment.md/#6-identity-provider-setup-for-smart-on-fhir-with-b2c) in the deployment document for instructions on how to do this.
 
 
 ## Practitioner Application Registration
@@ -70,3 +71,4 @@
         - DelegatedPermissionGrant.ReadWrite.All 
 1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
+1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 6](./deployment.md/#6-identity-provider-setup-for-smart-on-fhir-with-b2c) in the deployment document for instructions on how to do this.

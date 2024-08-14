@@ -42,7 +42,17 @@ You will need to follow the instructions below twice—once for the confidential
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
 1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
-1. Generate a secret for this application. Save this secret and the client id for testing *1. Standalone Patient App*.
+1. Generate a secret for this application. Save this secret and the client id for testing
+    - *Standalone Patient App*
+    - *Public Client App* (if you have opted for Smart on FHIR with B2C)
+1. Additional Steps for Public Client App (SPA), If you have opted for Smart on FHIR with B2C:
+    - Select `Manage` -> `Authentication`
+    - Under the Implicit Grant and Hybrid Flows section, ensure the following options are selected: 
+        - `Access tokens (used for implicit flows)`
+        - `ID tokens (used for implicit and hybrid flows)`
+    - Go to the Advanced Settings section.
+    - Set **Allow public client flows** to `Yes`.
+1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 6](../deployment.md/#6-identity-provider-setup-for-smart-on-fhir-with-b2c) in the deployment document for instructions on how to do this.
 1. If you have opted for Microsoft Entra ID, then follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 <br /><details><summary>Click to expand and see screenshots for Microsoft Entra ID Reference.</summary>
@@ -91,6 +101,7 @@ The EHR launch confidential client application is a standard confidential client
         - DelegatedPermissionGrant.ReadWrite.All
 1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 6](../deployment.md/#6-identity-provider-setup-for-smart-on-fhir-with-b2c) in the deployment document for instructions on how to do this.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 <br /><details><summary>Click to expand and see screenshots.</summary>
     ![](./images/5_confidential_client_1.png)
@@ -108,7 +119,7 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
-        - user.all.all
+        - user.all.read
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
@@ -139,7 +150,8 @@ Before executing the test, follow these steps to configure your environment:
     - Add the following secrets along with their values for the Endpoint resource:
         - `status` = active
         - `connectionType` = http://terminology.hl7.org/CodeSystem/endpoint-connection-type
-        - `address` = Your Fhir Service URL without /metadata
+        - `address` = `{apim-url}/smart`
+            - For example: `https://myenv-apim.azure-api.net/smart`
     - Add the following secrets along with their values for the Organization resource:
         - `active` = true
         - `name` = Health Intersections CarePlan Hub

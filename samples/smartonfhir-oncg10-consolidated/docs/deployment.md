@@ -93,7 +93,7 @@ Next you will need to clone this repository and prepare your environment for dep
     - **For Azure B2C**
         ```
         azd env set B2CTenantId <Tenant_ID_Of_B2C>
-        azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/<YOUR_USER_FLOW_NAME>/v2.0"
+        azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN_SMART/v2.0"
         azd env set StandaloneAppClientId <STANDALONE_APP_ID_CREATED_IN_STEP_6>
         azd env set SmartonFhirwithB2C true
         ```
@@ -190,15 +190,6 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
         </details>
         <br />
 
-- **For Azure B2C:**
-  - You will need to access the applications registered in B2C tenant for the SMART Auth Custom Operations. You need to provide client secret of Standalone application in key vault. 
-
-    1. In the resource group that matches your environment, open the KeyVault with the suffix `-kv`.
-    1. Add a new secret that corresponds to the Standalone Application you just generated.
-        - Name: `standalone-app-secret`
-        - Secret: The secret you generated for the Standalone application
-
-
 ### Set the Auth User Input Redirect URL
 
 1. Open the resource group created by deployment. Find the Azure API Management instance.
@@ -215,7 +206,7 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 </details>
 <br />
 
-*NOTE: Changes made to Application Registration in Azure B2C Tenant takes time to reflect.*
+*NOTE: Changes made to Application Registration in Azure B2C Tenant takes around an hour to reflect.*
 
 ## 4. Add sample data and US Core resources
 
@@ -264,11 +255,33 @@ To learn more about the sample data, read [sample data](./sample-data.md).
 - If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
 - This role is necessary for enabling the SMART scope logic with your access token scopes in the FHIR Service.
 
-## 6. Use Postman to access FHIR resource via SMART on FHIR sample
+## 6. Identity Provider Configuration for SMART on FHIR with B2C
+
+In order to run the SMART on FHIR with B2C setup you need to provide Application Registration Details created in the B2C tenant. Resources deployed in the Azure AD tenant won't be able to directly access the Application Registration created earlier. 
+
+- Configure Identity Provider:
+    1. In the resource group that matches your environment, open the newly created FHIR Service.
+    1. Select `Settings` -> `Authentication`
+    1. In `Identity Provider 1`, within `Application 1`, enter the Client ID from the Application Registration into the `Client ID` field.
+    1. Click Save.
+
+    *Note: It would take around 10 minutes to update*
+
+- Create Secrets in KeyVault:
+    1. In the resource group that matches your environment, open the KeyVault with the suffix `-kv`.
+    1. Add a new secret to store Client ID of Application Registration.
+        - Name: `ExternalAppClientID`
+        - Secret: Client ID of Application Registration added earlier in the FHIR Service Authentication.
+        - Name: `ExternalAppClientSecret`
+        - Secret: Secret generated for this App Registration.
+    
+    *Note: If the secrets already exist then create a new version of the secret*
+
+## 7. Use Postman to access FHIR resource via SMART on FHIR sample
 
 Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman/configure-postman.md) for instructions to access FHIR resources via SMART on FHIR using postman.
 
-## 7. Create Inferno Test Applications
+## 8. Create Inferno Test Applications
 
 *Note: This section applies if the sample is deployed to be compliant with ONC (g)(10).*
 
