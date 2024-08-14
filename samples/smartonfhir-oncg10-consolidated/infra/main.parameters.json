@@ -29,16 +29,13 @@
     "AuthorityURL": {
       "value": "${AuthorityURL}"
     },
-    "StandaloneAppClientId": {
-      "value": "${StandaloneAppClientId}"
-    },
     "FhirResourceAppId": {
       "value": "${FhirResourceAppId}"
     },
     "existingresourcegroupname": {
       "value": ""
     },
-    "fhirid": {
+    "existingfhirid": {
       "value": ""
     },
     "smartonfhirwithb2c": {
