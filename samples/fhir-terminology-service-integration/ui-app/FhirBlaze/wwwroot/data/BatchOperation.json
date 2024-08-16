@@ -1,5 +1,5 @@
 {
-  "icd9cm-001.1=>icd10cm&Local-GLU=>Loinc": {
+  "icd9cm-001.1=>icd10cm & Local-GLU=>Loinc": {
     "resourceType": "Bundle",
     "type": "batch",
     "entry": [
@@ -63,7 +63,7 @@
       }
     ]
   },
-  "icd9cm-001.1=>icd10cm_&_icd10cm-A00.1": {
+  "snomed-33747003=>cpt & icd10cm-A00.1=>icd9cm": {
     "resourceType": "Bundle",
     "type": "batch",
     "entry": [
@@ -73,27 +73,15 @@
           "parameter": [
             {
               "name": "code",
-              "valueString": "001.1"
+              "valueString": "33747003"
             },
             {
               "name": "system",
-              "valueUri": "icd9cm"
+              "valueUri": "snomed"
             },
             {
               "name": "targetsystem",
-              "valueUri": "icd10cm"
-            },
-            {
-              "name": "dependency",
-              "resource": {
-                "resourceType": "Parameters",
-                "parameter": [
-                  {
-                    "name": "element",
-                    "valueUri": "icd9cm_icd10cm_equals"
-                  }
-                ]
-              }
+              "valueUri": "cpt"
             }
           ]
         },

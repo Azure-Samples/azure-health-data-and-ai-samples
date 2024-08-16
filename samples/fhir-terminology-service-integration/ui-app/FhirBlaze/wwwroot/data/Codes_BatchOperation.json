@@ -1,7 +1,7 @@
 {
   "Codes": [
-    "icd9cm-001.1=>icd10cm&Local-GLU=>Loinc",
-    "icd9cm-001.1=>icd10cm_&_icd10cm-A00.1",
+    "icd9cm-001.1=>icd10cm & Local-GLU=>Loinc",
+    "snomed-33747003=>cpt & icd10cm-A00.1=>icd9cm",
     "Batch_Validate"
   ]
-} 
+}
