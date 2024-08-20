@@ -29,6 +29,21 @@ Some common Azure issues that you need to watch out for are:
 
 The Azure Developer CLI creates a deployment in Azure as part of the `azd up` command. To get additional details about deployment issues, it's best to find the newly created resource group in Azure and look at the deployments in the resource group for more information. A single `azd up` command will spawn off multiple child deployments, so make sure to click into the failing deployment for more details.
 
+## Powershell Script Issues
+
+If you encounter an error while attempting to run the scripts with the message indicating that the file cannot be loaded because it is not digitally signed, this is due to the script execution policy on your system. Specifically, the error message might state:
+```
+Script cannot be loaded. The file is not digitally signed. You cannot run this script on the current system. 
+```
+
+To resolve this issue, you can temporarily change the script execution policy to bypass the digital signature requirement by running the following command in your PowerShell session:
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+This command allows you to run the script without altering the execution policy permanently. For more information on PowerShell execution policies, refer to the documentation at [about_Execution_Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4).
+
 ### Not getting correct scopes
 
 If you are getting more scopes assigned to your token, make sure you HAVE NOT applied admin consent for any scopes. Any admin consent that you apply will override user selected scopes.

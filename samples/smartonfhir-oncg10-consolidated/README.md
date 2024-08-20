@@ -19,26 +19,30 @@ This sample is targeted at application developers who are already using Azure He
 ## Sample Components
 
 The below components are deployed with this sample. 
-
-The below components will be deployed with this sample.
 1. Azure Health Data Services with a FHIR Service
     - FHIR Service acts as the backend that stores and retrieves FHIR resources. It supports the integration of SMART on FHIR apps, enabling them to perform a wide range of clinical and analytical operations on health data. This includes querying patient records, updating information, and interoperating with other clinical systems—all within the security and compliance frameworks offered by Azure.
-2. Azure API Management
+1. Azure API Management
     - APIM is a cloud-based service from Microsoft that helps businesses manage and secure their Application Programming Interfaces (APIs). APIM is used to manage the interactions between client applications and the Azure API for FHIR. It can enforce usage policies, validate tokens, provide caching, log API calls, and handle rate limiting. This ensures that the FHIR server is only accessed via secure and controlled paths.
-3. Smart Auth Function App
+1. Smart Auth Function App
     - This is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The Smart Auth Function App typically handles tasks such as generating and validating tokens, managing sessions, and possibly transforming claims or other security-related operations needed to integrate SMART on FHIR apps securely with Azure Health Data Service (FHIR).
         - Needed for certain SMART operations not supported by the FHIR Service or specific to your EHR.
             - Standalone Launch Handler enables the auth flow for standalone launch scenarios.
-            - EHR Launch Handler enables the auth flow for EHR launch scenarios.
-4. FHIR Bulk Data Custom Operations
-    - This is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The FHIR Bulk Data Custom Operations typically handles Bulk Data Operations on FHIR Service.   
-        - Currently supports Bulk Export Operations.          
-5. Azure Storage Account
+            - EHR Launch Handler enables the auth flow for EHR launch scenarios.         
+1. Azure Storage Account
     - Needed for Azure Function, assorted static assets, and configuration tables.
-6. Auth Context Frontend App
+1. Auth Context Frontend App
     - This app basically uses Web App Service to deploy UI for user Authorization. The Auth Context Frontend App facilitates the OAuth2 authorization flow. It interacts with Azure Active Directory (AAD) to authenticate users and obtain consent for the required scopes, thereby ensuring that applications receive appropriate access to health data based on user permissions.
      - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping.
 
+The below components will be deployed with this sample but will only be accessible if ONC g(10) compliance is enabled.
+1. FHIR Bulk Data Custom Operations
+    - This is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The FHIR Bulk Data Custom Operations typically handles Bulk Data Operations on FHIR Service.   
+        - Currently supports Bulk Export Operations. 
+
+1. Azure Key Vault
+    - Azure Key Vault is a cloud-based service that allows you to securely manage keys, secrets and certificates used by cloud applications and services. It will be used to store secrets used for testing Inferno (g)(10) test suite.
+        - It stores the secret generated for the App Registration. 
+        - It also stores secrets required for the Service Base URL Test Suite.
 
 Working of the sample at high level:
 

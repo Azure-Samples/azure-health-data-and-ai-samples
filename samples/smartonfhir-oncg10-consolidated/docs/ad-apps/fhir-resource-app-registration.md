@@ -6,7 +6,8 @@ This application registration is used to customize the access token sent to the 
 
 1. If you have chosen Microsoft Entra ID, register a FHIR Resource Application in your Microsoft Entra ID tenant. If you have chosen Azure B2C, register the application in your B2C tenant instead.
     - Go to `App Registrations`
-    - Create a new application and name the App Registration to match your Azure Developer CLI environment name. For reference, see step [2.3](../deployment.md/#2-prepare-and-deploy-environment/) where you set the environment name.
+    - Create a new application. You can name the App Registration to match your Azure Developer CLI environment name. For reference, see step [2.3](../deployment.md/#2-prepare-and-deploy-environment/) where you set the environment name.
+    - If you decide to use a custom name for the App Registration, ensure that it does not include any whitespace.
     - Click `Register` (ignore redirect URI).
 1. Inform your Azure Developer CLI environment of this application with:
     ```

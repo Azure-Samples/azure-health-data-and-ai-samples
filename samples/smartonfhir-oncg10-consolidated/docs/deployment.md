@@ -107,7 +107,7 @@ Next you will need to clone this repository and prepare your environment for dep
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
         ```
-1. Initiate the environment deployment by executing the `azd` command. This will handle both the infrastructure provisioning and code deployment, which should take around one hour to complete.
+1. Initiate the environment deployment by executing the `azd up` command  in a `Bash Shell`. This will handle both the infrastructure provisioning and code deployment, which should take around one hour to complete. Running the `azd` command in `PowerShell` will result in an error.
 
     *Note:- When executing the `azd up` command, you will be asked to provide several values. Below, you will find a detailed explanation of each prompt.*
 
@@ -122,31 +122,9 @@ Next you will need to clone this repository and prepare your environment for dep
     The `azd up` command will prompt you to enter values for the following parameters:   
     
     - `B2CTenantId` : 
-        - Enter the Tenant ID of your B2C Tenant deployed earlier. (*If you have opted for Microsoft Entra ID you can keep this parameter blank.*)
-        
-    - `StandaloneAppClientId` : 
-        - Enter the Application ID / Client ID of the Inferno Standalone Patient App created earlier. (*If you have opted for Microsoft Entra ID you can keep this parameter blank.*)            
+        - Enter the Tenant ID of your B2C Tenant deployed earlier. (*If you have opted for Microsoft Entra ID you can keep this parameter blank.*)           
     
-    - `existingResourceGroupName` : 
-    
-        - Choose whether to deploy the sample in an existing resource group or create a new one.
-        - Leaving this parameter empty will create a new resource group named {env_name}-rg.
-        - If you provide an existing resource group name, ensure it does not already contain a SMART on FHIR resources, as multiple samples in the same resource group are not supported.
-
-            *Note:- If you plan to use an existing FHIR service for deployment, enter the name of the resource group where the FHIR service is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service. *
-    
-    - `exitingFhirId`: 
-    
-        - Decide whether to use an existing FHIR service or create a new one.
-        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR service, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
-            1. Navigate to your FHIR service in Azure Portal.
-            2. Click on properties in the left menu.
-            3. Copy the "Id" field under the "Essentials" group.    
-
-        >*[!IMPORTANT]  
-        If you are using an existing FHIR server, please be aware that during deployment, the FHIR server Audience URL will be updated to reflect the new Application Registration ID URL. You will need to update any downstream applications that were using the old FHIR server Audience URL to point to the new URL.*
-       
-     - `enableVNetSupport`: 
+    - `enableVNetSupport`: 
      
         - This parameter accepts a boolean (true/false) value.
  
@@ -162,6 +140,25 @@ Next you will need to clone this repository and prepare your environment for dep
             3. Function Apps and App Service Plan: Utilizes Windows as the operating system.
  
             *NOTE: This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group.*
+
+    - `existingFhirId`: 
+    
+        - Decide whether to use an existing FHIR service or create a new one.
+        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR service, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
+            1. Navigate to your FHIR service in Azure Portal.
+            2. Click on properties in the left menu.
+            3. Copy the "Id" field under the "Essentials" group.    
+
+        >*[!IMPORTANT]  
+        If you are using an existing FHIR server, please be aware that during deployment, the FHIR server Audience URL will be updated to reflect the new Application Registration ID URL. You will need to update any downstream applications that were using the old FHIR server Audience URL to point to the new URL.*
+
+    - `existingResourceGroupName` : 
+    
+        - Choose whether to deploy the sample in an existing resource group or create a new one.
+        - Leaving this parameter empty will create a new resource group named {env_name}-rg.
+        - If you provide an existing resource group name, ensure it does not already contain a SMART on FHIR resources, as multiple samples in the same resource group are not supported.
+
+            *Note:- If you plan to use an existing FHIR service for deployment, enter the name of the resource group where the FHIR service is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service. *
         
 *NOTE: The deployment will take approximately 15 minutes. You can proceed with the setup steps outlined below once the deployment is complete. All resources will be deployed to the resource group named {env_name}-rg by default. If you provide an existing resource group name, the resources will be deployed to that group instead.*
 
@@ -239,12 +236,12 @@ To learn more about the sample data, read [sample data](./sample-data.md).
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url>/Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
     ```
 
     Mac/Linux:
     ```bash
-    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url>/Patient/PatientA"
+    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
     ```
     
 **Assign `FHIR SMART User` Role:**
