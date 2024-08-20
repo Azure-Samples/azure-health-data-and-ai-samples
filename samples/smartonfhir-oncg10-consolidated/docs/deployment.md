@@ -77,8 +77,6 @@ Next you will need to clone this repository and prepare your environment for dep
 
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.   
 
-1. If you are using B2C, the client application must be created in the B2C tenant before beginning the sample deployment. You will need the Application ID for the deployment process. Refer to the [Create Inferno Standalone Patient App](./ad-apps/inferno-test-app-registration.md) section for detailed instructions on how to create the application. If you are using Entra ID, this step is not required at this time.
-
 1. Set the deployment environment configuration as below
     - **Common configurations for all IDPs** (*Irrespective of IDP choosen*)
         ```
@@ -94,7 +92,6 @@ Next you will need to clone this repository and prepare your environment for dep
         ```
         azd env set B2CTenantId <Tenant_ID_Of_B2C>
         azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN_SMART/v2.0"
-        azd env set StandaloneAppClientId <STANDALONE_APP_ID_CREATED_IN_STEP_6>
         azd env set SmartonFhirwithB2C true
         ```
 1. To enable ONC g(10) compliance for this sample, set the `oncEnabled` variable to true; if not needed, set it to false. Enabling this setting will grant access to additional resources necessary for ONC g(10) compliance.

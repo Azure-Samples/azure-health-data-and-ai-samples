@@ -30,14 +30,17 @@ The below components will be deployed with this sample.
         - Needed for certain SMART operations not supported by the FHIR Service or specific to your EHR.
             - Standalone Launch Handler enables the auth flow for standalone launch scenarios.
             - EHR Launch Handler enables the auth flow for EHR launch scenarios.
-4. Azure Storage Account
+4. FHIR Bulk Data Custom Operations
+    - This is an Azure Function which is a serverless compute platform that allows users to develop event-driven applications. The FHIR Bulk Data Custom Operations typically handles Bulk Data Operations on FHIR Service.   
+        - Currently supports Bulk Export Operations.          
+5. Azure Storage Account
     - Needed for Azure Function, assorted static assets, and configuration tables.
-5. Auth Context Frontend App
+6. Auth Context Frontend App
     - This app basically uses Web App Service to deploy UI for user Authorization. The Auth Context Frontend App facilitates the OAuth2 authorization flow. It interacts with Azure Active Directory (AAD) to authenticate users and obtain consent for the required scopes, thereby ensuring that applications receive appropriate access to health data based on user permissions.
      - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping.
 
 
-Wroking of the sample at high level:
+Working of the sample at high level:
 
 - Routing and SMART Conformance is handled with [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview).
 - Authorization as defined by the [SMART on FHIR](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) and [Bulk Data Access](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/authorization/index.html) Implementation Guide are handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis) or [Azure AD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) with custom code to enable some specific requirements. 
