@@ -1,0 +1,1 @@
+The `predeploymentScript.ps1` is designed to deploy the prerequisites before deploying the Azure Marketplace offer for HDS in Purview. Please follow the instructions provided by Microsoft as part of the private preview to ensure proper use of the script.
