@@ -1,6 +1,6 @@
 # Create Custom Policy
 
-This document guides you through the steps needed to create Custom Policy in Azure B2C Tenant. This sample creates Signing and Encryption key along with two Application Registartion and a Custom User Flow using custom policies.
+This document guides you through the steps needed to create Custom Policy in Azure B2C Tenant. This sample creates Signing and Encryption key along with two Application Registration and a Custom User Flow using custom policies.
 
 - Flow the below mentioned steps: 
     - [Create Signing and Encryption Key](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#add-signing-and-encryption-keys-for-identity-experience-framework-applications)

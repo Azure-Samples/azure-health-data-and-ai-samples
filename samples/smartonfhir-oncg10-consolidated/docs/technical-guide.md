@@ -72,7 +72,7 @@ Azure Health Data Services needs some modification to the capability statement a
     EHR ->> User/App: Launch Request
 
     User/App ->> APIM: Discovery Request
-    APIM -->> User/App: Discovery Repsonse
+    APIM -->> User/App: Discovery Response
     User/App ->> APIM:  Authorization Request
     APIM -->> APIM: Cache launch parameter
     APIM ->> EHR Launch Handler: Forward /authorize request    
@@ -96,7 +96,7 @@ Azure Health Data Services needs some modification to the capability statement a
 
 SMART standalone launch refers to when an app launches from outside an EHR session. Generally these are patient facing apps since patients often do not access an EHR to view their data (patients could have EHR launch apps from an EHR patient portal). This flow often relies on user input for establishing the correct context for the SMART application since there is no session data to pull from. There are two potential scenarios where an EHR application may need to gather input from the user:
 
-- Selecting a record (like a patient) when a user has access to mulitple patients (like parent/child relatonship)
+- Selecting a record (like a patient) when a user has access to multiple patients (like parent/child relationship)
 - Reviewing and granting limited scopes to an application to control how much of the patient's data the SMART app can access
 
 *I think (need to verify)* ONC (g)(10) does not require a patient picker, so it is out of scope for this sample. If we need it, it's not too bad.
@@ -112,7 +112,7 @@ Microsoft Entra ID does not have a mechanism for selecting a subset of scopes wh
     participant FHIR
     participant Graph
     User/App ->> APIM: Discovery Request
-    APIM ->> User/App: Discovery Repsonse
+    APIM ->> User/App: Discovery Response
     User/App ->> APIM: /authorize
     alt Scope Selector
         note over User/App: Session scope selection

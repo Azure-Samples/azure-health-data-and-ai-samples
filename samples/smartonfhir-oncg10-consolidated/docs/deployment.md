@@ -33,7 +33,7 @@ Make sure you have the pre-requisites listed below
 
 - **Test User Accounts:**
 
-    To effectively test the application, you need to create two test user accounts: one for the Patient persona and another for the Provider persona. You can choose to create these user accounts in your choosen Identity Provider
+    To effectively test the application, you need to create two test user accounts: one for the Patient persona and another for the Provider persona. You can choose to create these user accounts in your chosen Identity Provider
 
     -   **For Microsoft Entra ID:**
         - Create two new test user accounts: one for the Patient persona and one for the Provider persona. Refer the [link](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-create-delete-users#create-a-new-user) for steps.
@@ -78,7 +78,7 @@ Next you will need to clone this repository and prepare your environment for dep
 1. [Create the Auth Context Frontend App Registration. Use the instructions here](./ad-apps/auth-context-frontend-app-registration.md). Record the application id and application url for later.   
 
 1. Set the deployment environment configuration as below
-    - **Common configurations for all IDPs** (*Irrespective of IDP choosen*)
+    - **Common configurations for all IDPs** (*Irrespective of IDP chosen*)
         ```
         azd env set ApiPublisherName "Your Name"
         azd env set ApiPublisherEmail "Your Email"
@@ -107,7 +107,7 @@ Next you will need to clone this repository and prepare your environment for dep
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
         ```
-1. Initiate the environment deployment by executing the `azd up` command  in a `Bash Shell`. This will handle both the infrastructure provisioning and code deployment, which should take around one hour to complete. Running the `azd` command in `PowerShell` will result in an error.
+1. Initiate the environment deployment by executing the `azd up` command. This will handle both the infrastructure provisioning and code deployment, which should take around one hour to complete.
 
     *Note:- When executing the `azd up` command, you will be asked to provide several values. Below, you will find a detailed explanation of each prompt.*
 
@@ -128,7 +128,7 @@ Next you will need to clone this repository and prepare your environment for dep
      
         - This parameter accepts a boolean (true/false) value.
  
-        - When set to false, the follwing resorces are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
+        - When set to false, the following resources are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
             1. API Management (APIM): Deployed in the Consumption tier.
             2. App Service Plan : Deployed in the Dynamic tier. 
             3. Static Web App: Deployed in the Free tier.
@@ -158,7 +158,7 @@ Next you will need to clone this repository and prepare your environment for dep
         - Leaving this parameter empty will create a new resource group named {env_name}-rg.
         - If you provide an existing resource group name, ensure it does not already contain a SMART on FHIR resources, as multiple samples in the same resource group are not supported.
 
-            *Note:- If you plan to use an existing FHIR service for deployment, enter the name of the resource group where the FHIR service is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service. *
+            *Note:- If you plan to use an existing FHIR service for deployment, enter the name of the resource group where the FHIR service is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service.*
         
 *NOTE: The deployment will take approximately 15 minutes. You can proceed with the setup steps outlined below once the deployment is complete. All resources will be deployed to the resource group named {env_name}-rg by default. If you provide an existing resource group name, the resources will be deployed to that group instead.*
 
@@ -170,7 +170,7 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 - **For Microsoft Entra ID:** 
   - You will need to grant the Azure Managed Identity associated with the Azure Function appropriate permissions, such as the Application Administrator role (or similar).
 
-    1. Open the Azure Function for the SMART Auth Custom Operations from the {env_name}-rg resource group. The function will have a suffix of `aad-func`. 
+    1. Open the Azure Function for SMART Auth Custom Operations from the {env_name}-rg resource group, or use the name of the existing resource group you specified. The function will have a suffix of `aad-func`. 
     1. From the left navbar open `Identity` -> `System assigned`. Copy the Object(principal) ID for the next steps.
     1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
     1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
@@ -186,7 +186,7 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 
 ### Set the Auth User Input Redirect URL
 
-1. Open the resource group created by deployment. Find the Azure API Management instance.
+1. Open the resource group named as {env_name}-rg, or with the name of the existing resource group you specified. Find the Azure API Management instance.
 1. Copy the Gateway URL for the API Management instance.
 1. Open your Application Registration for the Auth Context Frontend you created before deployment. 
 1. The Application Registration already contains a redirect URI `http://localhost:3000` that you can use for local debugging. You should add a new redirect URI in the format `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to include the trailing slash.
@@ -206,6 +206,8 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 
 To successfully run this sample using POSTMAN or with Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
 
+**For Microsoft Entra ID:**
+
 To efficiently load the required data into your FHIR Service, ensure that the user account you are using to execute the script has the **FHIR Data Contributor** role assigned to the FHIR Service. Once confirmed, run the following script:
 
 Windows:
@@ -218,6 +220,39 @@ Mac/Linux:
 pwsh ./scripts/Load-ProfilesData.ps1
 ```
 
+**For SMART on FHIR with B2C:** 
+
+Currently loading data through script is not supported for Smart on FHIR with B2C. You need to manually load the data by following the below steps:
+
+1. [Register a client application in Microsoft Entra ID](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-a-register-a-client-application-in-microsoft-entra-id)
+1. [Assign FHIR Data Contributor role in Azure](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-b-assign-fhir-data-contributor-role-in-azure)
+1. [Set up Environment and Collection in Postman](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-c-set-up-environment-and-collection-in-postman)
+1. [Get an access token from AAD](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-1---get-an-access-token-from-aad)
+1. Load US Core Compliant Resources to the FHIR Service. 
+    - Create a new HTTP Request
+    - Select method as POST
+    - Enter the following URL: `{{fhirurl}}`
+    - Open the `Body` section, select `raw` and `JSON`
+    - Copy the json data from [V3.1.1_USCoreCompliantResources](../scripts/test-resources/V3.1.1_USCoreCompliantResources.json) file and paste in the Body.
+    - Click Send.
+    <details>
+    <summary>Click to expand and see screenshots for Reference.</summary>
+    
+    ![](./images/deployment/4_Load_US_Core_Compliant_Resource.png)
+    </details>
+    <br />
+1. Load Capability Statement Resource to the FHIR Service.
+    - Create a new HTTP Request
+    - Select method as PUT
+    - Enter the following URL: `{{fhirurl}}/CapabilityStatement/us-core-server`
+    - Open the `Body` section, select `raw` and `JSON`
+    - Copy the json data from [CapabilityStatement-us-core-server](../scripts/test-resources/CapabilityStatement-us-core-server.json) file and paste in the Body.
+    - Click Send.
+    <details>
+    <summary>Click to expand and see screenshots for Reference.</summary>
+    
+    ![](./images/deployment/4_Load_Capability_Statement_Resource.png)
+    </details>
 To learn more about the sample data, read [sample data](./sample-data.md).
 
 ## 5. Mapping test users
@@ -225,8 +260,8 @@ To learn more about the sample data, read [sample data](./sample-data.md).
 **Add `fhirUser` Claim to Test Users:**
 
 -  To properly integrate with the sample data, you need to add the fhirUser claim to each of your test user accounts:
-   - For the patient test user, set the `fhirUser` claim to `<Complete Fhir Url>/Patient/PatientA`.
-   - For the practitioner test user, set the `fhirUser` claim to `<Complete Fhir Url>/Practitioner/PractitionerC1`.
+   - For the patient test user, set the `fhirUser` claim to `<Complete Fhir Url without /metadata>/Patient/PatientA`.
+   - For the practitioner test user, set the `fhirUser` claim to `<Complete Fhir Url without /metadata>/Practitioner/PractitionerC1`.
 
    Modifying Microsoft Graph directory extensions requires API requests to Microsoft Graph. Use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will need the `object id` of your patient test user. In a production environment, integrate this step into your user registration process.
 
@@ -249,33 +284,11 @@ To learn more about the sample data, read [sample data](./sample-data.md).
 - If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service deployed as part of this sample.
 - This role is necessary for enabling the SMART scope logic with your access token scopes in the FHIR Service.
 
-## 6. Identity Provider Configuration for SMART on FHIR with B2C
-
-In order to run the SMART on FHIR with B2C setup you need to provide Application Registration Details created in the B2C tenant. Resources deployed in the Azure AD tenant won't be able to directly access the Application Registration created earlier. 
-
-- Configure Identity Provider:
-    1. In the resource group that matches your environment, open the newly created FHIR Service.
-    1. Select `Settings` -> `Authentication`
-    1. In `Identity Provider 1`, within `Application 1`, enter the Client ID from the Application Registration into the `Client ID` field.
-    1. Click Save.
-
-    *Note: It would take around 10 minutes to update*
-
-- Create Secrets in KeyVault:
-    1. In the resource group that matches your environment, open the KeyVault with the suffix `-kv`.
-    1. Add a new secret to store Client ID of Application Registration.
-        - Name: `ExternalAppClientID`
-        - Secret: Client ID of Application Registration added earlier in the FHIR Service Authentication.
-        - Name: `ExternalAppClientSecret`
-        - Secret: Secret generated for this App Registration.
-    
-    *Note: If the secrets already exist then create a new version of the secret*
-
-## 7. Use Postman to access FHIR resource via SMART on FHIR sample
+## 6. Use Postman to access FHIR resource via SMART on FHIR sample
 
 Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman/configure-postman.md) for instructions to access FHIR resources via SMART on FHIR using postman.
 
-## 8. Create Inferno Test Applications
+## 7. Create Inferno Test Applications
 
 *Note: This section applies if the sample is deployed to be compliant with ONC (g)(10).*
 
@@ -288,4 +301,33 @@ Follow the directions on the [Inferno Test App Registration Page](./ad-apps/infe
 - Backend Service Client (*Not supported for Azure B2C*)
 - Standalone Patient App (Public Client)
 
+
+## 8. Identity Provider Configuration
+
+**For SMART on FHIR with B2C:** 
+
+To set up SMART on FHIR with B2C, you need to provide the Application Registration details from the B2C tenant. Specifically, you will need to provide the Application Registration ID and Secret. This allows Third Party IDP Support for FHIR Service as well as resources deployed in the Azure AD tenant to access and interact with the Application Registration created in the B2C tenant. Note that resources in the Azure AD tenant cannot directly access the B2C Application Registration without these details.
+
+- Configure Identity Provider:
+    1. Open the FHIR Service from the {env_name}-rg resource group, or with the name of the existing resource group you specified.
+    1. Select `Settings` -> `Authentication`
+    1. In `Identity Provider 1`, within `Application 1`, enter the Client ID from the Application Registration into the `Client ID` field.
+    1. Click Save.
+
+    *Note: It would take around 10 minutes to update*
+    <details>
+    <summary>Click to expand and see screenshots for Reference.</summary>
+    
+    ![](./images/deployment/8_Identity_Provider_Configuration.png)
+    </details>
+    <br />
+- Create Secrets in KeyVault:
+    1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `backkv`.
+    1. Add a new secret to store Client ID and Client Secret of Application Registration.
+        - Name: `ExternalAppClientID`
+        - Secret: Client ID of Application Registration added earlier in the FHIR Service Authentication.
+        - Name: `ExternalAppClientSecret`
+        - Secret: Secret generated for this App Registration.
+    
+    *Note: If the secrets already exist then create a new version of the secret.*
 

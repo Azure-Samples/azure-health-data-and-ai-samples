@@ -32,6 +32,7 @@ The Azure Developer CLI creates a deployment in Azure as part of the `azd up` co
 ## Powershell Script Issues
 
 If you encounter an error while attempting to run the scripts with the message indicating that the file cannot be loaded because it is not digitally signed, this is due to the script execution policy on your system. Specifically, the error message might state:
+
 ```
 Script cannot be loaded. The file is not digitally signed. You cannot run this script on the current system. 
 ```
