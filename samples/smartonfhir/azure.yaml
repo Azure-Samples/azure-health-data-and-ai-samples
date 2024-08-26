@@ -17,5 +17,5 @@ services:
     host: staticwebapp
 hooks:
   postprovision:
-    shell: sh
+    shell: pwsh
     run: npm run setbuildenv --prefix src/auth-context-frontend-app 
