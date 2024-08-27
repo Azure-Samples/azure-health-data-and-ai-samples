@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # FHIR Resource App Registration
 
 This application registration is used to customize the access token sent to the FHIR Service. The SMART on FHIR logic inside Azure Health Data Services relies on the `fhirUser` claim inside the access token to restrict user access to their own compartment (e.g. patient can access their own data but not others). Microsoft is unable to allow custom claims mapping on the first-party Healthcare APIs application as it creates a [security hole for malicious applications](https://learn.microsoft.com/azure/active-directory/develop/reference-app-manifest#acceptmappedclaims-attribute). We must then create a custom application registration to protect the FHIR Service and change the audience in the FHIR Service to validate tokens against the custom application.
@@ -63,3 +66,5 @@ This application registration is used to customize the access token sent to the 
 ![](./images/fhir_resource_app_set_uri2_b2c.png)
 ![](./images/fhir_resource_app_manifest_b2c.png)
 </details>
+
+**[Back to Previous Page](../deployment.md#2-prepare-and-deploy-environment)**

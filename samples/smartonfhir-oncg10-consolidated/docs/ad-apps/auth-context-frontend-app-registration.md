@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Auth Context Frontend App Registration
 
 The Auth Context Frontend Application is a sample React single-page app that enables patient session-based scope selection and EHR launch context. It allows patients to choose which permissions (scopes) to consent for SMART on FHIR apps and even remove scopes during the login process. Since Microsoft Entra ID and Azure AD B2C do not support session-based scoping, the app clears consent records so users must re-consent upon login. Additionally, it stores the launch parameters before login for later use in the token. You will need to register the application and save the `Client ID` and `Tenant ID` for future configuration.
@@ -43,3 +46,5 @@ The Auth Context Frontend Application is a sample React single-page app that ena
 ![](./images/2_add_fhir_user_impersonation_b2c.png)
 ![](./images/2_add_fhir_user_impersonation_screen_2_b2c.png)
 </details>
+
+**[Back to Previous Page](../deployment.md#2-prepare-and-deploy-environment)**

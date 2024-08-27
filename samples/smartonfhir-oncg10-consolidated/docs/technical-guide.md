@@ -202,3 +202,5 @@ Client registration is an out-of-band process required before backend services c
 - EHR Launch
 - Rewriting of resource URLs
 - Missing Data
+
+**[Back to Previous Page](../README.md)**

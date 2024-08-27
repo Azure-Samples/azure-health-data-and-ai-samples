@@ -10,12 +10,6 @@ This sample demonstrates how [Azure Health Data Services](https://www.healthit.g
 
 While Azure Health Data Services is the core of this sample, some custom behavior is required to fully meet the §170.315(g)(10) Standardized API for patient and population services criteria requirements, mostly around SMART on FHIR authentication. This sample is therefore *not* using only the FHIR Server but other Azure Services with sample code to pass the Inferno tests. You can use this sample as a starting point and reference for building your applications and solutions.
 
-## Sample Deployment
-
-Deployment of this sample requires the creation of supporting Azure services, custom code deployed to Azure Function Apps, and setup in either Microsoft Entra ID or Azure AD B2C. For detailed deployment instructions, check out the [deployment document here](./docs/deployment.md).
-
-This sample is targeted at application developers who are already using Azure Health Data Services or Azure API for FHIR.
-
 ## Sample Components
 
 The below components are deployed with this sample. 
@@ -56,6 +50,14 @@ Working of the sample at high level:
 For more details of how the pieces work together, check out [the technical guide](./docs/technical-guide.md).
 
 <img src="./docs/images/overview-architecture.png" height="700" >
+
+
+## Sample Deployment
+
+Deployment of this sample requires the creation of supporting Azure services, custom code deployed to Azure Function Apps, and setup in either Microsoft Entra ID or Azure AD B2C. For detailed deployment instructions, check out the [deployment document here](./docs/deployment.md).
+
+This sample is targeted at application developers who are already using Azure Health Data Services or Azure API for FHIR.
+
 
 ## Sample Support
 

@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Set fhirUser Claims Mapping
 
 The fhirUser claim mapping informs the calling application of the user's FHIR id through the identity token and it informs the FHIR Service the user's id through the access token. This claims mapping needs to be setup for the FHIR Resource application *and* each SMART client application that will be getting an identity token and expecting the `fhirUser` claim.

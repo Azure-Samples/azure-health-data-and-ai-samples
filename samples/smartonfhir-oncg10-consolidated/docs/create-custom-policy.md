@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
+
 # Create Custom Policy
 
 This document guides you through the steps needed to create Custom Policy in Azure B2C Tenant. This sample creates Signing and Encryption key along with two Application Registration and a Custom User Flow using custom policies.
@@ -30,4 +33,5 @@ This document guides you through the steps needed to create Custom Policy in Azu
             2. *TrustFrameworkLocalization.xml*
             3. *TrustFrameworkExtensions.xml*
             4. *SignUpOrSignin.xml*
-        
+
+**[Back to Previous Page](./deployment.md#1-prerequisites)**

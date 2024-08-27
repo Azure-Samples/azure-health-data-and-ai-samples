@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
+
 # Sample Deployment: Azure Health Data Services SMART on FHIR & ONC (g)(10)
 
 This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID or Azure AD B2C configuration.
@@ -206,9 +209,10 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 
 To successfully run this sample using POSTMAN or with Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
 
-**For Microsoft Entra ID:**
 
 To efficiently load the required data into your FHIR Service, ensure that the user account you are using to execute the script has the **FHIR Data Contributor** role assigned to the FHIR Service. Once confirmed, run the following script:
+
+**For Microsoft Entra ID:**
 
 Windows:
 ```powershell
@@ -222,37 +226,23 @@ pwsh ./scripts/Load-ProfilesData.ps1
 
 **For SMART on FHIR with B2C:** 
 
-Currently loading data through script is not supported for Smart on FHIR with B2C. You need to manually load the data by following the below steps:
+To run the script given below, you need to pass the FHIR Server Audience parameter. To get the FHIR Server Audience, follow these steps:
+- Open the resource group named as {env_name}-rg, or with the name of the existing resource group you specified. Find the FHIR Service instance.
+- Navigate to `Settings`  -> `Authentication`.
+- Copy the url value present for `Audience` field.
 
-1. [Register a client application in Microsoft Entra ID](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-a-register-a-client-application-in-microsoft-entra-id)
-1. [Assign FHIR Data Contributor role in Azure](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-b-assign-fhir-data-contributor-role-in-azure)
-1. [Set up Environment and Collection in Postman](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-c-set-up-environment-and-collection-in-postman)
-1. [Get an access token from AAD](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/sample-postman-queries#step-1---get-an-access-token-from-aad)
-1. Load US Core Compliant Resources to the FHIR Service. 
-    - Create a new HTTP Request
-    - Select method as POST
-    - Enter the following URL: `{{fhirurl}}`
-    - Open the `Body` section, select `raw` and `JSON`
-    - Copy the json data from [V3.1.1_USCoreCompliantResources](../scripts/test-resources/V3.1.1_USCoreCompliantResources.json) file and paste in the Body.
-    - Click Send.
-    <details>
-    <summary>Click to expand and see screenshots for Reference.</summary>
-    
-    ![](./images/deployment/4_Load_US_Core_Compliant_Resource.png)
-    </details>
-    <br />
-1. Load Capability Statement Resource to the FHIR Service.
-    - Create a new HTTP Request
-    - Select method as PUT
-    - Enter the following URL: `{{fhirurl}}/CapabilityStatement/us-core-server`
-    - Open the `Body` section, select `raw` and `JSON`
-    - Copy the json data from [CapabilityStatement-us-core-server](../scripts/test-resources/CapabilityStatement-us-core-server.json) file and paste in the Body.
-    - Click Send.
-    <details>
-    <summary>Click to expand and see screenshots for Reference.</summary>
-    
-    ![](./images/deployment/4_Load_Capability_Statement_Resource.png)
-    </details>
+*Note:- Do not copy the Audience value present inside Application1.*
+
+Windows:
+```powershell
+powershell ./scripts/Load-ProfilesData.ps1 -FhirAudience "<FHIR Server Audience>"
+```
+
+Mac/Linux:
+```bash
+pwsh ./scripts/Load-ProfilesData.ps1 -FhirAudience "<FHIR Server Audience>"
+```
+
 To learn more about the sample data, read [sample data](./sample-data.md).
 
 ## 5. Mapping test users
@@ -331,3 +321,4 @@ To set up SMART on FHIR with B2C, you need to provide the Application Registrati
     
     *Note: If the secrets already exist then create a new version of the secret.*
 
+**[Back to Previous Page](../README.md)**

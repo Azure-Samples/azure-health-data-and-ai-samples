@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Inferno Test Applications 
 
 To successfully test ONC (g)(10) with Inferno, you will need to create four separate application registrations to represent the different access scenarios addressed by this test. This method of setting up application registrations is applicable to real SMART on FHIR applications too.
@@ -163,3 +166,5 @@ Before executing the test, follow these steps to configure your environment:
 2. **Sample Endpoint**:
     - Use the following URL `{apim-url}/smart/service-base` to test Service Base URL Test Suite. 
     - Replace `{apim-url}` with your deployed APIM service url in the resource group.
+
+**[Back to Previous Page](../deployment.md#7-create-inferno-test-applications)**
