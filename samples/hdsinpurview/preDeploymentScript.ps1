@@ -7,6 +7,7 @@
 # 3. Managed Identity: An Azure Managed Identity is created. This is an identity in Azure Active Directory, and it is automatically managed by Azure. Managed identities eliminate the need for developers having to manage credentials.
 # The script ensures that these resources are created if they do not exist, and configures them with the necessary permissions and settings for the PurviewHealthcareKit solution.
 
+
 param(
     [Parameter(Mandatory = $true)]
     [string]$ResourceGroupName,
@@ -21,10 +22,8 @@ param(
     [string]$Location,
 
     [Parameter(Mandatory = $true)]
-    [string]$SubscriptionId,
+    [string]$SubscriptionId
 
-    [Parameter(Mandatory = $false)]
-    [switch]$GrantAppAdminConsent
 )
 
 #Get current date time in UTC format for logging purposes
@@ -161,7 +160,7 @@ if ($null -eq $azureAdApplication) {
     Write-Host "[$(Get-CurrentDateTime)]: Creating App Registration with Name: $AppRegistrationName"
     $azureAdApplication = New-AzADApplication -DisplayName $AppRegistrationName
 }
-Write-Host "[$(Get-CurrentDateTime)]: Using App Registration with ID: $($azureAdApplication.Id)"
+Write-Host "[$(Get-CurrentDateTime)]: Using App Registration with Application ID: $($azureAdApplication.AppId), Object ID: $($azureAdApplication.Id)"
 
 for ($appRegLoopCount = 0; $appRegLoopCount -lt $retryAttempts; $appRegLoopCount++) {
     if ($null -ne $azureAdApplication) {
@@ -248,21 +247,11 @@ if ( $null -eq $servicePrincipalForApp) {
 
 Grant-Permissions -identityId $servicePrincipalForApp.Id -permissions $appRegistrationPermissions 
 
-
-if ($GrantAppAdminConsent) {
-    Write-Host "[$(Get-CurrentDateTime)]: Granting Admin Consent to the App Registration"
-    az login --tenant $TenantId
-    az ad app permission admin-consent --id $azureAdApplication.Id
-    Write-Host "[$(Get-CurrentDateTime)]: Granted Admin Consent to the App Registration"
-}
-else {
-    Write-Host "[$(Get-CurrentDateTime)]: An Entra ID global administrator will need to grant admin consent to the App Registration with ID: $($azureAdApplication.Id)"
-    Read-Host -Prompt "Granting admin consent can be performed after this script is completed. Press Enter to continue script execution."
-}
+Write-Host "[$(Get-CurrentDateTime)]: Granting Admin Consent to the App Registration"
+az login --tenant $TenantId
+az ad app permission admin-consent --id $azureAdApplication.Id
+Write-Host "[$(Get-CurrentDateTime)]: Granted Admin Consent to the App Registration"
 
 Write-Host "[$(Get-CurrentDateTime)]: Pre-Deployment script completed successfully. Here are the details of the resources created:"
-Write-Host "Resource group: $($resourceGroup.ResourceGroupName)`nService principal: $($azureAdApplication.DisplayName)`nUser assigned managed identity: $($createdManagedIdentity.Name)`nLocation: $($resourceGroup.Location)"
+Write-Host "Resource group: $($resourceGroup.ResourceGroupName)`nApp registration name: $($azureAdApplication.DisplayName)`nApplication (client) ID: $($azureAdApplication.AppId)`nUser assigned managed identity: $($createdManagedIdentity.Name)`nLocation: $($resourceGroup.Location)"
 
-if (!$GrantAppAdminConsent) {
-    Write-Host "Please ensure that the App Registration has been granted Admin Consent by an Entra ID global administrator."
-}
