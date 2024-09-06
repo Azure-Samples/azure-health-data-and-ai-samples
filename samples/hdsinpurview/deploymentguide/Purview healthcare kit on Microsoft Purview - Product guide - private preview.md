@@ -596,8 +596,7 @@ to note are:
 # Product deployment support 
 
 If you face any problems, discover bugs, or need assistance with the
-artifacts given in this private preview, please email
-<hdspurviewsupport@microsoft.com>. Note that this procedure is meant
+artifacts given in this private preview, please submit the support request [here](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR4BVOvi5iVJJlHOO_p0-r0FUMkJXRklQQUlGQlZBUDRaN1M0RUJXMFUyRi4u). Note that this procedure is meant
 to address issues specific to the Purview healthcare kit private
 preview. For general issues with Microsoft Purview, please use the
 official Microsoft Purview support channels. We will notify you of any
