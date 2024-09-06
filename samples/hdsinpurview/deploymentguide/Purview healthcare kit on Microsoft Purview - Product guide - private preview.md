@@ -667,7 +667,7 @@ below.
 </thead>
 <tbody>
 <tr>
-<td><p>New-AzResourceGroup : The client 'user@contoso.com' with object id
+<td><p>New-AzResourceGroup : The client '<useremail>' with object id
 <em>'guid'</em> does not have authorization to perform action
 'Microsoft.Resources/subscriptions/resourcegroups/write' over scope
 '/subscriptions/<em>subscriptionId</em>/resourcegroups/<em>resourcegroupname'</em>
