@@ -1,12 +1,6 @@
-> MICROSOFT CLOUD FOR HEALTHCARE - PURVIEW HEALTHCARE KIT
->
-> 
->
-> Product guide/onboarding document for private preview (August 2024 release)  
-> 
->
->   
-> *Content is Microsoft confidential*
+# Microsoft Cloud For Healthcare - Purivew Healthcare Kit
+## Product guide/onboarding document for private preview (August 2024 release)  
+   *Content is Microsoft confidential*
 - [Scope and Purpose ](#scope-and-purpose)
 - [Target audience](#target-audience)
 - [Customer onboarding process ](#customer-onboarding-process)
@@ -41,30 +35,30 @@
 
 # Scope and Purpose 
 
-> The scope of the document is to provide details about the Purview
-> healthcare kit and to guide the reader through the installation and
-> use of the product.
->
-> In accordance with Private Preview requirements, this document will
-> not be published on Microsoft’s public documentation site but will be
-> made available to Private Preview participants as a PDF document.
->
-> This document is to be solely used by the participating organizations
-> for the purposes of installing and using the Purview healthcare kit,
-> and to provide feedback to the Microsoft Cloud for Healthcare Product
-> team on the features of the product, functionality, ease of use and
-> opportunities to improve the current offering.
->
-> **Do not use this private preview in production environments.** The
-> included features are exclusively for private preview use in
-> non-production environments and are only supported for such usage.
+ The scope of the document is to provide details about the Purview
+ healthcare kit and to guide the reader through the installation and
+ use of the product.
+
+ In accordance with Private Preview requirements, this document will
+ not be published on Microsoft’s public documentation site but will be
+ made available to Private Preview participants as a PDF document.
+
+ This document is to be solely used by the participating organizations
+ for the purposes of installing and using the Purview healthcare kit,
+ and to provide feedback to the Microsoft Cloud for Healthcare Product
+ team on the features of the product, functionality, ease of use and
+ opportunities to improve the current offering.
+
+ **Do not use this private preview in production environments.** The
+ included features are exclusively for private preview use in
+ non-production environments and are only supported for such usage.
 
 # Target audience
 
-> This user-guide is intended for use by customers and partners
-> participating in the private preview of the Purview healthcare kit.
-> The private preview includes Sensitive Information Type based
-> classifications and the new Glossary Terms experience.
+ This user-guide is intended for use by customers and partners
+ participating in the private preview of the Purview healthcare kit.
+ The private preview includes Sensitive Information Type based
+ classifications and the new Glossary Terms experience.
 
 # Customer onboarding process 
 
@@ -154,8 +148,8 @@ the SITs and Glossary terms as follows:
 
 # Deployment guide 
 
-> The following sections of this document will detail the deployment
-> process for the Purview healthcare kit.
+ The following sections of this document will detail the deployment
+ process for the Purview healthcare kit.
 
 ## Overview 
 
@@ -176,10 +170,10 @@ The deployment of the Purview healthcare kit involves two primary steps:
 2.  Following the pre-deployment steps, the Purview healthcare kit is
     deployed through an Azure Marketplace offer.
 
-> The Purview healthcare kit is installed via an Azure Marketplace
-> Offer. Upon deployment, an authentication token is acquired using
-> Entra ID, followed by the import of Sensitive Information Types (SITs)
-> and Glossary terms.
+ The Purview healthcare kit is installed via an Azure Marketplace
+ Offer. Upon deployment, an authentication token is acquired using
+ Entra ID, followed by the import of Sensitive Information Types (SITs)
+ and Glossary terms.
 
 When the Purview healthcare kit is deployed, it creates healthcare
 specific Sensitive Information Types (SITs) using Security & Compliance
@@ -194,29 +188,29 @@ alt="A diagram of a process Description automatically generated" />
 
 ### Pre-deployment
 
-> Before deploying the Azure Marketplace offer, certain Azure
-> dependencies must be established to enable app-only authentication for
-> unattended scripts and automation. Detailed information about these
-> dependencies can be found in [App-only authentication in Exchange
-> Online PowerShell and Security & Compliance PowerShell \| Microsoft
-> Learn](https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps).
-> To streamline this setup, a ‘pre-deployment’ PowerShell script is
-> provided and will be explained in the [subsequent
-> sections](#_Pre-deployment_process_(deployment).
->
-> Should you choose not to utilize the pre-deployment script, please
-> consult the manual steps provided in the
-> [appendix](#_10.1_Manual_pre-deployment) for guidance on manually
-> configuring the pre-deployment resources.
+Before deploying the Azure Marketplace offer, certain Azure
+dependencies must be established to enable app-only authentication for
+unattended scripts and automation. Detailed information about these
+dependencies can be found in [App-only authentication in Exchange
+Online PowerShell and Security & Compliance PowerShell \| Microsoft
+Learn](https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps).
+To streamline this setup, a ‘pre-deployment’ PowerShell script is
+provided and will be explained in the subsequent
+sections.
+
+Should you choose not to utilize the pre-deployment script, please
+consult the manual steps provided in the
+[appendix](#appendix) for guidance on manually
+configuring the pre-deployment resources.
 
 ####  Pre-deployment process (administrative user)
 
-> Prior to beginning, an administrator should verify that the deployment
-> user executing the pre-deployment script has been granted the
-> necessary minimal privileges in Azure, and that Azure subscription has
-> the necessary resource providers enabled. This ensures that the script
-> can carry out the required actions under the user's account. Use the
-> following steps to verify these privileges.
+Prior to beginning, an administrator should verify that the deployment
+user executing the pre-deployment script has been granted the
+necessary minimal privileges in Azure, and that Azure subscription has
+the necessary resource providers enabled. This ensures that the script
+can carry out the required actions under the user's account. Use the
+following steps to verify these privileges.
 
 1.  The user will need to be able to register an application and assign
     permissions to it. This can be configured using either of the
@@ -261,13 +255,13 @@ alt="A diagram of a process Description automatically generated" />
 
 #### Pre-deployment process (deployment user)
 
-> With the dependencies in place, the pre-deployment script can be run
-> by following these steps:
->
-> Reminder: Should you choose not to utilize the pre-deployment script
-> as described in the following instructions, please consult the manual
-> steps provided in the [appendix](#_10.1_Manual_pre-deployment) for
-> guidance on manually configuring the pre-deployment resources.
+With the dependencies in place, the pre-deployment script can be run
+by following these steps:
+
+Reminder: Should you choose not to utilize the pre-deployment script
+as described in the following instructions, please consult the manual
+steps provided in the [appendix](#manual-pre-deployment-steps) for
+ guidance on manually configuring the pre-deployment resources.
 
 1.  Download the pre-deployment PowerShell script from the GitHub
     repository.  
@@ -277,7 +271,7 @@ alt="A diagram of a process Description automatically generated" />
     Properties, navigate to the General tab, and within the security
     section, unblock the file by ticking the Unblock checkbox.
 
-<img src="media/image7.png" style="width:3.61509in;height:1.57314in" />
+    <img src="media/image7.png" style="width:3.61509in;height:1.57314in" />
 
 3.  Open Windows PowerShell  
     <img src="media/image8.png" style="width:3.59425in;height:0.71885in" />
@@ -285,88 +279,88 @@ alt="A diagram of a process Description automatically generated" />
 4.  Use Windows PowerShell 5.1. You can check your version using the
     command:
 
-\$PSVersionTable.PSVersion
+     $PSVersionTable.PSVersion
 
-Note: PowerShell 6 and above is not compatible with the PowerShell
+    Note: PowerShell 6 and above is not compatible with the PowerShell
 cmdlets used in the script.
 
 5.  New PowerShell users should configure the execution policy to allow
     running local scripts by using the following command:
 
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 6.  Navigate to the folder location where the PowerShell script is
     downloaded and run it with the command:
 
-.\preDeploymentScript.ps1
+    .\preDeploymentScript.ps1
 
 7.  Enter the required parameters to create the necessary Azure
     resources. If a parameter refers to a new resource, the resource
     will be created with that name. If a parameter value refers to an
     existing resource, the existing resource will be reused.
 
-<table>
-<colgroup>
-<col style="width: 28%" />
-<col style="width: 71%" />
-</colgroup>
-<thead>
-<tr>
-<th><strong>Parameter</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ResourceGroupName</td>
-<td><p>The resource group name for creating deployment-dependent
-resources.<br />
-<br />
-example: rg-purview-deploy</p>
-<p>Refer to the <strong>resourcegroups</strong> entity for naming
-restrictions at <a
-href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftresources">https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftresources</a>.</p></td>
-</tr>
-<tr>
-<td>AppRegistrationName</td>
-<td><p>The display name of the app registration designated for Purview
-authentication</p>
-<p>example: app-purview-deploy</p></td>
-</tr>
-<tr>
-<td>ManagedIdentityName</td>
-<td><p>The name of the user assigned managed identity for running
-PowerShell deployment scripts<br />
-<br />
-example: mi-purview-deploy</p>
-<p>Refer to the <strong>userAssignedIdentities</strong> entity for
-naming restrictions at <a
-href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftmanagedidentity">https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftmanagedidentity</a>.</p></td>
-</tr>
-<tr>
-<td>Location</td>
-<td><p>A valid Azure location where resources will be created.<br />
-<br />
-Use the following command to get the list of allowed values:</p>
-<ul>
-<li><p>Get-AzLocation | select location</p></li>
-</ul>
-<p>example: westus</p></td>
-</tr>
-<tr>
-<td>SubscriptionId</td>
-<td><p>The ID for the subscription in which resources will be
-created.</p>
-<p>You can find this ID in the Azure portal on the Subscription’s
-overview page.</p>
-<p>Important: Ensure that the deployment user has access to the
-subscription. You can check this by verifying they can see the
-subscription ID in the Azure portal.</p>
-<p><img src="media/image9.png"
-style="width:4.30694in;height:0.96319in" /></p></td>
-</tr>
-</tbody>
-</table>
+    <table>
+    <colgroup>
+    <col style="width: 28%" />
+    <col style="width: 71%" />
+    </colgroup>
+    <thead>
+    <tr>
+    <th><strong>Parameter</strong></th>
+    <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>ResourceGroupName</td>
+    <td><p>The resource group name for creating deployment-dependent
+    resources.<br />
+    <br />
+    example: rg-purview-deploy</p>
+    <p>Refer to the <strong>resourcegroups</strong> entity for naming
+    restrictions at <a
+    href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftresources">https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftresources</a>.</p></td>
+    </tr>
+    <tr>
+    <td>AppRegistrationName</td>
+    <td><p>The display name of the app registration designated for Purview
+    authentication</p>
+    <p>example: app-purview-deploy</p></td>
+    </tr>
+    <tr>
+    <td>ManagedIdentityName</td>
+    <td><p>The name of the user assigned managed identity for running
+    PowerShell deployment scripts<br />
+    <br />
+    example: mi-purview-deploy</p>
+    <p>Refer to the <strong>userAssignedIdentities</strong> entity for
+    naming restrictions at <a
+    href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftmanagedidentity">https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftmanagedidentity</a>.</p></td>
+    </tr>
+    <tr>
+    <td>Location</td>
+    <td><p>A valid Azure location where resources will be created.<br />
+    <br />
+    Use the following command to get the list of allowed values:</p>
+    <ul>
+    <li><p>Get-AzLocation | select location</p></li>
+    </ul>
+    <p>example: westus</p></td>
+    </tr>
+    <tr>
+    <td>SubscriptionId</td>
+    <td><p>The ID for the subscription in which resources will be
+    created.</p>
+    <p>You can find this ID in the Azure portal on the Subscription’s
+    overview page.</p>
+    <p>Important: Ensure that the deployment user has access to the
+    subscription. You can check this by verifying they can see the
+    subscription ID in the Azure portal.</p>
+    <p><img src="media/image9.png"
+    style="width:4.30694in;height:0.96319in" /></p></td>
+    </tr>
+    </tbody>
+    </table>
 
 8.  Enter login credentials when prompted. This may occur multiple times
     due to the use of multiple PowerShell modules.
@@ -375,25 +369,25 @@ style="width:4.30694in;height:0.96319in" /></p></td>
     names required for deploying the Azure Marketplace offer. Keep a
     copy of this output for future reference.
 
-> If you encounter any issues, please refer to the [troubleshooting
-> section](#_Common_pre-deployment_script).
+ If you encounter any issues, please refer to the [troubleshooting
+ section](#troubleshooting).
 
 ### Azure Marketplace offer installation
 
-> To install the Purview healthcare kit in your tenant, follow the steps
-> in the upcoming sections.
->
-> Currently, in this private preview, only fresh installations of the
-> Purview healthcare kit for Microsoft Purview (SaaS) are supported.
-> Update and upgrade scenarios will be supported during our public
-> preview phase.
+ To install the Purview healthcare kit in your tenant, follow the steps
+ in the upcoming sections.
+
+ Currently, in this private preview, only fresh installations of the
+ Purview healthcare kit for Microsoft Purview (SaaS) are supported.
+ Update and upgrade scenarios will be supported during our public
+ preview phase.
 
 #### Prerequisites for Azure Marketplace offer installation (administrative user)
 
-> To successfully deploy the Azure Marketplace offer and manage user
-> data after deployment, specific permissions must be granted in
-> advance. Please make sure these prerequisites are met in order to
-> complete the steps in this section.
+To successfully deploy the Azure Marketplace offer and manage user
+data after deployment, specific permissions must be granted in
+advance. Please make sure these prerequisites are met in order to
+complete the steps in this section.
 
 1.  An existing Microsoft Purview account is available at
     <https://purview.microsoft.com>
@@ -410,28 +404,28 @@ privileges.
 In the [Purview portal](https://purview.microsoft.com), as a user with
 the Data Governance Administrator role:
 
-1.  Navigate to Data Catalog \> Roles and permissions
+1.  Navigate to Data Catalog \Roles and permissions
 
 2.  Add the app registration to the Business Domain Creator role
 
-<img src="media/image10.png" style="width:6.30208in;height:3.46875in" />
+    <img src="media/image10.png" style="width:6.30208in;height:3.46875in" />
 
-> To allow the user responsible for managing the SITs and glossaries to
-> manage their roles in the newly created business domains, add the user
-> to the Data Governance role group in order to join the tenant-level
-> Data Governance Administrator role.
+To allow the user responsible for managing the SITs and glossaries to
+manage their roles in the newly created business domains, add the user
+to the Data Governance role group in order to join the tenant-level
+Data Governance Administrator role.
 
-1.  Navigate to Settings \> Roles and scopes \> Role groups
+1.  Navigate to Settings \Roles and scopes \Role groups
 
 2.  Add the user to the Data Governance group.
 
-<img src="media/image11.png" style="width:6.30486in;height:3.33681in"
+    <img src="media/image11.png" style="width:6.30486in;height:3.33681in"
 alt="A screenshot of a computer Description automatically generated" />
 
-> **Register resource providers**
->
-> The Azure subscription will need to have the following resource
-> providers registered:
+**Register resource providers**
+
+The Azure subscription will need to have the following resource
+providers registered:
 
 1.  Microsoft.Compute
 
@@ -441,20 +435,20 @@ alt="A screenshot of a computer Description automatically generated" />
 
 4.  Microsoft.Network
 
-> Please follow the steps at [Resource provider registration errors -
-> Azure Resource Manager \| Microsoft
-> Learn](https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-register-resource-provider?tabs=azure-portal)
-> to verify the registration status of these resource providers and
-> register them if they are not registered.
+Please follow the steps at [Resource provider registration errors -
+Azure Resource Manager \| Microsoft
+Learn](https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-register-resource-provider?tabs=azure-portal)
+to verify the registration status of these resource providers and
+register them if they are not registered.
 
 #### Resources created as part of the deployment
 
-> In the following sections, when the deployment user starts the Azure
-> Marketplace offer deployment, new resources will be added to the
-> specified resource group to facilitate Purview authentication for
-> importing SITs and glossaries. These resources are needed solely
-> during the deployment phase and can be manually deleted afterward. We
-> intend to automate this cleanup process in a future release.
+In the following sections, when the deployment user starts the Azure
+Marketplace offer deployment, new resources will be added to the
+specified resource group to facilitate Purview authentication for
+importing SITs and glossaries. These resources are needed solely
+during the deployment phase and can be manually deleted afterward. We
+intend to automate this cleanup process in a future release.
 
 | **Resource** | **Purpose** | **Managed Identity Permissions** |
 |----|----|----|
@@ -476,7 +470,7 @@ process should take around 15 minutes to complete.
 
 3.  Click on “View private plans”
 
-> <img src="media/image12.png" style="width:4.875in;height:3.65021in" />
+    <img src="media/image12.png" style="width:4.875in;height:3.65021in" />
 
 4.  Select the “Purview healthcare kit (preview)” tile.
 
@@ -489,14 +483,14 @@ process should take around 15 minutes to complete.
     refer to the pre-deployment script's output for the necessary
     values.
 
-| **Parameter** | **Description** |
-|----|----|
-| Resource group | Resource group from the pre-deployment script. |
-| User assigned managed identity | User assigned managed identity name from the pre-deployment script. |
-| App registration name | App registration name from the pre-deployment script. This field will auto-populate the dropdown options in the next field. |
-| Application (client) ID | App registration client id from the pre-deployment script. |
-| Business domain owner name | Optional – supply the user who will manage the glossary terms in the business domains. This field will auto-populate the dropdown options in the next field. |
-| Business domain owner ID | Business domain owner id. |
+    | **Parameter** | **Description** |
+    |----|----|
+    | Resource group | Resource group from the pre-deployment script. |
+    | User assigned managed identity | User assigned managed identity name from the pre-deployment script. |
+    | App registration name | App registration name from the pre-deployment script. This field will auto-populate the dropdown options in the next field. |
+    | Application (client) ID | App registration client id from the pre-deployment script. |
+    | Business domain owner name | Optional – supply the user who will manage the glossary terms in the business domains. This field will auto-populate the dropdown options in the next field. |
+    | Business domain owner ID | Business domain owner id. |
 
 The deployment progress will be visible via the Azure Portal
 notifications.
@@ -538,7 +532,7 @@ Data Map \> Domains \> Role assignments:
 2.  Data source admins
 
 To learn more about permissions, please refer to the
-[appendix](#_10.2_Understanding_permissions).
+[appendix](#understanding-permissions-in-microsoft-purview).
 
 ### User's guide to getting started with the Purview portal
 
@@ -601,17 +595,17 @@ to note are:
 
 # Product deployment support 
 
-> If you face any problems, discover bugs, or need assistance with the
-> artifacts given in this private preview, please email
-> <hdspurviewsupport@microsoft.com>. Note that this procedure is meant
-> to address issues specific to the Purview healthcare kit private
-> preview. For general issues with Microsoft Purview, please use the
-> official Microsoft Purview support channels. We will notify you of any
-> updates or changes to this support system.
->
-> When contacting the Purview healthcare kit team for support, please
-> supply as many of the following pieces of information as part of your
-> request:
+If you face any problems, discover bugs, or need assistance with the
+artifacts given in this private preview, please email
+<hdspurviewsupport@microsoft.com>. Note that this procedure is meant
+to address issues specific to the Purview healthcare kit private
+preview. For general issues with Microsoft Purview, please use the
+official Microsoft Purview support channels. We will notify you of any
+updates or changes to this support system.
+
+When contacting the Purview healthcare kit team for support, please
+supply as many of the following pieces of information as part of your
+request:
 
 1.  A description of what step during the deployment process the error
     was encountered.
@@ -621,7 +615,7 @@ to note are:
 3.  Copy the error message from the deployment failure page. Please see
     the below screen shot for the location of the error message.
 
-<img src="media/image13.png" style="width:6.30486in;height:2.66736in" />
+    <img src="media/image13.png" style="width:6.30486in;height:2.66736in" />
 
 4.  The Azure Subscription ID used when performing the deployment.
 
@@ -673,8 +667,7 @@ below.
 </thead>
 <tbody>
 <tr>
-<td><p>New-AzResourceGroup : The client '<a
-href="mailto:user@contoso.com">user@contoso.com</a>' with object id
+<td><p>New-AzResourceGroup : The client 'user@contoso.com' with object id
 <em>'guid'</em> does not have authorization to perform action
 'Microsoft.Resources/subscriptions/resourcegroups/write' over scope
 '/subscriptions/<em>subscriptionId</em>/resourcegroups/<em>resourcegroupname'</em>
