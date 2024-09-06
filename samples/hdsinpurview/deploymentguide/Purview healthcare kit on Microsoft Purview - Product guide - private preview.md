@@ -1,4 +1,4 @@
-# Microsoft Cloud For Healthcare - Purivew Healthcare Kit
+# Microsoft Cloud For Healthcare - Purview Healthcare Kit
 ## Product guide/onboarding document for private preview (August 2024 release)  
    *Content is Microsoft confidential*
 - [Scope and Purpose ](#scope-and-purpose)
