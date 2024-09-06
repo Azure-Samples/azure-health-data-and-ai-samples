@@ -264,7 +264,7 @@ steps provided in the [appendix](#manual-pre-deployment-steps) for
  guidance on manually configuring the pre-deployment resources.
 
 1.  Download the pre-deployment PowerShell script from the GitHub
-    repository.  
+    repository [here](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/blob/previews/hdsinpurview/samples/hdsinpurview/predeployment/preDeploymentScript.ps1).  
     <img src="media/image6.png" style="width:2.18781in;height:0.47923in" />
 
 2.  Locate the file in File Explorer and right-click on it. Select
