@@ -404,7 +404,7 @@ privileges.
 In the [Purview portal](https://purview.microsoft.com), as a user with
 the Data Governance Administrator role:
 
-1.  Navigate to Data Catalog \Roles and permissions
+1.  Navigate to Data Catalog Roles and permissions
 
 2.  Add the app registration to the Business Domain Creator role
 
@@ -415,7 +415,7 @@ manage their roles in the newly created business domains, add the user
 to the Data Governance role group in order to join the tenant-level
 Data Governance Administrator role.
 
-1.  Navigate to Settings \Roles and scopes \Role groups
+1.  Navigate to Settings Roles and scopes Role groups
 
 2.  Add the user to the Data Governance group.
 
@@ -972,7 +972,7 @@ Microsoft Purview:
 
 ##  Understanding common concepts in Microsoft Purview
 
-Please refer to the following resources on the different permissions in
+Please refer to the following resources on the different features in
 Microsoft Purview:
 
 - [Scans and ingestion \| Microsoft
