@@ -16,7 +16,7 @@ Make sure you have the pre-requisites listed below
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node Version 18.17.1/ NPM Version 10.2.0](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
-  - [PowerShell Version 5.1.22621.2428 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
+  - [PowerShell Version 7 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
@@ -89,6 +89,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     azd up
     ```
+    *Note*- This command requires at least `PowerShell 7`. Running it in any earlier version may result in failure.
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
     - The azd provision command will prompt you to enter values for the `B2CTenantId`, `StandaloneAppClientId`, `existingResourceGroupName`, `fhirid` and `enableVNetSupport` parameters:
@@ -105,7 +106,7 @@ Next you will need to clone this repository and prepare your environment for dep
             3. Copy the "Id" field under the "Essentials" group.      
         - `enableVNetSupport`: This parameter accepts a boolean (true/false) value.
  
-            When set to false, the follwing resorces are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
+            When set to false, the following resources are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
             1. API Management (APIM): Deployed in the Consumption tier.
             2. App Service Plan : Deployed in the Dynamic tier. 
             3. Static Web App: Deployed in the Free tier.
@@ -182,7 +183,7 @@ If you have opted for B2C - This requires accessing the applications registered 
 
 1. Open the resource group created by step 3. Find the Azure API Management instance.
 1. Copy the Gateway URL for the API Management instance.
-1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
+1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to add the last slash.
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />
