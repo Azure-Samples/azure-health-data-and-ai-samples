@@ -1,37 +1,30 @@
-# Microsoft Cloud For Healthcare - Purview Healthcare Kit
+# Microsoft Cloud for Healthcare - Purview Healthcare Kit
 ## Product guide/onboarding document for private preview (August 2024 release)  
    *Content is Microsoft confidential*
-- [Scope and Purpose ](#scope-and-purpose)
+- [Scope and Purpose](#scope-and-purpose)
 - [Target audience](#target-audience)
-- [Customer onboarding process ](#customer-onboarding-process)
+- [Customer onboarding process](#customer-onboarding-process)
 - [Overview ](#overview)
-  - [Sensitive information types ](#sensitive-information-types)
-  - [Glossaries for healthcare in the Microsoft Purview data catalog
-    ](#glossaries-for-healthcare-in-the-microsoft-purview-data-catalog)
-- [Architecture overview ](#architecture-overview)
-- [Deployment guide ](#deployment-guide)
-  - [Overview ](#overview-1)
+  - [Sensitive information types](#sensitive-information-types)
+  - [Glossaries for healthcare in the Microsoft Purview data catalog](#glossaries-for-healthcare-in-the-microsoft-purview-data-catalog)
+- [Architecture overview](#architecture-overview)
+- [Deployment guide](#deployment-guide)
+  - [Overview](#overview-1)
   - [Deployment mechanism](#deployment-mechanism)
   - [Post installation instructions](#post-installation-instructions)
-- [Limitations of the Purview healthcare
-  kit](#limitations-of-the-purview-healthcare-kit)
-- [Product deployment support ](#product-deployment-support)
-- [Troubleshooting ](#troubleshooting)
+- [Limitations of the Purview healthcare kit](#limitations-of-the-purview-healthcare-kit)
+- [Product deployment support](#product-deployment-support)
+- [Troubleshooting](#troubleshooting)
   - [Common Azure deployment errors](#common-azure-deployment-errors)
-  - [Common pre-deployment script
-    errors](#common-pre-deployment-script-errors)
-  - [Common purview healthcare kit installation
-    errors:](#common-purview-healthcare-kit-installation-errors)
-  - [View deployment outcome ](#view-deployment-outcome)
+  - [Common pre-deployment script errors](#common-pre-deployment-script-errors)
+  - [Common purview healthcare kit installation errors](#common-purview-healthcare-kit-installation-errors)
+  - [View deployment outcome](#view-deployment-outcome)
   - [Contact Microsoft support team](#contact-microsoft-support-team)
-- [ Appendix](#appendix)
-  - [Resources created as part of
-    pre-deployment](#resources-created-as-part-of-pre-deployment)
+- [Appendix](#appendix)
+  - [Resources created as part of pre-deployment](#resources-created-as-part-of-pre-deployment)
   - [Manual pre-deployment steps](#manual-pre-deployment-steps)
-  - [ Understanding permissions in Microsoft
-    Purview](#understanding-permissions-in-microsoft-purview)
-  - [ Understanding common concepts in Microsoft
-    Purview](#understanding-common-concepts-in-microsoft-purview)
+  - [Understanding permissions in Microsoft Purview](#understanding-permissions-in-microsoft-purview)
+  - [Understanding common concepts in Microsoft Purview](#understanding-common-concepts-in-microsoft-purview)
 
 # Scope and Purpose 
 
@@ -170,10 +163,10 @@ The deployment of the Purview healthcare kit involves two primary steps:
 2.  Following the pre-deployment steps, the Purview healthcare kit is
     deployed through an Azure Marketplace offer.
 
- The Purview healthcare kit is installed via an Azure Marketplace
- Offer. Upon deployment, an authentication token is acquired using
- Entra ID, followed by the import of Sensitive Information Types (SITs)
- and Glossary terms.
+The Purview healthcare kit is installed via an Azure Marketplace
+Offer. Upon deployment, an authentication token is acquired using Microsoft
+Entra ID, followed by the import of Sensitive Information Types (SITs)
+and Glossary terms.
 
 When the Purview healthcare kit is deployed, it creates healthcare
 specific Sensitive Information Types (SITs) using Security & Compliance
@@ -220,7 +213,7 @@ following steps to verify these privileges.
         This option restricts registering applications to only the users
         assigned to this role.
 
-    2.  In your Entra ID tenant, enable the "**Users can register
+    2.  In your Microsoft Entra ID tenant, enable the "**Users can register
         applications**" setting in the "User settings" section. This
         option is less restrictive and allows all users to register
         applications.<img src="media/image5.png" style="width:5.63542in;height:1.19792in" />
@@ -404,7 +397,7 @@ privileges.
 In the [Purview portal](https://purview.microsoft.com), as a user with
 the Data Governance Administrator role:
 
-1.  Navigate to Data Catalog Roles and permissions
+1.  Navigate to Data Catalog \> Roles and permissions
 
 2.  Add the app registration to the Business Domain Creator role
 
@@ -415,7 +408,7 @@ manage their roles in the newly created business domains, add the user
 to the Data Governance role group in order to join the tenant-level
 Data Governance Administrator role.
 
-1.  Navigate to Settings Roles and scopes Role groups
+1.  Navigate to Settings \> Roles and scopes \> Role groups
 
 2.  Add the user to the Data Governance group.
 
@@ -593,6 +586,16 @@ to note are:
     Data Catalog. Ensure you have fewer than 196 domains to guarantee a
     successful installation.
 
+5.  The final step in the deployment process is to remove the 
+    self-signed certificate from both the key vault and app
+    registration. If the marketplace deployment encounters any failures
+    before reaching the certificate deletion stage, the certificate will
+    remain in the key vault and app registration. To ensure the
+    certificate is removed, either address the underlying issues causing
+    the failures and redeploy the Purview healthcare kit until it completes
+    successfully - including the certificate deletion stage — or manually
+    delete the certificate from the key vault and app registration.
+
 # Product deployment support 
 
 If you face any problems, discover bugs, or need assistance with the
@@ -691,7 +694,7 @@ in Microsoft Entra ID</td>
 </tbody>
 </table>
 
-## Common purview healthcare kit installation errors:
+## Common purview healthcare kit installation errors
 
 While running the Azure Marketplace offer deployment you might encounter
 some typical misconfiguration issues. Check the output logs for any
@@ -836,7 +839,7 @@ deployment inside the container.</td>
 during the Azure Marketplace deployment to facilitate certificate-based
 authentication.</td>
 <td>"Users can register applications" setting in the "User settings"
-section of Entra ID in the Azure portal.<br />
+section of Microsoft Entra ID in the Azure portal.<br />
 <br />
 or,<br />
 <br />
@@ -907,8 +910,7 @@ register</p></li>
 <li><p>Application permissions -&gt; Exchange -&gt; click the checkbox
 and add permissions</p></li>
 </ol></td>
-<td style="text-align: left;">"Users can register applications" setting
-in the "User settings" section of the Azure AD portal</td>
+<td style="text-align: left;">"Cloud Application Administrator" role assignment<br><br>or<br><br>Enable "Users can register applications" setting in the "User settings" section of Microsoft Entra ID in the Azure portal</td>
 </tr>
 <tr>
 <td>Grant Admin Consent to the App Registration</td>
