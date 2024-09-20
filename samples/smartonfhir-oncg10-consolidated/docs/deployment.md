@@ -19,7 +19,7 @@ Make sure you have the pre-requisites listed below
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node Version 18.17.1/ NPM Version 10.2.0](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
-  - [PowerShell Version 5.1.22621.2428 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
+  - [PowerShell Version 7 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
 
 - **Access:**
 
@@ -111,13 +111,14 @@ Next you will need to clone this repository and prepare your environment for dep
         azd auth login --tenant-id <tenant-id>
         ```
 1. Initiate the environment deployment by executing the `azd up` command. This will handle both the infrastructure provisioning and code deployment, which should take around one hour to complete.
-
-    *Note:- When executing the `azd up` command, you will be asked to provide several values. Below, you will find a detailed explanation of each prompt.*
+    
+    *Note*- This command requires at least `PowerShell 7`. Running it in any earlier version may result in failure.
 
     ```
     azd up
     ```
-
+    *Note:- When executing the `azd up` command, you will be asked to provide several values. Below, you will find a detailed explanation of each prompt.*
+    
     **Deployment Instructions**
 
     When running the `azd up` command, you will need to select the `subscription name` and `location` from the drop-down menus to specify where to deploy all resources. Note that this sample can only be deployed in the `EastUS2, WestUS2, or CentralUS` regions. Ensure you choose one of these regions during deployment.
@@ -193,6 +194,7 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 1. Copy the Gateway URL for the API Management instance.
 1. Open your Application Registration for the Auth Context Frontend you created before deployment. 
 1. The Application Registration already contains a redirect URI `http://localhost:3000` that you can use for local debugging. You should add a new redirect URI in the format `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to include the trailing slash.
+
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />
