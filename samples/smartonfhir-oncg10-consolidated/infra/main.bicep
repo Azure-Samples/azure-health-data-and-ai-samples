@@ -40,13 +40,10 @@ param FhirAudience string
 param existingResourceGroupName string 
 
 @description('Provide the exisiting fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
-param fhirId string 
+param existingFhirId string 
 
 @description('Provide authority url to ensure that only authorized users can access sensitive patient information')
 param AuthorityURL string
-
-@description('Provide standalone App registration Client Id to access your FHIR Service')
-param StandaloneAppClientId string
 
 @description('Provide Fhir Resource App registration Client Id to customize the access token sent to the FHIR Service')
 param FhirResourceAppId string
@@ -71,9 +68,9 @@ param enableVNetSupport bool
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
 var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
-var fhirResourceIdSplit = split(fhirId,'/')
-var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
-var createWorkspace = empty(fhirId) ? true : false
+var fhirResourceIdSplit = split(existingFhirId,'/')
+var fhirserviceRg = empty(existingFhirId) ? '' : fhirResourceIdSplit[4]
+var createWorkspace = empty(existingFhirId) ? true : false
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
@@ -96,8 +93,8 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResource
   tags: appTags
 }
 
-var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
-var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
+var workspaceNameResolved = empty(existingFhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
+var fhirNameResolved = empty(existingFhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
 var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
 
 
@@ -106,10 +103,8 @@ resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' e
 }
 
 var AuthorityURLvalue = empty(AuthorityURL) ? '' : AuthorityURL
-var StandaloneAppClientIdvalue = empty(StandaloneAppClientId) ? '': StandaloneAppClientId
-var FhirResourceAppIdvalue = empty(StandaloneAppClientId)? '': FhirResourceAppId
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
-var fhirInstanceResourceGroup = empty(fhirId) ? newOrExistingResourceGroupName : fhirserviceRg
+var fhirInstanceResourceGroup = empty(existingFhirId) ? newOrExistingResourceGroupName : fhirserviceRg
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir 'core/fhir.bicep'= {
@@ -125,8 +120,7 @@ module fhir 'core/fhir.bicep'= {
     appTags: appTags
     audience: FhirAudience
     AuthorityURL: AuthorityURLvalue
-    StandaloneAppClientId:StandaloneAppClientIdvalue
-    FhirResourceAppId:FhirResourceAppIdvalue
+    FhirResourceAppId:FhirResourceAppId
     smartOnFhirWithB2C: smartonfhirwithb2c
   }
 }
@@ -196,7 +190,6 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     fhirResourceAppId: FhirResourceAppId
     authorityUrl: AuthorityURL
     smartOnFhirWithB2C: smartonfhirwithb2c
-    standaloneAppClientId: StandaloneAppClientId
     enableVNetSupport: enableVNetSupport
   }
 }
@@ -349,7 +342,6 @@ output Authority_URL string = AuthorityURL
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
 output SmartonFhir_with_B2C bool = smartonfhirwithb2c
 output B2C_Tenant_Id string = B2CTenantId
-output Standalone_App_ClientId string = StandaloneAppClientId
 output Fhir_Resource_AppId string = FhirResourceAppId
 
 output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]

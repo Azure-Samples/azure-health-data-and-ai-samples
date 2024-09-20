@@ -1,10 +1,14 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
+
 # Create Custom Policy
 
-This document guides you through the steps needed to create Custom Policy in Azure B2C Tenant. This sample creates Signing and Encryption key along with two Application Registartion and a Custom User Flow using custom policies.
+This document guides you through the steps needed to create Custom Policy in Azure B2C Tenant. This sample creates Signing and Encryption key along with two Application Registration and a Custom User Flow using custom policies.
 
 - Flow the below mentioned steps: 
     - [Create Signing and Encryption Key](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#add-signing-and-encryption-keys-for-identity-experience-framework-applications)
-    - [Create Identity Experience Framework applications](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-identity-experience-framework-applications)
+    - [Create Identity Experience Framework application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-identity-experience-framework-applications)
+    - [Create Proxy Identity Experience Framework application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#register-the-proxyidentityexperienceframework-application)
 
 
     - Update the custom policies provided at [location](../docs/b2c-custom-policy/).
@@ -29,4 +33,5 @@ This document guides you through the steps needed to create Custom Policy in Azu
             2. *TrustFrameworkLocalization.xml*
             3. *TrustFrameworkExtensions.xml*
             4. *SignUpOrSignin.xml*
-        
+
+**[Back to Previous Page](./deployment.md#1-prerequisites)**

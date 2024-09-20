@@ -13,11 +13,8 @@ param tenantId string
 @description('Azure B2C Directory tenant ID.')
 param b2cTenantId string
 
-@description('Microsoft Entra ID/B2c Application ID for the FHIR resource application.')
+@description('Microsoft Entra ID/B2C Application ID for the FHIR resource application.')
 param fhirResourceAppId string
-
-@description('Microsoft Entra ID/B2c Application ID for the Standalone Client application.')
-param standaloneAppClientId string 
 
 @description('Azure B2C Directory authority url.')
 param authorityUrl string
@@ -135,7 +132,6 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
     AZURE_Authority_URL: authorityUrl
     AZURE_B2C_Tenant_Id: b2cTenantId
-    AZURE_Standalone_App_ClientId: standaloneAppClientId
     AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_FhirAudience: fhirServiceAudience
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName

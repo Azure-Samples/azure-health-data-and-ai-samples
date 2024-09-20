@@ -48,8 +48,6 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? B2C_Tenant_Id { get; set; }
 
-        public string? Standalone_App_ClientId { get; set; }
-
         public string? Fhir_Resource_AppId { get; set; }
 
         public string? BackendServiceKeyVaultStore { get; set; }
@@ -93,6 +91,10 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         public string? Authorization_Endpoint { get; set; }
 
         public string? Token_Endpoint { get; set; }
+
+        public string KeyVaultClientIdKey { get; set; } = "ExternalAppClientID";
+
+        public string KeyVaultClientSecretKey { get; set; } = "ExternalAppClientSecret";
 
         // Only for testing 
         public bool? IsCachedData { get; set; } = false;
