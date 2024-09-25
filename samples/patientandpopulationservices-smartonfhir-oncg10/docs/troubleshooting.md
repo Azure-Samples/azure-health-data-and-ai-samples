@@ -64,8 +64,13 @@ To find out more, information, check out:
 ![](./images/troubleshooting/ClientAuthError.png)
 </details>
 
-### Not getting Login Screen
+### Unexpected Screen Displayed Instead of Login Screen
+- When accessing the frontend application, you may encounter an unexpected screen shown below instead of the login page.
+- This issue typically occurs if the frontend build deployment to Azure Static Web Apps is still in progress. The app remains in the **Waiting for Deployment** state instead of transitioning to the **Ready** state.
+- Follow below steps to resolve this issue
+  - Wait for the `azd up` command to complete, as the deployment may still be processing.
+  - If the deployment appears to be stuck, you can rerun the `azd up` command in the terminal where the app was originally deployed.
+
+<br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/troubleshooting/FrontendLoginError.png)
-- When accessing the frontend app, you may see the screen above instead of the expected login screen.
-- This issue occurs when the deployment of the frontend build to the Azure Static Web App is in progress, which causes the app to be stuck in the **Waiting for Deployment** state rather than transitioning to **Ready** state.
-- To resolve this issue, you can either wait for the `azd up` command to finish or rerun the command in the terminal where the app was initially deployed.
+</details>
