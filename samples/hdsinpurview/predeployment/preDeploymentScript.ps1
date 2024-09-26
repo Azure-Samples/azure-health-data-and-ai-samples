@@ -22,7 +22,9 @@ param(
     [string]$Location,
 
     [Parameter(Mandatory = $true)]
-    [string]$SubscriptionId
+    [string]$SubscriptionId,
+
+    [switch]$deploySITs = $false
 
 )
 
@@ -127,10 +129,6 @@ $ErrorActionPreference = 'Stop'
 
 ## manual steps not possible via bicep templates and user assigned managed identity
 $managedIdentityPermissions = @('Cloud Application Administrator')
-$appRegistrationPermissions = @('Exchange Administrator', 'Compliance Administrator')
-# Define the API and permissions for the Office 365 Exchange Online API
-$appRegistrationAPIAppId = '00000002-0000-0ff1-ce00-000000000000'
-$appRegistrationAPIPermissionsId = 'dc50a0fb-09a3-484d-be87-e023b12c6440'
 
 # glossary api permissions
 $appRegistrationGlossaryAPIAppId = '73c2949e-da2d-457a-9607-fcc665198967' #Microsoft Purview API
@@ -174,21 +172,9 @@ if ( $null -eq $azureAdApplication) {
     Write-Error "[$(Get-CurrentDateTime)]: Failed to create App Registration."
     exit
 }
+
 #check permissions for the app registration
 $app = Get-AzADAppPermission -ObjectId $azureAdApplication.Id -ErrorAction SilentlyContinue
-
-# # Filter to find specific permission ID in RequiredResourceAccess
-$matchingPermissions = $app | Where-Object {
-    $_.ApiId -eq $appRegistrationAPIAppId
-}
-
-if ($null -eq $matchingPermissions) {
-    Write-Host "[$(Get-CurrentDateTime)]: Add the Office 365 Exchange Online ($appRegistrationAPIAppId) Exchange.ManageAsApp ($appRegistrationAPIPermissionsId) API permission to the app registration"
-    Add-AzADAppPermission -ObjectId $azureAdApplication.Id -ApiId $appRegistrationAPIAppId -PermissionId $appRegistrationAPIPermissionsId -Type Role -ErrorAction Stop
-}
-else {
-    Write-Host "[$(Get-CurrentDateTime)]: Office 365 Exchange Online ($appRegistrationAPIAppId) Exchange.ManageAsApp ($appRegistrationAPIPermissionsId) API permission exists in the app registration"
-}
 
 # # Glossaries Filter to find specific permission ID in RequiredResourceAccess
 $matchingPermissions = $app | Where-Object {
@@ -228,24 +214,6 @@ if ( $null -eq $createdManagedIdentity) {
 
 Write-Host "[$(Get-CurrentDateTime)]: Assign permissions to the Managed Identity"
 Grant-Permissions -identityId $createdManagedIdentity.PrincipalId -permissions $managedIdentityPermissions
-
-Write-Host "[$(Get-CurrentDateTime)]: Assign permissions to the App Registration"
-$servicePrincipalForApp = Get-AzADServicePrincipal -ApplicationId $azureAdApplication.AppId -ErrorAction SilentlyContinue
-
-for ($spLoopCount = 0; $spLoopCount -lt $retryAttempts; $spLoopCount++) {
-    if ($null -ne $servicePrincipalForApp) {
-        break
-    }
-    Write-Host "[$(Get-CurrentDateTime)]: Waiting for Service Principal to be created..."
-    Start-Sleep -Seconds $sleepDurationSeconds
-    $servicePrincipalForApp = New-AzADServicePrincipal -ApplicationId $azureAdApplication.AppId -ErrorAction SilentlyContinue
-}
-if ( $null -eq $servicePrincipalForApp) {
-    Write-Error "[$(Get-CurrentDateTime)]: Failed to create Service Principal for App Registration."
-    exit
-}
-
-Grant-Permissions -identityId $servicePrincipalForApp.Id -permissions $appRegistrationPermissions 
 
 Write-Host "[$(Get-CurrentDateTime)]: Granting Admin Consent to the App Registration"
 az login --tenant $TenantId
