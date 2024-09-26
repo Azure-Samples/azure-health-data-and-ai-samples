@@ -5,7 +5,6 @@
 - [Target audience](#target-audience)
 - [Customer onboarding process](#customer-onboarding-process)
 - [Overview ](#overview)
-  - [Sensitive information types](#sensitive-information-types)
   - [Glossaries for healthcare in the Microsoft Purview data catalog](#glossaries-for-healthcare-in-the-microsoft-purview-data-catalog)
 - [Architecture overview](#architecture-overview)
 - [Deployment guide](#deployment-guide)
@@ -50,8 +49,7 @@
 
  This user-guide is intended for use by customers and partners
  participating in the private preview of the Purview healthcare kit.
- The private preview includes Sensitive Information Type based
- classifications and the new Glossary Terms experience.
+ The private preview includes the new Glossary Terms experience.
 
 # Customer onboarding process 
 
@@ -71,20 +69,7 @@ built on top of the new unified Microsoft Purview, that aims to offer
 comprehensive healthcare data governance and compliance solutions. With
 these capabilities, healthcare organizations can better enable data
 discovery, data cataloguing and data understanding. The private preview
-includes components for sensitive information types and glossaries,
-detailed in the sections below.
-
-## Sensitive information types 
-
-Sensitive information types (SITs) allow customers to identify and
-classify data based on predefined rules and patterns. The private
-preview offers ready-to-run SITs built specifically for healthcare,
-curated based on the HIPAA safe harbor guidelines. With support for
-identifiers like date of admission/discharge, US vehicle identification
-number, and non-US identifiers such as European health insurance card
-number, healthcare organizations can effectively recognize Protected
-Health Information (PHI) from their data estate and ensure that
-sensitive information is properly classified and catalogued.
+includes FHIR and DICOM glossaries, detailed in the sections below.
 
 ## Glossaries for healthcare in the Microsoft Purview data catalog 
 
@@ -122,19 +107,11 @@ definitions of various DICOM data elements.
 <img src="media/image3.png" style="width:5.47152in;height:3.57851in" />
 
 After the Purview healthcare kit deployment is complete, users can use
-the SITs and Glossary terms as follows:
+the Glossary terms as follows:
 
-1.  Data Map - users can set up Purview to register different data
-    sources to run data scans and classify their data with the
-    healthcare SITs. The healthcare SITs utilize regular expression and
-    word list matching for data classification. The SIT configurations
-    can be changed to meet business specific needs. Refer to [Scans and
-    ingestion](https://learn.microsoft.com/en-us/purview/concept-scans-and-ingestion)
-    for more details.
-
-2.  Data Catalog - users can also use the deployed FHIR glossary and
+1.  Data Catalog - users can also use the deployed FHIR glossary and
     DICOM glossary to associate the terms with the relevant data assets.
-    They can be searched using SITs, terms or labels as needed for
+    They can be searched using terms or labels as needed for
     easier data discovery. Refer to [business
     glossary](https://learn.microsoft.com/en-us/purview/concept-business-glossary)
     for more details.
@@ -165,14 +142,11 @@ The deployment of the Purview healthcare kit involves two primary steps:
 
 The Purview healthcare kit is installed via an Azure Marketplace
 Offer. Upon deployment, an authentication token is acquired using Microsoft
-Entra ID, followed by the import of Sensitive Information Types (SITs)
-and Glossary terms.
+Entra ID, followed by the import of Glossary terms.
 
-When the Purview healthcare kit is deployed, it creates healthcare
-specific Sensitive Information Types (SITs) using Security & Compliance
-PowerShell and creates FHIR and DICOM glossary terms using Purview REST
-APIs. Certificate-based authentication is used during the offer
-installation for both scenarios.
+When the Purview healthcare kit is deployed, it creates FHIR and DICOM 
+glossary terms using Purview REST APIs. Certificate-based authentication 
+is used during the offer installation for both scenarios.
 
 The following diagram illustrates the deployment mechanism:
 
@@ -183,13 +157,9 @@ alt="A diagram of a process Description automatically generated" />
 
 Before deploying the Azure Marketplace offer, certain Azure
 dependencies must be established to enable app-only authentication for
-unattended scripts and automation. Detailed information about these
-dependencies can be found in [App-only authentication in Exchange
-Online PowerShell and Security & Compliance PowerShell \| Microsoft
-Learn](https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps).
-To streamline this setup, a ‘pre-deployment’ PowerShell script is
-provided and will be explained in the subsequent
-sections.
+unattended scripts and automation.To streamline this setup, a 
+‘pre-deployment’ PowerShell script is provided and will be explained 
+in the subsequent sections.
 
 Should you choose not to utilize the pre-deployment script, please
 consult the manual steps provided in the
@@ -403,7 +373,7 @@ the Data Governance Administrator role:
 
     <img src="media/image10.png" style="width:6.30208in;height:3.46875in" />
 
-To allow the user responsible for managing the SITs and glossaries to
+To allow the user responsible for managing the glossaries to
 manage their roles in the newly created business domains, add the user
 to the Data Governance role group in order to join the tenant-level
 Data Governance Administrator role.
@@ -439,14 +409,14 @@ register them if they are not registered.
 In the following sections, when the deployment user starts the Azure
 Marketplace offer deployment, new resources will be added to the
 specified resource group to facilitate Purview authentication for
-importing SITs and glossaries. These resources are needed solely
+importing glossaries. These resources are needed solely
 during the deployment phase and can be manually deleted afterward. We
 intend to automate this cleanup process in a future release.
 
 | **Resource** | **Purpose** | **Managed Identity Permissions** |
 |----|----|----|
 | Key Vault | For the secure storage of a self-signed certificate. | Contributor role at the resource group |
-| Self-signed Certificate | To be used for certificate-based authentication during the import of Sensitive Information Types and Glossary terms. | Cloud application Administrator to upload the self-signed certificate in the app registration. |
+| Self-signed Certificate | To be used for certificate-based authentication during the import of Glossary terms. | Cloud application Administrator to upload the self-signed certificate in the app registration. |
 
 #### Deployment of the Purview healthcare kit (deployment user)
 
@@ -506,13 +476,6 @@ An administrator with the necessary privileges in the corresponding
 Purview solutions will need to provide access to users who will utilize
 those specific Purview features.
 
-**Feature: Information Protection**
-
-To allow users to verify the installation of the Sensitive Information
-Types, an administrator will need to add the users to the following
-roles by navigating to Settings \> Roles and scopes \> Role groups:
-
-1.  Information Protection Admins
 
 **Feature: Data Map**
 
@@ -538,11 +501,7 @@ Purview healthcare kit.
     Purview, such as the Data Map, Data Catalog, and Information
     Protection.
 
-3.  Go to Information Protection \> Classifiers \> Sensitive information
-    types to locate the new artifacts. The new Sensitive information
-    types have the publisher 'Purview healthcare kit'.
-
-4.  Go to Data Catalog \> Data Management \> Business Domains to locate
+3.  Go to Data Catalog \> Data Management \> Business Domains to locate
     the new domains: Clinical, Imaging - DICOM VR, and Imaging - DICOM
     Tags for glossary terms.
 
@@ -568,25 +527,15 @@ Being in a private preview phase, some features have known limitations
 and bugs, which will be fixed in upcoming releases. The current issues
 to note are:
 
-1.  After the Purview healthcare kit is installed, any additional
-    Sensitive Information types created manually will have the Purview
-    healthcare kit listed as the publisher, rather than the publisher
-    associated with the local tenant.
-
-2.  When you install the Purview healthcare kit, remove all Sensitive
-    Information Types, reinstall the kit, and then conduct a data scan,
-    the reinstalled sensitive information types will display as GUIDs
-    rather than their display names.
-
-3.  When redeploying, ensure you use the same app registration as in the
+1.  When redeploying, ensure you use the same app registration as in the
     original deployment; using different app registrations is not
     allowed and will cause an error.
 
-4.  Due to product limitation, only 200 business domains are allowed in
+2.  Due to product limitation, only 200 business domains are allowed in
     Data Catalog. Ensure you have fewer than 196 domains to guarantee a
     successful installation.
 
-5.  The final step in the deployment process is to remove the 
+3.  The final step in the deployment process is to remove the 
     self-signed certificate from both the key vault and app
     registration. If the marketplace deployment encounters any failures
     before reaching the certificate deletion stage, the certificate will
@@ -630,8 +579,7 @@ request:
 If your deployment from Azure Marketplace encounters issues, this
 troubleshooting section is here to assist you in pinpointing and
 addressing typical problems that might occur during the implementation
-of Azure Marketplace offers for Sensitive Information Types and
-Glossaries.
+of Azure Marketplace offers for Glossaries.
 
 ## Common Azure deployment errors
 
@@ -718,27 +666,6 @@ below.
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>The term ‘Get-DlpSensitiveInformationTypeRulePackage’ is not
-recognized as a name of a cmdlet, function, script file, or executable
-program. \n Check the spelling of the name, or if a path was included,
-verify that the path is correct and try again.</td>
-<td>The App Registration does not have the correct permissions.</td>
-<td>The App Registration needs to have Compliance Admin and Exchange
-Admin role in Microsoft Entra ID.</td>
-</tr>
-<tr>
-<td>Object reference not set to an instance of an object.\n at
-Microsoft.Exchange.Managemnet.ExoPowershellSnapin.GetEXOBanner.ProcessRecord()\r\nat
-Connect-ExchangeOnline&lt;Process&gt;,
-/root/.local/share/powershell/Modules/ExchangeOnline
-Management/3.5.0/netcore/ExchangeOnlineManagement.psm1</td>
-<td>Admin consent not granted to the App registration</td>
-<td><p>The user who performed the pre-deployment steps needs to grant
-admin consent to the permissions on the app registration.</p>
-<p>Users with the ‘Privileged Role Administrator’ role can grant consent
-to the App Registration.</p></td>
-</tr>
 <tr>
 <td>First
 error:\r\nMicrosoft.Azure.KeyVault.Models.KeyVaultErrorException:
@@ -895,24 +822,6 @@ Identities</p></li>
 a resource group</td>
 </tr>
 <tr>
-<td>Create app registration and add Exchange.ManageAsApp API
-permissions</td>
-<td><ol type="1">
-<li><p>Go to <a href="http://portal.azure.com">portal.azure.com</a> and
-navigate to Microsoft Entra ID</p></li>
-<li><p>Go into app registrations and click new registration</p></li>
-<li><p>Enter a name for your app registration and click
-register</p></li>
-<li><p>Navigate to API permissions</p></li>
-<li><p>Click “Add a permission”</p></li>
-<li><p>Click “APIs my organization uses”</p></li>
-<li><p>Search for “office365 Exchange online”</p></li>
-<li><p>Application permissions -&gt; Exchange -&gt; click the checkbox
-and add permissions</p></li>
-</ol></td>
-<td style="text-align: left;">"Cloud Application Administrator" role assignment<br><br>or<br><br>Enable "Users can register applications" setting in the "User settings" section of Microsoft Entra ID in the Azure portal</td>
-</tr>
-<tr>
 <td>Grant Admin Consent to the App Registration</td>
 <td><ol type="1">
 <li><p>Go to <a href="http://portal.azure.com">portal.azure.com</a> and
@@ -931,21 +840,6 @@ navigate to Microsoft Entra ID</p></li>
 <li><p>Search for Cloud application administrator</p></li>
 <li><p>Add assignments -&gt; select members -&gt; select the managed
 identity that you created</p></li>
-<li><p>Fill in required fields and click assign</p></li>
-</ol></td>
-<td>Privilege Role Administrator</td>
-</tr>
-<tr>
-<td>Add Exchange Administrator and Compliance Administrator role to the
-app registration</td>
-<td><ol type="1">
-<li><p>Go to <a href="http://portal.azure.com">portal.azure.com</a>,
-navigate to Microsoft Entra ID</p></li>
-<li><p>Click roles and admins</p></li>
-<li><p>Search for Exchange Administrator and Compliance
-administrator</p></li>
-<li><p>Add assignments -&gt; select members -&gt; select the App
-Registration that you created</p></li>
 <li><p>Fill in required fields and click assign</p></li>
 </ol></td>
 <td>Privilege Role Administrator</td>
