@@ -98,7 +98,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
             "apiVersion": "2020-06-01",
-            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/5rvf3axpjwins')]",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/',variables('deploymentPrefix'))]",
             "location": "global",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
@@ -113,7 +113,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
             "apiVersion": "2020-06-01",
-            "name": "[concat(variables('privateDnsZonePrivatelinkNameDicom'),'/5rvf3axpjwins')]",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameDicom'),'/',variables('deploymentPrefix'))]",
             "location": "global",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameDicom'))]"
