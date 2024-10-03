@@ -1,0 +1,106 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "resourceTypes": [
+            
+            "Microsoft.HealthcareApis/workspaces",
+            "Microsoft.HealthcareApis/services",
+            "Microsoft.Resources/deployments",
+			"Microsoft.Resources/resourceGroups"
+        ],
+        "config": {
+            "isWizard": true,
+            "basics": { 
+                "description": "**Private Endpoint Deployment",
+                "subscription": {
+                    "resourceProviders": [
+
+                        "Microsoft.HealthcareApis",
+						"Microsoft.Resources"
+                    ]
+                }
+            }
+        },
+        "basics": [
+            {
+                "name": "basicsConfigurationSection",
+                "type": "Microsoft.Common.Section",
+                "label": "Resource Configuration",
+                "elements": [
+                    {
+                        "name": "prefix",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Prefix for all resources.",
+                        "defaultValue": "",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z]{1,6}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-6 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ],
+                "visible": true
+            }
+        ],
+        "steps": [
+            {
+                "name": "vnetSelection",
+                "bladeTitle": "Configuration",
+                "label": "Configuration",
+                "elements": [
+                    {
+                        "name": "vnetSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "",
+                        "elements": [
+                            {
+                                "name": "vnet",
+                                "type": "Microsoft.Network.VirtualNetworkCombo",
+                                "label": {
+                                    "virtualNetwork": "Virtual network",
+                                    "subnets": "Subnets"
+                                },
+                                "toolTip": {
+                                    "virtualNetwork": "Select Virtual Network",
+                                    "subnets": "Select Subnet"
+                                },
+                                "constraints": {
+                                    "minAddressPrefixSize": "/16"
+                                },
+                                "options": {
+                                    "hideExisting": false
+                                },
+                                "subnets": {
+                                    "subnet1": {
+                                        "label": "Subnet",
+                                        "constraints": {
+                                            "minAddressPrefixSize": "/24",
+                                            "minAddressCount": 12
+                                        }
+                                    }
+                                },
+                                "visible": true
+                            }
+                            
+                        ]
+                    }
+                ]
+            }
+         ],
+        "outputs": { 
+            "prefix": "[basics('basicsConfigurationSection').prefix]",
+            "location": "[location()]",
+            "virtualNetworkName": "[steps('vnetSelection').vnetSection.vnet.name]",
+            "virtualNetworkResourceGroup":"[steps('vnetSelection').vnetSection.vnet.resourceGroup]",
+            "subnetName": "[steps('vnetSelection').vnetSection.vnet.subnets.subnet1.name]"
+           
+        }
+    }
+}

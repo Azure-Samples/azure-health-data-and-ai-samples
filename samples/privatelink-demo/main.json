@@ -1,0 +1,315 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "prefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Prefix for all resources"
+            }
+        },
+        "location": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string"
+        },
+         "subnetName": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "deploymentPrefix": "[substring(uniquestring(parameters('prefix'), resourceGroup().id), 0, 6)]",
+        "workspaceName": "[format('{0}{1}', variables('deploymentPrefix'), 'wkspc')]",
+        "fhirservicename":"[format('{0}{1}', variables('deploymentPrefix'), 'fhirserver')]",
+        "privateEndpointName": "[format('{0}{1}', variables('deploymentPrefix'), '-privateEndpoint')]",
+        "networkInterfacename": "[format('{0}{1}', variables('deploymentPrefix'), 'nic')]",
+        "privateDnsZonePrivatelinkNameFhir": "privatelink.azurehealthcareapis.com",
+        "privateDnsZonePrivatelinkNameDicom": "privatelink.dicom.azurehealthcareapis.com",
+        "tenantId": "[subscription().tenantId]"
+        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.HealthcareApis/workspaces",
+            "apiVersion": "2024-03-31",
+            "name": "[variables('workspaceName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "Use": "Fhir Service on Virtual network with private link"
+            },
+            "properties": {
+                "publicNetworkAccess": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2024-01-01",
+            "name": "[variables('privateEndpointName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', variables('workspaceName'))]",
+                "[resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', variables('workspaceName'),variables('fhirservicename'))]"
+            
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[variables('privateEndpointName')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', variables('privateEndpointName')), concat('/privateLinkServiceConnections/', variables('privateEndpointName')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.HealthcareApis/workspaces', variables('workspaceName'))]",
+                            "groupIds": [
+                                "healthcareworkspace"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "customNetworkInterfaceName": "[concat(variables('privateEndpointName'), '-nic')]",
+                "subnet": {
+                    "id": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+               },
+                "ipConfigurations": [],
+                "customDnsConfigs": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('privateDnsZonePrivatelinkNameFhir')]",
+            "location": "global"
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('privateDnsZonePrivatelinkNameDicom')]",
+            "location": "global",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/5rvf3axpjwins')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameDicom'),'/5rvf3axpjwins')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameDicom'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(variables('privateEndpointName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', variables('privateEndpointName'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameDicom'))]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "privatelink-azurehealthcareapis-com",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
+                        }
+                    },
+                    {
+                        "name": "privatelink-dicom-azurehealthcareapis-com",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameDicom'))]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2024-01-01",
+            "name": "[variables('networkInterfacename')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [ ],
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfacename')), '/ipConfigurations/ipconfig1')]",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.6",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                  "id": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                 },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard",
+                "auxiliaryMode": "None",
+                "auxiliarySku": "None"
+            }
+        },
+       
+        {
+            "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
+            "apiVersion": "2024-03-31",
+            "name": "[concat(variables('workspaceName'), '/',variables('fhirservicename'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', variables('workspaceName'))]"
+            ],
+            "kind": "fhir-R4",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "acrConfiguration": {
+                    "loginServers": []
+                },
+                "authenticationConfiguration": {
+                    "authority": "[concat('https://login.microsoftonline.com/', variables('tenantId'))]",
+                    "audience": "[concat('https://', variables('workspaceName'), '-',variables('fhirservicename'),'.fhir.azurehealthcareapis.com')]",
+                    "smartProxyEnabled": false,
+                    "smartIdentityProviders": []
+                },
+                "corsConfiguration": {
+                    "origins": [],
+                    "headers": [],
+                    "methods": [],
+                    "allowCredentials": false
+                },
+                "exportConfiguration": {},
+                "importConfiguration": {
+                    "enabled": false,
+                    "initialImportMode": false
+                },
+                "resourceVersionPolicyConfiguration": {
+                    "default": "versioned",
+                    "resourceTypeOverrides": {}
+                },
+                "implementationGuidesConfiguration": {
+                    "usCoreMissingData": false
+                },
+                "encryption": {
+                    "customerManagedKeyEncryption": {}
+                },
+                "publicNetworkAccess": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/',variables('workspaceName'),'-fhirserv.fhir')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
+            ],
+            "properties": {
+                "metadata": {
+                    "creator": "created by private endpoint"
+                },
+                "ttl": 10,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.0.0.5"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/',variables('workspaceName'),'-workspace')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
+            ],
+            "properties": {
+                "metadata": {
+                    "creator": "created by private endpoint"
+                },
+                "ttl": 10,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.0.0.4"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameFhir'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameFhir'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(variables('privateDnsZonePrivatelinkNameDicom'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZonePrivatelinkNameDicom'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        }
+    ]
+}
