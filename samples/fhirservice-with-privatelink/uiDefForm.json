@@ -1,0 +1,111 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "resourceTypes": [
+            
+            "Microsoft.HealthcareApis/workspaces",
+            "Microsoft.HealthcareApis/services",
+            "Microsoft.Resources/deployments",
+			"Microsoft.Resources/resourceGroups"
+        ],
+        "config": {
+            "isWizard": true,
+            "basics": { 
+                "description": "**FHIR Service in Private Network",
+                "subscription": {
+                    "resourceProviders": [
+
+                        "Microsoft.HealthcareApis",
+						"Microsoft.Resources"
+                    ]
+                }
+            }
+        },
+        "basics": [
+            {
+                "name": "basicsConfigurationSection",
+                "type": "Microsoft.Common.Section",
+                "label": "Resource Configuration",
+                "elements": [
+                    {
+                        "name": "prefix",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Prefix for all resources.",
+                        "defaultValue": "",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z]{1,6}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-6 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ],
+                "visible": true
+            }
+        ],
+        "steps": [
+            {
+                "name": "vnetSelection",
+                "bladeTitle": "Configuration",
+                "label": "Configuration",
+                "elements": [
+                    {
+                        "name": "vnetSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "",
+                        "elements": [
+                            {
+                                "name": "vnet",
+                                "label": "Select Vitual Network",
+                                "type": "Microsoft.Solutions.ResourceSelector",
+                                "resourceType": "Microsoft.Network/virtualNetworks",
+                                "constraints": {
+                                    "required": true
+                                },
+                                "options": {
+                                    "filter": {
+                                        "subscription": "onBasics",
+                                        "location": "onBasics"
+                                    }
+                                },
+                                "visible": true                   
+                            },
+                            {
+                                "name": "subnets",
+                                "type": "Microsoft.Solutions.ArmApiControl",
+                                "request": {
+                                    "method": "GET",
+                                    "path": "[concat(steps('basics').resourceScope.subscription.id, '/resourceGroups/', last(take(split(steps('vnetSelection').vnetSection.vnet.id, '/'), 5)), '/providers/Microsoft.Network/virtualNetworks/', steps('vnetSelection').vnetSection.vnet.name,'/subnets?api-version=2022-01-01')]"
+                                }
+                            },
+                            {
+                                    "name": "subnetList",
+                                    "type": "Microsoft.Common.DropDown",
+                                    "label": "Select Subnet",
+                                    "filter": true,
+                                    "constraints": {
+                                        "allowedValues": "[map(steps('vnetSelection').vnetSection.subnets.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.id, '\"}')))]",
+                                        "required": true
+                                    },
+                                    "visible": true
+                            }
+                        ]
+                    }
+                ]
+            }
+         ],
+        "outputs": { 
+            "prefix": "[basics('basicsConfigurationSection').prefix]",
+            "location": "[location()]",
+            "virtualNetworkName": "[steps('vnetSelection').vnetSection.vnet.name]",
+            "virtualNetworkResourceGroup": "[last(take(split(steps('vnetSelection').vnetSection.vnet.id, '/'), 5))]",
+            "subnetName": "[last(split(steps('vnetSelection').vnetSection.subnetList, '/'))]"
+        }
+    }
+}
