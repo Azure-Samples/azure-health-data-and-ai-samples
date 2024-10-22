@@ -1,1 +1,1 @@
-This folder contains Healthcare application templates in Purview sample data files.
+This folder contains Healthcare application templates in Purview sample data files. These files are intended for running scans to test healthcare classifications.
