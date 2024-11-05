@@ -150,7 +150,7 @@ This section shows the steps to assign **FHIR Data Contruibutor** role to a regi
 
 1. Access the Postman environment template for FHIR service [here](./fhir-service.postman_environment.json). Save the file locally (click on **Raw** and then do a **Save as** from your browser).
 
-2. Now, access the ```FHIR Collection.postman-collection.json``` file available in this repo [here](./FHIR-Collection.postman_collection.json) and save the file locally. 
+2. Now, access the ```FHIR-Collection.postman-collection.json``` file available in this repo [here](./FHIR-Collection.postman_collection.json) and save the file locally. 
 
 
 ### Create a workspace, Import collection and environment
