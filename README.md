@@ -86,11 +86,11 @@ This project provides samples outlining example implementations of various use c
 |------|-----------|
 |[MedTech service mappings](/samples/medtech-service-mappings/)|The [MedTech service](https://learn.microsoft.com/azure/healthcare-apis/iot/overview) scenario-based samples provide conforming and valid [device](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-device-mapping) and [FHIR destination](https://learn.microsoft.com/azure/healthcare-apis/iot/overview-of-fhir-destination-mapping) mappings and test device messages to assist with authoring and troubleshooting mappings.|
 
-### Healthcare data solutions on Fabric
+### Healthcare data solutions in Micrsoft Fabric
 
 |Sample|Description|
 |------|-----------|
-|[ALM integration helper](/samples/fabric-healthcare-data-solutions/sample-notebooks/git_integration_helper.ipynb)|[Healthcare Data Solutions (HDS)](https://learn.microsoft.com/en-us/industry/healthcare/healthcare-data-solutions/overview) on [Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview) supports version control through [Application Lifecycle Management (ALM)](https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration?tabs=azure-devops). This sample notebook allows for seamless migration of the Healthcare data solution item dependencies from a source workspace. |
+|[ALM integration helper](/samples/fabric-healthcare-data-solutions/sample-notebooks/git_integration_helper.ipynb)|[Healthcare Data Solutions (HDS)](https://learn.microsoft.com/en-us/industry/healthcare/healthcare-data-solutions/overview) in [Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview) supports version control through [Application Lifecycle Management (ALM)](https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration?tabs=azure-devops). This sample notebook allows for seamless migration of the Healthcare data solution item dependencies from a source workspace. |
 
 **NOTE:** These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data.
 
