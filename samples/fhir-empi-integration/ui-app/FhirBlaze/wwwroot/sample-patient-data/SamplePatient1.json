@@ -1,0 +1,52 @@
+{
+  "resourceType": "Patient",
+  "meta": {
+    "tag": [
+      {
+        "system": "https://somecompany/tenantid",
+        "code": "org1234"
+      }
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://epic.org",
+      "value": "PAT12345"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "John Smithson",
+      "family": "Smithson",
+      "given": [
+        "John"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "612-111-222",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "john@bedrock.com"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "2002-02-18",
+  "address": [
+    {
+      "use": "home",
+      "line": [
+        "1235 Gravel Road"
+      ],
+      "city": "Bedrock",
+      "state": "GA",
+      "postalCode": "31111",
+      "country": "USA"
+    }
+  ]
+}
