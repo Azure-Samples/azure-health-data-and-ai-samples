@@ -130,7 +130,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 try
                 {
                     await _graphContextService.PersistAppConsentScopeIfRemoval(appConsentInfo, userId);
-                    context.StatusCode = HttpStatusCode.NoContent;
+                    context.StatusCode = HttpStatusCode.OK;
                     return context;
                 }
                 catch (Microsoft.Graph.ServiceException ex)
