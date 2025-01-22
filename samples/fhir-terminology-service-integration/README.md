@@ -123,6 +123,8 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	e. Policy is added to API operation in inbound processing as shown:
 		![](./images/AddPolicy4.png)
 
+
+
 Following the above steps and sample templates users can create more APIs, Operations and Policies as needed.
 
 
@@ -145,6 +147,65 @@ Following the above steps and sample templates users can create more APIs, Opera
 * This application is based on sample app [here](https://github.com/microsoft/azure-health-data-services-workshop/tree/main/Challenge-10%20-%20Optional%20-%20FhirBlaze%20(Blazor%20app%20dev%20%2B%20FHIR)), please refer Readme file for configuration of project. Follow step 1 & 3 only, skip step 2.
 * Set FhirBlaze project as StartUpProject
 * Run FhirBlaze Application.
+
+## Set up on Azure
+
+#### In order to run locally/deploy the FHIR-Terminology integration sample on Azure portal you will need to clone the repository, create certain app registartions manually and later publish the UI application from Visual Studio:
+
+### First App Registration
+1. Create a first App Registration without selecting any Redirect URI.
+2. Navigate to **Manage** → **Expose an API**.
+3. Click **Add** to add an Application ID URI.
+4. The Application ID URI should be in the following format: https://{app-name}.primary-domain. Click Save.
+5. Click on **+ Add a scope**.
+6. Enter the following details:
+	* **Scope name**: user_impersonation
+	* **Who can consent?**: Admins and users
+	* **Admin consent display name**: user_impersonation
+	* **Admin consent description**: user_impersonation
+	* **State**: Enabled
+7. Click **Save**.
+### Second App Registration
+1. Create a second App Registration with a Redirect URI for a Single-Page Application (SPA), and set the Redirect URI as https://{ui-app-uri-local-or-deployed}/authentication/login-callback.
+ 	- Example:
+https://localhost:5004/authentication/login-callback, https://ts-app.azurewebsites.net/authentication/login-callback.
+2. Navigate to Manage → API permissions.
+3. Click + Add a permission.
+	- 	Select the initially created App Registration from APIs my organization uses.
+5. Select user_impersonation from **Delegated Permissions**. Click **Add permissions**.
+6. Click Grant admin consent for {your-tenant-name}.
+
+### Changes to UI App
+
+Update the appsettings.json file with the following updates:
+
+1. Add the second app registration's **Client ID** in AzureAd -> ClientID.
+2. Obtain the Application ID URI from the Overview section of the App Registration that exposes an API
+2. Add {Application ID URI}/user_impersonation to **GraphScopes** after **offline_access**.
+4. Set FHIRConnection -> Scope to {Application ID URI}/user_impersonation 
+5. Set **APIMUri** to https://your-apim.azure-api.net/ (This should be a URI of APIM resource that we created earlier).
+6. Set LookupCodeSystemUrls -> LOCAL to "fhirapis_ehr_1_labs", This may change based on the terminology service instance, so confirm about this value with terminology service instance provider.
+
+### Changes on APIM
+
+update the CORS policy on APIM
+
+- Inside the APIM instance, navigate to APIs → FHIR TERMINOLOGY → All Operations → Inbound Processing → Policies → CORS.
+- Add the URL of the deployed or local terminology ui app. 
+	Example:
+```xml	
+<policies>
+    <inbound>
+        <cors allow-credentials="true">
+            <allowed-origins>
+                <origin>{URL of terminology Frontend Service}/</origin>
+            </allowed-origins>
+        </cors>
+    </inbound>
+</policies>
+```
+
+After completeion of set up steps above you can run the UI app locally and also can deploy it on azure using Visual Studio.
 
 ## UI Application Walkthrough:
 
@@ -213,3 +274,4 @@ Following the above steps and sample templates users can create more APIs, Opera
 15. Select Batch_Validate value from dropdown,to to validate the code details from terminology service.
 
 	<img src="./images/image13.png" height="380">	
+
