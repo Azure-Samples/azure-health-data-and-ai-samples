@@ -6,11 +6,11 @@ Healthcare data solutions in Microsoft Fabric help you accelerate time to value 
 
 This sample provides a notebook for customers who have already deployed their Healthcare data solutions item in Fabric and want to take advantage of Application Lifecycle Management (ALM). ALM allows developers who are developing in Fabric to apply the capabilities of familiar source control tools to manage Fabric items.
 
-There are some additional, manual steps to be able to run Helathcare data solutions capabilities after syncing a workspace with ALM. The `hds_alm_helper` notebook attempts to streamline these manual steps. 
+There are some additional, manual steps to be able to run Helathcare data solutions capabilities after syncing a workspace with ALM. The `healthcare_msft_alm_helper` notebook attempts to streamline these manual steps. 
 
 ## Prerequisites
 
-There are a few prerequisites before running the sample `hds_alm_helper` notebook.
+There are a few prerequisites before running the sample `healthcare_msft_alm_helper` notebook.
 
 ### Healthcare data solutions is deployed in source workspace
 
@@ -36,11 +36,11 @@ You are ready to run the sample notebook!
 
 ## What does the sample notebook do?
 
-The `hds_alm_helper` notebook helps copy important system configuration files, creates folders and tables, and updates metadata of other Fabric items in your workspace. This saves an immense amount of time and allows you to quickly start managing your healthcare data.
+The `healthcare_msft_alm_helper` notebook helps copy important system configuration files, creates folders and tables, and updates metadata of other Fabric items in your workspace. This saves an immense amount of time and allows you to quickly start managing your healthcare data.
 
 ## Getting Started
 
-If you meet the criteria defined in the scenario overview above, all you need to do to run the `hds_alm_helper` notebook is import it into the **_source_** Fabric workspace, open the notebook, and run through the cells.
+If you meet the criteria defined in the scenario overview above, all you need to do to run the `healthcare_msft_alm_helper` notebook is import it into the **_source_** Fabric workspace, open the notebook, and run through the cells.
 
 ### Importing the Notebook
 
@@ -54,6 +54,6 @@ In the synchronized workspace, import the notebook from your local machine.
 
 ### Running the Notebook
 
-After importing the notebook, you can open it and start the migration procress. The notebook will require information about the source and destination workspace but should not require any additional modification. Additional guidance is included in the notebook.
+After importing the notebook, you can open it and start the migration process. The notebook will require information about the source and destination workspace but should not require any additional modification. Additional guidance is included in the notebook.
 
 ![](./images/notebook_preview.png)

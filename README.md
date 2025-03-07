@@ -90,7 +90,7 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 |------|-----------|
-|[ALM integration helper](/samples/fabric-healthcare-data-solutions/sample-notebooks/git_integration_helper.ipynb)|[Healthcare Data Solutions (HDS)](https://learn.microsoft.com/en-us/industry/healthcare/healthcare-data-solutions/overview) in [Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview) supports version control through [Application Lifecycle Management (ALM)](https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration?tabs=azure-devops). This sample notebook allows for seamless migration of the Healthcare data solution item dependencies from a source workspace. |
+|[ALM integration helper](/samples/fabric-healthcare-data-solutions/sample-notebooks/healthcare_msft_alm_helper.ipynb)|[Healthcare Data Solutions (HDS)](https://learn.microsoft.com/en-us/industry/healthcare/healthcare-data-solutions/overview) in [Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview) supports version control through [Application Lifecycle Management (ALM)](https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration?tabs=azure-devops). This sample notebook allows for seamless migration of the Healthcare data solution item dependencies from a source workspace. |
 
 **NOTE:** These code samples are simplified scenarios showing how you can use Azure Health Data Services. These samples should be used for testing purposes only with sample data.
 
