@@ -40,7 +40,7 @@ export const App: FC = () => {
 
 
   msalInstance.addEventCallback((event: EventMessage) => {
-    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
+    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload || event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS && event.payload) {
 
       // Set the active account - this simplifies token acquisition
       const authResult = event.payload as AuthenticationResult;

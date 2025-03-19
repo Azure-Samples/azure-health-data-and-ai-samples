@@ -64,6 +64,8 @@ namespace SMARTCustomOperations.AzureAuth
                     });
                     services.AddScoped<GraphConsentService>();
 
+                    services.AddHttpClient<IAuthProvider, AuthProvider>();
+
                     // Add cache for token context
                     services.AddMemoryCache();
                     services.AddRedisCacheBackingStore(options =>
@@ -87,7 +89,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = new Uri("https://login.microsoftonline.com");
+                        options.BaseAddress = new Uri(config.Authority_URL!);
                     });
 
                     services.AddOutputFilter(typeof(TokenOutputFilter));

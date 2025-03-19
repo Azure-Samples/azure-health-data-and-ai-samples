@@ -42,6 +42,16 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? TenantId { get; set; }
 
+        public bool SmartonFhir_with_B2C { get; set; }
+
+        public string? Authority_URL { get; set; }
+
+        public string? B2C_Tenant_Id { get; set; }
+
+        public string? Fhir_Resource_AppId { get; set; }
+
+        public string? KeyVaultStore { get; set; }
+
         public string? FhirAudience
         {
             get => _fhirAudience;
@@ -61,8 +71,6 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
             }
         }
 
-        public string? BackendServiceKeyVaultStore { get; set; }
-
         public string? ContextAppClientId { get; set; }
 
         // Only for static environment config service - not for production.
@@ -77,6 +85,19 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         public string? CacheConnectionString { get; set; }
 
         public string? CacheContainer { get; set; }
+
+        public string? Issuer { get; set; }
+
+        public string? Authorization_Endpoint { get; set; }
+
+        public string? Token_Endpoint { get; set; }
+
+        public string KeyVaultClientIdKey { get; set; } = "ExternalAppClientID";
+
+        public string KeyVaultClientSecretKey { get; set; } = "ExternalAppClientSecret";
+
+        // Only for testing 
+        public bool? IsCachedData { get; set; } = false;
 
         public void Validate()
         {

@@ -31,6 +31,18 @@
     },
     "principalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "B2CTenantId": {
+      "value": "${B2CTenantId}"
+    },
+    "AuthorityURL": {
+      "value": "${AuthorityURL}"
+    },
+    "FhirResourceAppId": {
+      "value": "${FhirResourceAppId}"
+    },
+    "smartonfhirwithb2c": {
+      "value": "${SmartonFhirwithB2C}"
     }
   }
 }
