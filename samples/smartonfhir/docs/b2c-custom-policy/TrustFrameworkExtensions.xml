@@ -4,12 +4,12 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
   PolicySchemaVersion="0.3.0.0" 
-  TenantId="smartonfhirb2c.onmicrosoft.com" 
+  TenantId="yourtenant.onmicrosoft.com" 
   PolicyId="B2C_1A_TrustFrameworkExtensions_smart" 
-  PublicPolicyUri="http://smartonfhirb2c.onmicrosoft.com/B2C_1A_TrustFrameworkExtensions_smart">
+  PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkExtensions_smart">
   
   <BasePolicy>
-    <TenantId>smartonfhirb2c.onmicrosoft.com</TenantId>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkLocalization_smart</PolicyId>
   </BasePolicy>
   <BuildingBlocks>
@@ -24,9 +24,9 @@
         <TechnicalProfile Id="AAD-Common">
           <Metadata>
             <!--Insert b2c-extensions-app application ID here, for example: 11111111-1111-1111-1111-111111111111-->  
-            <Item Key="ClientId">9410c4cb-ccd4-44c0-a25d-997a7b45885e</Item>
+            <Item Key="ClientId">B2CExtensionsAppApplicationId</Item>
             <!--Insert b2c-extensions-app application ObjectId here, for example: 22222222-2222-2222-2222-222222222222-->
-            <Item Key="ApplicationObjectId">a6ffebef-e7a4-4131-bcf1-a4eb2c33d2ed</Item>
+            <Item Key="ApplicationObjectId">B2CExtensionsAppObjectId</Item>
           </Metadata>
           <OutputClaims>
             <OutputClaim ClaimTypeReferenceId="extension_fhirUser" />
@@ -40,12 +40,12 @@
       <TechnicalProfiles>
          <TechnicalProfile Id="login-NonInteractive">
           <Metadata>
-            <Item Key="client_id">f7fd7c1b-adbe-4f4e-83b3-269edb018d22</Item>
-            <Item Key="IdTokenAudience">61a16999-2b9f-442a-baf5-adced450f487</Item>
+            <Item Key="client_id">ProxyIdentityExperienceFrameworkAppId</Item>
+            <Item Key="IdTokenAudience">IdentityExperienceFrameworkAppId</Item>
           </Metadata>
           <InputClaims>
-            <InputClaim ClaimTypeReferenceId="client_id" DefaultValue="f7fd7c1b-adbe-4f4e-83b3-269edb018d22" />
-            <InputClaim ClaimTypeReferenceId="resource_id" PartnerClaimType="resource" DefaultValue="61a16999-2b9f-442a-baf5-adced450f487" />
+            <InputClaim ClaimTypeReferenceId="client_id" DefaultValue="ProxyIdentityExperienceFrameworkAppId" />
+            <InputClaim ClaimTypeReferenceId="resource_id" PartnerClaimType="resource" DefaultValue="IdentityExperienceFrameworkAppId" />
           </InputClaims>
         </TechnicalProfile>
       </TechnicalProfiles>
