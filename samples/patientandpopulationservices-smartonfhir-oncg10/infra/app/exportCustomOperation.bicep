@@ -16,9 +16,6 @@ param apimName string
 @description('URL used to access the FHIR Service by the custom operation.')
 param fhirUrl string
 
-@description('App Insights Instrumentation Key for the sample. (Optional)')
-param appInsightsInstrumentationKey string
-
 @description('App Insights Connection String for the sample. (Optional)')
 param appInsightsConnectionString string
 
@@ -87,14 +84,12 @@ resource exportCustomOperationFfhirProxyAppSettings 'Microsoft.Web/sites/config@
     // WEBSITE_CONTENTSHARE: exportCustomOperationsFunctionAppName
     FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
-    APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString    
     SCM_DO_BUILD_DURING_DEPLOYMENT: 'false'
     ENABLE_ORYX_BUILD: 'true'
     
     AZURE_ApiManagementHostName: '${apimName}.azure-api.net'
     AZURE_FhirUrl: fhirUrl
-    AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
     AZURE_ExportStorageAccountUrl: 'https://${funcStorageAccount.name}.blob.${environment().suffixes.storage}'
