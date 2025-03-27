@@ -48,12 +48,7 @@ namespace SMARTCustomOperations.AzureAuth
                     {
                         services.UseAppInsightsLogging(config.AppInsightsConnectionString, LogLevel.Information);
                         services.UseTelemetry(config.AppInsightsConnectionString);
-                    }
-                    else if (config.AppInsightsInstrumentationKey is not null)
-                    {
-                        services.UseAppInsightsLogging(config.AppInsightsInstrumentationKey, LogLevel.Information);
-                        services.UseTelemetry(config.AppInsightsInstrumentationKey);
-                    }
+                    }                   
                     // Add configuration
                     services.AddSingleton<AzureAuthOperationsConfig>(config);
 

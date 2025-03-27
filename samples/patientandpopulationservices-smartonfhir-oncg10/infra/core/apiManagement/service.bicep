@@ -4,7 +4,7 @@ param sku string
 param skuCount int
 param publisherName string
 param publisherEmail string
-param appInsightsInstrumentationKey string
+param appInsightsConnectionString string
 
 resource apim 'Microsoft.ApiManagement/service@2021-12-01-preview' = {
   name: apiManagementServiceName
@@ -27,8 +27,7 @@ resource apim 'Microsoft.ApiManagement/service@2021-12-01-preview' = {
     properties: {
       loggerType: 'applicationInsights'
       credentials: {
-        appInsightsInstrumentationKey: appInsightsInstrumentationKey
-        instrumentationKey: appInsightsInstrumentationKey
+        connectionString: appInsightsConnectionString
       }
       isBuffered: true
     }
