@@ -292,7 +292,7 @@ To set up SMART on FHIR with B2C, you need to provide the Application Registrati
     </details>
     <br />
 - Create Secrets in KeyVault:
-    1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `backkv`.
+    1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `kv`.
     1. Add a new secret to store Client ID and Client Secret of Application Registration.
         - Name: `ExternalAppClientID`
         - Secret: Client ID of Application Registration added earlier in the FHIR Service Authentication.

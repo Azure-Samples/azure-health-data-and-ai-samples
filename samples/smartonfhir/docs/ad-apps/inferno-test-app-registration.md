@@ -120,7 +120,7 @@ This repository contains a sample code to validate conformance to the HTI-1 rule
 Before executing the test, follow these steps to configure your environment:
 
 1. **Create Secrets in Key Vault**:
-    - Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `backkv`.
+    - Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `kv`.
     - Add the following secrets along with their values for the Endpoint resource:
         - `status` = active
         - `connectionType` = http://terminology.hl7.org/CodeSystem/endpoint-connection-type
