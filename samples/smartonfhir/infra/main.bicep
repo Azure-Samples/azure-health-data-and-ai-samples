@@ -252,7 +252,7 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
 }
 
 var keyVaultName = '${nameShort}-kv'
-@description('KeyVault to hold backend service principal maps')
+@description('KeyVault to hold Azure AD B2C Application Registration details.')
 module keyVault './core/keyVault.bicep' = {
   name: 'vaultDeploy'
   scope: resourceGroup(newOrExistingResourceGroupName)

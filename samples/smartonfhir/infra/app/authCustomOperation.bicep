@@ -22,7 +22,7 @@ param authorityUrl string
 @description('Condition to include B2C in SMART on FHIR')
 param smartOnFhirWithB2C bool
 
-@description('Name of the Key Vault used to store the backend service credentials.')
+@description('Name of the Key Vault used to store the Azure AD B2C Application Registration details.')
 param keyVaultName string
 
 @description('Name of the Azure API Management instance.')
