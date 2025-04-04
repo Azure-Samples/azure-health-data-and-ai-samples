@@ -157,7 +157,6 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     fhirServiceAudience: FhirAudience
     contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
     redisCacheId: redis.outputs.redisCacheId
@@ -205,7 +204,7 @@ module apim './core/apiManagement.bicep'= {
     fhirBaseUrl: fhirUrl
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+    appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     enableVNetSupport: enableVNetSupport
   }
 }

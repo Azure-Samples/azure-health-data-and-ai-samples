@@ -35,8 +35,8 @@ param exportFunctionBaseUrl string
 param contextStaticAppBaseUrl string
 
 
-@description('Instrumentation key for App Insights used with APIM')
-param appInsightsInstrumentationKey string
+@description('Connection String for App Insights used with APIM')
+param appInsightsConnectionString string
 
 @description('Core API Management Service Resources')
 module apimService 'apiManagement/service.bicep' = {
@@ -48,7 +48,7 @@ module apimService 'apiManagement/service.bicep' = {
     skuCount: skuCount
     publisherName: publisherName
     publisherEmail: publisherEmail
-    appInsightsInstrumentationKey: appInsightsInstrumentationKey
+    appInsightsConnectionString: appInsightsConnectionString
   }
 }
 

@@ -14,8 +14,6 @@ namespace SMARTCustomOperations.Export.Configuration
 
         public string? AppInsightsConnectionString { get; set; }
 
-        public string? AppInsightsInstrumentationKey { get; set; }
-
         // Returns more detailed error messages to client
         public bool Debug { get; set; } = false;
 

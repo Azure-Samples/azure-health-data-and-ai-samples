@@ -38,8 +38,6 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? AppInsightsConnectionString { get; set; }
 
-        public string? AppInsightsInstrumentationKey { get; set; }
-
         public string? TenantId { get; set; }
 
         public string? FhirAudience
