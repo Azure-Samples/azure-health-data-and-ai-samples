@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Access SMART on FHIR using Postman
 
 In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) via SMART on FHIR with [Postman](https://www.getpostman.com/).
@@ -35,8 +38,9 @@ While you can use the full URL in the request, it's recommended that you store t
 ![A screenshot that shows postman configurations](../images/postman/Postman-Authorization-Tab.png)
 
 1. Choose **Get New Access Token** at the bottom of the page.
-1. The system asks for user sign-in credentials. Provide credentails of test user created for patient/practitioner based on test case. 
+1. The system asks for user sign-in credentials. Provide credentials of test user created for patient/practitioner based on test case. 
 1. When you receive the token, choose **Use Token**.
 1. Ensure the token is in the Authorization Header of the REST call.
 1. Use this token to access FHIR resources based on the scopes specified in the environment variable.
 
+**[Back to Previous Page](../deployment.md#6-use-postman-to-access-fhir-resource-via-smart-on-fhir-sample)**

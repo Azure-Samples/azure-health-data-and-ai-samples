@@ -23,9 +23,15 @@ The below components will be deployed with this sample.
     - This app basically uses Web App Service to deploy UI for user Authorization. The Auth Context Frontend App facilitates the OAuth2 authorization flow. It interacts with Azure Active Directory (AAD) to authenticate users and obtain consent for the required scopes, thereby ensuring that applications receive appropriate access to health data based on user permissions.
      - Needed for the Patient Standalone authorize flow to properly handle scopes. Microsoft Entra ID does not support session based scoping.
 
+The below components will be deployed with this sample only if Azure AD B2C is enabled.
+1. Azure Key Vault
+    - Azure Key Vault is a cloud-based service that allows you to securely manage keys, secrets and certificates used by cloud applications and services. It will be used to store secrets created in Azure AD B2C.
+        - It stores the secret generated for the App Registration.
+        - It also stores secrets required for the Service Base URL Test Suite.
+
 Working of the sample at high level
 1. User initiates Authentication by calling APIM endpoint managed by [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview) which also handles routing and SMART Conformance.
-2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), so frontend app interacts with Entra ID to authenticate the user and after successful authentication, the user provide scopes/permissions to access FHIR Service.
+2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by [Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)/[Azure AD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview), so frontend app interacts with Entra ID/Azure AD B2C to authenticate the user and after successful authentication, the user provide scopes/permissions to access FHIR Service.
 3. User can select the required scopes and grant consent to the selected scopes.
 4. Access Token is returned after granting consent to the scope.
 5. The SMART on FHIR app sends an API request to the FHIR Server via Azure API Management where the access token is attached to this request to validate the user's identity and permissions.
