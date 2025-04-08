@@ -353,3 +353,4 @@ MigrationBackup/
 
 # VerifyTests temp files
 *.received.*
+.env

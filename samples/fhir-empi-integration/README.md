@@ -60,13 +60,15 @@ The Sequence diagram show the the order of communication among the components fo
 - Login to the Azure CLI
 - Launch Postman app.
 
+> **_NOTE:_** 
+> For this sample we have used [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) service as an external EMPI service. In case you are using different external EMPI service, The code may have to be updated as per the authentication requirements for the external EMPI service.
+
+
 ### Static Web App (UI) and Postman queries
 
 UI application and Postman queries use common endpoint for EMPI service operations and FHIR service Operations.
 
 The UI application demonstrates $match and CRUD operations for patient, those operations are routed to external EMPI service by EMPI Connector app. 
-
-The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
 
 ### Postman Queries
 The postman queries to demonstrate EMPI API call for $match operation is available in `FHIR Collection` postman collection [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo.
@@ -89,13 +91,13 @@ The postman queries to demonstrate EMPI API call for $match operation is availab
 	- `evconnect` : Connection-String of Event Hub you created earlier
 	- `FS-CLIENT-ID` : EMPI Connector App Registration Client ID you create earlier
 	- `FS-ISMSI` : true/false
-	- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com`
+	- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
 	- `FS-SECRET` : EMPI Connector App Registration Secret you created earlier 
 	- `FS-TENANT-NAME` : Tenant ID
 	- `FS-URL` : FHIR Service URL
-	- `NEXTGATE-URL` : EMPI Server URL
-	- `NEXTGATE-USERNAME` : EMPI Server User's Username
-	- `NEXTGATE-PASSWORD` : EMPI Server User's Password
+	- `SEARCH_API_KEY` : Azure AI Search service key
+	- `SEARCH_ENDPOINT` : Azure AI Search service URL
+	- `SEARCH_INDEX` : Azure AI Search service index name
 * Set EMPIShim project as StartUpProject
 * Run EMPIShim Application.
 
@@ -119,7 +121,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 	- Create a new application. 
     - Click `Register` (ignore redirect URI).
 	- Go to `Expose an API`, add Application ID URI
-	- Add the following URI `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com` and click save.
+	- Add the following URI `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>` and click save.
 	- Click on Add a scope
 	- Enter the following values
 		- Scope name = user_impersonation
@@ -134,7 +136,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 	- Add `*` inside Origins and Headers
 	- Select all the methods and
 	- Go to `Authentication`
-	- Replace the value for Audience with `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com`
+	- Replace the value for Audience with `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
 	- click save.
 1. Steps to Publish EMPI Connector App:
 	- Navigate to `empi-connector` folder in the cloned repo and open the `EMPIShim.sln` solution using Visual Studio.
@@ -149,7 +151,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 		- `evconnect` : Connection-String of Event Hub you created earlier
 		- `FS-CLIENT-ID` : EMPI Connector App Registration Client ID you create earlier
 		- `FS-ISMSI` : true/false
-		- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com`
+		- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
 		- `FS-SECRET` : EMPI Connector App Registration Secret you created earlier 
 		- `FS-TENANT-NAME` : Tenant ID
 		- `FS-URL` : FHIR Service URL
@@ -172,7 +174,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 	- Open the `appsettings.json` file from FhirBlaze/wwwroot folder.
 	- Replace the values for following:
 		- [clientId] : Client ID of the EMPI UI App Registration
-		- [scope] : `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com/user_impersonation`
+		- [scope] : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>/user_impersonation`
 		- [fhir-url] : FHIR Service URL
 		- [empi-connector-url] : Function App's url which you published earlier
 		- [empi-connector-api-key] : add the App keys present in the Function App which you published earlier.

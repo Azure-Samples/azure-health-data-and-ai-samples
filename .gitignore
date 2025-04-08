@@ -4,3 +4,4 @@
 
 /.vs/TS/v17
 /.vs
+/samples/fhir-empi-integration/empi-connector/EMPIShim/local.settings.json

@@ -90,6 +90,7 @@ namespace EMPIShim
                 return await _fhirClient.SendAsync(_fhirRequest);
 
             });
+            log.LogInformation($"Response status code from FHIR: {_fhirResponse.StatusCode.ToString()}");
             return await FHIRResponse.FromHttpResponseMessage(_fhirResponse, log);
         }
         public static BundleType DetermineBundleType(string trtext, ILogger log)
