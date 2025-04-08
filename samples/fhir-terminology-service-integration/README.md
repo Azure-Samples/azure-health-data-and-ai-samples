@@ -150,7 +150,7 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 ## Set up on Azure
 
-#### In order to run locally/deploy the FHIR-Terminology integration sample on Azure portal you will need to clone the repository, create certain app registrations manually and later publish the UI application from Visual Studio:
+#### In order to deploy the FHIR-Terminology integration sample on Azure portal or run a local instance, you will need to clone the repository, create certain app registrations manually and later publish the UI application from Visual Studio:
 
 ### First App Registration
 1. Create a first App Registration without selecting any Redirect URI.
