@@ -1,0 +1,214 @@
+﻿@page "/"
+@using FhirBlaze.Model
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject HttpClient Http
+
+
+<PageTitle>MatchPatient</PageTitle>
+<style>
+	.btnstyle {
+		width: 150px;
+		background-color: #348ce5;
+		white-space: normal;
+	}
+
+	.btnstylesmall {
+		width: 65px;
+		background-color: #348ce5;
+		white-space: normal;
+		text-align: center;
+	}
+
+	textarea { 
+		resize: none;
+	}
+
+	.readonlytextarea {
+		min-height: 350px;
+		padding: 5px;
+		background: #f3f3f3;
+		border-radius: 4px;
+		white-space: pre;
+		word-wrap: normal;
+	}
+
+	.spinner {
+		border: 16px solid silver;
+		border-top: 16px solid #337AB7;
+		border-radius: 50%;
+		width: 80px;
+		height: 80px;
+		animation: spin 700ms linear infinite;
+		top: 45%;
+		left: 55%;
+		position: fixed;
+		z-index: 100;
+	}
+	.shift-right{
+		margin: auto 0 auto auto;
+	}
+	
+	/* Fix height and enable scrolling */
+	.grid {
+		overflow-y: auto;
+	}
+
+	/* Sticky header while scrolling */
+	::deep thead {
+		position: sticky;
+		top: 0;
+		background-color: #eee;
+	}
+
+	/* Stripe effect */
+	::deep tbody tr {
+		background-color: rgba(0,0,0,0.04);
+	}
+
+	::deep tbody tr:nth-child(even) {
+			background: rgba(255,255,255,0.4);
+	}
+
+
+</style>
+
+<form class="form-size">
+	@if (isLoading)
+	{
+		<div class="spinner"></div>
+	}
+
+	<h3 class="text-center">Azure FHIR Service and 3P EMPI Integration Demo</h3>
+	<h3 class="text-center font-weight-bold mb-5"><strong>Match Patient</strong></h3>
+
+	<EditForm Model="loadPatientModel" OnValidSubmit="SearchAndLoadPatient" class="row m-2 px-3">
+		<DataAnnotationsValidator />
+		<div class="row">
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Identifier</label>
+				<input class="form-control" type="text" placeholder="Enter Identifier" @bind-value="loadPatientModel.Identifier" />
+				<ValidationMessage For="@(() => loadPatientModel.Identifier)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">First Name</label>
+				<input class="form-control" type="text" placeholder="Enter First Name" @bind-value="loadPatientModel.FirstName" />
+				<ValidationMessage For="@(() => loadPatientModel.FirstName)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Last Name</label>
+				<input class="form-control" type="text" placeholder="Enter Last Name" @bind-value="loadPatientModel.LastName" />
+				<ValidationMessage For="@(() => loadPatientModel.LastName)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Gender</label>
+				<select class="form-control" aria-label="Default select example" @bind="loadPatientModel.Gender">
+					<option selected>Select Gender</option>
+					<option value="male">Male</option>
+					<option value="female">Female</option>
+					<option value="other">Other</option>
+				</select>
+				<ValidationMessage For="@(() => loadPatientModel.Gender)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Birth Date</label>
+				<input class="form-control" type="date" @bind-value="loadPatientModel.BirthDate" />
+				<ValidationMessage For="@(() => loadPatientModel.BirthDate)" />
+			</div>
+		</div>
+		<div class="w-100 my-3">
+			<input type="submit" class="btn btn-primary btnstyle" />
+		</div>
+	</EditForm>
+	<div class="row m-2">
+		<div class="col text-left">
+			<h6 class="font-weight-bold">Sample Patient Json</h6>
+			<textarea readonly placeholder="Sample Json Patient Resource" class="readonlytextarea w-100" rows="7" @bind="jsonResource"></textarea>
+		</div>
+	</div>
+	<div class="row m-2">
+		<div class="w-100 ml-3 my-4">
+			<input type="button" class="btn btn-primary btnstyle" value="Match Patient" @onclick="GetAllPatientMatch" />
+		</div>
+	</div>
+	<div class="row m-2">
+		<div class="col text-left">
+			<h6 class="font-weight-bold">FHIR Service Response with EMPI Matching Result</h6>
+		</div>
+	</div>
+	<div class="grid">
+		@if(!matchPatientResultFound)
+		{
+			<h6 class="ml-4">@matchPaitentJson</h6>
+		}
+		else
+		{
+			<QuickGrid Items="@patients" Class="mx-3 mt-1">
+				<TemplateColumn Title="Actions">
+					<button type="button" class="btn btn-primary text-center ml-2 p-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" onclick="@(() => PopulateSelectedPatientModel(context))">
+						<img src="/img/pen_icon.svg" alt="select-button" width="24" height="24" />
+					</button>
+				</TemplateColumn>
+				@* <PropertyColumn Property="@(p => p.FhirId)" hidden="true"/> *@
+				<PropertyColumn Property="@(p => p.Identifier)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.Gender)" Sortable="true" />
+				<PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+			</QuickGrid>
+		}
+	</div>	
+	@if (!matchPatientResultFound)
+	{
+		<div class="row m-2">
+			<div class="w-100 ml-3 my-4">
+				<input type="button" class="btn btn-primary btnstyle" @onclick="CreatePatient" value="Add New Patient" />
+			</div>
+			<div class="col text-left">
+				<textarea class="w-100" @bind="msgNewPatientAdded"></textarea>
+			</div>
+		</div>
+	}
+
+	@if (matchPatientResultFound)
+	{
+		<EditForm Model="updatePatientModel" OnValidSubmit="UpdatePatient" class="row mt-2 px-3 ">
+			<DataAnnotationsValidator />
+		<div class="row mx-2 mt-4">
+		<h6 class="font-weight-bold w-100 ml-3">Update Patient Json</h6>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Last Name</label>
+				<input class="form-control" type="text" @bind-value="updatePatientModel.LastName" />
+				<ValidationMessage For="(() => updatePatientModel.LastName)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-lable">Phone Number</label>
+				<input class="form-control" type="tel" @bind-value="updatePatientModel.PhoneNumber"/>
+				<ValidationMessage For="(() => updatePatientModel.PhoneNumber)" />
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="form-label">Birth Date</label>
+				<input class="form-control" type="date" @bind-value="updatePatientModel.BirthDate" />
+				<ValidationMessage For="(() => updatePatientModel.BirthDate)" />
+			</div>
+		</div>
+		<div class="row mx-2 w-100">
+				<div class="w-100 ml-3 my-4">
+				<input type="submit" class="btn btn-primary btnstyle" value="Update Patient" />
+			</div>
+				<div class="col text-left">
+				<textarea class="w-100" @bind="msgPatientUpdated" readonly></textarea>
+			</div>
+		</div>
+	</EditForm>
+	}
+
+	<div class="row m-2 mb-5">
+		<div class="w-100 ml-3 my-4">
+			<input type="button" class="btn btn-primary btnstyle" @onclick="DeletePatient" value="Delete Patient" />
+		</div>
+		<div class="col text-left">
+			<textarea class="w-100" @bind="msgPatientDeleted" readonly></textarea>
+		</div>
+	</div>
+</form>
