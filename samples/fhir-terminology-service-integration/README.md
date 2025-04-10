@@ -79,13 +79,13 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	d. Go to "APIs" tab, click on "Add API" and select "OpenAPI" from "Create from definition" section as highlighted below:
 		![](./images/CreateAPI.png)
 		
-	e. In the new popup window, click on "Select a file" and browse file "FHIR Terminology.openapi+json.json" at loaction (../samples/fhir-terminology-service-integration/apim).
+	e. In the new popup window, click on "Select a file" and browse file "FHIR Terminology.openapi+json.json" at location (../samples/fhir-terminology-service-integration/apim).
 		![](./images/CreateAPI2.png)
 		
 	f. After you select the file, fields will be filled with values as shown below, you can change values of "Display Name" and "Name" fields. Click on "Create".
 		![](./images/CreateAPI3.png)
 		
-	g. As shown below, API willget created with list of operations and backend is fhir service url for all operations.
+	g. As shown below, API will get created with list of operations and backend is fhir service url for all operations.
 		![](./images/CreateAPI4.png)
 
 	
@@ -93,7 +93,7 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 
 	a. In the cloned repo, go to at location (../samples/fhir-terminology-service-integration/apim)
 
-	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P teminology service requirements.
+	b. Open file "PolicyFragments.xml file" in editor and update the values for highlighted fields as per your 3P terminology service requirements.
 		![](./images/Policy0.png)
 
 	c. Add below condition in PolicyFragments.
@@ -123,20 +123,22 @@ Create an Azure APIM instance following steps [here](https://learn.microsoft.com
 	e. Policy is added to API operation in inbound processing as shown:
 		![](./images/AddPolicy4.png)
 
+
+
 Following the above steps and sample templates users can create more APIs, Operations and Policies as needed.
 
 
 - **Static Web App (UI) and Postman queries**
 
-	UI application and Postman queries use common APIM endpoint for termonology service operations and FHIR service Operations.
+	UI application and Postman queries use common APIM endpoint for terminology service operations and FHIR service Operations.
 
-	The UI application demonstartes $lookup ,$translate operations and $Batch Translate operations, those operations are routed to external terminology service by APIM. 
+	The UI application demonstrates $lookup ,$translate operations and $Batch Translate operations, those operations are routed to external terminology service by APIM. 
 
-	The UI Application also demonstartes operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
+	The UI Application also demonstrates operations for searching Observation resources from FHIR service and saving translated Observation resources to FHIR service, the search and save operations are routed to AHDS FHIR Service by APIM.
 
 	- **Postman Queries**
 
-	The postman queries to demonstare Common Endpoint Application (APIM) routing calls to external terminology service and AHDS FHIR Service via single endpoint are available under `FHIR & Terminology Service Integration` folder in `Fhir Collection` postman collection available in [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo. For Queries in this folder, we are using APIM URL as our base URL and auth token of FHIR service to authenticate requests.
+	The postman queries to demonstrate Common Endpoint Application (APIM) routing calls to external terminology service and AHDS FHIR Service via single endpoint are available under `FHIR & Terminology Service Integration` folder in `Fhir Collection` postman collection available in [samples](https://github.com/Azure-Samples/azure-health-data-services-samples/tree/main/samples/sample-postman-queries) repo. For Queries in this folder, we are using APIM URL as our base URL and auth token of FHIR service to authenticate requests.
 
 ## Setting up application locally 
 ### Visual Studio
@@ -145,6 +147,65 @@ Following the above steps and sample templates users can create more APIs, Opera
 * This application is based on sample app [here](https://github.com/microsoft/azure-health-data-services-workshop/tree/main/Challenge-10%20-%20Optional%20-%20FhirBlaze%20(Blazor%20app%20dev%20%2B%20FHIR)), please refer Readme file for configuration of project. Follow step 1 & 3 only, skip step 2.
 * Set FhirBlaze project as StartUpProject
 * Run FhirBlaze Application.
+
+## Set up on Azure
+
+#### In order to deploy the FHIR-Terminology integration sample on Azure portal or run a local instance, you will need to clone the repository, create certain app registrations manually and later publish the UI application from Visual Studio:
+
+### First App Registration
+1. Create a first App Registration without selecting any Redirect URI.
+2. Navigate to **Manage** → **Expose an API**.
+3. Click **Add** to add an Application ID URI.
+4. The Application ID URI should be in the following format: https://{app-name}.primary-domain. Click Save.
+5. Click on **+ Add a scope**.
+6. Enter the following details:
+	* **Scope name**: user_impersonation
+	* **Who can consent?**: Admins and users
+	* **Admin consent display name**: user_impersonation
+	* **Admin consent description**: user_impersonation
+	* **State**: Enabled
+7. Click **Save**.
+### Second App Registration
+1. Create a second App Registration with a Redirect URI for a Single-Page Application (SPA), and set the Redirect URI as https://{ui-app-uri-local-or-deployed}/authentication/login-callback.
+ 	- Example:
+https://localhost:5004/authentication/login-callback, https://ts-app.azurewebsites.net/authentication/login-callback.
+2. Navigate to Manage → API permissions.
+3. Click + Add a permission.
+	- 	Select the initially created App Registration from APIs my organization uses.
+5. Select user_impersonation from **Delegated Permissions**. Click **Add permissions**.
+6. Click Grant admin consent for {your-tenant-name}.
+
+### Changes to UI App
+
+Update the appsettings.json file with the following updates:
+
+1. Add the second app registration's **Client ID** in AzureAd -> ClientID.
+2. Obtain the Application ID URI (First App Registration) from the Overview section of the App Registration that exposes an API
+2. Add {Application ID URI}/user_impersonation to **GraphScopes** after **offline_access**.
+4. Set FHIRConnection -> Scope to {Application ID URI}/user_impersonation 
+5. Set **APIMUri** to https://your-apim.azure-api.net/ (This should be a URI of APIM resource that we created earlier).
+6. Set LookupCodeSystemUrls -> LOCAL to "fhirapis_ehr_1_labs", This may change based on the terminology service instance, so confirm about this value with terminology service instance provider.
+
+### Changes on APIM
+
+update the CORS policy on APIM
+
+- Inside the APIM instance, navigate to APIs → FHIR TERMINOLOGY → All Operations → Inbound Processing → Policies → CORS.
+- Add the URL of the deployed or local terminology ui app. 
+	Example:
+```xml	
+<policies>
+    <inbound>
+        <cors allow-credentials="true">
+            <allowed-origins>
+                <origin>{URL of terminology Frontend Service}/</origin>
+            </allowed-origins>
+        </cors>
+    </inbound>
+</policies>
+```
+
+After completion of set up steps above you can run the UI app locally and also can deploy it on azure using Visual Studio.
 
 ## UI Application Walkthrough:
 
@@ -162,13 +223,13 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 	<img src="./images/image3.png" height="380">
 
-	The reponse json is shown in "Response" text area and some important details from response are also shown in table at bottom of the page for easy readability.
+	The response json is shown in "Response" text area and some important details from response are also shown in table at bottom of the page for easy readability.
 
 5. For Translate, Enter code, select source system & target system, Click on Translate button to get the default Terminology mappings between source code and target code.
 
 	<img src="./images/image4.png" height="380">
 
-6. Second page is "Translate Resource". It allows user to search for an `Oservation` resource using patient name, user can translate the code in `Observation` resource with Translate and save the translated `Observation` resource to AHDS FHIR Service. Reset operation is also available which will restore the `Observation` resources to original state as it was prior to translate.
+6. Second page is "Translate Resource". It allows user to search for an `Observation` resource using patient name, user can translate the code in `Observation` resource with Translate and save the translated `Observation` resource to AHDS FHIR Service. Reset operation is also available which will restore the `Observation` resources to original state as it was prior to translate.
 
 7. Navigate to "Translate Resource" page, enter the first or last name of `Patient`, Click on the Search button to fetch latest `Observation` for the `Patient`.
 
@@ -186,7 +247,7 @@ Following the above steps and sample templates users can create more APIs, Opera
 
 	<img src="./images/image7.png" height="380">
 
-	Once the the translated `Observation` resource is saved user can see the updated version Id in reponse as highlitghted.
+	Once the the translated `Observation` resource is saved user can see the updated version Id in response as highlighted.
 
 10. Click on Reset All button to Update the Translated Resource to the FHIR Server.
 
@@ -213,3 +274,4 @@ Following the above steps and sample templates users can create more APIs, Opera
 15. Select Batch_Validate value from dropdown,to to validate the code details from terminology service.
 
 	<img src="./images/image13.png" height="380">	
+
