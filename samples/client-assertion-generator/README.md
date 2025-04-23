@@ -1,6 +1,6 @@
 # Client Assertion Generator
 
-This sample guides you through generating a client assertion and corresponding JWK (JSON Web Key) using a self-signed certificate from Azure Key Vault. The output can be used for OAuth2 flows such as client credentials with a secure certificate-based authentication mechanism.
+This sample guides you through generating a client assertion and corresponding JWKS (JSON Web Key Set) using a self-signed certificate from Azure Key Vault. The output can be used for OAuth2 flows such as client credentials with a secure certificate-based authentication mechanism.
 
 ## Prerequisites
 
@@ -48,9 +48,9 @@ This sample guides you through generating a client assertion and corresponding J
 ![](./images/download_certificate_2.png)
 </details>
 
-## Step 3: Generate Client Assertion and JWK
+## Step 3: Generate Client Assertion and JWKS
 
-A Visual Studio solution is provided under the `samples/client-assertion-generator` directory. This solution includes a simple console application that generates a signed JWT (client assertion) and JWK based on user input.
+A Visual Studio solution is provided under the `samples/client-assertion-generator` directory. This solution includes a simple console application that generates a signed JWT (client assertion) and JWKS based on user input.
 
 ### Running the Utility
 
@@ -73,9 +73,8 @@ On running the project, the console will prompt you to enter the following input
 
 ### Output
 
-- The tool will display the generated **client assertion token** and the **JWK** in the console.
+- The tool will display the generated **client assertion token** and the **JWKS** in the console.
 - Manually **copy and save** the values for further use in your authentication flow.
-
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/client_assertion_generation.png)
 </details>

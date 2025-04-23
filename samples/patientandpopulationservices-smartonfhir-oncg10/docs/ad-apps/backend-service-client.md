@@ -43,7 +43,7 @@ To ensure Azure API Management returns the correct JWKS (JSON Web Key Set), you 
 
 > **Prerequisites**: You need to install **REST Client** Extension in Visual Studio Code to execute the following HTTP requests.
 
-1. Open the [backend_service_client.http](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/blob/personal/gkuber/Manual_Backend_service_test_support/samples/patientandpopulationservices-smartonfhir-oncg10/docs/rest/backend_service_client.http) file in VS code. 
+1. Open the [backend_service_client.http](../rest/backend_service_client.http) file in VS code. 
 1. In the [rest](../rest/) folder, create a new `.env` file and add the following environment variable:
     
     ```env
