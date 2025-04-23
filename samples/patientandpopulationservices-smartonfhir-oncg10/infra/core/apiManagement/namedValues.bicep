@@ -26,3 +26,11 @@ resource audienceNamedVAlue 'Microsoft.ApiManagement/service/namedValues@2021-12
     value: '${audienceUrl}/smart'
   }
 }
+
+resource jwksNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-12-01-preview' = {
+  name: '${apiManagementServiceName}/JWKS'
+  properties: {
+    displayName: 'JWKS'
+    value: 'xxx'
+  }
+}
