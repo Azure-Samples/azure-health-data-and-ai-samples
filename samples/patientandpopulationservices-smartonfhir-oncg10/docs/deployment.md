@@ -164,3 +164,9 @@ pwsh ./scripts/Load-ProfilesData.ps1
 ```
 
 To learn more about the sample data, read [sample data](./sample-data.md).
+
+## 7. Testing Backend Service flow manually
+
+The backend service flow in SMART on FHIR is designed for system-to-system communication, where no user interaction is required. It uses the **client credentials grant** to authorize a backend client (such as a service or scheduled job) to access FHIR resources securely. In this implementation, we register a confidential client, generate a signed JWT (client assertion) using a private key, and exchange it for an access token. This token is then used to interact with protected FHIR APIs—such as performing a bulk data export—through Azure API Management.
+
+Follow the [SMART on FHIR Backend Service Setup and Manual Testing](./ad-apps/backend-service-client.md) document to test backend service flow manually.

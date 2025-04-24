@@ -1,6 +1,61 @@
-# **Backend Service Client**
+# SMART on FHIR Backend Service Setup and Manual Testing
+This document outlines the complete setup and manual testing flow for a **SMART on FHIR Backend Service**. This guide walks you through generating a self-signed certificate in Azure Key Vault, registering a confidential client application, generating a client assertion and JWKS, and configuring Azure API Management. Finally, it demonstrates how to trigger and monitor a **FHIR Bulk Export** operation using a REST client setup in Visual Studio Code.
 
-## 1. Create a Backend Registration App and Store the Secret in Key Vault
+**Note:** For demonstration purposes, we are using a self-signed certificate generated via Azure Key Vault. However, users may choose their own preferred method for certificate generation.
+
+## 1: Generate a Self-Signed Certificate in Azure Key Vault
+
+1. **Create or Use an Existing Key Vault**
+
+    Ensure you have the required permissions to create/manage certificates:
+    - First, check the **Permission model** by navigating to:
+        - **Key Vault** → **Settings** → **Access configuration**  
+    - If **Vault access policy** is used:
+        - Go to **Access policies** → Select your **User** → **Edit**
+        - Under **Certificate permissions**, ensure the required permissions are granted
+    - If **RBAC (Role-Based Access Control)** is used:
+        - Go to **Access control (IAM)** → **+ Add**
+        - Assign the **Key Vault Administrator** role to your user account  
+
+    <br /><details><summary>Click to expand and see screenshots.</summary>
+    ![](./images/6_certificate_config_1.png)
+    ![](./images/6_certificate_config_2.png)
+    ![](./images/6_certificate_config_3.png)
+    </details>
+
+2. **Navigate to the Key Vault**
+   - Go to the **Certificates** section under **Objects**.
+   - Click on **Generate/Import**.
+
+3. **Configure Certificate Details**
+   - **Name:** Provide a name for your certificate.
+   - **Certificate Authority:** Select `Self-Signed certificate`.
+   - **Subject:** Use the format `CN=<domain name>`, e.g. `CN=contoso.onmicrosoft.com`.
+   - **Content Type:** Choose `PEM`.
+
+4. **Create the Certificate**
+   - Click on **Create**.
+   - After creation, **copy and save the certificate thumbprint**. This will be used in the client assertion step.
+   
+<br /><details><summary>Click to expand and see screenshots.</summary>
+![](./images/6_generate_certificate_1.png)
+![](./images/6_generate_certificate_2.png)
+![](./images/6_generate_certificate_3.png)
+</details>
+
+## 2: Download Certificate Files
+
+1. Select the newly created certificate in Azure Key Vault.
+2. Click on the **current version** of the certificate.
+3. Download the certificate in **PEM format**.
+4. Save the downloaded `.pem` file in a separate folder, as it contains both the **private key** and **public key**.
+
+<br /><details><summary>Click to expand and see screenshots.</summary>
+![](./images/6_download_certificate_1.png)
+![](./images/6_download_certificate_2.png)
+</details>
+
+## 3. Create a Backend Registration App and Store the Secret in Key Vault
 Please follow the steps(1-5) from the provided [link](./inferno-test-app-registration.md/#backend-service-client-application)
 at the section titled  `Backend Service Client Application` to create backend app registration.
 
@@ -16,7 +71,7 @@ After registration:
 ![](./images/5_keyvault_secret_details.png)
 </details>
 
-## 2. Generate Client assertion using the Client Assertion utility
+## 4. Generate Client assertion using the Client Assertion utility
 
 Use the **Client Assertion Utility** to generate both a client assertion and a JWKS (JSON Web Key Set).
 
@@ -28,7 +83,7 @@ Follow the [Client Assertion Utility documentation](../../../client-assertion-ge
 Once generated, copy and store the **Client Assertion** and the **JWKS** for use in the subsequent steps.
 
 
-## 3. Update the JWKS in Azure API Management
+## 5. Update the JWKS in Azure API Management
 To ensure Azure API Management returns the correct JWKS (JSON Web Key Set), you need to update the named value that references the JWKS endpoint. Follow the steps below to complete the update:
 1. Open the API Management service with the suffix `apim`.
 1. Navigate to **APIs** → **Named values**.
@@ -39,7 +94,7 @@ To ensure Azure API Management returns the correct JWKS (JSON Web Key Set), you 
 ![](./images/6_apim_config_update.png)
 </details>
 
-## 4. Bulk Export Operation
+## 6. Bulk Export Operation
 
 > **Prerequisites**: You need to install **REST Client** Extension in Visual Studio Code to execute the following HTTP requests.
 

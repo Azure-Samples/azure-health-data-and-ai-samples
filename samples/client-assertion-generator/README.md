@@ -4,53 +4,19 @@ This sample guides you through generating a client assertion and corresponding J
 
 ## Prerequisites
 
-- Azure subscription
-- Access to Azure Key Vault
-- Azure AD App Registration (with Client ID and Tenant ID)
-- Visual Studio (for running the provided solution)
+- An active **Azure subscription**
+- A **self-signed certificate** with:
+  - The **thumbprint**
+  - A `.PEM` file containing both the private and public keys
+- An **Azure AD App Registration** acting as a Backend Client, including:
+  - **Client ID**
+  - **Tenant ID**
+- **Visual Studio** (for running the provided solution)
+- **.NET SDK version 8.0 or later** installed (for building and running the sample)
 
-## Step 1: Generate a Self-Signed Certificate in Azure Key Vault
+## Generate Client Assertion and JWKS
 
-1. **Create or Use an Existing Key Vault**
-   - Ensure you have the required permissions to create/manage certificates:
-     - If **RBAC (Role-Based Access Control)** is used, assign the **Key Vault Administrator** role to your user account.
-     - If **Vault access policy** is used, ensure your user account is assigned an access policy with **all certificate permissions**.
-
-2. **Navigate to the Key Vault**
-   - Go to the **Certificates** section under **Objects**.
-   - Click on **Generate/Import**.
-
-3. **Configure Certificate Details**
-   - **Name:** Provide a name for your certificate.
-   - **Certificate Authority:** Select `Self-Signed certificate`.
-   - **Subject:** Use the format `CN=<domain name>`, e.g. `CN=contoso.onmicrosoft.com`.
-   - **Content Type:** Choose `PEM`.
-
-4. **Create the Certificate**
-   - Click on **Create**.
-   - After creation, **copy and save the certificate thumbprint**. This will be used in the client assertion step.
-   
-<br /><details><summary>Click to expand and see screenshots.</summary>
-![](./images/generate_certificate_1.png)
-![](./images/generate_certificate_2.png)
-![](./images/generate_certificate_3.png)
-</details>
-
-## Step 2: Download Certificate Files
-
-1. Select the newly created certificate in Azure Key Vault.
-2. Click on the **current version** of the certificate.
-3. Download the certificate in **PEM format**.
-4. Save the downloaded `.pem` file in a separate folder, as it contains both the **private key** and **public key**.
-
-<br /><details><summary>Click to expand and see screenshots.</summary>
-![](./images/download_certificate_1.png)
-![](./images/download_certificate_2.png)
-</details>
-
-## Step 3: Generate Client Assertion and JWKS
-
-A Visual Studio solution is provided under the `samples/client-assertion-generator` directory. This solution includes a simple console application that generates a signed JWT (client assertion) and JWKS based on user input.
+A Visual Studio solution is provided under the [client-assertion-generator](.) directory. This solution includes a simple console application that generates a signed JWT (client assertion) and JWKS based on user input.
 
 ### Running the Utility
 
@@ -63,13 +29,13 @@ A Visual Studio solution is provided under the `samples/client-assertion-generat
 On running the project, the console will prompt you to enter the following inputs:
 
 - **Client ID** of your Azure AD App Registration
-    > **Note:** For [patientandpopulationservices-smartonfhir-oncg10](../patientandpopulationservices-smartonfhir-oncg10/) sample use Client ID of Backend App Registration.
-- **Tenant ID**
+    > **Note:** If you are deploying **SMART on FHIR ONC g10**, use the **Client ID of the Backend App Registration**.
+- **Tenant ID** of Microsoft Entra ID
 - **Thumbprint** of the certificate
 - **Path to PEM folder** (where your `.pem` file with private/public key is stored)
 - **Audience URL**
 
-    > **Note:** For the [patientandpopulationservices-smartonfhir-oncg10](../patientandpopulationservices-smartonfhir-oncg10/) sample use Audience URL as `<APIM-URL>/auth/token`.
+    > **Note:** If you are deploying **SMART on FHIR ONC g10**, use: `<APIM-URL>/auth/token`.
 
 ### Output
 
