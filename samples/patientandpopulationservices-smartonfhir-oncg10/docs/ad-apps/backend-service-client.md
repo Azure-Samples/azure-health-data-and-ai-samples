@@ -64,7 +64,7 @@ After registration:
 1. Add a new secret that corresponds to the Application you just generated. 
     - Name: Application ID/Client ID of the application
     - Secret: The secret you generated for the application
-    - Tags: Make sure to add the tag `jwks_url`with the value: `{apim-url}/.well-known/jwks.json`
+    - Tags: Make sure to add the tag `jwks_url`with the value: `{apim-url}/smart/.well-known/jwks.json`
 1. Save the client id for the next step.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_keyvault_create_secret.png)
@@ -105,12 +105,14 @@ To ensure Azure API Management returns the correct JWKS (JSON Web Key Set), you 
     BASE_URL = {apim-url}
     ```
 1. Replace `{apim-url}` with your Azure API Management Service url.
+1. Please save the file.
 
 ### 1.	Get access token using the client assertion.
 
 1. Insert the client assertion generated from the *Client Assertion Utility* into the variable `@client_assertion` in the `backend_service_client.http` file.
 1. Click **Send Request** for the **Token Endpoint Operation**.
 1. Copy the access token from the response body and assign it to the variable `@access_token`.
+1. Please save the file.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/6_Token_Request.png)
 </details>
@@ -119,6 +121,7 @@ To ensure Azure API Management returns the correct JWKS (JSON Web Key Set), you 
 
 1. Click **Send Request** for the **Group Export Operation**.
 1. Copy the **Content-Location** from the response headers and assign it to the variable `@exportStatusUrl`.
+1. Please save the file.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/6_Export_Request.png)
 </details>
