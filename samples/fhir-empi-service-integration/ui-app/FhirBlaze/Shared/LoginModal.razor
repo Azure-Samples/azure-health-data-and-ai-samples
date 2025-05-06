@@ -1,0 +1,29 @@
+﻿@using FhirBlaze.Pages;
+<style>
+    .bm-header[b-mwsrhhqq2g] {
+        padding: 0 0 1rem 0 !important;
+    }
+
+    .bm-title[b-mwsrhhqq2g] {
+        font-size: 1.4rem;
+    }
+
+    .blazored-modal[b-mwsrhhqq2g] {
+        margin: 0 !important;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<div>
+    <a href="authentication/login" class="btn btn-primary">Log In</a>
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    async Task Cancel() => await BlazoredModal.CancelAsync(ModalResult.Ok("Cancel"));
+}
