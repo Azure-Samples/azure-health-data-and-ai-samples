@@ -37,9 +37,6 @@ param fhirServiceAudience string
 @description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
-@description('App Insights Instrumentation Key for the sample. (Optional)')
-param appInsightsInstrumentationKey string
-
 @description('App Insights Connection String for the sample. (Optional)')
 param appInsightsConnectionString string
 
@@ -120,13 +117,11 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     // WEBSITE_CONTENTSHARE: authCustomOperationsFunctionAppName
     FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'dotnet-isolated'
-    APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     SCM_DO_BUILD_DURING_DEPLOYMENT: 'false'
     ENABLE_ORYX_BUILD: 'true'
 
     AZURE_ApiManagementHostName: '${apimName}.azure-api.net'
-    AZURE_APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
     AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
