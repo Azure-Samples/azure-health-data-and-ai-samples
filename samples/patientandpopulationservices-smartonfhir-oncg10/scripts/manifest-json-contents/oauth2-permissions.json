@@ -470,6 +470,627 @@
       "userConsentDescription": "Allow the application to access Azure Healthcare APIs on your behalf.",
       "userConsentDisplayName": "Access Azure Healthcare APIs",
       "value": "user_impersonation"
+    },
+    {
+      "adminConsentDescription": "Allows user to search all resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.all.rs",
+      "id": "328a1aff-09b5-44a1-b3c8-d6c04f1cd6e1",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search all resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.all.rs",
+      "value": "patient.all.rs"
+    },
+    {
+      "adminConsentDescription": "Allows a user to search all resources in their compartment.",
+      "adminConsentDisplayName": "user.all.rs",
+      "id": "f4c5c908-3ea6-4b41-8164-7f3abec967e5",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows a user to search all resources in their compartment.",
+      "userConsentDisplayName": "user.all.rs",
+      "value": "user.all.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Medication resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Medication.rs",
+      "id": "1fba51b4-380a-492d-8594-b00e645149b7",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "samples readAllows user to search Medication resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Medication.rs",
+      "value": "patient.Medication.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Medication resources in their own compartment.",
+      "adminConsentDisplayName": "user.Medication.rs",
+      "id": "802f7300-8560-4bc1-a24f-f6502f8ff0c4",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Medication resources in their own compartment.",
+      "userConsentDisplayName": "user.Medication.rs",
+      "value": "user.Medication.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search AllergyIntolerance resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.AllergyIntolerance.rs",
+      "id": "09021d78-d9b1-45c6-aa8a-7004ebad9bf8",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search AllergyIntolerance resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.AllergyIntolerance.rs",
+      "value": "patient.AllergyIntolerance.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search AllergyIntolerance resources in their own compartment.",
+      "adminConsentDisplayName": "user.AllergyIntolerance.rs",
+      "id": "0cbb193b-d7c7-4d2d-976f-8d08b049b017",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search AllergyIntolerance resources in their own compartment.",
+      "userConsentDisplayName": "user.AllergyIntolerance.rs",
+      "value": "user.AllergyIntolerance.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search CarePlan resources in their own compartment.",
+      "adminConsentDisplayName": "user.CarePlan.rs",
+      "id": "20bffb69-2c16-44aa-8371-066d4e273e4c",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search CarePlan resources in their own compartment.",
+      "userConsentDisplayName": "user.CarePlan.rs",
+      "value": "user.CarePlan.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search CarePlan resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.CarePlan.rs",
+      "id": "e98d5aaf-b861-4ab1-944a-63ce08fc5144",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search CarePlan resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.CarePlan.rs",
+      "value": "patient.CarePlan.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search CareTeam resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.CareTeam.rs",
+      "id": "f892bbf0-8ebf-4626-a1a1-301d401205d1",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search CareTeam resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.CareTeam.rs",
+      "value": "patient.CareTeam.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Condition resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Condition.rs",
+      "id": "635805ba-e512-4de0-be49-8513f4f79582",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Condition resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Condition.rs",
+      "value": "patient.Condition.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Device resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Device.rs",
+      "id": "c14a01fd-4973-4c3d-b1bf-7245581a0501",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Device resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Device.rs",
+      "value": "patient.Device.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search DiagnosticReport resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.DiagnosticReport.rs",
+      "id": "c8eb793a-f30a-43a7-b809-5dd0bcdaf88f",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search DiagnosticReport resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.DiagnosticReport.rs",
+      "value": "patient.DiagnosticReport.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search DocumentReference resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.DocumentReference.rs",
+      "id": "54a36659-e1a1-4c1f-8e9c-d6fa859ce982",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search DocumentReference resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.DocumentReference.rs",
+      "value": "patient.DocumentReference.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Encounter resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Encounter.rs",
+      "id": "a46fe1cf-d236-498e-aec5-a6225153ab9b",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Encounter resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Encounter.rs",
+      "value": "patient.Encounter.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Goal resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Goal.rs",
+      "id": "c7179365-c855-456e-b2c6-8ae6657b2810",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Goal resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Goal.rs",
+      "value": "patient.Goal.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Immunization resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Immunization.rs",
+      "id": "e66020c4-e89b-4ab2-8194-3a756fe42444",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Immunization resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Immunization.rs",
+      "value": "patient.Immunization.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search MedicationRequest resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.MedicationRequest.rs",
+      "id": "89e2c082-0235-4dc8-8524-a8ba3d0c35af",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search MedicationRequest resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.MedicationRequest.rs",
+      "value": "patient.MedicationRequest.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Observation resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Observation.rs",
+      "id": "e1d108d2-8097-4557-a8e8-4681ebc24093",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Observation resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Observation.rs",
+      "value": "patient.Observation.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Organization resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Organization.rs",
+      "id": "b8d08b8e-7940-487d-acb8-b12b8d3269b7",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Organization resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Organization.rs",
+      "value": "patient.Organization.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Patient resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Patient.rs",
+      "id": "db4a9cbd-955d-4d7e-8203-51af70bf7d5f",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Patient resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Patient.rs",
+      "value": "patient.Patient.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Practitioner resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Practitioner.rs",
+      "id": "75e217f2-8645-41d4-b1cd-810cc0a64ee6",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Practitioner resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Practitioner.rs",
+      "value": "patient.Practitioner.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Procedure resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Procedure.rs",
+      "id": "93414dca-3aef-4619-90fe-ec5acbb3f7ef",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Procedure resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Procedure.rs",
+      "value": "patient.Procedure.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Provenance resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Provenance.rs",
+      "id": "09de5a07-bf41-4394-b4b6-9e10701056b4",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Provenance resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Provenance.rs",
+      "value": "patient.Provenance.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search PractitionerRole resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.PractitionerRole.rs",
+      "id": "940188dc-cad0-44c9-877b-4c3c7f4cce30",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search PractitionerRole resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.PractitionerRole.rs",
+      "value": "patient.PractitionerRole.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search PractitionerRole resources in their own compartment.",
+      "adminConsentDisplayName": "user.PractitionerRole.rs",
+      "id": "846fd334-d762-4c53-8d04-d972f91f1aac",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search PractitionerRole resources in their own compartment.",
+      "userConsentDisplayName": "user.PractitionerRole.rs",
+      "value": "user.PractitionerRole.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search CareTeam resources in their own compartment.",
+      "adminConsentDisplayName": "user.CareTeam.rs",
+      "id": "2615c271-ac77-4be2-b6e8-28c388fe72c4",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search CareTeam resources in their own compartment.",
+      "userConsentDisplayName": "user.CareTeam.rs",
+      "value": "user.CareTeam.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Condition resources in their own compartment.",
+      "adminConsentDisplayName": "user.Condition.rs",
+      "id": "fd66aea1-1fc6-4e3f-aa58-92ac550f41c6",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Condition resources in their own compartment.",
+      "userConsentDisplayName": "user.Condition.rs",
+      "value": "user.Condition.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Device resources in their own compartment.",
+      "adminConsentDisplayName": "user.Device.rs",
+      "id": "994e993f-8f2d-4386-a925-e657cdedb901",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Device resources in their own compartment.",
+      "userConsentDisplayName": "user.Device.rs",
+      "value": "user.Device.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search DocumentReference resources in their own compartment.",
+      "adminConsentDisplayName": "user.DocumentReference.rs",
+      "id": "73ba70e8-a564-4758-9151-1668df3da7c0",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search DocumentReference resources in their own compartment.",
+      "userConsentDisplayName": "user.DocumentReference.rs",
+      "value": "user.DocumentReference.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search DiagnosticReport resources in their own compartment.",
+      "adminConsentDisplayName": "user.DiagnosticReport.rs",
+      "id": "7d56cfda-1694-4b35-b152-ffb6b3d5e486",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search DiagnosticReport resources in their own compartment.",
+      "userConsentDisplayName": "user.DiagnosticReport.rs",
+      "value": "user.DiagnosticReport.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Encounter resources in their own compartment.",
+      "adminConsentDisplayName": "user.Encounter.rs",
+      "id": "a3815e4a-e48d-4137-a071-a5bc2ae576ba",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Encounter resources in their own compartment.",
+      "userConsentDisplayName": "user.Encounter.rs",
+      "value": "user.Encounter.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Goal resources in their own compartment.",
+      "adminConsentDisplayName": "user.Goal.rs",
+      "id": "06bbb747-f1cf-4878-afe6-7ead31077ff3",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Goal resources in their own compartment.",
+      "userConsentDisplayName": "user.Goal.rs",
+      "value": "user.Goal.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Location resources in their own compartment.",
+      "adminConsentDisplayName": "user.Location.rs",
+      "id": "940f8f6a-76cd-4b68-a7f2-ef5b8720fa28",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Location resources in their own compartment.",
+      "userConsentDisplayName": "user.Location.rs",
+      "value": "user.Location.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search MedicationRequest resources in their own compartment.",
+      "adminConsentDisplayName": "user.MedicationRequest.rs",
+      "id": "8cb9cfa4-4f52-4a7d-94cb-cc76c1236b17",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search MedicationRequest resources in their own compartment.",
+      "userConsentDisplayName": "user.MedicationRequest.rs",
+      "value": "user.MedicationRequest.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Observation resources in their own compartment.",
+      "adminConsentDisplayName": "user.Observation.rs",
+      "id": "d955b3dc-eeb4-49bd-8fa0-ab2b732f0fcc",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Observation resources in their own compartment.",
+      "userConsentDisplayName": "user.Observation.rs",
+      "value": "user.Observation.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Organization resources in their own compartment.",
+      "adminConsentDisplayName": "user.Organization.rs",
+      "id": "6c3620e7-cfac-405d-b6fa-606b852a3638",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Organization resources in their own compartment.",
+      "userConsentDisplayName": "user.Organization.rs",
+      "value": "user.Organization.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Patient resources in their own compartment.",
+      "adminConsentDisplayName": "user.Patient.rs",
+      "id": "e1f0b158-5648-4853-9a57-956f9c72742e",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Patient resources in their own compartment.",
+      "userConsentDisplayName": "user.Patient.rs",
+      "value": "user.Patient.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to serach Practitioner resources in their own compartment.",
+      "adminConsentDisplayName": "user.Practitioner.rs",
+      "id": "8681b4ed-4840-4d74-b6df-8210e5d6f19f",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Practitioner resources in their own compartment.",
+      "userConsentDisplayName": "user.Practitioner.rs",
+      "value": "user.Practitioner.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Procedure resources in their own compartment.",
+      "adminConsentDisplayName": "user.Procedure.rs",
+      "id": "d1cf75bc-7b58-4f9c-bfd7-384040267934",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Procedure resources in their own compartment.",
+      "userConsentDisplayName": "user.Procedure.rs",
+      "value": "user.Procedure.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Provenance resources in their own compartment.",
+      "adminConsentDisplayName": "user.Provenance.rs",
+      "id": "f9d18483-eca9-45f8-8364-c431e634fdb8",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Provenance resources in their own compartment.",
+      "userConsentDisplayName": "user.Provenance.rs",
+      "value": "user.Provenance.rs"
+    },
+    {
+      "adminConsentDescription": "Allows a user to search Location resources in a patient's compartment.",
+      "adminConsentDisplayName": "patient.Location.rs",
+      "id": "f10cefc8-44b5-4919-b03e-f68c9a41b45a",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows a user to search Location resources in a patient's compartment.",
+      "userConsentDisplayName": "patient.Location.rs",
+      "value": "patient.Location.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Immunization resources in their compartment.",
+      "adminConsentDisplayName": "user.Immunization.rs",
+      "id": "fc512edb-a09d-430e-aea3-743f99d33e87",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Immunization resources in their compartment.",
+      "userConsentDisplayName": "user.Immunization.rs",
+      "value": "user.Immunization.rs"
+    },
+    
+    {
+      "adminConsentDescription": "Allows user to read Specimen resources in their compartment.",
+      "adminConsentDisplayName": "user.Specimen.read",
+      "id": "79287f87-0617-44a6-9067-fdbb84197264",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read Specimen resources in their compartment.",
+      "userConsentDisplayName": "user.Specimen.read",
+      "value": "user.Specimen.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Specimen resources in their compartment.",
+      "adminConsentDisplayName": "user.Specimen.rs",
+      "id": "58517d83-ecfb-4354-ae2d-10b21dc98fa9",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Specimen resources in their compartment.",
+      "userConsentDisplayName": "user.Specimen.rs",
+      "value": "user.Specimen.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read Specimen resources in their compartment.",
+      "adminConsentDisplayName": "patient.Specimen.read",
+      "id": "d603b263-5b19-4a49-9c0d-67d65eac0cc9",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read Specimen resources in their compartment.",
+      "userConsentDisplayName": "patient.Specimen.read",
+      "value": "patient.Specimen.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Specimen resources in their compartment.",
+      "adminConsentDisplayName": "patient.Specimen.rs",
+      "id": "c72ebb6a-dc36-4de8-915e-4d09a6939284",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Specimen resources in their compartment.",
+      "userConsentDisplayName": "patient.Specimen.rs",
+      "value": "patient.Specimen.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read Coverage resources in their compartment.",
+      "adminConsentDisplayName": "patient.Coverage.read",
+      "id": "15553dfb-9d9a-4d57-ae0c-e989ca23e8bc",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read Coverage resources in their compartment.",
+      "userConsentDisplayName": "patient.Coverage.read",
+      "value": "patient.Coverage.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Coverage resources in their compartment.",
+      "adminConsentDisplayName": "patient.Coverage.rs",
+      "id": "40a0ed41-f661-4e6a-a750-242e3fb9a062",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Coverage resources in their compartment.",
+      "userConsentDisplayName": "patient.Coverage.rs",
+      "value": "patient.Coverage.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read Coverage resources in their compartment.",
+      "adminConsentDisplayName": "user.Coverage.read",
+      "id": "6e5fdaf9-7396-4ec0-8bbb-ed83794cb329",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read Coverage resources in their compartment.",
+      "userConsentDisplayName": "user.Coverage.read",
+      "value": "user.Coverage.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search Coverage resources in their compartment.",
+      "adminConsentDisplayName": "user.Coverage.rs",
+      "id": "75cf27a7-e22c-4f1f-a5b6-4eb646f7bf9a",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search Coverage resources in their compartment.",
+      "userConsentDisplayName": "user.Coverage.rs",
+      "value": "user.Coverage.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
+      "adminConsentDisplayName": "patient.MedicationDispense.read",
+      "id": "8a4981a0-ebe7-44a5-85f1-b9a185600caa",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
+      "userConsentDisplayName": "patient.MedicationDispense.read",
+      "value": "patient.MedicationDispense.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
+      "adminConsentDisplayName": "patient.MedicationDispense.rs",
+      "id": "175420b4-c72c-4c9a-8b4a-35785b47cfb9",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
+      "userConsentDisplayName": "patient.MedicationDispense.rs",
+      "value": "patient.MedicationDispense.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
+      "adminConsentDisplayName": "user.MedicationDispense.read",
+      "id": "861f96e4-4069-4a1d-a326-162c7b8698a5",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
+      "userConsentDisplayName": "user.MedicationDispense.read",
+      "value": "user.MedicationDispense.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
+      "adminConsentDisplayName": "user.MedicationDispense.rs",
+      "id": "b0ba3599-2c6b-4c66-8b23-4cb8b06cecfb",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
+      "userConsentDisplayName": "user.MedicationDispense.rs",
+      "value": "user.MedicationDispense.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
+      "adminConsentDisplayName": "user.ServiceRequest.read",
+      "id": "9f9499b9-91b2-44cc-9819-4b00cc71e3e9",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
+      "userConsentDisplayName": "user.ServiceRequest.read",
+      "value": "user.ServiceRequest.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
+      "adminConsentDisplayName": "user.ServiceRequest.rs",
+      "id": "f20f7a7c-3e83-4248-8fca-9fc0e8596f54",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
+      "userConsentDisplayName": "user.ServiceRequest.rs",
+      "value": "user.ServiceRequest.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
+      "adminConsentDisplayName": "patient.ServiceRequest.read",
+      "id": "9b6019d4-c9d7-45ba-afd7-96957d86dea9",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
+      "userConsentDisplayName": "patient.ServiceRequest.read",
+      "value": "patient.ServiceRequest.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
+      "adminConsentDisplayName": "patient.ServiceRequest.rs",
+      "id": "ee458b1e-0720-42c2-868f-a14b96720735",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
+      "userConsentDisplayName": "patient.ServiceRequest.rs",
+      "value": "patient.ServiceRequest.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
+      "adminConsentDisplayName": "patient.RelatedPerson.read",
+      "id": "f3a489d9-57c6-4c90-85c2-1eeb893f203a",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
+      "userConsentDisplayName": "patient.RelatedPerson.read",
+      "value": "patient.RelatedPerson.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
+      "adminConsentDisplayName": "patient.RelatedPerson.rs",
+      "id": "e8c1a0e5-9b9a-4d6f-9a72-5e4f7b60d821",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
+      "userConsentDisplayName": "patient.RelatedPerson.rs",
+      "value": "patient.RelatedPerson.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
+      "adminConsentDisplayName": "user.RelatedPerson.read",
+      "id": "b1f5e2a4-3f7e-4d62-b3a1-2e0b4e8fc4b3",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
+      "userConsentDisplayName": "user.RelatedPerson.read",
+      "value": "user.RelatedPerson.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
+      "adminConsentDisplayName": "user.RelatedPerson.rs",
+      "id": "7c9d0d12-63a3-462f-9bc1-9f9d7f1a56e2",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
+      "userConsentDisplayName": "user.RelatedPerson.rs",
+      "value": "user.RelatedPerson.rs"
     }
   ]
 }

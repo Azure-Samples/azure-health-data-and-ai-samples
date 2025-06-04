@@ -64,8 +64,8 @@ $access_token = az account get-access-token --scope "$FhirAudience/user_imperson
 
 Write-Host "Using token $access_token"
 
-$FilePath = "$SCRIPT_PATH/test-resources/V3.1.1_USCoreCompliantResources.json"
+$FilePath = "$SCRIPT_PATH/test-resources/V6.1.0_USCoreCompliantResources.json"
 az rest --uri $FhirUrl --method POST --body "@$FilePath" --headers "Authorization=Bearer $access_token" "Content-Type=application/json"
 
-$FilePath = "$SCRIPT_PATH/test-resources/CapabilityStatement-us-core-server.json"
+$FilePath = "$SCRIPT_PATH/test-resources/CapabilityStatement-us-core-server-v6.1.0.json"
 az rest --uri "$FhirUrl/CapabilityStatement/us-core-server" --method PUT --body "@$FilePath" --headers "Authorization=Bearer $access_token" "Content-Type=application/json"

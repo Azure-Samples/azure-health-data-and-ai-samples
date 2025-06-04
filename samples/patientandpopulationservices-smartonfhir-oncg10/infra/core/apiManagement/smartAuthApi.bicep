@@ -117,19 +117,36 @@ resource smartAuthApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' 
     }
   }
 
-  resource smart 'operations' = {
-    name: 'smartAuthorizeEndpoint'
+  resource smartAuthorizeEndpointGet 'operations' = {
+    name: 'smartAuthorizeEndpointGet'
     properties: {
       displayName: 'SMART Authorize Endpoint (GET)'
       method: 'GET'
       urlTemplate: '/authorize'
     }
 
-    resource smartAuthorizeEndpointPolicy 'policies' = {
+    resource smartAuthorizeEndpointGetPolicy 'policies' = {
       name: 'policy'
       properties: {
         format: 'rawxml'
-        value: loadTextContent('policies/authorizeEndpointPolicy.xml')
+        value: loadTextContent('policies/authorizeEndpointGetPolicy.xml')
+      }
+    }
+  }
+
+  resource smartAuthorizeEndpointPost 'operations' = {
+    name: 'smartAuthorizeEndpointPost'
+    properties: {
+      displayName: 'SMART Authorize Endpoint (POST)'
+      method: 'POST'
+      urlTemplate: '/authorize'
+    }
+
+    resource smartAuthorizeEndpointPostPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/authorizeEndpointPostPolicy.xml')
       }
     }
   }

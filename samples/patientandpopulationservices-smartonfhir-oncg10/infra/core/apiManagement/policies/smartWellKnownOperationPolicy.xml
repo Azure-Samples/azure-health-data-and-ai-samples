@@ -11,16 +11,16 @@
     - Comments within policy elements are not supported and may disappear. Place your comments between policy elements or at a higher level scope.
 -->
 <policies>
-	<inbound>
-		<base />
-		<rewrite-uri template="/metadata" />
-	</inbound>
-	<backend>
-		<base />
-	</backend>
-	<outbound>
-		<base />
-		<set-body template="liquid">{
+    <inbound>
+        <base />
+        <rewrite-uri template="/metadata" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <set-body template="liquid">{
             "issuer": "https://login.microsoftonline.com/{{TenantId}}/v2.0",
             "jwks_uri": "https://login.microsoftonline.com/{{TenantId}}/discovery/v2.0/keys",
             "authorization_endpoint": "https://{{context.Request.OriginalUrl.Host}}/auth/authorize",
@@ -48,14 +48,15 @@
                 "permission-offline",
                 "context-banner",
                 "context-style",
-                "permission-user"
+                "permission-user",
+                "context-ehr-encounter"
             ]
         }</set-body>
-		<set-header name="Content-Type" exists-action="override">
-			<value>application/json</value>
-		</set-header>
-	</outbound>
-	<on-error>
-		<base />
-	</on-error>
+        <set-header name="Content-Type" exists-action="override">
+            <value>application/json</value>
+        </set-header>
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
 </policies>
