@@ -45,6 +45,10 @@ param fhirId string
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
+@allowed([
+  true
+  false
+])
 @description('Deploy sample with Virtual Network')
 param enableVNetSupport bool
 
