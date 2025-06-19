@@ -21,24 +21,24 @@ namespace EMPIShim
         private static HttpClient _empiclient = new HttpClient();
         private async Task initAuthClient(ILogger log)
         {
-            var url = Environment.GetEnvironmentVariable("NEXTGATE-URL") + "/ws/auth/auth/authenticate";
+            var url = Environment.GetEnvironmentVariable("NEXTGATE_URL") + "/ws/auth/auth/authenticate";
             var dict = new Dictionary<string, string>();
-            dict.Add("username", Utils.GetEnvironmentVariable("NEXTGATE-USERNAME"));
-            dict.Add("password", Utils.GetEnvironmentVariable("NEXTGATE-PASSWORD"));
+            dict.Add("username", Utils.GetEnvironmentVariable("NEXTGATE_USERNAME"));
+            dict.Add("password", Utils.GetEnvironmentVariable("NEXTGATE_PASSWORD"));
             using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(dict) };
             using var resp = await _empiclient.SendAsync(req);
             var rs = await resp.Content.ReadAsStringAsync();
             if (resp.IsSuccessStatusCode)
             {
                 CookieContainer cookies = new CookieContainer();
-                Uri myUri = new Uri(Environment.GetEnvironmentVariable("NEXTGATE-URL"));
+                Uri myUri = new Uri(Environment.GetEnvironmentVariable("NEXTGATE_URL"));
                 foreach (var cookieHeader in resp.Headers.GetValues("Set-Cookie"))
                     cookies.SetCookies(myUri, cookieHeader);
                 string cookieValue = cookies.GetCookies(myUri).FirstOrDefault(c => c.Name == "XSRF-TOKEN")?.Value;
                 _empiclient.DefaultRequestHeaders.Clear();
                 _empiclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _empiclient.DefaultRequestHeaders.TryAddWithoutValidation("X-XSRF-TOKEN", cookieValue);
-                _empiclient.DefaultRequestHeaders.TryAddWithoutValidation("Referer", Environment.GetEnvironmentVariable("NEXTGATE-URL"));
+                _empiclient.DefaultRequestHeaders.TryAddWithoutValidation("Referer", Environment.GetEnvironmentVariable("NEXTGATE_URL"));
                 log.LogInformation($"Authenticated to NextGate Token: {cookieValue}");
             } else
             {
@@ -135,7 +135,7 @@ namespace EMPIShim
                     }
                 }
             }
-            var url = Environment.GetEnvironmentVariable("NEXTGATE-URL") + $"/ws/mm/PersonRS/search?minScore=1&count={limit}";
+            var url = Environment.GetEnvironmentVariable("NEXTGATE_URL") + $"/ws/mm/PersonRS/search?minScore=1&count={limit}";
             if (!_empiclient.DefaultRequestHeaders.TryGetValues("X-XSRF-TOKEN",out var fred)) await initAuthClient(log);
             var resp = await _empiclient.PostAsync(url,new StringContent(sc.ToString(), Encoding.UTF8, "application/json"));
             if (resp.StatusCode==HttpStatusCode.Unauthorized || resp.StatusCode==HttpStatusCode.Forbidden)
@@ -160,7 +160,7 @@ namespace EMPIShim
                 else if (mc.Score >= 5 && mc.Score < 8) mc.Certainty = Certainty.possible;
                 else if (mc.Score >= 8 && mc.Score < 10) mc.Certainty = Certainty.probable;
                 else mc.Certainty = Certainty.certain;
-                var urlp = Environment.GetEnvironmentVariable("NEXTGATE-URL") + $"/ws/mm/PersonRS/enterpriserecords/{mc.EnterpriseId}?includeMetadata=true";
+                var urlp = Environment.GetEnvironmentVariable("NEXTGATE_URL") + $"/ws/mm/PersonRS/enterpriserecords/{mc.EnterpriseId}?includeMetadata=true";
                 using var resp1 = await _empiclient.GetAsync(urlp);
                 var rs1 = await resp1.Content.ReadAsStringAsync();
                 JObject content1 = JObject.Parse(rs1);
@@ -290,7 +290,7 @@ namespace EMPIShim
 
                         }
                         log.LogInformation(o.ToString(Newtonsoft.Json.Formatting.Indented));
-                        var url = Environment.GetEnvironmentVariable("NEXTGATE-URL") + $"/ws/mm/PersonRS/systemrecords/{Utils.GetEnvironmentVariable("EMPIFHIRSystemId")}/{fhirresource["id"].ToString()}?match=true";
+                        var url = Environment.GetEnvironmentVariable("NEXTGATE_URL") + $"/ws/mm/PersonRS/systemrecords/{Utils.GetEnvironmentVariable("EMPIFHIRSystemId")}/{fhirresource["id"].ToString()}?match=true";
                         if (!_empiclient.DefaultRequestHeaders.TryGetValues("X-XSRF-TOKEN", out var fred)) await initAuthClient(log);
                         var resp = await _empiclient.PostAsync(url, new StringContent(o.ToString(), Encoding.UTF8, "application/json"));
                         if (resp.StatusCode == HttpStatusCode.Unauthorized || resp.StatusCode == HttpStatusCode.Forbidden)
@@ -310,7 +310,7 @@ namespace EMPIShim
                     }
                     break;
                 case "Microsoft.HealthcareApis.FhirResourceDeleted":
-                    var urld = Environment.GetEnvironmentVariable("NEXTGATE-URL") + $"/ws/mm/PersonRS/systemrecords/{Utils.GetEnvironmentVariable("EMPIFHIRSystemId")}/{fhirresource["id"].ToString()}/status";
+                    var urld = Environment.GetEnvironmentVariable("NEXTGATE_URL") + $"/ws/mm/PersonRS/systemrecords/{Utils.GetEnvironmentVariable("EMPIFHIRSystemId")}/{fhirresource["id"].ToString()}/status";
                     if (!_empiclient.DefaultRequestHeaders.TryGetValues("X-XSRF-TOKEN", out var fred1)) await initAuthClient(log);
                     JObject stat = new JObject();
                     stat["value"] = "I";

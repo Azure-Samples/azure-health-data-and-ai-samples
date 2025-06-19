@@ -32,13 +32,13 @@ namespace EMPIShim
     public static class FHIRUtils
     {
         //AD Settings
-        private static bool isMsi = Utils.GetBoolEnvironmentVariable("FS-ISMSI");
-        private static string resource = Utils.GetEnvironmentVariable("FS-RESOURCE");
-        private static string tenant = Utils.GetEnvironmentVariable("FS-TENANT-NAME");
-        private static string clientid = Utils.GetEnvironmentVariable("FS-CLIENT-ID");
-        private static string secret = Utils.GetEnvironmentVariable("FS-SECRET");
-        private static string authority = Utils.GetEnvironmentVariable("FS-AUTHORITY", "https://login.microsoftonline.com");
-        private static string fsurl = Utils.GetEnvironmentVariable("FS-URL");
+        private static bool isMsi = Utils.GetBoolEnvironmentVariable("FS_ISMSI");
+        private static string resource = Utils.GetEnvironmentVariable("FS_RESOURCE");
+        private static string tenant = Utils.GetEnvironmentVariable("FS_TENANT_NAME");
+        private static string clientid = Utils.GetEnvironmentVariable("FS_CLIENT_ID");
+        private static string secret = Utils.GetEnvironmentVariable("FS_SECRET");
+        private static string authority = Utils.GetEnvironmentVariable("FS_AUTHORITY", "https://login.microsoftonline.com");
+        private static string fsurl = Utils.GetEnvironmentVariable("FS_URL");
         private static ConcurrentDictionary<string, string> _tokens = new ConcurrentDictionary<string, string>();
         private static readonly HttpStatusCode[] httpStatusCodesWorthRetrying = {
             HttpStatusCode.RequestTimeout, // 408

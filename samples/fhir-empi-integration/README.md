@@ -86,24 +86,26 @@ The postman queries to demonstrate EMPI API call for $match operation is availab
 * Navigate to *\samples\fhir-empi-integration\empi-connector, Open the `EMPIShim.sln` project in Visual Studio.
 * Create `local.settings.json` file inside EMPIShim folder.
 * Add the following name and value:
+    - `AzureWebJobsStorage` : `UseDevelopmentStorage=true`
 	- `EMPIFHIRSystemId` : FHIR Service Url 
 	- `EMPIProvider` : `EMPIShim.NextGateEMPIProvider`
 	- `evconnect` : Connection-String of Event Hub you created earlier
-	- `FS-CLIENT-ID` : EMPI Connector App Registration Client ID you create earlier
-	- `FS-ISMSI` : true/false
-	- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
-	- `FS-SECRET` : EMPI Connector App Registration Secret you created earlier 
-	- `FS-TENANT-NAME` : Tenant ID
-	- `FS-URL` : FHIR Service URL
+	- `FS_CLIENT_ID` : EMPI Connector App Registration Client ID you create earlier
+	- `FS_ISMSI` : true/false
+	- `FS_RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
+	- `FS_SECRET` : EMPI Connector App Registration Secret you created earlier 
+	- `FS_TENANT_NAME` : Tenant ID
+	- `FS_URL` : FHIR Service URL
 	- `SEARCH_API_KEY` : Azure AI Search service key
 	- `SEARCH_ENDPOINT` : Azure AI Search service URL
 	- `SEARCH_INDEX` : Azure AI Search service index name
+	-`FUNCTIONS_WORKER_RUNTIME` : `dotnet`
 * Set EMPIShim project as StartUpProject
 * Run EMPIShim Application.
 
 ## Deploying the Sample on Azure:
 
-In order to deploy the EMPI Sample on Azure portal you will need to clone the repository, create certain resources, app registartions manually and later publish the application from Visual Studio:
+In order to deploy the EMPI Sample on Azure portal you will need to clone the repository, create certain resources, app registrations manually and later publish the application from Visual Studio:
 
 1. Create FHIR Service: Follow this [link](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/deploy-azure-portal) to create FHIR Service.
 	- Add `FHIR Data Contributor` role to the test user.
@@ -131,7 +133,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 		- state = enabled
 	- click save.
 1. Enable CORS and Update FHIR Service Audience:
-	- Naviagte to FHIR Serivce you created earlier
+	- Navigate to FHIR Service you created earlier
 	- Go to `CORS`
 	- Add `*` inside Origins and Headers
 	- Select all the methods and
@@ -142,22 +144,30 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 	- Navigate to `empi-connector` folder in the cloned repo and open the `EMPIShim.sln` solution using Visual Studio.
 	- Navigate to `EMPIUpdate.cs` file update the value `empievents` with the name of Event Hub you created earlier.
 	- Follow this [link](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs?pivots=isolated#publish-to-azure) to publish EMPI Connector App to Azure portal.
+	
+	Note: While creating the function app select Consumption as plan type and Linux as operating system. 
+
 1. Enable CORS and Setup configuration for EMPI Connector App:
 	- Go to the EMPI Connector Function App on Azure Portal which you created earlier.
 	- Go to `CORS`, add `*` inside allowed Origins and click save.
 	- Go to `Environment variables` and add the following name and value:
+	    - `AzureWebJobsStorage` : Storage Account Connection string 
 		- `EMPIFHIRSystemId` : FHIR Service Url 
 		- `EMPIProvider` : `EMPIShim.NextGateEMPIProvider`
 		- `evconnect` : Connection-String of Event Hub you created earlier
-		- `FS-CLIENT-ID` : EMPI Connector App Registration Client ID you create earlier
-		- `FS-ISMSI` : true/false
-		- `FS-RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
-		- `FS-SECRET` : EMPI Connector App Registration Secret you created earlier 
-		- `FS-TENANT-NAME` : Tenant ID
-		- `FS-URL` : FHIR Service URL
-		- `NEXTGATE-URL` : EMPI Server URL
-		- `NEXTGATE-USERNAME` : EMPI Server User's Username
-		- `NEXTGATE-PASSWORD` : EMPI Server User's Password
+		- `FS_CLIENT_ID` : EMPI Connector App Registration Client ID you create earlier
+		- `FS_ISMSI` : true/false
+		- `FS_RESOURCE` : `https://<Expose-API-App-Registration-Name>.<primary-domain-of-tenant>`
+		- `FS_SECRET` : EMPI Connector App Registration Secret you created earlier 
+		- `FS_TENANT_NAME` : Tenant ID
+		- `FS_URL` : FHIR Service URL
+		- `NEXTGATE_URL` : EMPI Server URL
+	        - `NEXTGATE_USERNAME` : EMPI Server User's Username
+	        - `NEXTGATE_PASSWORD` : EMPI Server User's Password
+	    - `FUNCTIONS_WORKER_RUNTIME` : `dotnet`
+
+Note: If you are using azure for deployment use EMPIShim.AzureSearchEMPIShim instead of EMPIShim.NextGateEMPIProvider as EMPIProvider
+
 1. Create App Registration for EMPI UI App:
 	- Go to `App Registrations`
 	- Create a new application
@@ -165,7 +175,7 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 		- Localhost is useful for debugging - we will add the Azure redirect URI after deploying EMPI UI App.
 	- Go to `API Permissions` and add the `user_impersonation` scope from your Expose API application.
     - Click `Add a Permission` then `APIs my organization uses`.
-    - Select the Expose API applicatin you created earlier.
+    - Select the Expose API application you created earlier.
     - Choose `Delegated permissions` then `user_impersonation`.
     - Finally, click `Add permission` to save.
 	- Save the client id of this application.
@@ -180,8 +190,10 @@ In order to deploy the EMPI Sample on Azure portal you will need to clone the re
 		- [empi-connector-api-key] : add the App keys present in the Function App which you published earlier.
 	- Add `https://<Expose-API-App-Registration-Name>.<tenant-name>.onmicrosoft.com/user_impersonation` along with openid and offline_access inside the GraphScopes.
 1. Steps to Publish EMPI UI App:
-	- Follow this [link](https://learn.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-8.0#deploy-from-visual-studio) to publish EMPI UI App.
+	- Follow this [link](https://learn.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly/azure-static-web-apps?view=aspnetcore-8.0) to publish EMPI UI App.
 	- Add the redirect URL `https://{{empi-ui-app-url}}/authentication/login-callback` within your EMPI UI App Registration.
+
+Note: If you are facing any issues while deployment, refer to [troubleshooting](./TROUBLESHOOTING.md)
 
 ## UI Application Walkthrough:
 

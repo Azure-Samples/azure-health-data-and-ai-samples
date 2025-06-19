@@ -55,7 +55,7 @@ namespace EMPIShim
                         if (pat.Success)
                         {
                             JObject pe = new JObject();
-                            pe["fullUrl"] = $"{Utils.GetEnvironmentVariable("FS-URL")}/Patient/{sysid.Id}";
+                            pe["fullUrl"] = $"{Utils.GetEnvironmentVariable("FS_URL")}/Patient/{sysid.Id}";
                             pe["resource"] = JObject.Parse(pat.Content);
                             pe["search"] = searchEntry(mc);
                             patients.Add(pe);

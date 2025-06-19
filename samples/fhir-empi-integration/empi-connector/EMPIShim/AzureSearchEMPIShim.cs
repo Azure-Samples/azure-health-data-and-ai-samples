@@ -20,7 +20,7 @@ namespace EMPIShim
 {
 	internal class AzureSearchEMPIShim : IEMPIProvider
 	{
-		private static string fsurl = Utils.GetEnvironmentVariable("FS-URL");
+		private static string fsurl = Utils.GetEnvironmentVariable("FS_URL");
 		private string searchIndex = Environment.GetEnvironmentVariable("SEARCH_INDEX");
 		private static HttpClient _empiclient = new HttpClient();
 		public async Task<MatchResult> RunMatch(JObject criteria, ILogger log)
@@ -174,14 +174,14 @@ namespace EMPIShim
 					{
 						candidates.Add(mc);
 
-					}
+					}  
 					c++;
 
 				}
 
 
 			}
-			retVal.Result = candidates;
+			    retVal.Result = candidates;
 			return retVal;
 		}
 		public async Task UpdateEMPI(string eventType, JObject fhirresource, ILogger log)
