@@ -24,6 +24,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id;
         private readonly GraphConsentService _graphContextService;
+        private readonly string subClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        private readonly string oidClaim = "http://schemas.microsoft.com/identity/claims/objectidentifier";
 
         public AppConsentInfoInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, GraphConsentService graphContextService)
         {
@@ -73,7 +75,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-            if (userPrincipal is null || !userPrincipal.HasClaim(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier"))
+            if (userPrincipal is null || !userPrincipal.HasClaim(x => x.Type == (_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)))
             {
                 _logger?.LogError("User does not have the oid claimin AppConsentInfoInputFilter. {User}", userPrincipal);
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new UnauthorizedAccessException("Token validation failed for get context info operation"), code: HttpStatusCode.Unauthorized);
@@ -84,7 +86,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             if (context.Request.Method == HttpMethod.Get)
             {
                 AuthorizeContext uriContext = new(context.Request.RequestUri.ParseQueryString());
-                var userId = userPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")!.Value;
+                var userId = userPrincipal.FindFirst(_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
 
                 if (uriContext.ClientId is null || uriContext.Scope is null || userId is null)
                 {
@@ -114,7 +116,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             {
                 var body = JObject.Parse(context.ContentString);
                 var appConsentInfo = body.ToObject<AppConsentInfo>();
-                var userId = userPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")!.Value;
+                var userId = userPrincipal.FindFirst(_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
 
                 if (appConsentInfo?.ApplicationId is null || userId is null || appConsentInfo?.Scopes is null)
                 {
@@ -128,7 +130,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 try
                 {
                     await _graphContextService.PersistAppConsentScopeIfRemoval(appConsentInfo, userId);
-                    context.StatusCode = HttpStatusCode.NoContent;
+                    context.StatusCode = HttpStatusCode.OK;
                     return context;
                 }
                 catch (Microsoft.Graph.ServiceException ex)

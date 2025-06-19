@@ -1,3 +1,6 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
+
 ## 4. Add sample data and US Core resources
 
 We have created a Powershell script that will load US Core artifacts and test data quickly for testing. Open [this script](../scripts/Load-ProfilesData.ps1), change the variables at the top, and execute.
@@ -9,3 +12,5 @@ Information about loading profiles for the FHIR Service can be found at [this do
 ### Loading Data
 
 We have created a bundle containing US Core compliant sample data. This can be found [here](https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json). Postman or another REST client can be used to load this file.
+
+**[Back to Previous Page](./deployment.md#4-add-sample-data-and-us-core-resources)**

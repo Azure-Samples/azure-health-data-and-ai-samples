@@ -45,13 +45,30 @@ param fhirId string
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
+@allowed([
+  true
+  false
+])
 @description('Deploy sample with Virtual Network')
 param enableVNetSupport bool
+
+@description('Provide authority url to ensure that only authorized users can access sensitive patient information')
+param AuthorityURL string
+
+@description('Provide Fhir Resource App registration Client Id to customize the access token sent to the FHIR Service')
+param FhirResourceAppId string
+
+@description('Provide B2C Tenant Id')
+param B2CTenantId string
+
+@description('smart on fhir with b2c')
+param smartonfhirwithb2c bool 
 
 // end optional configuration parameters
 
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
+var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
 var fhirResourceIdSplit = split(fhirId,'/')
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
@@ -68,6 +85,7 @@ var appTags = {
 var tenantId = subscription().tenantId
 
 // Add any extra principals that need to be able to access the Key Vault
+var keyVaultWriterPrincipals = [ principalId ]
 var fhirSMARTPrincipals = []
 var fhirContributorPrincipals = [ principalId ]
 var createResourceGroup = empty(existingResourceGroupName) ? true : false
@@ -82,6 +100,8 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResource
 resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' existing = if (!createResourceGroup) {
   name: existingResourceGroupName
 }
+
+var AuthorityURLvalue = empty(AuthorityURL) ? '' : AuthorityURL
 
 var newOrExistingResourceGroupName = createResourceGroup ? rg.name : existingResourceGroup.name
 
@@ -100,6 +120,9 @@ module fhir 'core/fhir.bicep'= {
     tenantId: tenantId
     appTags: appTags
     audience: FhirAudience
+    AuthorityURL: AuthorityURLvalue
+    FhirResourceAppId:FhirResourceAppId
+    smartOnFhirWithB2C: smartonfhirwithb2c
   }
 }
 
@@ -157,13 +180,17 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     fhirServiceAudience: FhirAudience
     contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
     redisCacheId: redis.outputs.redisCacheId
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
     enableVNetSupport: enableVNetSupport
+    b2cTenantId: B2CTenantId
+    fhirResourceAppId: FhirResourceAppId
+    authorityUrl: AuthorityURL
+    smartOnFhirWithB2C: smartonfhirwithb2c
+    keyVaultName: keyVaultName
   }
 }
 
@@ -203,9 +230,11 @@ module apim './core/apiManagement.bicep'= {
     publisherName: ApiPublisherName
     location: location
     fhirBaseUrl: fhirUrl
+    issuer: issuer
+    jwksUri: jwksUri
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+    appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     enableVNetSupport: enableVNetSupport
   }
 }
@@ -225,6 +254,22 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
   ]
 }
 
+var keyVaultName = '${nameShort}-kv'
+@description('KeyVault to hold Azure AD B2C Application Registration details.')
+module keyVault './core/keyVault.bicep' = {
+  name: 'vaultDeploy'
+  scope: resourceGroup(newOrExistingResourceGroupName)
+  params: {
+    vaultName: keyVaultName
+    location: location
+    tenantId: tenantId
+    enableVNetSupport: enableVNetSupport
+    smartonfhirwithb2c: smartonfhirwithb2c
+    writerObjectIds: keyVaultWriterPrincipals
+    readerObjectIds: [ authCustomOperation.outputs.functionAppPrincipalId ]
+  }
+}
+
 var authorizeStaticWebAppName = '${name}-contextswa'
 @description('Static web app for SMART Context UI')
 module contextStaticWebApp './app/contextApp.bicep' = {
@@ -239,6 +284,13 @@ module contextStaticWebApp './app/contextApp.bicep' = {
     enableVNetSupport: enableVNetSupport
   }
 }
+
+var tenantnamesplit = split(AuthorityURL,'/')  
+var tenantendpoint = smartonfhirwithb2c ? tenantnamesplit[2] : ''
+var b2ctenantname = smartonfhirwithb2c ? split(tenantendpoint,'.') : ['']
+
+var issuer = smartonfhirwithb2c ? 'https://${tenantendpoint}/${B2CTenantId}/v2.0/' : 'https://${tenantendpoint}/${tenantId}/v2.0'
+var jwksUri = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL
 
 // These map to user secrets for local execution of the program
 output Location string = location
@@ -255,3 +307,12 @@ output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
+output B2C_Tenant_Name string = b2ctenantname[0]
+output Authority_URL string = AuthorityURL
+output SmartonFhir_with_B2C bool = smartonfhirwithb2c
+output B2C_Tenant_Id string = B2CTenantId
+output Fhir_Resource_AppId string = FhirResourceAppId
+output keyVaultStore string = keyVaultName
+output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
+output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
+output REACT_APP_Authority_URL string = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL

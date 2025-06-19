@@ -65,25 +65,25 @@ Azure Health Data Services needs some modification to the capability statement a
     participant EHR
     participant APIM
     participant EHR Launch Handler
-    participant Microsoft Entra ID
+    participant Microsoft Entra ID/Azure AD B2C
 
     EHR -->> APIM: Send session state to cache
     EHR ->> EHR: User Launches App
     EHR ->> User/App: Launch Request
 
     User/App ->> APIM: Discovery Request
-    APIM -->> User/App: Discovery Repsonse
+    APIM -->> User/App: Discovery Response
     User/App ->> APIM:  Authorization Request
     APIM -->> APIM: Cache launch parameter
     APIM ->> EHR Launch Handler: Forward /authorize request    
-    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ Microsoft Entra ID Transformed /authorize URL
-    User/App ->> Microsoft Entra ID: /authorize request
-    note over EHR Launch Handler, Microsoft Entra ID: Transformed to Microsoft Entra ID Compatible Request
-    Microsoft Entra ID -->> User/App: Authorization response (code)
+    EHR Launch Handler ->> User/App: HTTP Redirect Response w/ Microsoft Entra ID/Azure AD B2C Transformed /authorize URL
+    User/App ->> Microsoft Entra ID/Azure AD B2C: /authorize request
+    note over Microsoft Entra ID/Azure AD B2C: Transformed to Microsoft Entra ID/Azure AD B2C Compatible Request
+    Microsoft Entra ID/Azure AD B2C -->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> EHR Launch Handler: Forward /token request
-    EHR Launch Handler ->> Microsoft Entra ID: POST /token on behalf of user
-    Microsoft Entra ID ->> EHR Launch Handler: Access token response
+    EHR Launch Handler ->> Microsoft Entra ID/Azure AD B2C: POST /token on behalf of user
+    Microsoft Entra ID/Azure AD B2C ->> EHR Launch Handler: Access token response
     note over EHR Launch Handler: Handler will augment the /token response with proper scopes, context
     note over EHR Launch Handler: Handler will NOT create a new token
     EHR Launch Handler ->> APIM: Return token response
@@ -96,7 +96,7 @@ Azure Health Data Services needs some modification to the capability statement a
 
 SMART standalone launch refers to when an app launches from outside an EHR session. Generally these are patient facing apps since patients often do not access an EHR to view their data (patients could have EHR launch apps from an EHR patient portal). This flow often relies on user input for establishing the correct context for the SMART application since there is no session data to pull from. There are two potential scenarios where an EHR application may need to gather input from the user:
 
-- Selecting a record (like a patient) when a user has access to mulitple patients (like parent/child relatonship)
+- Selecting a record (like a patient) when a user has access to multiple patients (like parent/child relationship)
 - Reviewing and granting limited scopes to an application to control how much of the patient's data the SMART app can access
 
 *I think (need to verify)* ONC (g)(10) does not require a patient picker, so it is out of scope for this sample. If we need it, it's not too bad.
@@ -108,11 +108,11 @@ Microsoft Entra ID does not have a mechanism for selecting a subset of scopes wh
     participant User/App
     participant APIM
     participant SMART Auth Custom Operations
-    participant Microsoft Entra ID
+    participant Microsoft Entra ID/Azure AD B2C
     participant FHIR
     participant Graph
     User/App ->> APIM: Discovery Request
-    APIM ->> User/App: Discovery Repsonse
+    APIM ->> User/App: Discovery Response
     User/App ->> APIM: /authorize
     alt Scope Selector
         note over User/App: Session scope selection
@@ -127,13 +127,13 @@ Microsoft Entra ID does not have a mechanism for selecting a subset of scopes wh
     end
 
     APIM ->> SMART Auth Custom Operations: Forward /authorize request    
-    SMART Auth Custom Operations ->> Microsoft Entra ID: /authorize
-    note over SMART Auth Custom Operations, Microsoft Entra ID: Limited scopes, transformed
-    Microsoft Entra ID ->> User/App: Authorization response (code)
+    SMART Auth Custom Operations ->> Microsoft Entra ID/Azure AD B2C: /authorize
+    note over SMART Auth Custom Operations, Microsoft Entra ID/Azure AD B2C: Limited scopes, transformed
+    Microsoft Entra ID/Azure AD B2C ->> User/App: Authorization response (code)
     User/App ->> APIM: /token
     APIM ->> SMART Auth Custom Operations: Forward /token request
-    SMART Auth Custom Operations ->> Microsoft Entra ID: POST /token on behalf of user
-    Microsoft Entra ID ->> SMART Auth Custom Operations: Access token response
+    SMART Auth Custom Operations ->> Microsoft Entra ID/Azure AD B2C: POST /token on behalf of user
+    Microsoft Entra ID/Azure AD B2C ->> SMART Auth Custom Operations: Access token response
     note over SMART Auth Custom Operations: Handler will augment the /token response with proper scopes, context
     note over SMART Auth Custom Operations: Handler will NOT create a new token
     SMART Auth Custom Operations ->> APIM: Return token response
@@ -202,3 +202,5 @@ Client registration is an out-of-band process required before backend services c
 - EHR Launch
 - Rewriting of resource URLs
 - Missing Data
+
+**[Back to Previous Page](../README.md)**

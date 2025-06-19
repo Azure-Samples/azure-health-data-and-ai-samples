@@ -25,6 +25,12 @@ param publisherEmail string
 @description('Base URL of the FHIR Service')
 param fhirBaseUrl string
 
+@description('Issuer uri of openid-configuration endpoint')
+param issuer string
+
+@description('Jwks_uri of openid-configuration endpoint')
+param jwksUri string
+
 @description('Base URL of the SMART Auth Custom Operation Function')
 param smartAuthFunctionBaseUrl string
 
@@ -32,8 +38,8 @@ param smartAuthFunctionBaseUrl string
 param contextStaticAppBaseUrl string
 
 
-@description('Instrumentation key for App Insights used with APIM')
-param appInsightsInstrumentationKey string
+@description('Connection String for App Insights used with APIM')
+param appInsightsConnectionString string
 
 @description('Core API Management Service Resources')
 module apimService 'apiManagement/service.bicep' = {
@@ -45,7 +51,7 @@ module apimService 'apiManagement/service.bicep' = {
     skuCount: skuCount
     publisherName: publisherName
     publisherEmail: publisherEmail
-    appInsightsInstrumentationKey: appInsightsInstrumentationKey
+    appInsightsConnectionString: appInsightsConnectionString
   }
 }
 
@@ -92,6 +98,8 @@ module apimNamedValues 'apiManagement/namedValues.bicep' = {
   params: {
     apiManagementServiceName: apiManagementServiceName
     tenantId: subscription().tenantId
+    issuer: issuer
+    jwksUri: jwksUri
     contextStaticAppBaseUrl: contextStaticAppBaseUrl
     audienceUrl: 'https://${apiManagementServiceName}.azure-api.net'
   }

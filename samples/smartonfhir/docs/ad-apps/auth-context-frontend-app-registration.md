@@ -1,18 +1,26 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Auth Context Frontend App Registration
 
-The Auth Context Frontend Application is a sample React single-page application which enables both patient session-based scope selection and EHR launch context. Session-based scope selection allows patients to select which scopes they want to consent to for SMART on FHIR applications, even allowing removal of scopes during the login flow after they have been consented. Microsoft Entra ID does not support session based scoping, so this app removes the consent records for the user so they must re-consent on login. EHR launch requires the storage of session state during the authentication flow. This application will save of the launch parameter before login for later integration into the token. You will need to create an application regristation to represent the single-page application. You will need to save the `Client ID` and `Tenant ID` values from this application for later configuration.
+The Auth Context Frontend Application is a sample React single-page app that enables patient session-based scope selection and EHR launch context. It allows patients to choose which permissions (scopes) to consent for SMART on FHIR apps and even remove scopes during the login process. Since Microsoft Entra ID and Azure AD B2C do not support session-based scoping, the app clears consent records so users must re-consent upon login. Additionally, it stores the launch parameters before login for later use in the token. You will need to register the application and save the `Client ID` and `Tenant ID` for future configuration.
 
 ## Deployment (manual)
 
-1. Open Microsoft Entra ID and create a new application registration.
-1. Leave the application as a single tenant application. Add a single-page application (SPA) redirict URI of `http://localhost:3000`.
+1. If you are using Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. If you are using B2C, create the registration in the B2C tenant.
+1. Add a single-page application (SPA) redirect URI of `http://localhost:3000`.
     - Localhost is useful for debugging - we will add the Azure redirect URI after deployment.
-1. After registering the application, Under `Token Configuration` add optional claim for ID token type. Select `login_hint` claim and click on Add.
+1. After registering the application, include the following configuration only if you are using Microsoft Entra ID. **If you are implementing SMART on FHIR with B2C, you can skip this step.**
+    - Navigate to `Token Configuration`. 
+    - Add optional claim for ID token type.
+    - Select `login_hint` claim.  
+    - Click on Add.    
 1. Go to `API Permissions` and add the `user_impersonation` scope from your FHIR resource application.
-    - Click `Add a Permission` then `My APIs`.
-    - Select the FHIR Resource applicatin you created earlier.
+    - Click `Add a Permission` then `APIs my organization uses`.
+    - Select the FHIR Resource application you created earlier.
     - Choose `Delegated permissions` then `user_impersonation`.
     - Finally, click `Add permission` to save.
+1. Grant admin consent only if you are implementing SMART on FHIR with B2C. **Do not grant admin consent if you are using Microsoft Entra ID.**
 1. Inform your Azure Developer CLI environment of this application with:
     ```
     azd env set ContextAppClientId <context app id>
@@ -20,7 +28,7 @@ The Auth Context Frontend Application is a sample React single-page application 
 
 <br />
 <details>
-<summary>Click to expand and see screenshots.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra ID Reference.</summary>
 
 ![](./images/2_create_application_registration.png)
 ![](./images/2_create_application_registration_details.png)
@@ -28,3 +36,15 @@ The Auth Context Frontend Application is a sample React single-page application 
 ![](./images/2_add_fhir_user_impersonation.png)
 ![](./images/2_add_fhir_user_impersonation_screen_2.png)
 </details>
+
+<br />
+<details>
+<summary>Click to expand and see screenshots for B2C Reference.</summary>
+
+![](./images/2_create_application_registration_b2c.png)
+![](./images/2_create_application_registration_details_b2c.png)
+![](./images/2_add_fhir_user_impersonation_b2c.png)
+![](./images/2_add_fhir_user_impersonation_screen_2_b2c.png)
+</details>
+
+**[Back to Previous Page](../deployment.md#2-prepare-and-deploy-environment)**

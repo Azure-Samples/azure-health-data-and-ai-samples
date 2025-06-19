@@ -49,6 +49,23 @@ resource smartApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' = {
     }
   }
 
+  resource smartWellKnownJwksOperation 'operations' = {
+    name: 'smartWellKnownJwks'
+    properties: {
+      displayName: 'SMART well-known JWKS endpoint'
+      method: 'GET'
+      urlTemplate: '/.well-known/jwks.json'
+    }
+
+    resource smartWellKnownJwksPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/smartWellKnownJwksPolicy.xml')
+      }
+    }
+  }
+
   resource exportStatusCheckEndpoint 'operations' = {
     name: 'exportStatusCheck'
     properties: {

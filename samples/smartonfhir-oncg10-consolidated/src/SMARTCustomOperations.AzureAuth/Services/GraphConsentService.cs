@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
+using System.Configuration;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Logging;
@@ -16,16 +17,25 @@ namespace SMARTCustomOperations.AzureAuth.Services
 {
     public class GraphConsentService : BaseContextAppService
     {
-        private readonly ILogger<BaseContextAppService> _logger;
+		private readonly string _vaultName;
+		private readonly string _vaultUrl;
+		private readonly ILogger<BaseContextAppService> _logger;
         private readonly GraphServiceClient _graphServiceClient;
         private readonly AzureAuthOperationsConfig _config;
         private readonly Dictionary<string, ServicePrincipal> _resourceServicePrincipals = new();
 
         public GraphConsentService(AzureAuthOperationsConfig configuration, GraphServiceClient graphServiceClient, ILogger<BaseContextAppService> logger) : base(configuration, logger)
         {
-            _graphServiceClient = configuration.SmartonFhir_with_B2C ? B2CGraphServiceClient(configuration) : graphServiceClient;
-            _config = configuration;
+			if (string.IsNullOrEmpty(configuration.BackendServiceKeyVaultStore))
+			{
+				throw new ConfigurationErrorsException("BackendServiceKeyVaultStore must be set to use the KeyVaultClientConfiguratinService.");
+			}
+
+			_vaultName = configuration.BackendServiceKeyVaultStore!;
+			_vaultUrl = "https://" + configuration.BackendServiceKeyVaultStore! + ".vault.azure.net";
             _logger = logger;
+			_graphServiceClient = configuration.SmartonFhir_with_B2C ? B2CGraphServiceClient(configuration) : graphServiceClient;
+            _config = configuration;
         }
 
         public async Task<AppConsentInfo> GetAppConsentScopes(string requestingAppClientId, string userId, string[] requestedScopes)
@@ -225,9 +235,8 @@ namespace SMARTCustomOperations.AzureAuth.Services
         {
             var scopes = new[] { "https://graph.microsoft.com/.default" };
             var tenantId = config.B2C_Tenant_Id;
-            var clientId = config.Standalone_App_ClientId;
-            //var clientSecret = secret.Value.ToString();
-            var clientSecret = GetKeyVaultSecret(config.BackendServiceKeyVaultStore);
+            var clientId = GetKeyVaultSecret(config.KeyVaultClientIdKey);
+            var clientSecret = GetKeyVaultSecret(config.KeyVaultClientSecretKey);
             var options = new TokenCredentialOptions
             {
                 AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
@@ -236,14 +245,41 @@ namespace SMARTCustomOperations.AzureAuth.Services
             return new GraphServiceClient(clientSecretCredential, scopes);
         }
 
-        private string GetKeyVaultSecret(string keyVaultName)
-        {
-            string keyVaultUrl = $"https://{keyVaultName}.vault.azure.net";
-            string secretName = "standalone-app-secret";
-            var credential = new DefaultAzureCredential();
-            var client = new SecretClient(new Uri(keyVaultUrl), credential);
-            KeyVaultSecret secret = client.GetSecret(secretName);
-            return secret.Value.ToString();
-        }
-    }
+		private string GetKeyVaultSecret(string key)
+		{
+			_logger.LogInformation($"Attempting to fetch keyvault information for {key}");
+
+			try
+			{
+				// Create a keyvault client and try to fetch the client info that corresponds to the request
+			    var credential = new DefaultAzureCredential();
+			    var client = new SecretClient(new Uri(_vaultUrl), credential);
+
+			    KeyVaultSecret secret = client.GetSecret(key);
+			    return secret.Value.ToString();
+			}
+			catch (Azure.RequestFailedException ex)
+			{
+				if (ex.Status == 401)
+				{
+					_logger.LogCritical("Application is not setup correctly. Please provide application access to KeyVault via Managed Identity.");
+					throw new ConfigurationErrorsException($"The function app is not correctly configured to access KeyVault.", ex);
+				}
+
+				if (ex.Status == 404)
+				{
+					throw new UnauthorizedAccessException($"KeyVault could not find the secret with the names {key}", ex);
+				}
+
+				_logger.LogError("Unexpected error encountered while accessing KeyVault for keys {key}", key);
+				throw new UnauthorizedAccessException($"KeyVault error finding the keys with the names {key}", ex);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Unexpected error encountered while accessing KeyVault for keys {key}", ex);
+				throw new UnauthorizedAccessException($"KeyVault error when trying to {key}", ex);
+			}
+
+		}
+	}
 }

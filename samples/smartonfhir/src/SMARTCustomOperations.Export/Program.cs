@@ -49,11 +49,6 @@ namespace SMARTCustomOperations.Export
                         services.UseAppInsightsLogging(config.AppInsightsConnectionString, LogLevel.Trace);
                         services.UseTelemetry(config.AppInsightsConnectionString);
                     }
-                    else if (config.AppInsightsInstrumentationKey is not null)
-                    {
-                        services.UseAppInsightsLogging(config.AppInsightsInstrumentationKey, LogLevel.Trace);
-                        services.UseTelemetry(config.AppInsightsInstrumentationKey);
-                    }
 
                     services.UseAzureFunctionPipeline();
 

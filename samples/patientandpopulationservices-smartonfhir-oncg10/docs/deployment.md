@@ -16,7 +16,7 @@ Make sure you have the pre-requisites listed below
   - [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration debugging the sample code).
   - [Node Version 18.17.1/ NPM Version 10.2.0](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for building the frontend application and installing the US Core FHIR Profile.
   - [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
-  - [PowerShell Version 5.1.22621.2428 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
+  - [PowerShell Version 7 or Greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
 
 - **Access:**
   - Access to an Azure Subscription where you can create resources and add role assignments.
@@ -48,6 +48,7 @@ Next you will need to clone this repository and prepare your environment for dep
      ```
     azd up
     ```
+    *Note*- This command requires at least `PowerShell 7`. Running it in any earlier version may result in failure.
     - When running this command, you must select the `subscription name` and `location` from the drop-down menus to specify the deployment location for all resources. 
     - Please be aware that this sample can only be deployed in the EastUS2, WestUS2, or CentralUS regions. Make sure you choose one of these regions during the deployment process.
     - The azd provision command will prompt users to enter values for the `existingResourceGroupName`, `fhirid` and `enableVNetSupport` parameters. Users can provide values based on their requirements as below
@@ -60,7 +61,7 @@ Next you will need to clone this repository and prepare your environment for dep
             3. Copy the "Id" field under the "Essentials" group.
         - `enableVNetSupport`: This parameter accepts a boolean (true/false) value. 
         
-            When set to false, the follwing resorces are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
+            When set to false, the following resources are deployed with mentioned configurations. User will not be able to create private endpoints and will not be able to setup private network.
             1. API Management (APIM): Deployed in the Consumption tier.
             2. App Service Plan : Deployed in the Dynamic tier. 
             3. Static Web App: Deployed in the Free tier.
@@ -125,7 +126,7 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 1. Open the resource group created by step 3. Find the Azure API Management instance.
 1. Copy the Gateway URL for the API Management instance.
-1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a sinple-page application redirect URI. Make sure to add the last slash.
+1. Open your Application Registration for the Auth Context Frontend you created before deployment. Add `<gatewayURL>/auth/context/` as a single-page application redirect URI. Make sure to add the last slash.
     - For example: `https://myenv-apim.azure-api.net/auth/context/`
 
 <br />
@@ -163,3 +164,9 @@ pwsh ./scripts/Load-ProfilesData.ps1
 ```
 
 To learn more about the sample data, read [sample data](./sample-data.md).
+
+## 7. Testing Backend Service flow manually
+
+The backend service flow in SMART on FHIR is designed for system-to-system communication, where no user interaction is required. It uses the **client credentials grant** to authorize a backend client (such as a service or scheduled job) to access FHIR resources securely. In this implementation, we register a confidential client, generate a signed JWT (client assertion) using a private key, and exchange it for an access token. This token is then used to interact with protected FHIR APIs—such as performing a bulk data export—through Azure API Management.
+
+Follow the [SMART on FHIR Backend Service Setup and Manual Testing](./ad-apps/backend-service-client.md) document to test backend service flow manually.

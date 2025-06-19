@@ -45,6 +45,10 @@ param fhirId string
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = ''
 
+@allowed([
+  true
+  false
+])
 @description('Deploy sample with Virtual Network')
 param enableVNetSupport bool
 
@@ -162,7 +166,6 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     backendServiceVaultName: backendServiceVaultName
     contextAadApplicationId: ContextAppClientId
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
     redisCacheId: redis.outputs.redisCacheId
@@ -184,7 +187,6 @@ module exportCustomOperation './app/exportCustomOperation.bicep' = {
     apimName: apimName
     fhirUrl: fhirUrl
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
     enableVNetSupport: enableVNetSupport
@@ -241,7 +243,7 @@ module apim './core/apiManagement.bicep'= {
     smartAuthFunctionBaseUrl: 'https://${name}-aad-func.azurewebsites.net/api'
     exportFunctionBaseUrl: 'https://${name}-exp-func.azurewebsites.net/api'
     contextStaticAppBaseUrl: contextStaticWebApp.outputs.uri
-    appInsightsInstrumentationKey: monitoring.outputs.appInsightsInstrumentationKey
+    appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     enableVNetSupport: enableVNetSupport
   }
 }

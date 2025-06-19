@@ -48,21 +48,18 @@ namespace SMARTCustomOperations.AzureAuth
                     {
                         services.UseAppInsightsLogging(config.AppInsightsConnectionString, LogLevel.Information);
                         services.UseTelemetry(config.AppInsightsConnectionString);
-                    }
-                    else if (config.AppInsightsInstrumentationKey is not null)
-                    {
-                        services.UseAppInsightsLogging(config.AppInsightsInstrumentationKey, LogLevel.Information);
-                        services.UseTelemetry(config.AppInsightsInstrumentationKey);
-                    }
+                    }                   
                     // Add configuration
                     services.AddSingleton<AzureAuthOperationsConfig>(config);
 
                     // Add services needed for Microsoft Graph
                     services.AddMicrosoftGraphClient(options =>
                     {
-                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.TenantId });
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.SmartonFhir_with_B2C ? config.B2C_Tenant_Id : config.TenantId });
                     });
                     services.AddScoped<GraphConsentService>();
+
+                    services.AddHttpClient<IAuthProvider, AuthProvider>();
 
                     // Add cache for token context
                     services.AddMemoryCache();
@@ -87,7 +84,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddBinding<RestBinding, RestBindingOptions>(options =>
                     {
-                        options.BaseAddress = new Uri("https://login.microsoftonline.com");
+                        options.BaseAddress = new Uri(config.Authority_URL!);
                     });
 
                     services.AddOutputFilter(typeof(TokenOutputFilter));

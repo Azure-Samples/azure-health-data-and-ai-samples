@@ -7,7 +7,6 @@ param location string
 param audience string = ''
 param appTags object = {}
 param AuthorityURL string
-param StandaloneAppClientId string
 param FhirResourceAppId string
 param smartOnFhirWithB2C bool
 
@@ -36,7 +35,7 @@ var authenticationConfiguration = smartOnFhirWithB2C ? {
           authority: AuthorityURL
           applications: [
               {
-                  clientId: StandaloneAppClientId
+                  clientId: 'ExternalAppClientId'
                   audience: FhirResourceAppId
                   allowedDataActions: ['Read']
               }

@@ -22,6 +22,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly ContextCacheService _cacheService;
         private readonly string _id;
+        private readonly string subClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        private readonly string oidClaim = "http://schemas.microsoft.com/identity/claims/objectidentifier";
 
         public ContextCacheInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, ContextCacheService cacheService)
         {
@@ -71,7 +73,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(error, _configuration.Debug);
             }
 
-            if (userPrincipal is null || !userPrincipal.HasClaim(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier"))
+            if (userPrincipal is null || !userPrincipal.HasClaim(x => x.Type == (_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)))
             {
                 _logger?.LogError("User does not have the oid claimin AppConsentInfoInputFilter. {User}", userPrincipal);
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new UnauthorizedAccessException("Token validation failed for get context info operation"), code: HttpStatusCode.Unauthorized);
@@ -94,7 +96,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             }
 
             // Ensure the OID provided in the cache body matches the user's access token.
-            var userId = userPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")!.Value;
+            var userId = userPrincipal.FindFirst(_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
             if (launchCacheObject.UserId != userId)
             {
                 _logger?.LogError($"User provided oid {launchCacheObject.UserId} does not match token oid {userId}.");

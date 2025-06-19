@@ -24,7 +24,7 @@ var writerAccessPolicy = [for writerId in writerObjectIds: {
   objectId: writerId
   tenantId: tenantId
   permissions: {
-    secrets: ['all']
+    secrets: ['all', 'purge']
   }
 }]
 
