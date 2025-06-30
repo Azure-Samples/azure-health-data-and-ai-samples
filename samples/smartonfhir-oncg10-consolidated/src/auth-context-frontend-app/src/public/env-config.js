@@ -1,2 +1,0 @@
-window.ENV_CONFIG = {
-}
