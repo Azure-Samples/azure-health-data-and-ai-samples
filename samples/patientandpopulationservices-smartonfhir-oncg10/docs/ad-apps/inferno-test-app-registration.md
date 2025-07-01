@@ -1,12 +1,17 @@
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
+
 # Inferno Test Applications 
 
 To successfully test ONC (g)(10) with Inferno, you will need to create four separate application registrations to represent the different access scenarios addressed by this test. This method of setting up application registrations is applicable to real SMART on FHIR applications too.
 
 ## Patient Standalone Confidential Client / Public Client Applications
 
-The Patient Standalone Launch application is a standard confidential client application which represents an application that can protect a secret (section 1 & 2 of the test). The public client represents an application that cannot protect a secret (section 9 of the test). You will need to follow these instructions twice - once for the confidential client (web) and once for the public client (spa). 
+The Patient Standalone Launch application consists of two types of client applications:
+1. **Confidential Client (Web):** This application can protect a secret and is used for sections 1 & 2 of the test.
+1. **Public Client (SPA):** This application cannot protect a secret and is used for section 9 of the test.
 
-1. Create a new application in Microsoft Entra ID. Make sure to select platform (Note : You need one application with platform - Web and SPA respectively) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. Create a new application in Microsoft Entra ID. Make sure to select platform (Note : Create Confidential Client application with Web platform and Public Client application with SPA platform) and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -34,7 +39,7 @@ The Patient Standalone Launch application is a standard confidential client appl
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-1. Generate a secret for this application. Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
+1. Generate a secret for this application(only for Confidential Client). Save this and the client id for testing Inferno *1. Standalone Patient App* and *2. Limited Access App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
@@ -74,23 +79,26 @@ The EHR launch confidential client application is a standard confidential client
         - openid
         - offline_access
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_ehr_confidental_app_scopes.png)
 </details>
 
+Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
+
 ## Backend Service Client Application
 
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
-1. Create a new application in Microsoft Entra ID. No platform or redirect URL is needed.
-1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
+1. Create a new application registration in the Microsoft Entra ID tenant. No platform or redirect URL is needed.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
         - user.all.read
-1. Grant admin consent for your Application on the API Permission page-->
+1. Grant admin consent for your Application on the API Permission page.
 1. Generate a secret for this application. Save this and the client id.
-1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
+1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
+1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `backkv`.
 1. Add a new secret that corresponds to the Application you just generated. 
     - Name: Application ID/Client ID of the application
     - Secret: The secret you generated for the application
@@ -129,3 +137,5 @@ Before executing the test, follow these steps to configure your environment:
 2. **Sample Endpoint**:
     - Use the following URL `{apim-url}/smart/service-base` to test Service Base URL Test Suite. 
     - Replace `{apim-url}` with your deployed APIM service url in the resource group.
+
+    **[Back to Previous Page](../deployment.md#7-create-inferno-test-applications)**

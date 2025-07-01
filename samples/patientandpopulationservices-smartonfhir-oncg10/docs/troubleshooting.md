@@ -29,17 +29,38 @@ Some common Azure issues that you need to watch out for are:
 
 The Azure Developer CLI creates a deployment in Azure as part of the `azd up` command. To get additional details about deployment issues, it's best to find the newly created resource group in Azure and look at the deployments in the resource group for more information. A single `azd up` command will spawn off multiple child deployments, so make sure to click into the failing deployment for more details.
 
+### Powershell Script Issues
+
+If you encounter an error while attempting to run the PowerShell scripts with the below message:
+
+```
+Script cannot be loaded. The script is not digitally signed. You cannot run this script on the current system. 
+```
+
+To resolve this issue, you can temporarily change the script execution policy to bypass the digital signature requirement by running the following command in your PowerShell session:
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+This command allows you to run the script without altering the execution policy permanently. For more information on PowerShell execution policies, refer to the documentation at [about_Execution_Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4).
+
 ### Not getting correct scopes
 
 If you are getting more scopes assigned to your token, make sure you HAVE NOT applied admin consent for any scopes. Any admin consent that you apply will override user selected scopes.
 
 ### Unauthorized Errors
 
-Unauthorized errors are generally due to users or backend services not having the proper access setup. Check the following:
-
-- Users
-  - You didn't add your user to the SMART Roles group.
-- Backend Services
+If you encounter Unauthorized(401) or Forbidden(403) errors while accessing resources or during authentication, please check the following:
+- User Configuration:
+  - `FHIR SMART User` Role is assigned to the Test User.
+  - Test User is mapped with appropriate `fhirUser` claim.
+  - Required scopes were selected during authentication.
+  - To identify `fhirUser` and `scope` claim value decode obtained token using [jwt.ms](https://jwt.ms/).
+- Postman Configuration:
+  - All the environment variables contain proper values.
+  - Specifically, `resource` environment variable match the FHIR Server audience.
+- Backend Services Configuration:
   - You have an invalid JWKS
   - You don't have the correct configuration in KeyVault for your client
   - You didn't give your client the proper role assignments to your FHIR Service.
