@@ -181,7 +181,7 @@ Update the appsettings.json file with the following updates:
 
 1. Add the second app registration's **Client ID** in AzureAd -> ClientID.
 2. Obtain the Application ID URI (First App Registration) from the Overview section of the App Registration that exposes an API
-2. Add {Application ID URI}/user_impersonation to **GraphScopes** after **offline_access**.
+3. Add {Application ID URI}/user_impersonation to **GraphScopes** after **offline_access**.
 4. Set FHIRConnection -> Scope to {Application ID URI}/user_impersonation 
 5. Set **APIMUri** to https://your-apim.azure-api.net/ (This should be a URI of APIM resource that we created earlier).
 6. Set LookupCodeSystemUrls -> LOCAL to "fhirapis_ehr_1_labs", This may change based on the terminology service instance, so confirm about this value with terminology service instance provider.
