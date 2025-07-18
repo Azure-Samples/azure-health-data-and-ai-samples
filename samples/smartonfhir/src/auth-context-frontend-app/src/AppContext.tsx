@@ -234,7 +234,7 @@ const updateScopesWhereNeeded = async (modifiedAuthInfo: AppConsentInfo) : Promi
   const newQueryParams = queryParams;
   newQueryParams.set("scope", modifiedAuthInfo.scopes.filter(x => x.enabled).map(x => x.name).join(" "));
   newQueryParams.set("user", "true");
-  newQueryParams.set("prompt", "consent");
+  if(process.env.REACT_APP_SmartonFhir_with_B2C !== "true")newQueryParams.set("prompt", "consent");
 
   const hint = user?.account.idTokenClaims?.login_hint;
   if (hint && hint.length > 0) {

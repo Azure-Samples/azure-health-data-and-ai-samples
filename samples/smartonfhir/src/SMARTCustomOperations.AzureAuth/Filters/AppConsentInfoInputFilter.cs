@@ -86,7 +86,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             if (context.Request.Method == HttpMethod.Get)
             {
                 AuthorizeContext uriContext = new(context.Request.RequestUri.ParseQueryString());
-                var userId = userPrincipal.FindFirst(_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
+                //var userId = userPrincipal.FindFirst(!_configuration.SmartonFhir_with_B2C ? subClaim : oidClaim)!.Value;
+                var userId = userPrincipal.FindFirst(oidClaim)!.Value;
 
                 if (uriContext.ClientId is null || uriContext.Scope is null || userId is null)
                 {
