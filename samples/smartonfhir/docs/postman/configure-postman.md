@@ -1,21 +1,21 @@
 > [!TIP]
 > *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
 
-# Access SMART on FHIR using Postman
+# Access SMART on FHIR using Insomnia or Postman
 
-In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) via SMART on FHIR with [Postman](https://www.getpostman.com/).
+In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) via SMART on FHIR with [Insomnia](https://insomnia.rest/download) or [Postman](https://www.getpostman.com/).
 
 ## Prerequisites
 
 * SMART on FHIR sample deployed in Azure.
-* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application in Microsoft Entra ID](./../register-application.md). 
-* Postman installed locally. For more information about Postman, see [Get Started with Postman](https://www.getpostman.com/).
+* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application in Microsoft Entra ID](./register-application.md). 
+* Insomnia or Postman installed locally. For more information about Insomnia, see [Get Started with Insomnia](https://docs.insomnia.rest/insomnia/install). For Postman, see [Get Started with Postman](https://www.getpostman.com/).
 
-## Using Postman: create workspace, collection, and environment
+## Using Insomnia or Postman: create workspace, collection, and environment
 
 You can use the default “My workspace” or “Team workspace” or create a new workspace for you or your team.
 
-Import the collection [fhir-proxy-smart-client-calls-sample-v2.postman_collection.json](./postman-collection/fhir-proxy-smart-client-calls-sample-v2.postman_collection.json) and environment [apim-smart-env-sample.postman_environment.json](./postman-collection/apim-smart-env-sample.postman_environment.json) files in Postman. For more information, see [the Postman documentation](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/).
+Import the collection [fhir-proxy-smart-client-calls-sample-v2.postman_collection.json](./postman-collection/fhir-proxy-smart-client-calls-sample-v2.postman_collection.json) and environment [apim-smart-env-sample.postman_environment.json](./postman-collection/apim-smart-env-sample.postman_environment.json) files in Insomnia or Postman. For more information, see [the Insomnia documentation](https://docs.insomnia.rest/insomnia/import-export-data) or [the Postman documentation](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/).
 
 ## Update environment variables
 
@@ -33,6 +33,8 @@ While you can use the full URL in the request, it's recommended that you store t
     * **state** – Some unique identifier value.
     * **callbackurl** – `https://oauth.pstmn.io/v1/callback`.
     * **resource** – FHIR server audience.
+
+1. In Insomnia, select the **Environment** tab open the `apim-smart-env-sample` environment and update the variables in the environment file as mentioned above. If you are using Postman, follow the same steps in the `apim-smart-env-sample` environment.
 
 1. In the postman, select the **Authorization** tab of a 'fhir-proxy-smart-client-calls-sample-v2' collection or a specific REST call, and then select **Type** as OAuth 2.0. Under **Configure New Token**, values will be pre-populated as shown below
 ![A screenshot that shows postman configurations](../images/postman/Postman-Authorization-Tab.png)

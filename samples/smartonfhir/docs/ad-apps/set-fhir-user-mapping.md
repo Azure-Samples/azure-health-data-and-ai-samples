@@ -15,17 +15,17 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source
-5. Select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
+5. Select your **b2c-extensions-app** Application. Choose the `user.fhirUser` attribute.
 6. Click **Add** then **Save**.
 
 <details>
 <summary>Click to expand and see screenshots.</summary>
 <br />
 
-![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2.png)
-![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3.png)
+![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims_external_entra_id.png)
+![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info_external_entra_id.png)
+![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2_external_entra_id.png)
+![Azure Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3_external_entra_id.png)
 </details>
 
 <br />
@@ -43,5 +43,5 @@ For the Application Registration to allow custom claims, the *acceptMappedClaims
 <summary>Click to expand and see screenshots.</summary>
 <br />
 
-![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
+![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping_external_entra_id.png)
 </details>

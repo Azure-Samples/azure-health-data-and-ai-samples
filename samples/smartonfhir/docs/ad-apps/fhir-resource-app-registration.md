@@ -7,7 +7,7 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. If you have chosen Microsoft Entra ID, register a FHIR Resource Application in your Microsoft Entra ID tenant. If you have chosen Azure B2C, register the application in your B2C tenant instead.
+1. Register a FHIR Resource Application in your Microsoft External Entra ID tenant. 
     - Go to `App Registrations`
     - Create a new application. You can name the App Registration to either match your Azure Developer CLI environment name or use a custom name. 
         - If you choose a custom name, make sure it does not contain any whitespace. 
@@ -28,43 +28,18 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step is required only for Microsoft Entra ID. For SMART on FHIR implementations with B2C, this command can be skipped.
 
-    Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
-    
-    Windows:
-    ```powershell
-    powershell ./scripts/Create-FhirUserDirectoryExtension.ps1
-    ```
-    
-    Mac/Linux
-    ```bash
-    pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
-    ```
-1. Follow the steps in **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token. Note that this is required only for Microsoft Entra ID and not for Azure B2C.
+1. Follow the steps in **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token.
 
 <br />
 <details>
-<summary>Click to expand and see screenshots for Microsoft Entra ID Reference.</summary>
+<summary>Click to expand and see screenshots for Reference.</summary>
 
-![](./images/fhir_resource_app_primary_domain.png)
-![](./images/fhir_resource_app_new_app.png)
-![](./images/fhir_resource_app_new_app2.png)
-![](./images/fhir_resource_app_set_uri.png)
-![](./images/fhir_resource_app_set_uri2.png)
-![](./images/fhir_resource_app_manifest.png)
-</details>
-
-<br />
-<details>
-<summary>Click to expand and see screenshots for B2C Reference.</summary>
-
-![](./images/fhir_resource_app_primary_domain_b2c.png)
-![](./images/fhir_resource_app_new_app_b2c.png)
-![](./images/fhir_resource_app_new_app2_b2c.png)
-![](./images/fhir_resource_app_set_uri_b2c.png)
-![](./images/fhir_resource_app_set_uri2_b2c.png)
-![](./images/fhir_resource_app_manifest_b2c.png)
+![](./images/fhir_resource_app_primary_domain_external_entra_id.png)
+![](./images/common_new_app_external_entra_id.png)
+![](./images/fhir_resource_app_new_app2_external_entra_id.png)
+![](./images/fhir_resource_app_set_uri_external_entra_id.png)
+![](./images/fhir_resource_app_manifest_external_entra_id.png)
 </details>
 
 **[Back to Previous Page](../deployment.md#2-prepare-and-deploy-environment)**

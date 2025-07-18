@@ -3,7 +3,7 @@
 
 ## Patient Application Registration
 
-1. If you have opted for Microsoft Entra ID, follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft Entra ID. Otherwise for B2C, follow this [document](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications) to create a new application in B2C Tenant. Make sure to select `Web` as the platform and add the redirect URL for Postman (`https://oauth.pstmn.io/v1/callback`).
+1. Follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft External Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Insomnia (`http://localhost:3000`) or Postman (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
         - fhirUser
@@ -31,18 +31,18 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for B2C.
+    - Microsoft Graph (Application)
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
-1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
-1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
-1. If you have opted for Microsoft Entra ID, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+1. Grant admin consent for all the app permissions.
+1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Insomnia or Postman.
+1. You need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
+1. Follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 
 ## Practitioner Application Registration
 
-1. If you have opted for Microsoft Entra ID, follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft Entra ID. Otherwise for B2C, follow this [document](https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications) to create a new application in B2C Tenant. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://oauth.pstmn.io/v1/callback`).
+1. Follow this [document](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Insomnia (`http://localhost:3000`) or Postman (`https://oauth.pstmn.io/v1/callback`).
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource Application (Delegated)
         - fhirUser
@@ -70,12 +70,12 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for B2C.
+    - Microsoft Graph (Application)
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have opted for Smart on FHIR with B2C then Grant admin consent for app permissions.
-1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
-1. If you have opted for Smart on FHIR with B2C, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
-1. If you have opted for Microsoft Entra ID, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+1. Grant admin consent for all the app permissions.
+1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Insomnia or Postman.
+1. You need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
+1. Follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 **[Back to Previous Page](./configure-postman.md)**
