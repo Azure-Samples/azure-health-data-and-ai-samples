@@ -26,13 +26,13 @@ While you can use the full URL in the request, it's recommended that you store t
     * **tenantId** – Azure tenant where the SMART on FHIR sample is deployed in. 
     * **clientId** – Application client registration ID.
     * **clientSecret** – Application client registration secret.
-    * **bearerToken** – The variable to store the Microsoft Entra access token in the script. Leave it blank.
+    * **bearerToken** – The variable to store the Microsoft External Entra ID access token in the script. Leave it blank.
     * **fhirurl** – APIM url ends with /smart. For example, `https://XXXXX-apim.azure-api.net/smart`.
     * **scope** – Required scopes. For example, `openid offline_access fhirUser launch/patient patient/Patient.read patient/Condition.read` 
     * **apimurl** – APIM url. For example, `https://XXXXX-apim.azure-api.net`.
     * **state** – Some unique identifier value.
-    * **callbackurl** – `https://oauth.pstmn.io/v1/callback`.
-    * **resource** – FHIR server audience.
+    * **callbackurl** – For Insomnia = `http://localhost:3000`, Postman = `https://oauth.pstmn.io/v1/callback`.
+    * **resource** – FHIR Resource App's Application ID URI.
 
 1. In Insomnia, select the **Environment** tab open the `apim-smart-env-sample` environment and update the variables in the environment file as mentioned above. If you are using Postman, follow the same steps in the `apim-smart-env-sample` environment.
 

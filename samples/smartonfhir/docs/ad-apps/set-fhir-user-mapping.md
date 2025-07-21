@@ -7,11 +7,11 @@ The fhirUser claim mapping informs the calling application of the user's FHIR id
 
 ### Configure fhirUser mapping to token
 
-In the Azure Portal under Microsoft Entra ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
+In the Portal under Microsoft External Entra ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
-1. In the Azure Portal, on the **Attributes & Claims** section, select **Edit**
+1. In the Portal, on the **Attributes & Claims** section, select **Edit**
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source
@@ -34,7 +34,7 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 
 For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true** (*if it is already true, you can skip this step*). To update your application manifest:
 
-1. In the Azure Portal in Microsoft Entra ID, select **App registrations**
+1. In the Portal in Microsoft External Entra ID, select **App registrations**
 2. Select your App registration from the list
 3. Select **Manifest** from the left-hand menu
 4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.
