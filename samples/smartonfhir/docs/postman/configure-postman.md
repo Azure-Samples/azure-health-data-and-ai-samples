@@ -3,12 +3,12 @@
 
 # Access SMART on FHIR using Postman
 
-In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) via SMART on FHIR with [Postman](https://www.getpostman.com/).
+In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) or Azure API for FHIR via SMART on FHIR with [Postman](https://www.getpostman.com/).
 
 ## Prerequisites
 
 * SMART on FHIR sample deployed in Azure.
-* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application in Microsoft Entra ID](./../register-application.md). 
+* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application in Microsoft Entra ID](./register-application.md). 
 * Postman installed locally. For more information about Postman, see [Get Started with Postman](https://www.getpostman.com/).
 
 ## Using Postman: create workspace, collection, and environment
