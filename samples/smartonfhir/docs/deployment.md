@@ -202,7 +202,7 @@ To set up SMART on FHIR with External Entra ID, you need to provide the Applicat
 - Configure Identity Provider:
     1. Open the FHIR Service from the {env_name}-rg resource group, or with the name of the existing resource group you specified.
     1. Select `Settings` -> `Authentication`
-    1. In `Identity Provider 1`, within `Application 1`, enter the Client ID from the Application Registration into the `Client ID` field.
+    1. In `Identity Provider 1`, within `Application 1`, enter the Client ID from the Patient Application Registration into the `Client ID` field.
     1. Click Save.
 
     *Note: It would take around 10 minutes to update*
@@ -216,9 +216,9 @@ To set up SMART on FHIR with External Entra ID, you need to provide the Applicat
     1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `kv`.
     1. Add a new secret to store Client ID and Client Secret of Application Registration.
         - Name: `ExternalAppClientID`
-        - Secret: Client ID of Application Registration added earlier in the FHIR Service Authentication.
+        - Secret: Client ID of Patient Application Registration added earlier in the FHIR Service Authentication.
         - Name: `ExternalAppClientSecret`
-        - Secret: Secret generated for this App Registration.
+        - Secret: Secret generated for the Patient Application Registration.
     
     *Note: If the secrets already exist then create a new version of the secret.*
 
