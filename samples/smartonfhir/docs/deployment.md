@@ -51,7 +51,7 @@ Next you will need to clone this repository and prepare your environment for dep
     ```
     ```powershell
     azd env set B2CTenantId <Tenant_ID_Of_Entra_External_ID>
-    azd env set AuthorityURL "https://<YOUR_EntraExternalID_TENANT_NAME>.ciamlogin.com /<Tenant_ID_Of_Entra_External_ID>/v2.0"
+    azd env set AuthorityURL "https://<YOUR_EntraExternalID_TENANT_NAME>.ciamlogin.com/<Tenant_ID_Of_Entra_External_ID>/v2.0"
     azd env set SmartonFhirwithB2C true
     ```
 1. To begin the sample deployment, you need to be logged into the appropriate tenant.
@@ -139,7 +139,7 @@ Next you will need to clone this repository and prepare your environment for dep
 
 ## 4. Add sample data and US Core resources
 
-To successfully run this sample using POSTMAN or with Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
+To successfully run this sample using Insomnia or POSTMAN, both the US Core FHIR package and applicable data need to be loaded. 
 
 
 To efficiently load the required data into your FHIR Service, ensure that the user account you are using to execute the script has the **FHIR Data Contributor** role assigned to the FHIR Service. Once confirmed, run the following script:
@@ -181,7 +181,7 @@ To learn more about the sample data, read [sample data](./sample-data.md).
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<B2C_EXTENSION_APP_ID >" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<B2C_EXTENSION_APP_ID>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
     ```
 
     Mac/Linux:
