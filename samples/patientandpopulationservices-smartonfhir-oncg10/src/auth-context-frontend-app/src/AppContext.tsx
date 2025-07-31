@@ -133,11 +133,22 @@ function useProvideAppContext() {
       launch: launch
     }
     await saveCacheString(cacheInfo);
+    // Removing previously consented scopes for EHR
+    if(applicationId && requestedScopes){
+      const info = await getAppConsentInfo(applicationId, requestedScopes);
+      if(info){
+        await saveAppConsentInfo(info);
+      }
+    }
   }
   catch (err: any) {
     displayError(err.message);
     return
   }
+
+  // Give graph more time to replicate the consent information.
+  console.log("Sleeping for 5 seconds to ensure graph will have the latest consent information.");
+  await sleep(5000);
 
   // redirect the app to the EHR launch URL
   const newQueryParams = queryParams;
