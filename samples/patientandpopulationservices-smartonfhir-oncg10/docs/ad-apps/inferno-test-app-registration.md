@@ -97,7 +97,7 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
         - user.all.read
 1. Grant admin consent for your Application on the API Permission page.
 1. Generate a secret for this application. Save this and the client id.
-1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
+1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service or Azure API for FHIR.
 1. Open the KeyVault from the {env_name}-rg resource group, or with the name of the existing resource group you specified. The Key Vault will have a suffix of `backkv`.
 1. Add a new secret that corresponds to the Application you just generated. 
     - Name: Application ID/Client ID of the application
@@ -126,7 +126,7 @@ Before executing the test, follow these steps to configure your environment:
     - Add the following secrets along with their values for the Endpoint resource:
         - `status` = active
         - `connectionType` = http://terminology.hl7.org/CodeSystem/endpoint-connection-type
-        - `address` = Your Fhir Service URL without /metadata
+        - `address` = Your Fhir Service or Azure API for FHIR URL without /metadata
     - Add the following secrets along with their values for the Organization resource:
         - `active` = true
         - `name` = Health Intersections CarePlan Hub

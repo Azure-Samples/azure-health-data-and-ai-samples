@@ -134,15 +134,7 @@ Next you will need to clone this repository and prepare your environment for dep
             2. App Service Plan and Static Web App: Deployed in the Standard tier.
             3. Function Apps and App Service Plan: Utilizes Windows as the operating system.
  
-            *NOTE: This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group.*
-
-    - `existingFhirId`: 
-    
-        - Decide whether to use an existing FHIR service, existing Azure API for FHIR or create a new FHIR Service.
-        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR service or Azure API for FHIR, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
-            1. Navigate to your existing FHIR service or Azure API for FHIR in Azure Portal.
-            2. Click on properties in the left menu.
-            3. Copy the "Id" field under the "Essentials" group.    
+            *NOTE: This only allows you to create private endpoints, not set up the private network as part of the deployment. Users are responsible for setting up their own private networks. Make sure all resources are deployed under the same subscription and same resource group.*  
 
     - `existingResourceGroupName` : 
     
@@ -151,6 +143,14 @@ Next you will need to clone this repository and prepare your environment for dep
         - If you provide an existing resource group name, ensure it does not already contain a SMART on FHIR resources, as multiple samples in the same resource group are not supported.
 
             *Note:- If you plan to use an existing FHIR service or Azure API for FHIR for deployment, enter the name of the resource group where the FHIR service or Azure API for FHIR is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service or Azure API for FHIR.*
+
+    - `fhirId`: 
+    
+        - Decide whether to use an existing FHIR service, existing Azure API for FHIR or create a new FHIR Service.
+        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR service or Azure API for FHIR, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
+            1. Navigate to your existing FHIR service or Azure API for FHIR in Azure Portal.
+            2. Click on properties in the left menu.
+            3. Copy the "Id" field under the "Essentials" group.  
 
 - Some important considerations when using an existing FHIR service or Azure API for FHIR instance:
     - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.

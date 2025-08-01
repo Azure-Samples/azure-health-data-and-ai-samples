@@ -63,7 +63,7 @@ If you encounter Unauthorized(401) or Forbidden(403) errors while accessing reso
 - Backend Services Configuration:
   - You have an invalid JWKS
   - You don't have the correct configuration in KeyVault for your client
-  - You didn't give your client the proper role assignments to your FHIR Service.
+  - You didn't give your client the proper role assignments to your FHIR Service or Azure API for FHIR.
 
 ### Not Found Errors for API Requests
 

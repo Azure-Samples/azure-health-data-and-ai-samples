@@ -68,7 +68,7 @@ resource fhirExisting 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-
   name: '${newOrExistingWorkspaceName}/${fhirServiceName}'
 }
 
-resource apiForFhirExisting 'Microsoft.HealthcareApis/services@2025-04-01-preview' existing = if (!isFhirService && !createFhirService) {
+resource apiForFhirExisting 'Microsoft.HealthcareApis/services@2025-04-01-preview' existing = if (!isFhirService) {
   name: fhirServiceName
 }
 
