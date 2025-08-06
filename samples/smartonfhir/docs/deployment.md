@@ -1,6 +1,8 @@
 > [!TIP]
 > *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
 
+> Note - Throughout this document, the term `FHIR Server` refers to either AHDS FHIR service or Azure API for FHIR, depending on the configuration or user preference.
+
 # Sample Deployment: SMART on FHIR
 
 This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID or Azure AD B2C configuration.
@@ -118,6 +120,7 @@ Next you will need to clone this repository and prepare your environment for dep
     
     - `B2CTenantId` : 
         - Enter the Tenant ID of your B2C Tenant deployed earlier. (*If you have opted for Microsoft Entra ID you can keep this parameter blank.*)           
+        **Note**: If you have already set this value using the command `azd env set B2CTenantId <Tenant_ID_Of_B2C>`, you will **not be prompted** during deployment. The existing value will be used automatically.
     
     - `enableVNetSupport`: 
      
@@ -142,20 +145,20 @@ Next you will need to clone this repository and prepare your environment for dep
         - Leaving this parameter empty will create a new resource group named {env_name}-rg.
         - If you provide an existing resource group name, ensure it does not already contain a SMART on FHIR resources, as multiple samples in the same resource group are not supported.
 
-            *Note:- If you plan to use an existing FHIR service or Azure API for FHIR for deployment, enter the name of the resource group where the FHIR service or Azure API for FHIR is located. The SMART on FHIR deployment must be in the same resource group as the FHIR service or Azure API for FHIR.*
+            *Note:- If you plan to use an existing FHIR Server for deployment, enter the name of the resource group where the FHIR Server is located. The SMART on FHIR deployment must be in the same resource group as the FHIR Server.*
 
     - `fhirId`: 
     
         - Decide whether to use an existing FHIR service, existing Azure API for FHIR or create a new FHIR Service.
-        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR service or Azure API for FHIR, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
-            1. Navigate to your existing FHIR service or Azure API for FHIR in Azure Portal.
+        - Leaving this parameter empty will create a new FHIR service. To use an existing FHIR Server, input the FHIR instance ID. Steps to retrieve the FHIR instance ID: 
+            1. Navigate to your existing FHIR Server in Azure Portal.
             2. Click on properties in the left menu.
             3. Copy the "Id" field under the "Essentials" group.  
 
-- Some important considerations when using an existing FHIR service or Azure API for FHIR instance:
+- Some important considerations when using an existing FHIR Server instance:
     - The FHIR server instance and SMART on FHIR resources are expected to be deployed in the same resource group, so enter the same resource group name in the `existingResourceGroupName` parameter.
-    - Enable the system-assigned status in the existing FHIR service or Azure API for FHIR, Follow the below steps:
-        1. Navigate to your existing FHIR Service or Azure API for FHIR.
+    - Enable the system-assigned status in the existing FHIR Server, Follow the below steps:
+        1. Navigate to your existing FHIR Server.
         2. Proceed to the identity blade.
         3. Enable the status.
         4. Click on save.
@@ -167,7 +170,7 @@ Next you will need to clone this repository and prepare your environment for dep
         The SMART on FHIR sample requires the FHIR server Audience URL to match the FHIR Resource Application Registration ID URL (which you created in Step 4 above). When you deploy the SMART on FHIR sample with a new FHIR server, the sample will automatically change the FHIR server Audience URL for you. If you use an existing FHIR server, you will need to do this step manually. 
         1. Navigate to your FHIR Resource App Registration.
         2. Proceed to the "Expose an API" blade and copy the Application ID URI. 
-        3. Go to your existing FHIR Service or Azure API for FHIR.
+        3. Go to your existing FHIR Server.
         4. Proceed to the authentication blade. 
         5. Paste the URL into the Audience field.
     <br /><details><summary>Click to expand and see screenshots.</summary>
@@ -226,7 +229,7 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
 To successfully run this sample using POSTMAN or with Inferno ONC (g)(10) test suite, both the US Core FHIR package and applicable data need to be loaded. 
 
 
-To efficiently load the required data into your FHIR Service or Azure API for FHIR, ensure that the user account you are using to execute the script has the **FHIR Data Contributor** role assigned to the FHIR Service or Azure API for FHIR. Once confirmed, run the following script:
+To efficiently load the required data into your FHIR Server, ensure that the user account you are using to execute the script has the **FHIR Data Contributor** role assigned to the FHIR Server. Once confirmed, run the following script:
 
 **For Microsoft Entra ID:**
 
@@ -243,7 +246,7 @@ pwsh ./scripts/Load-ProfilesData.ps1
 **For SMART on FHIR with B2C:** 
 
 To run the script given below, you need to pass the FHIR Server Audience parameter. To get the FHIR Server Audience, follow these steps:
-- Open the resource group named as {env_name}-rg, or with the name of the existing resource group you specified. Find the FHIR Service or Azure API for FHIR instance.
+- Open the resource group named as {env_name}-rg, or with the name of the existing resource group you specified. Find the FHIR Server.
 - Navigate to `Settings`  -> `Authentication`.
 - Copy the url value present for `Audience` field.
 
@@ -287,8 +290,8 @@ To learn more about the sample data, read [sample data](./sample-data.md).
     
 **Assign `FHIR SMART User` Role:**
 
-- If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Service or Azure API for FHIR deployed as part of this sample.
-- This role is necessary for enabling the SMART scope logic with your access token scopes in the FHIR Service or Azure API for FHIR.
+- If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Server deployed as part of this sample.
+- This role is necessary for enabling the SMART scope logic with your access token scopes in the FHIR Server.
 
 ## 6. Use Postman to access FHIR resource via SMART on FHIR sample
 

@@ -1,3 +1,5 @@
+> Note - Throughout this document, the term `FHIR Server` refers to either AHDS FHIR service or Azure API for FHIR, depending on the configuration or user preference.
+
 #  EHR Practitioner App Testing with Inferno
 This guide outlines the steps to test the EHR Practitioner App Launch Workflow using the **Inferno** testing tool in combination with the SMART on FHIR app launcher. 
 
@@ -39,7 +41,7 @@ Once the application starts, it will open in your default browser (typically at 
      Example:```https://inferno.healthit.gov/suites/custom/smart/launch```
 - **FHIR Service URL**: Enter your smart app URL. Example: ```https://<APIM URL>/smart```
 
-After you enter all these information, you notice that the **Launch context** is updated. When you're using the FHIR service or Azure API for FHIR, the launch context is simply a JSON document that contains information about patient, practitioner, and more. This launch context is base64 encoded and passed to the SMART on FHIR app as the launch query parameter.
+After you enter all these information, you notice that the **Launch context** is updated. When you're using the FHIR Server, the launch context is simply a JSON document that contains information about patient, practitioner, and more. This launch context is base64 encoded and passed to the SMART on FHIR app as the launch query parameter.
 
 **Example:**
 ```https://inferno.healthit.gov/suites/custom/smart/launch?launch=eyJwYXRpZW50IjoiUGF0aWVudEEifQ%3D%3D&iss=https%3A%2F%2Fyour-fhir-service.azure-api.net%2Fsmart```

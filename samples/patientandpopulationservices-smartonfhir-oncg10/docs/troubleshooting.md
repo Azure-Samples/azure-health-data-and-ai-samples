@@ -1,3 +1,5 @@
+> Note - Throughout this document, the term `FHIR Server` refers to either AHDS FHIR service or Azure API for FHIR, depending on the configuration or user preference.
+
 # Troubleshooting
 
 ## Application Insights
@@ -63,7 +65,7 @@ If you encounter Unauthorized(401) or Forbidden(403) errors while accessing reso
 - Backend Services Configuration:
   - You have an invalid JWKS
   - You don't have the correct configuration in KeyVault for your client
-  - You didn't give your client the proper role assignments to your FHIR Service or Azure API for FHIR.
+  - You didn't give your client the proper role assignments to your FHIR Server.
 
 ### Not Found Errors for API Requests
 

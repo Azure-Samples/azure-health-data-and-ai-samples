@@ -1,9 +1,11 @@
 > [!TIP]
 > *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
 
+> Note - Throughout this document, the term `FHIR Server` refers to either AHDS FHIR service or Azure API for FHIR, depending on the configuration or user preference.
+
 # Set fhirUser Claims Mapping
 
-The fhirUser claim mapping informs the calling application of the user's FHIR id through the identity token and it informs the FHIR Service or Azure API for FHIR the user's id through the access token. This claims mapping needs to be setup for the FHIR Resource application *and* each SMART client application that will be getting an identity token and expecting the `fhirUser` claim.
+The fhirUser claim mapping informs the calling application of the user's FHIR id through the identity token and it informs the FHIR Server the user's id through the access token. This claims mapping needs to be setup for the FHIR Resource application *and* each SMART client application that will be getting an identity token and expecting the `fhirUser` claim.
 
 ### Configure fhirUser mapping to token
 
