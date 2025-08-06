@@ -1,9 +1,11 @@
 > [!TIP]
 > *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](../troubleshooting.md)*
 
+> Note - Throughout this document, the term `FHIR Server` refers to either AHDS FHIR service or Azure API for FHIR, depending on the configuration or user preference.
+
 # Access SMART on FHIR using Postman
 
-In this article, we'll walk through the steps of accessing the Azure Health Data Services (hereafter called FHIR service) or Azure API for FHIR via SMART on FHIR with [Postman](https://www.getpostman.com/).
+In this article, we'll walk through the steps of accessing the FHIR Server with [Postman](https://www.getpostman.com/).
 
 ## Prerequisites
 
