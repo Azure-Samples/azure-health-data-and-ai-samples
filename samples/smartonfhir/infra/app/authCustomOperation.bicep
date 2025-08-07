@@ -10,17 +10,11 @@ param appTags object
 @description('Microsoft Entra ID tenant ID for the FHIR Service.')
 param tenantId string
 
-// @description('Azure B2C Directory tenant ID.')
-// param b2cTenantId string
-
 @description('Microsoft Entra ID/B2C Application ID for the FHIR resource application.')
 param fhirResourceAppId string
 
 @description('Azure B2C Directory authority url.')
 param authorityUrl string
-
-// @description('Condition to include B2C in SMART on FHIR')
-// param smartOnFhirWithB2C bool
 
 @description('Tenant ID for the different IDP Provider. Required if IDPProvider is set to EntraExternalID.')
 param idpProviderTenantId string
@@ -130,10 +124,8 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_ApiManagementHostName: '${apimName}.azure-api.net'
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     AZURE_TenantId: tenantId
-    // AZURE_SmartonFhir_with_B2C: '${smartOnFhirWithB2C}'
     AZURE_IDPProvider: idpProvider
     AZURE_Authority_URL: authorityUrl
-    // AZURE_B2C_Tenant_Id: b2cTenantId
     AZURE_IDPProviderTenantId: idpProviderTenantId
     AZURE_Fhir_Resource_AppId: fhirResourceAppId
     AZURE_KeyVaultStore: keyVaultName

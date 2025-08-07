@@ -8,7 +8,6 @@ param audience string = ''
 param appTags object = {}
 param AuthorityURL string
 param FhirResourceAppId string
-// param smartOnFhirWithB2C bool
 param idpProvider string
 
 var loginURL = environment().authentication.loginEndpoint

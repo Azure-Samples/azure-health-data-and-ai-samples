@@ -2,7 +2,6 @@ param vaultName string
 param location string
 param tenantId string
 param enableVNetSupport bool
-// param smartonfhirwithb2c bool
 param idpProvider string
 
 param writerObjectIds array = []
