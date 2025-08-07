@@ -2,7 +2,8 @@ param vaultName string
 param location string
 param tenantId string
 param enableVNetSupport bool
-param smartonfhirwithb2c bool
+// param smartonfhirwithb2c bool
+param idpProvider string
 
 param writerObjectIds array = []
 param readerObjectIds array = []
@@ -32,7 +33,7 @@ var writerAccessPolicy = [for writerId in writerObjectIds: {
 
 var comboAccessPolicy = union(readerAccessPolicy, writerAccessPolicy)
 
-resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = if (smartonfhirwithb2c) {
+resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = if (idpProvider != 'EntraID') {
   name: vaultName
   location: location
   properties: {
