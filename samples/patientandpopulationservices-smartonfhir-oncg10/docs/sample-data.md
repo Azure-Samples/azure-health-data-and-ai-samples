@@ -9,7 +9,7 @@ We have created a Powershell script that will load US Core artifacts and test da
 
 ### Loading the US Core resources
 
-Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
+Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir) and for the Azure API for FHIR can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
 
 ### Loading Data
 

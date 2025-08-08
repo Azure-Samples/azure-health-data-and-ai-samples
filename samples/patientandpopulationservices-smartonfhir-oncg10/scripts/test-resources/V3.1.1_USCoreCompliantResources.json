@@ -1,6 +1,6 @@
 {
     "resourceType": "Bundle",
-    "type": "transaction",
+    "type": "batch",
     "entry": [
         {
             "resource": {
@@ -1373,7 +1373,7 @@
                 "identifier": [
                     {
                         "use": "official",
-                        "system": "http://acme.org/prescriptions",
+                        "system": "https://fhir.network.org/ids/medicationrequest",
                         "value": "12345689"
                     }
                 ],
@@ -2223,7 +2223,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],
@@ -2284,7 +2284,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],
@@ -3564,7 +3564,7 @@
                         "display": "Example Organization"
                     }
                 ],
-                "result": [
+                    "result": [
                     {
                         "reference": "Observation/neutrophils",
                         "display": "NEUTROPHILS"
@@ -3588,7 +3588,7 @@
                 "url": "DiagnosticReport/DiagnosticReportLabA"
             }
         },
-        {
+       {
             "resource": {
                 "resourceType": "DiagnosticReport",
                 "id": "DiagnosticReportNoteA",
@@ -3746,10 +3746,12 @@
                     }
                 ],
                 "context": {
-                    "encounter": {
-                        "reference": "Encounter/EncounterA",
-                        "display": "Example Encounter"
-                    },
+                    "encounter": [
+                        {
+                            "reference": "Encounter/EncounterA",
+                            "display": "Example Encounter"
+                        }
+                    ],
                     "period": {
                         "start": "2004-12-23T08:00:00+11:00",
                         "end": "2004-12-23T08:01:00+11:00"
@@ -4209,7 +4211,7 @@
                 "identifier": [
                     {
                         "use": "official",
-                        "system": "http://acme.org/prescriptions",
+                        "system": "https://fhir.network.org/ids/medicationrequest",
                         "value": "12345689"
                     }
                 ],
@@ -5011,7 +5013,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],
@@ -5072,7 +5074,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],
@@ -6348,8 +6350,8 @@
                 ],
                 "encounter": [
                     {
-                        "reference": "Organization/OrganizationB",
-                        "display": "Example Organization"
+                          "reference": "Encounter/EncounterB",
+                          "display": "Example Encounter"
                     }
                 ],
                 "result": [
@@ -6533,7 +6535,7 @@
                         }
                     }
                 ],
-                "context": {
+                "context": { 
                     "encounter": {
                         "reference": "Encounter/EncounterB",
                         "display": "Example Encounter"
@@ -6542,13 +6544,13 @@
                         "start": "2004-12-23T08:00:00+11:00",
                         "end": "2004-12-23T08:01:00+11:00"
                     }
-                }
+                    }
             },
             "request": {
                 "method": "PUT",
                 "url": "DocumentReference/DocumentReferenceB"
-            }
-        },
+                }
+            },
         {
             "resource": {
                 "resourceType": "Encounter",
@@ -6997,7 +6999,7 @@
                 "identifier": [
                     {
                         "use": "official",
-                        "system": "http://acme.org/prescriptions",
+                        "system": "https://fhir.network.org/ids/medicationrequest",
                         "value": "12345689"
                     }
                 ],
@@ -7823,7 +7825,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],
@@ -7884,7 +7886,7 @@
                         "value": "9941339108"
                     },
                     {
-                        "system": "http://www.acme.org/practitioners",
+                        "system": "https://fhir.network.org/ids/practitioner",
                         "value": "25456"
                     }
                 ],

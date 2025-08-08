@@ -79,12 +79,13 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResource
 }
 
 var fhirResourceIdSplit = split(fhirId,'/')
+var isFhirService = contains(fhirId, 'workspace') ? true : false
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
 var createFhirService = empty(fhirId) ? true : false
-var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
-var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
-var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
+var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : isFhirService ? fhirResourceIdSplit[8] : ''
+var fhirNameResolved = empty(fhirId) ? 'fhirdata' : isFhirService ? fhirResourceIdSplit[10] : fhirResourceIdSplit[8]
+var fhirUrl = createFhirService || isFhirService ? 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com' : 'https://${fhirNameResolved}.azurehealthcareapis.com'
 
 resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' existing = if (!createResourceGroup) {
   name: existingResourceGroupName
