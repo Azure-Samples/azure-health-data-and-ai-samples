@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "directoryName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "allowedValues": ["unitedstates","Europe", "Asia Pacific", "Australia"],
+      "defaultValue": "unitedstates"
+    },
+    "skuName": {
+      "type": "string",
+      "allowedValues": ["Base"],
+      "defaultValue": "Base"
+    }
+  },
+  "variables": {
+    "fullDirectoryName": "[concat(parameters('directoryName'), '.onmicrosoft.com')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.AzureActiveDirectory/ciamDirectories",
+      "apiVersion": "2023-05-17-preview",
+      "name": "[variables('fullDirectoryName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "A0"
+      },
+      "properties": {
+        "createTenantProperties": {
+          "countryCode": "US",
+          "displayName": "[parameters('directoryName')]"
+        }
+      }
+    }
+  ]
+}
