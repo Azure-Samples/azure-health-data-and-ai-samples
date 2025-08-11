@@ -1,6 +1,6 @@
 # Azure ONC (g)(10) SMART on FHIR Sample
 
-This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg) and Microsoft Entra ID can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
+This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg) or [Existing Azure API for FHIR](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/overview) and Microsoft Entra ID can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
 - [Health Level 7 (HL7®) Version 4.0.1 Fast Healthcare Interoperability Resources Specification (FHIR®)](http://hl7.org/fhir/directory.html)
 - [United States Core Data for Interoperability (USCDI)](https://www.healthit.gov/isa/us-core-data-interoperability-uscdi)
 - [HL7® FHIR® Bulk Data Access (Flat FHIR®) (V1.0.1:STU 1)](https://hl7.org/fhir/uv/bulkdata/STU1.0.1/)

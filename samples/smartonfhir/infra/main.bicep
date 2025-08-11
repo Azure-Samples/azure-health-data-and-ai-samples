@@ -75,12 +75,13 @@ var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
 var nameShort = length(name) > 16 ? substring(name, 0, 16) : name
 var fhirResourceIdSplit = split(fhirId,'/')
+var isFhirService = contains(fhirId, 'workspace') ? true : false
 var fhirserviceRg = empty(fhirId) ? '' : fhirResourceIdSplit[4]
 var createWorkspace = empty(fhirId) ? true : false
 var createFhirService = empty(fhirId) ? true : false
-var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : fhirResourceIdSplit[8]
-var fhirNameResolved = empty(fhirId) ? 'fhirdata' : fhirResourceIdSplit[10]
-var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com'
+var workspaceNameResolved = empty(fhirId) ? '${replace(nameCleanShort, '-', '')}health' : isFhirService ? fhirResourceIdSplit[8] : ''
+var fhirNameResolved = empty(fhirId) ? 'fhirdata' : isFhirService ? fhirResourceIdSplit[10] : fhirResourceIdSplit[8]
+var fhirUrl = createFhirService || isFhirService ? 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehealthcareapis.com' : 'https://${fhirNameResolved}.azurehealthcareapis.com'
 
 var appTags = {
   AppID: 'fhir-smart-onc-g10-sample'
