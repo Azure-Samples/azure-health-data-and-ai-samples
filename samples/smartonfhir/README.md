@@ -45,6 +45,7 @@ Read through [the technical guide](./docs/technical-guide.md) to understand inte
 
 ![](./docs/images/smart-sample-overview-archdiagram.png)
 
+>Note: IDP represents one of the identity providers supported in this solution.
 
 ## Sample Support
 
