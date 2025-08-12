@@ -9,19 +9,19 @@ The fhirUser claim mapping informs the calling application of the user's FHIR id
 
 ### Configure fhirUser mapping to token
 
-In the Azure Portal under Microsoft Entra ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
+In the Portal under Microsoft Entra ID/Microsoft Entra External ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 
-1. In the Azure Portal, on the **Attributes & Claims** section, select **Edit**
+1. In the Portal, on the **Attributes & Claims** section, select **Edit**
 2. Click **Add New Claim**
 3. Name the claim **fhirUser**
 4. Select **Directory schema extension** for Source
-5. Select your FHIR Resource Application. Choose the `user.fhirUser` attribute.
+5. Select your `FHIR Resource Application` for **Microsoft Entra ID**. For **Microsoft Entra External Id** select `b2c-extensions-app`. Choose the `user.fhirUser` attribute.
 6. Click **Add** then **Save**.
 
 <details>
-<summary>Click to expand and see screenshots.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra ID reference.</summary>
 <br />
 
 ![Azure Portal image of custom attribute claims configuration screen](./images/1_attributes_claims.png)
@@ -32,18 +32,38 @@ The following steps will assign a static fhirUser custom attribute for the Confi
 
 <br />
 
+<details>
+<summary>Click to expand and see screenshots for Microsoft Entra External ID reference.</summary>
+<br />
+
+![Entra admin Portal image of custom attribute claims configuration screen](./images/1_attributes_claims_external_entra_id.png)
+![Entra admin Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info_external_entra_id.png)
+![Entra admin Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info2_external_entra_id.png)
+![Entra admin Portal image of creating new custom claim](./images/fhirUser_set_oidc_claim_info3_external_entra_id.png)
+</details>
+
+
 ### Modify Application Manifest
 
 For the Application Registration to allow custom claims, the *acceptMappedClaims* value must be set to **true** (*if it is already true, you can skip this step*). To update your application manifest:
 
-1. In the Azure Portal in Microsoft Entra ID, select **App registrations**
+1. In the Portal, select **App registrations**
 2. Select your App registration from the list
 3. Select **Manifest** from the left-hand menu
-4. Find *acceptMappedClaims* in the JSON block and change it's value from *null* to **true**, click **Save**.
+4. Find `acceptMappedClaims` in the JSON block and change it's value from *null* to **true**, click **Save**.
 
 <details>
-<summary>Click to expand and see screenshots.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra ID reference.</summary>
 <br />
 
 ![Azure Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping.png)
+</details>
+
+<br />
+
+<details>
+<summary>Click to expand and see screenshots for Microsoft Entra External ID reference.</summary>
+<br />
+
+![Entra admin Portal image of changing the application manifest to accept mapped claims.](./images/change_app_manifest_claims_mapping_external_entra_id.png)
 </details>

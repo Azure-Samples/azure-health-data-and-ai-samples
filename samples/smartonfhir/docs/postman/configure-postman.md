@@ -10,7 +10,7 @@ In this article, we'll walk through the steps of accessing the FHIR Server with 
 ## Prerequisites
 
 * SMART on FHIR sample deployed in Azure.
-* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application in Microsoft Entra ID](./register-application.md). 
+* A registered client application to access the SMART on FHIR sample. For information about how to register a client application, see [Register a service client application](./register-application.md). 
 * Postman installed locally. For more information about Postman, see [Get Started with Postman](https://www.getpostman.com/).
 
 ## Using Postman: create workspace, collection, and environment
