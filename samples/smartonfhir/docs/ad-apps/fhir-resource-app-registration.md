@@ -9,7 +9,7 @@ This application registration is used to customize the access token sent to the 
 
 ## Deployment (manual)
 
-1. Register a FHIR Resource Application in the tenant that corresponds to your selected Identity Provider (i.e., Microsoft Entra ID, Azure AD B2C or Microsoft Entra External ID).
+1. Create a new application registration in the tenant of your chosen Identity Provider.
     - Go to `App Registrations`
     - Create a new application. You can name the App Registration to either match your Azure Developer CLI environment name or use a custom name. 
         - If you choose a custom name, make sure it does not contain any whitespace. 
@@ -30,7 +30,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Configure-FhirResourceAppRegistration.ps1
     ```
-1. This step is required only for Microsoft Entra ID. For SMART on FHIR implementations with B2C or Entra External ID, this command can be skipped.
+1. This step is required only if selected Identity Provider is Microsoft Entra ID. For other Identity Providers, this command can be skipped.
 
     Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
@@ -43,7 +43,7 @@ This application registration is used to customize the access token sent to the 
     ```bash
     pwsh ./scripts/Create-FhirUserDirectoryExtension.ps1
     ```
-1. Follow the steps in **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token. Note that this is required only for Microsoft Entra ID and Microsoft Entra External ID. Not for Azure B2C.
+1. Follow the steps in **Set fhirUser Claims Mapping** section in [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the access token. **Note: This step is not required when Azure AD B2C is the selected Identity Provider**.
 
 <br />
 <details>

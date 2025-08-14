@@ -9,7 +9,7 @@ The fhirUser claim mapping informs the calling application of the user's FHIR id
 
 ### Configure fhirUser mapping to token
 
-In the Portal under Microsoft Entra ID/Microsoft Entra External ID, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
+In the Portal under the selected Identity Provider, select Enterprise Applications. Search for the target application created previously. You also can find the enterprise application by clicking the `Managed application in local directory` link from the App Registrations page. Once you are in the enterprise application, select the **Single Sign-On** option in the left-hand menu and open the **Attributes & Claims** section.
 
 The following steps will assign a static fhirUser custom attribute for the Confidential Client application:
 

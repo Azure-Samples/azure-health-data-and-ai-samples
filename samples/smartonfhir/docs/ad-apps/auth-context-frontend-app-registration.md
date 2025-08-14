@@ -7,10 +7,10 @@ The Auth Context Frontend Application is a sample React single-page app that ena
 
 ## Deployment (manual)
 
-1. Create a new application registration in the tenant that corresponds to your selected Identity Provider (i.e., Microsoft Entra ID, Azure AD B2C or Microsoft Entra External ID).
+1. Create a new application registration in the tenant of your chosen Identity Provider.
 1. Add a single-page application (SPA) redirect URI of `http://localhost:3000`.
     - Localhost is useful for debugging - we will add the Azure redirect URI after deployment.
-1. After registering the application, include the following configuration only if you are using Microsoft Entra ID. **If you are implementing SMART on FHIR with B2C/Entra External ID, you can skip this step.**
+1. After registering the application, apply the following configuration only if Microsoft Entra ID is your selected Identity Provider. **This step is not required for other supported Identity Providers**.
     - Navigate to `Token Configuration`. 
     - Add optional claim for ID token type.
     - Select `login_hint` claim.  
@@ -20,7 +20,7 @@ The Auth Context Frontend Application is a sample React single-page app that ena
     - Select the FHIR Resource application you created earlier.
     - Choose `Delegated permissions` then `user_impersonation`.
     - Finally, click `Add permission` to save.
-1. Grant admin consent only if you are implementing SMART on FHIR with Azure AD B2C/Microsoft Entra External ID. **Do not grant admin consent if you are using Microsoft Entra ID.**
+1. Grant admin consent only when using non-Microsoft Entra ID Identity Providers. **Do not grant admin consent if Microsoft Entra ID is your selected Identity Provider**.
 1. Inform your Azure Developer CLI environment of this application with:
     ```
     azd env set ContextAppClientId <context app id>

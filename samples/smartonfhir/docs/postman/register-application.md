@@ -42,13 +42,13 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for B2C/Entra External ID.
+    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers.
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have opted for Azure AD B2C/Entra External ID then Grant admin consent for app permissions.
+1. If you have selected a non-Microsoft Entra ID Identity Provider then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
-1. If you have opted for Microsoft Entra ID/Microsoft Entra External ID, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
-1. If you have opted for Azure AD B2C/Entra External ID, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
+1. If you have selected an Identity Provider other than Azure AD B2C, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+1. If you have selected a non-Microsoft Entra ID Identity Provider, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
 
 
 ## Practitioner Application Registration
@@ -92,12 +92,12 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for B2C/Entra External ID.
+    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers.
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have opted for Azure AD B2C/Microsoft Entra External ID then Grant admin consent for app permissions.
+1. If you have selected a non-Microsoft Entra ID Identity Provider then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
-1. If you have opted for Microsoft Entra ID/Microsoft Entra External ID, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
-1. If you have opted for Azure AD B2C/Microsoft Entra External ID, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
+1. If you have selected an Identity Provider other than Azure AD B2C, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+1. If you have selected a non-Microsoft Entra ID Identity Provider, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
 
 **[Back to Previous Page](./configure-postman.md)**
