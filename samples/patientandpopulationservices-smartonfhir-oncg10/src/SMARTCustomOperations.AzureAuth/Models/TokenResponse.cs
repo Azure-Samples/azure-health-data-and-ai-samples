@@ -96,6 +96,17 @@ namespace SMARTCustomOperations.AzureAuth.Models
             _tokenResponseDict[key] = value;
         }
 
+        public bool TryGetIdToken(out string id_token)
+        {
+            if (_tokenResponseDict.ContainsKey("id_token"))
+            {
+                id_token = _tokenResponseDict["id_token"].ToString() ?? string.Empty;
+                return true;
+            }
+            id_token = string.Empty;
+            return false;
+        }
+
         public override string ToString()
         {
             var output = _tokenResponseDict;

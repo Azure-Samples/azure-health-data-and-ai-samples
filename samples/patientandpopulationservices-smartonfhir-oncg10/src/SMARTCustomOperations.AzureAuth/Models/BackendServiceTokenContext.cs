@@ -19,13 +19,26 @@ namespace SMARTCustomOperations.AzureAuth.Models
         /// <param name="audience">Microsoft Entra ID audience for the FHIR Server.</param>
         public BackendServiceTokenContext(NameValueCollection form, string audience)
         {
-            if (form["grant_type"] != GrantType.client_credentials.ToString())
+            if (form["grant_type"] != GrantType.authorization_code.ToString() && form["grant_type"] != GrantType.client_credentials.ToString())
             {
                 throw new ArgumentException("RefreshTokenContext requires the client_credentials grant type.");
             }
 
-            GrantType = GrantType.client_credentials;
+            if (form["grant_type"] == GrantType.authorization_code.ToString())
+            {
+                GrantType = GrantType.authorization_code;
+                Code = form["code"]!;
+                CodeVerifier = form["code_verifier"]!;
 
+                if (form.AllKeys.Contains("redirect_uri"))
+                {
+                    RedirectUri = new Uri(form["redirect_uri"]!);
+                }
+            }
+            else
+            {
+                GrantType = GrantType.client_credentials;
+            }
             // Since there is no user interaction involved, Microsoft Entra ID only accepts the .default scope. It will give
             // the application the approved scopes.
             // AADSTS1002012
@@ -35,6 +48,12 @@ namespace SMARTCustomOperations.AzureAuth.Models
         }
 
         public GrantType GrantType { get; }
+
+        public string Code { get; } = default!;
+
+        public Uri RedirectUri { get; } = default!;
+
+        public string? CodeVerifier { get; } = default!;
 
         public string Scope { get; }
 
@@ -51,8 +70,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public override void Validate()
         {
-            if (GrantType != GrantType.client_credentials ||
-                string.IsNullOrEmpty(Scope) ||
+            if ((GrantType != GrantType.client_credentials && GrantType != GrantType.authorization_code) ||
+                //string.IsNullOrEmpty(Scope) ||
                 string.IsNullOrEmpty(ClientAssertionType) ||
                 string.IsNullOrEmpty(ClientAssertion))
             {
@@ -62,13 +81,27 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public FormUrlEncodedContent ConvertToClientCredentialsFormUrlEncodedContent(string clientSecret)
         {
+            //List<KeyValuePair<string, string>> formValues = new()
+            //{
+            //    new KeyValuePair<string, string>("grant_type", "client_credentials"),
+            //    new KeyValuePair<string, string>("scope", Scope),
+            //    new KeyValuePair<string, string>("client_id", ClientId),
+            //    new KeyValuePair<string, string>("client_secret", clientSecret)
+            //};
+
             List<KeyValuePair<string, string>> formValues = new()
             {
-                new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                new KeyValuePair<string, string>("scope", Scope),
+                new KeyValuePair<string, string>("code", Code),
+                new KeyValuePair<string, string>("grant_type", GrantType.ToString()),
+                new KeyValuePair<string, string>("redirect_uri", RedirectUri.ToString()),
                 new KeyValuePair<string, string>("client_id", ClientId),
                 new KeyValuePair<string, string>("client_secret", clientSecret)
             };
+
+            if (!String.IsNullOrEmpty(CodeVerifier))
+            {
+                formValues.Add(new KeyValuePair<string, string>("code_verifier", CodeVerifier));
+            }
 
             return new FormUrlEncodedContent(formValues);
         }

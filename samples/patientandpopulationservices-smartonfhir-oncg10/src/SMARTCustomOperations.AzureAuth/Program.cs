@@ -7,14 +7,17 @@ using System.Reflection;
 using Azure.Identity;
 using Microsoft.AzureHealth.DataServices.Bindings;
 using Microsoft.AzureHealth.DataServices.Caching;
+using Microsoft.AzureHealth.DataServices.Caching.StorageProviders;
 using Microsoft.AzureHealth.DataServices.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Factories;
 using SMARTCustomOperations.AzureAuth.Filters;
 using SMARTCustomOperations.AzureAuth.Services;
+using StackExchange.Redis;
 
 
 namespace SMARTCustomOperations.AzureAuth
@@ -56,6 +59,8 @@ namespace SMARTCustomOperations.AzureAuth
                     services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
                     services.AddScoped<IServiceBaseUrlBundleGeneratorService, ServiceBaseUrlBundleGeneratorService>();
                     services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
+                    services.AddScoped<EntraTokenIntrospectionService>();
+                    services.AddSingleton<ITokenIntrospectionServiceFactory, TokenIntrospectionServiceFactory>();
 
                     // Add services needed for Microsoft Graph
                     services.AddMicrosoftGraphClient(options =>
@@ -76,6 +81,19 @@ namespace SMARTCustomOperations.AzureAuth
                     });
                     services.AddScoped<ContextCacheService>();
 
+                    //services.AddSingleton<IConnectionMultiplexer>(sp => 
+                    //    ConnectionMultiplexer.Connect(config.CacheConnectionString));
+
+                    //services.AddSingleton<ICacheBackingStoreProvider>(sp =>
+                    //{
+                    //    var originalProvider = sp.GetRequiredService<ICacheBackingStoreProvider>(); // however it's registered
+                    //    var redis = sp.GetRequiredService<IConnectionMultiplexer>();
+                    //    var expiry = TimeSpan.FromMinutes(60); // your desired expiry
+
+                    //    return new RedisCacheBackingStoreWithExpiry(originalProvider, redis, expiry);
+                    //});
+
+
                     // Use the toolkit Azure Function pipeline
                     services.UseAzureFunctionPipeline();
 
@@ -92,6 +110,7 @@ namespace SMARTCustomOperations.AzureAuth
 
                     services.AddOutputFilter(typeof(ServiceBaseUrlListOutputFilter));
                     services.AddOutputFilter(typeof(TokenOutputFilter));
+                    services.AddOutputFilter(typeof(TokenIntrospectionOutputFilter));
                 })
                 .Build();
 

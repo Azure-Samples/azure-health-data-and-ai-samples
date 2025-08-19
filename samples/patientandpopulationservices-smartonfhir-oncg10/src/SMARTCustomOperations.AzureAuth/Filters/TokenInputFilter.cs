@@ -5,6 +5,7 @@
 
 using System.Collections.Specialized;
 using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
@@ -24,18 +25,21 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly string _id;
         private readonly IAsymmetricAuthorizationService _asymmetricAuthorizationService;
+        private readonly IClientConfigService _clientConfigService;
 
-        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAsymmetricAuthorizationService asymmetricAuthorizationService)
+        public TokenInputFilter(ILogger<TokenInputFilter> logger, AzureAuthOperationsConfig configuration, IAsymmetricAuthorizationService asymmetricAuthorizationService, IClientConfigService clientConfigService)
         {
             _logger = logger;
             _configuration = configuration;
             _id = Guid.NewGuid().ToString();
             _asymmetricAuthorizationService = asymmetricAuthorizationService;
+            _clientConfigService = clientConfigService;
+            
         }
 
         public event EventHandler<FilterErrorEventArgs>? OnFilterError;
 
-        public string Name => nameof(AuthorizeInputFilter);
+        public string Name => nameof(TokenInputFilter);
 
         public StatusType ExecutionStatusType => StatusType.Normal;
 
@@ -44,7 +48,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         public async Task<OperationContext> ExecuteAsync(OperationContext context)
         {
             // Only execute for token request
-            if (!context.Request.RequestUri!.LocalPath.Contains("token", StringComparison.InvariantCultureIgnoreCase))
+            if (!context.Request.RequestUri!.LocalPath.Contains("token", StringComparison.InvariantCultureIgnoreCase) || context.Request.RequestUri!.LocalPath.Contains("introspection", StringComparison.InvariantCultureIgnoreCase))
             {
                 return context;
             }
@@ -63,10 +67,24 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Read the request body
             TokenContext? tokenContext = null;
             NameValueCollection requestData = await context.Request.Content.ReadAsFormDataAsync();
+            if (requestData != null) {
+                _logger.LogInformation("Request Data: {RequestData}", requestData.ToString());
+                foreach (string key in requestData.AllKeys)
+                {
+                    _logger.LogInformation("Key: {Key}, Value: {Value}", key, requestData[key]);
+                }
+            }
 
             // Parse the request body
             try
             {
+                if (requestData.AllKeys.Contains("refresh_token") && requestData.AllKeys.Contains("client_assertion"))
+                {
+                    var clientAssertion = requestData["client_assertion"];
+                    var clientId = new JwtSecurityTokenHandler().ReadJwtToken(clientAssertion).Subject;
+                    var clientSecret = await _clientConfigService.FetchSecretAsync(clientId);
+                    requestData.Add("client_secret", clientSecret.Value.Value);
+                }
                 tokenContext = TokenContext.FromFormUrlEncodedContent(requestData!, context.Request.Headers.Authorization, _configuration.FhirAudience!);
                 tokenContext.Validate();
             }
@@ -85,17 +103,29 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Microsoft Entra ID does not support bare JWKS auth or 384 JWKS auth. We must convert to an associated client secret flow.
             if (tokenContext.GetType() == typeof(BackendServiceTokenContext))
             {
+                _logger.LogInformation("Handling BackendServiceTokenContext for client credentials flow.");
                 var castTokenContext = (BackendServiceTokenContext)tokenContext;
                 context = await HandleBackendService(context, castTokenContext);
             }
             else
             {
+                _logger.LogInformation("Handling other TokenContext types for public or confidential client flows.");
                 context.Request.Content = tokenContext.ToFormUrlEncodedContent();
             }
 
-            // Origin header needed for clients using PKCE without a secret (SPA).
-            if (requestData.AllKeys.Contains("code_verifier") && !requestData.AllKeys.Contains("client_secret"))
+            if (requestData != null)
             {
+                _logger.LogInformation("Request Data after BackendService Operations");
+                foreach (string key in requestData.AllKeys)
+                {
+                    _logger.LogInformation("Key: {Key}, Value: {Value}", key, requestData[key]);
+                }
+            }
+
+            // Origin header needed for clients using PKCE without a secret (SPA).
+            if (requestData.AllKeys.Contains("code_verifier") && !requestData.AllKeys.Contains("client_secret") && !requestData.AllKeys.Contains("client_assertion"))
+            {
+                _logger.LogInformation("Adding Origin header for PKCE request without client secret.");
                 context.Headers.Add(new HeaderNameValuePair("Origin", $"https://{_configuration.ApiManagementHostName}", CustomHeaderType.RequestStatic));
             }
 
@@ -133,6 +163,8 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             }
 
             context.Request.Content = castTokenContext.ConvertToClientCredentialsFormUrlEncodedContent(clientConfig.ClientSecret);
+
+            _logger.LogInformation("Context Content" + context.Request.Content.ToString());
 
             return context;
         }

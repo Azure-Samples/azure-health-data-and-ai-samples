@@ -41,5 +41,20 @@ namespace SMARTCustomOperations.AzureAuth.Services
         {
             await _cache.RemoveAsync(key);
         }
+
+        public async Task<ClaimCacheObject> GetClaimCacheObjectAsync(string key)
+        {
+            return await _cache.GetAsync<ClaimCacheObject>(key);
+        }
+
+        public async Task SetClaimCacheObjectAsync(string key, ClaimCacheObject item)
+        {
+            await _cache.AddAsync<ClaimCacheObject>(key, item);
+        }
+
+        public async Task RemoveClaimCacheObjectAsync(string key)
+        {
+            await _cache.RemoveAsync(key);
+        }
     }
 }

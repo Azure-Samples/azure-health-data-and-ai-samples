@@ -60,5 +60,13 @@ namespace SMARTCustomOperations.AzureAuth
 
             return await _pipeline.ExecuteAsync(req);
         }
+
+        [Function("TokenIntrospection")]
+        public async Task<HttpResponseData> RunTokenIntrospectionFunction([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "token/introspection")] HttpRequestData req)
+        {
+            _logger.LogInformation($"TokenIntrospection function pipeline started.");
+
+            return await _pipeline.ExecuteAsync(req);
+        }
     }
 }

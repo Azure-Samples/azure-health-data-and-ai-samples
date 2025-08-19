@@ -49,7 +49,11 @@
                 "context-banner",
                 "context-style",
                 "permission-user",
-                "context-ehr-encounter"
+                "context-ehr-encounter",
+                "client-confidential-asymmetric",
+                "authorize-post",
+                "permission-v2",
+                "permission-v1"
             ]
         }</set-body>
         <set-header name="Content-Type" exists-action="override">

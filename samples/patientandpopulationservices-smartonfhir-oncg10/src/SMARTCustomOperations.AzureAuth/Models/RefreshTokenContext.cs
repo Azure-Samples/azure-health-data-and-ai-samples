@@ -4,6 +4,8 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.Collections.Specialized;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using SMARTCustomOperations.AzureAuth.Extensions;
 
@@ -11,6 +13,8 @@ namespace SMARTCustomOperations.AzureAuth.Models
 {
     public class RefreshTokenContext : TokenContext
     {
+        private static JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
+
         /// <summary>
         /// Creates a RefreshTokenContext from the NameValueCollection from the HTTP request body.
         /// </summary>
@@ -24,7 +28,16 @@ namespace SMARTCustomOperations.AzureAuth.Models
             }
 
             GrantType = GrantType.refresh_token;
-            ClientId = form["client_id"]!;
+            ClientAssertionType = form["client_assertion_type"]!;
+            ClientAssertion = form["client_assertion"]!;
+            if (ClientAssertion != null)
+            {
+                ClientId = _handler.ReadJwtToken(ClientAssertion).Subject;
+            }
+            else
+            {
+                ClientId = form["client_id"]!;
+            }
             RefreshToken = form["refresh_token"]!;
             ClientSecret = form["client_secret"]!;
 
@@ -39,6 +52,10 @@ namespace SMARTCustomOperations.AzureAuth.Models
         public string RefreshToken { get; set; } = default!;
 
         public string? Scope { get; set; } = default!;
+
+        public string ClientAssertionType { get; }
+
+        public string ClientAssertion { get; }
 
         public override string ClientId { get; } = default!;
 

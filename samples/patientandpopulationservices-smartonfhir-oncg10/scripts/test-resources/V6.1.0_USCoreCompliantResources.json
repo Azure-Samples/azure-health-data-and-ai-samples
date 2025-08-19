@@ -3179,10 +3179,10 @@
             {
               "system": "http://hl7.org/fhir/sid/cvx",
               "code": "140",
-              "display": "Influenza, seasonal, injectable, preservative free"
+              "display": "Influenza, split virus, trivalent, PF"
             }
           ],
-          "text": "Influenza, seasonal, injectable, preservative free"
+          "text": "Influenza, split virus, trivalent, PF"
         },
         "patient": {
           "reference": "Patient/PatientC",
@@ -3234,10 +3234,10 @@
             {
               "system": "http://hl7.org/fhir/sid/cvx",
               "code": "140",
-              "display": "Influenza, seasonal, injectable, preservative free"
+              "display": "Influenza, split virus, trivalent, PF"
             }
           ],
-          "text": "Influenza, seasonal, injectable, preservative free"
+          "text": "Influenza, split virus, trivalent, PF"
         },
         "patient": {
           "reference": "Patient/PatientA",
@@ -3289,10 +3289,10 @@
             {
               "system": "http://hl7.org/fhir/sid/cvx",
               "code": "140",
-              "display": "Influenza, seasonal, injectable, preservative free"
+              "display": "Influenza, split virus, trivalent, PF"
             }
           ],
-          "text": "Influenza, seasonal, injectable, preservative free"
+          "text": "Influenza, split virus, trivalent, PF"
         },
         "patient": {
           "reference": "Patient/PatientB",
@@ -3866,7 +3866,7 @@
         "identifier": [
           {
             "use": "official",
-            "system": "http://acme.org/prescriptions",
+            "system": "https://fhir.network.org/ids/medicationrequest",
             "value": "12345689"
           }
         ],
@@ -3993,7 +3993,7 @@
         "identifier": [
           {
             "use": "official",
-            "system": "http://acme.org/prescriptions",
+            "system": "https://fhir.network.org/ids/medicationrequest",
             "value": "12345689"
           }
         ],
@@ -4120,7 +4120,7 @@
         "identifier": [
           {
             "use": "official",
-            "system": "http://acme.org/prescriptions",
+            "system": "https://fhir.network.org/ids/medicationrequest",
             "value": "12345689"
           }
         ],
@@ -9564,6 +9564,315 @@
     },
     {
       "resource": {
+          "resourceType": "Observation",
+          "id": "ObservationScreenAssessA4",
+          "meta": {
+            "versionId": "1",
+            "lastUpdated": "2025-08-19T11:38:02.051+00:00",
+            "profile": [
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-screening-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-sdoh-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-simple-observation"
+            ]
+          },
+          "identifier": [
+            {
+              "system": "https://github.com/inferno-framework/us-core-test-kit",
+              "value": "86744768-f16e-4582-b5b4-d598cb9497ce"
+            }
+          ],
+          "status": "final",
+          "category": [
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-tags",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                },
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                  "code": "survey",
+                  "display": "Survey"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "functional-status",
+                  "display": "Functional Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "disability-status",
+                  "display": "Disability Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "cognitive-status",
+                  "display": "Cognitive Status"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "44250-9",
+                "display": "Little interest or pleasure in doing things in last 2 weeks"
+              }
+            ],
+            "text": "Little interest or pleasure in doing things?"
+          },
+          "subject": {
+            "reference": "Patient/PatientA"
+          },
+          "effectiveDateTime": "2022-03-30T04:08:59.084+05:30",
+          "performer": [
+            {
+              "reference": "Practitioner/PractitionerA1"
+            }
+          ],
+          "valueBoolean": false,
+          "hasMember": [
+            {
+              "reference": "Observation/ObservationScreenAssessA2"
+            }
+          ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/ObservationScreenAssessA4"
+      }
+    },
+    {
+      "resource": {
+          "resourceType": "Observation",
+          "id": "ObservationScreenAssessB4",
+          "meta": {
+            "versionId": "1",
+            "lastUpdated": "2025-08-19T11:38:02.051+00:00",
+            "profile": [
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-screening-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-sdoh-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-simple-observation"
+            ]
+          },
+          "identifier": [
+            {
+              "system": "https://github.com/inferno-framework/us-core-test-kit",
+              "value": "86744768-f16e-4582-b5b4-d598cb9497ce"
+            }
+          ],
+          "status": "final",
+          "category": [
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-tags",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                },
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                  "code": "survey",
+                  "display": "Survey"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "functional-status",
+                  "display": "Functional Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "disability-status",
+                  "display": "Disability Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "cognitive-status",
+                  "display": "Cognitive Status"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "44250-9",
+                "display": "Little interest or pleasure in doing things in last 2 weeks"
+              }
+            ],
+            "text": "Little interest or pleasure in doing things?"
+          },
+          "subject": {
+            "reference": "Patient/PatientB"
+          },
+          "effectiveDateTime": "2022-03-30T04:08:59.084+05:30",
+          "performer": [
+            {
+              "reference": "Practitioner/PractitionerB1"
+            }
+          ],
+          "valueBoolean": false,
+          "hasMember": [
+            {
+              "reference": "Observation/ObservationScreenAssessB2"
+            }
+          ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/ObservationScreenAssessB4"
+      }
+    },
+    {
+      "resource": {
+          "resourceType": "Observation",
+          "id": "ObservationScreenAssessC4",
+          "meta": {
+            "versionId": "1",
+            "lastUpdated": "2025-08-19T11:38:02.051+00:00",
+            "profile": [
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-screening-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-sdoh-assessment",
+              "http://hl7.org/fhir/us/core/StructureDefinition/us-core-simple-observation"
+            ]
+          },
+          "identifier": [
+            {
+              "system": "https://github.com/inferno-framework/us-core-test-kit",
+              "value": "86744768-f16e-4582-b5b4-d598cb9497ce"
+            }
+          ],
+          "status": "final",
+          "category": [
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-tags",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                },
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "sdoh",
+                  "display": "SDOH"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                  "code": "survey",
+                  "display": "Survey"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "functional-status",
+                  "display": "Functional Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "disability-status",
+                  "display": "Disability Status"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+                  "code": "cognitive-status",
+                  "display": "Cognitive Status"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "44250-9",
+                "display": "Little interest or pleasure in doing things in last 2 weeks"
+              }
+            ],
+            "text": "Little interest or pleasure in doing things?"
+          },
+          "subject": {
+            "reference": "Patient/PatientC"
+          },
+          "effectiveDateTime": "2022-03-30T04:08:59.084+05:30",
+          "performer": [
+            {
+              "reference": "Practitioner/PractitionerC1"
+            }
+          ],
+          "valueBoolean": false,
+          "hasMember": [
+            {
+              "reference": "Observation/ObservationScreenAssessC2"
+            }
+          ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/ObservationScreenAssessC4"
+      }
+    },
+    {
+      "resource": {
         "resourceType": "Organization",
         "id": "OrganizationC",
         "meta": {
@@ -10773,7 +11082,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],
@@ -10848,7 +11157,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],
@@ -10923,7 +11232,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],
@@ -10998,7 +11307,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],
@@ -11073,7 +11382,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],
@@ -11134,7 +11443,7 @@
             "value": "1250905357"
           },
           {
-            "system": "http://www.acme.org/practitioners",
+            "system": "https://fhir.network.org/ids/practitioner",
             "value": "25456"
           }
         ],

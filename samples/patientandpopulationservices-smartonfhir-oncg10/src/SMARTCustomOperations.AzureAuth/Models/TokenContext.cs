@@ -41,7 +41,12 @@ namespace SMARTCustomOperations.AzureAuth.Models
             // For public apps and confidential apps
             if (formData.AllKeys.Contains("grant_type") && formData["grant_type"] == GrantType.authorization_code.ToString())
             {
-                if (formData.AllKeys.Contains("client_secret"))
+                if (formData.AllKeys.Contains("client_assertion_type") && formData.AllKeys.Contains("client_assertion_type") &&
+                    Uri.UnescapeDataString(formData["client_assertion_type"]!) == "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+                {
+                    tokenContext = new BackendServiceTokenContext(formData, audience);
+                }
+                else if (formData.AllKeys.Contains("client_secret"))
                 {
                     tokenContext = new ConfidentialClientTokenContext(formData);
                 }

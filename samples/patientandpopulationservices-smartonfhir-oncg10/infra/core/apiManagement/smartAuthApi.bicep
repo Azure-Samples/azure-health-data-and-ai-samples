@@ -199,4 +199,21 @@ resource smartAuthApi 'Microsoft.ApiManagement/service/apis@2021-12-01-preview' 
       }
     }
   }
+
+  resource smartTokenIntrospectionEndpoint 'operations' = {
+    name: 'smartTokenIntrospectionEndpoint'
+    properties: {
+      displayName: 'SMART Token Introspection Endpoint'
+      method: 'POST'
+      urlTemplate: '/token/introspection'
+    }
+
+    resource smartAuthorizeEndpointPolicy 'policies' = {
+      name: 'policy'
+      properties: {
+        format: 'rawxml'
+        value: loadTextContent('policies/tokenIntrospectionEndpointPolicy.xml')
+      }
+    }
+  }
 }

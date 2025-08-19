@@ -3,11 +3,14 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using Microsoft.AzureHealth.DataServices.Clients.Headers;
 using Microsoft.AzureHealth.DataServices.Filters;
 using Microsoft.AzureHealth.DataServices.Pipelines;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using SMARTCustomOperations.AzureAuth.Configuration;
 using SMARTCustomOperations.AzureAuth.Extensions;
 using SMARTCustomOperations.AzureAuth.Models;
@@ -43,7 +46,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         public async Task<OperationContext> ExecuteAsync(OperationContext context)
         {
             // Only execute for token request
-            if (!context.Request.RequestUri!.LocalPath.Contains("token", StringComparison.CurrentCultureIgnoreCase))
+            if (!context.Request.RequestUri!.LocalPath.Contains("token", StringComparison.CurrentCultureIgnoreCase) || context.Request.RequestUri!.LocalPath.Contains("introspection", StringComparison.InvariantCultureIgnoreCase))
             {
                 return context;
             }
@@ -53,6 +56,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             TokenResponse tokenResponse;
             try
             {
+                _logger?.LogInformation($"Content String: {context.ContentString}");
                 tokenResponse = new(_configuration, context.ContentString);
                 
                 // Add launch information from cache if exists
@@ -73,6 +77,20 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                         _logger?.LogWarning($"No launch information found in cache for user {tokenResponse.UserId}");
                     }
                 }
+
+                if (tokenResponse.TryGetIdToken(out string id_token))
+                {
+                    _logger?.LogInformation("ID Token found in token response, decoding...");
+                    var idTokenClaims = ParseIdTokenClaims(id_token);
+
+                    var idTokenClaim = new ClaimCacheObject
+                    {
+                        Issuer = idTokenClaims["iss"],
+                        Subject = idTokenClaims["sub"]
+                    };
+
+                    await _cacheService.SetClaimCacheObjectAsync(idTokenClaims["uti"], idTokenClaim);
+                }
                 
                 context.ContentString = tokenResponse.ToString();
             }
@@ -89,5 +107,34 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             await Task.CompletedTask;
             return context;
         }
+
+        private Dictionary<string, string> ParseIdTokenClaims(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!handler.CanReadToken(token))
+            {
+                throw new ArgumentException("Invalid token format.");
+            }
+
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var iss = jwtToken.Issuer;
+            var sub = jwtToken.Subject;
+            var uti = jwtToken.Claims.FirstOrDefault(c => c.Type == "uti")?.Value;
+
+            if (string.IsNullOrEmpty(iss) || string.IsNullOrEmpty(sub) || string.IsNullOrEmpty(uti))
+            {
+                throw new SecurityTokenException("One or more required claims are missing (iss, sub, uti).");
+            }
+
+            return new Dictionary<string, string>
+            {
+                { "iss", iss },
+                { "sub", sub },
+                { "uti", uti }
+            };
+        }
+
     }
 }

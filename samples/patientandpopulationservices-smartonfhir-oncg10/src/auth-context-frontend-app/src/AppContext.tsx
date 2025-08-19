@@ -128,26 +128,38 @@ function useProvideAppContext() {
  
   try {
     // save launch parameter in backend cache somewhere
+    await setAppConsentInfoIfEmpty();
     const cacheInfo: CacheInfo = {
       userId: userId,
       launch: launch
     }
     await saveCacheString(cacheInfo);
+    // Changes for EHR consent revocation
+    // if(applicationId && requestedScopes){
+    //   const info = await getAppConsentInfo(applicationId, requestedScopes);
+    //   if(info){
+    //     await saveAppConsentInfo(info);
+    //   }
+    // }
   }
   catch (err: any) {
     displayError(err.message);
     return
   }
 
+  // Changes for EHR consent revocation
+  // await sleep(5000);
   // redirect the app to the EHR launch URL
-  const newQueryParams = queryParams;
-  const hint = user?.account.idTokenClaims?.login_hint;
-  if (hint && hint.length > 0) {
-    newQueryParams.set("login_hint", hint)
-  }
-  newQueryParams.set("user", "true");
-  newQueryParams.set("prompt", "consent");
-  window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
+
+
+  // const newQueryParams = queryParams;
+  // const hint = user?.account.idTokenClaims?.login_hint;
+  // if (hint && hint.length > 0) {
+  //   newQueryParams.set("login_hint", hint)
+  // }
+  // newQueryParams.set("user", "true");
+  // newQueryParams.set("prompt", "consent");
+  // window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
 }
 
 const setAppConsentInfoIfEmpty = async () => {
