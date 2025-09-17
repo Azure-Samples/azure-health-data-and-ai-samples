@@ -39,7 +39,7 @@ param FhirAudience string
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string 
 
-@description('Provide the exisiting fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
+@description('Provide the existing fhir Service Id(To Get the fhir Id Go to your fhir service -> properties -> Copy the Id under essentials)')
 param fhirId string 
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
@@ -58,11 +58,16 @@ param AuthorityURL string
 @description('Provide Fhir Resource App registration Client Id to customize the access token sent to the FHIR Service')
 param FhirResourceAppId string
 
-@description('Provide B2C Tenant Id')
-param B2CTenantId string
+@allowed([
+  'EntraID'
+  'EntraExternalID'
+  'AzureADB2C'
+])
+@description('IDP Provider to use for authentication. Options are EntraID, EntraExternalID, or AzureADB2C.')
+param IDPProvider string 
 
-@description('smart on fhir with b2c')
-param smartonfhirwithb2c bool 
+@description('Tenant ID for the different IDP Provider. Required if IDPProvider is set to EntraExternalID.')
+param IDPProviderTenantId string
 
 // end optional configuration parameters
 
@@ -123,7 +128,7 @@ module fhir 'core/fhir.bicep'= {
     audience: FhirAudience
     AuthorityURL: AuthorityURLvalue
     FhirResourceAppId:FhirResourceAppId
-    smartOnFhirWithB2C: smartonfhirwithb2c
+    idpProvider: IDPProvider
   }
 }
 
@@ -187,10 +192,10 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
     enableVNetSupport: enableVNetSupport
-    b2cTenantId: B2CTenantId
+    idpProviderTenantId: empty(IDPProviderTenantId) ? tenantId : IDPProviderTenantId
     fhirResourceAppId: FhirResourceAppId
     authorityUrl: AuthorityURL
-    smartOnFhirWithB2C: smartonfhirwithb2c
+    idpProvider: IDPProvider
     keyVaultName: keyVaultName
   }
 }
@@ -265,7 +270,7 @@ module keyVault './core/keyVault.bicep' = {
     location: location
     tenantId: tenantId
     enableVNetSupport: enableVNetSupport
-    smartonfhirwithb2c: smartonfhirwithb2c
+    idpProvider: IDPProvider
     writerObjectIds: keyVaultWriterPrincipals
     readerObjectIds: [ authCustomOperation.outputs.functionAppPrincipalId ]
   }
@@ -287,10 +292,10 @@ module contextStaticWebApp './app/contextApp.bicep' = {
 }
 
 var tenantnamesplit = split(AuthorityURL,'/')  
-var tenantendpoint = smartonfhirwithb2c ? tenantnamesplit[2] : ''
-var b2ctenantname = smartonfhirwithb2c ? split(tenantendpoint,'.') : ['']
+var tenantendpoint = IDPProvider != 'EntraID' ? tenantnamesplit[2] : ''
+var IDPProviderTenantName = IDPProvider != 'EntraID' ? split(tenantendpoint,'.') : ['']
 
-var issuer = smartonfhirwithb2c ? 'https://${tenantendpoint}/${B2CTenantId}/v2.0/' : 'https://${tenantendpoint}/${tenantId}/v2.0'
+var issuer = IDPProvider != 'EntraID' ? 'https://${tenantendpoint}/${IDPProviderTenantId}/v2.0/' : 'https://${tenantendpoint}/${tenantId}/v2.0'
 var jwksUri = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL
 
 // These map to user secrets for local execution of the program
@@ -308,12 +313,12 @@ output REACT_APP_AAD_APP_TENANT_ID string = tenantId
 output REACT_APP_API_BASE_URL string = 'https://${apim.outputs.apimHostName}'
 output REACT_APP_FHIR_RESOURCE_AUDIENCE string = FhirAudience
 output AZURE_RESOURCE_GROUP string = newOrExistingResourceGroupName
-output B2C_Tenant_Name string = b2ctenantname[0]
+output IDP_Provider_Tenant_Name string = IDPProviderTenantName[0]
 output Authority_URL string = AuthorityURL
-output SmartonFhir_with_B2C bool = smartonfhirwithb2c
-output B2C_Tenant_Id string = B2CTenantId
+output IDP_Provider string = IDPProvider
+output IDP_Provider_Tenant_Id string = empty(IDPProviderTenantId) ? tenantId : IDPProviderTenantId
 output Fhir_Resource_AppId string = FhirResourceAppId
 output keyVaultStore string = keyVaultName
-output REACT_APP_B2C_Tenant_Name string= b2ctenantname[0]
-output REACT_APP_SmartonFhir_with_B2C bool = smartonfhirwithb2c
+output REACT_APP_IDP_Provider_Tenant_Name string = IDPProviderTenantName[0]
+output REACT_APP_IDP_Provider string = IDPProvider
 output REACT_APP_Authority_URL string = endsWith(AuthorityURL, '/v2.0') ? substring(AuthorityURL, 0, length(AuthorityURL) - 5) : AuthorityURL
