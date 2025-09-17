@@ -30,13 +30,6 @@ This project provides samples outlining example implementations of various use c
 | FHIR to HL7v2 format for ingestion back into an EHR (coming soon)| Sample to convert FHIR data to HL7v2 format suitable for ingestion into an EHR. |
 
 --->
-
-### Data ingestion
-
-|Sample|Description|
-| --- | --- |
-| [Migrate data from one Azure API for FHIR server to another API for FHIR server](samples/fhir-to-fhir/api-for-fhir-to-api-for-fhir) | Sample app for copying/migrating data from one Azure API for FHIR server to another Azure API for FHIR server. |
-
 ### Sample transactions
 
 |Sample|Description|
