@@ -53,7 +53,7 @@ If you are getting more scopes assigned to your token, make sure you HAVE NOT ap
 
 If you encounter Unauthorized(401) or Forbidden(403) errors while accessing resources or during authentication, please check the following:
 
-**If you have opted for Microsoft Entra ID:**
+**For Microsoft Entra ID:**
 - User Configuration:
   - `FHIR SMART User` Role is assigned to the Test User.
   - Test User is mapped with appropriate `fhirUser` claim.
@@ -63,7 +63,7 @@ If you encounter Unauthorized(401) or Forbidden(403) errors while accessing reso
   - All the environment variables contain proper values.
   - Specifically, `resource` environment variable match the FHIR Server audience.
 
-**If you have opted for Smart on FHIR with B2C:**
+**For non-Microsoft Entra ID Identity Providers:**
 - User Configuration:
   - Test User is mapped with appropriate `fhirUser` claim.
   - Required scopes were selected during authentication.
@@ -86,7 +86,7 @@ To find out more, information, check out:
 
 - You can add a new scope in the "oauth2Permissions" array in the manifest.json file of the FHIR resource app.
 - Or, you can also add it from the "Expose an API" blade of the FHIR resource app by clicking on "Add a scope" button.
-- Once added, these scopes would be available for adding as permission from the "API permissions" blade on required Microsoft Entra ID / Azure AD B2C application.
+- Once added, these scopes would be available for adding as permission from the "API permissions" blade on your selected Identity Provider application.
 
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/troubleshooting/AddingScopesFromManifest.png)

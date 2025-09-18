@@ -55,7 +55,7 @@ namespace SMARTCustomOperations.AzureAuth
                     // Add services needed for Microsoft Graph
                     services.AddMicrosoftGraphClient(options =>
                     {
-                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.SmartonFhir_with_B2C ? config.B2C_Tenant_Id : config.TenantId });
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.IDPProviderTenantId });
                     });
                     services.AddScoped<GraphConsentService>();
 

@@ -32,8 +32,8 @@
     "principalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
     },
-    "B2CTenantId": {
-      "value": "${B2CTenantId}"
+    "IDPProviderTenantId": {
+      "value": "${IDPProviderTenantId}"
     },
     "AuthorityURL": {
       "value": "${AuthorityURL}"
@@ -41,8 +41,8 @@
     "FhirResourceAppId": {
       "value": "${FhirResourceAppId}"
     },
-    "smartonfhirwithb2c": {
-      "value": "${SmartonFhirwithB2C}"
+    "IDPProvider": {
+      "value": "${IDPProvider}"
     }
   }
 }

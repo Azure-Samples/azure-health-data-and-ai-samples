@@ -8,12 +8,12 @@ param audience string = ''
 param appTags object = {}
 param AuthorityURL string
 param FhirResourceAppId string
-param smartOnFhirWithB2C bool
+param idpProvider string
 
 var loginURL = environment().authentication.loginEndpoint
 var authority = '${loginURL}${tenantId}'
 var isFhirService = length(workspaceName) > 0
-var resolvedAudience = !smartOnFhirWithB2C && length(audience) > 0 ? audience : isFhirService ? 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com' : 'https://${fhirServiceName}.azurehealthcareapis.com'
+var resolvedAudience = idpProvider == 'EntraID' && length(audience) > 0 ? audience : isFhirService ? 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com' : 'https://${fhirServiceName}.azurehealthcareapis.com'
 
 resource healthWorkspace 'Microsoft.HealthcareApis/workspaces@2021-06-01-preview' = if (createWorkspace) {
   name: workspaceName
@@ -26,7 +26,7 @@ resource healthWorkspaceExisting 'Microsoft.HealthcareApis/workspaces@2021-06-01
 }
 var newOrExistingWorkspaceName = createWorkspace ? healthWorkspace.name : isFhirService ? healthWorkspaceExisting.name : ''
 
-var authenticationConfiguration = smartOnFhirWithB2C ? {
+var authenticationConfiguration = idpProvider != 'EntraID' ? {
   authority: authority
   audience: resolvedAudience
   smartProxyEnabled: false
