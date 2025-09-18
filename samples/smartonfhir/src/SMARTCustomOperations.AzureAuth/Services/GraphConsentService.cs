@@ -33,7 +33,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
 			_vaultName = configuration.KeyVaultStore!;
 			_vaultUrl = "https://" + configuration.KeyVaultStore! + ".vault.azure.net";
             _logger = logger;
-			_graphServiceClient = configuration.SmartonFhir_with_B2C ? B2CGraphServiceClient(configuration) : graphServiceClient;
+            _graphServiceClient = configuration.IDPProvider == IDPProvider.EntraID ? graphServiceClient : B2CGraphServiceClient(configuration);
             _config = configuration;
         }
 
@@ -233,7 +233,7 @@ namespace SMARTCustomOperations.AzureAuth.Services
         private GraphServiceClient B2CGraphServiceClient(AzureAuthOperationsConfig config)
         {
             var scopes = new[] { "https://graph.microsoft.com/.default" };
-            var tenantId = config.B2C_Tenant_Id;
+            var tenantId = config.IDPProviderTenantId;
             var clientId = GetKeyVaultSecret(config.KeyVaultClientIdKey);
             var clientSecret = GetKeyVaultSecret(config.KeyVaultClientSecretKey);
             var options = new TokenCredentialOptions

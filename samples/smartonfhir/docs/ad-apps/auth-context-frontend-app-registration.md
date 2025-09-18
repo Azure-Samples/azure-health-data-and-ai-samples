@@ -7,10 +7,10 @@ The Auth Context Frontend Application is a sample React single-page app that ena
 
 ## Deployment (manual)
 
-1. If you are using Microsoft Entra ID, create a new application registration in the Microsoft Entra ID tenant. If you are using B2C, create the registration in the B2C tenant.
+1. Create a new application registration in the tenant of your chosen Identity Provider.
 1. Add a single-page application (SPA) redirect URI of `http://localhost:3000`.
     - Localhost is useful for debugging - we will add the Azure redirect URI after deployment.
-1. After registering the application, include the following configuration only if you are using Microsoft Entra ID. **If you are implementing SMART on FHIR with B2C, you can skip this step.**
+1. After registering the application, apply the following configuration only if Microsoft Entra ID is your selected Identity Provider. **This step is not required for other supported Identity Providers**.
     - Navigate to `Token Configuration`. 
     - Add optional claim for ID token type.
     - Select `login_hint` claim.  
@@ -20,7 +20,7 @@ The Auth Context Frontend Application is a sample React single-page app that ena
     - Select the FHIR Resource application you created earlier.
     - Choose `Delegated permissions` then `user_impersonation`.
     - Finally, click `Add permission` to save.
-1. Grant admin consent only if you are implementing SMART on FHIR with B2C. **Do not grant admin consent if you are using Microsoft Entra ID.**
+1. Grant admin consent only when using non-Microsoft Entra ID Identity Providers. **Do not grant admin consent if Microsoft Entra ID is your selected Identity Provider**.
 1. Inform your Azure Developer CLI environment of this application with:
     ```
     azd env set ContextAppClientId <context app id>
@@ -28,7 +28,7 @@ The Auth Context Frontend Application is a sample React single-page app that ena
 
 <br />
 <details>
-<summary>Click to expand and see screenshots for Microsoft Entra ID Reference.</summary>
+<summary>Click to expand and see screenshots for Microsoft Entra ID reference.</summary>
 
 ![](./images/2_create_application_registration.png)
 ![](./images/2_create_application_registration_details.png)
@@ -39,12 +39,23 @@ The Auth Context Frontend Application is a sample React single-page app that ena
 
 <br />
 <details>
-<summary>Click to expand and see screenshots for B2C Reference.</summary>
+<summary>Click to expand and see screenshots for B2C reference.</summary>
 
 ![](./images/2_create_application_registration_b2c.png)
 ![](./images/2_create_application_registration_details_b2c.png)
 ![](./images/2_add_fhir_user_impersonation_b2c.png)
 ![](./images/2_add_fhir_user_impersonation_screen_2_b2c.png)
+</details>
+
+<br />
+<details>
+<summary>Click to expand and see screenshots for Microsoft Entra External ID reference.</summary>
+
+![](./images/common_new_app_external_entra_id.png)
+![](./images/2_create_application_registration_details_external_entra_id.png)
+![](./images/2_add_fhir_user_impersonation_external_entra_id.png)
+![](./images/2_add_fhir_user_impersonation_screen_2_external_entra_id.png)
+![](./images/2_add_fhir_user_impersonation_grant_admin_consent.png)
 </details>
 
 **[Back to Previous Page](../deployment.md#2-prepare-and-deploy-environment)**

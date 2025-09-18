@@ -7,6 +7,7 @@ import { getAppConsentInfo, getLoginHint, saveAppConsentInfo } from './GraphCons
 import { saveCacheString } from './ContextCacheService';
 import { apiEndpoint } from './Config';
 import { AccountInfo } from '@azure/msal-browser';
+import { IdpProvider } from './provider';
 
 
 // Core application context object.
@@ -157,7 +158,7 @@ function useProvideAppContext() {
     newQueryParams.set("login_hint", hint)
   }
   newQueryParams.set("user", "true");
-  newQueryParams.set("prompt", "consent");
+  if(process.env.REACT_APP_IDP_Provider as IdpProvider === IdpProvider.EntraID) newQueryParams.set("prompt", "consent");
   window.location.assign(apiEndpoint + "/authorize?" + newQueryParams.toString());
 }
 
@@ -245,7 +246,7 @@ const updateScopesWhereNeeded = async (modifiedAuthInfo: AppConsentInfo) : Promi
   const newQueryParams = queryParams;
   newQueryParams.set("scope", modifiedAuthInfo.scopes.filter(x => x.enabled).map(x => x.name).join(" "));
   newQueryParams.set("user", "true");
-  newQueryParams.set("prompt", "consent");
+  if(process.env.REACT_APP_IDP_Provider as IdpProvider === IdpProvider.EntraID) newQueryParams.set("prompt", "consent");
 
   const hint = user?.account.idTokenClaims?.login_hint;
   if (hint && hint.length > 0) {
