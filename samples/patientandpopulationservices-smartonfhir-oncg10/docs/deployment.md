@@ -141,10 +141,21 @@ Next you will need to clone this repository and prepare your environment for dep
 
 As part of the scope selection flow, the Auth Custom Operation Azure Function will modify user permissions for the signed in user. This requires granting the Azure Managed Identity behind Azure Functions Application Administrator (or similar access).
 
-1. Open the Azure Function for SMART Auth Custom Operations from the {env_name}-rg resource group, or use the name of the existing resource group you specified. The function will have a suffix of `aad-func`. 
-1. From the left navbar open `Identity` -> `System assigned`. Copy the Object(principal) ID for the next steps.
-1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
-1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
+1. Open the Azure Function
+    - Navigate to the Azure Function for SMART Auth Custom Operations in the `{env_name}-rg` resource group (or the resource group you specified earlier). The function name should end with the suffix `aad-func`.
+1. Copy the Object (Principal) ID
+    - In the Function App, go to **Identity** → **System assigned**.
+    - Copy the **Object (principal) ID**.
+1. Open Microsoft Entra ID
+    - Go to **Microsoft Entra ID** → **Roles and administrators**.
+    - Select **Application Administrator**.
+1. Add a Role Assignment
+    - Click **+ Add assignments**.
+    - Set **Scope** to **Directory**, then click **No members selected**.
+    - Paste the **Object (principal) ID**, select the identity, and click **Select**.
+1. Complete the Assignment
+    - Set **Assignment type** to **Active**.
+    - Add a **Justification** and click **Assign**.
 
 <br />
 <details>
@@ -152,7 +163,9 @@ As part of the scope selection flow, the Auth Custom Operation Azure Function wi
 
 ![](./images/deployment/4_copy_function_managed_identity.png)
 ![](./images/deployment/4_open_application_administrator.png)
+![](./images/deployment/4_add_assignments.png)
 ![](./images/deployment/4_assign_function_application_administrator.png)
+![](./images/deployment/4_add_assignment_type.png)
 </details>
 <br />
 

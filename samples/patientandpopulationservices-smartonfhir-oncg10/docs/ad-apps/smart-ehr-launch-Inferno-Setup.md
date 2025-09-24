@@ -12,11 +12,11 @@ To facilitate this, Microsoft provides a sample SMART launcher tool that helps g
 **1. Clone the Microsoft FHIR Server**
 
 ```
-git clone https://github.com/microsoft/fhir-server-samples.git
+git clone https://github.com/microsoft/fhir-server.git
 ```
 Navigate to the following path:
 ```
-cd fhir-server-samples/SmartLauncher
+cd fhir-server/samples/apps/SmartLauncher
 ```
 **2. Run the Smart Launcher Locally**
 
