@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Models;
 
 #pragma warning disable CA1002 // Do not expose generic lists
 
@@ -20,22 +21,18 @@ namespace SMARTCustomOperations.AzureAuth.Services
         private readonly bool _debug;
         private readonly string _contextAppClientId;
         private readonly string _fhirAudience;
-        private readonly string _tenantId;
         private readonly string _fhirResourceAppId;
-        private readonly bool _smartonfhir_with_b2c;
         private readonly string _authority_url;
-        private readonly string _b2c_tenant_id;
+        private readonly string _idProviderTenantId;
 
         public BaseContextAppService(AzureAuthOperationsConfig configuration, ILogger<BaseContextAppService> logger)
         {
             _debug = configuration.Debug;
             _contextAppClientId = configuration.ContextAppClientId!;
             _fhirAudience = configuration.FhirAudience!;
-            _tenantId = configuration.TenantId!;
             _fhirResourceAppId = configuration.Fhir_Resource_AppId!;
-            _smartonfhir_with_b2c = configuration.SmartonFhir_with_B2C;
             _authority_url = configuration.Authority_URL!;
-            _b2c_tenant_id = configuration.B2C_Tenant_Id!;
+            _idProviderTenantId = configuration.IDPProviderTenantId!;
         }
 
         // https://github.com/Azure-Samples/ms-identity-dotnet-webapi-azurefunctions/blob/master/Function/BootLoader.cs
@@ -48,13 +45,12 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
             OpenIdConnectConfiguration config = await configManager.GetConfigurationAsync();
 
-            var tenantId = _smartonfhir_with_b2c ? _b2c_tenant_id : _tenantId;
             var validIssuers = new List<string>()
             {
                 $"{config.Issuer}",
-                $"https://login.windows.net/{tenantId}/",
-                $"https://login.microsoft.com/{tenantId}/",
-                $"https://sts.windows.net/{tenantId}/",
+                $"https://login.windows.net/{_idProviderTenantId}/",
+                $"https://login.microsoft.com/{_idProviderTenantId}/",
+                $"https://sts.windows.net/{_idProviderTenantId}/",
             };
 
             // Debugging purposes only, set this to false for production

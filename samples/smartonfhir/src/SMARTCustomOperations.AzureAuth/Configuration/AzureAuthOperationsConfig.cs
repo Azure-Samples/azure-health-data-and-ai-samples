@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
+using SMARTCustomOperations.AzureAuth.Models;
 using System.Configuration;
 
 namespace SMARTCustomOperations.AzureAuth.Configuration
@@ -40,11 +41,11 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
         public string? TenantId { get; set; }
 
-        public bool SmartonFhir_with_B2C { get; set; }
+        public IDPProvider IDPProvider { get; set; }
 
         public string? Authority_URL { get; set; }
 
-        public string? B2C_Tenant_Id { get; set; }
+        public string? IDPProviderTenantId { get; set; }
 
         public string? Fhir_Resource_AppId { get; set; }
 

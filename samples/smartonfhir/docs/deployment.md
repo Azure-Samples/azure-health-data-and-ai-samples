@@ -5,7 +5,7 @@
 
 # Sample Deployment: SMART on FHIR
 
-This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and Microsoft Entra ID or Azure AD B2C configuration.
+This document guides you through the steps needed to deploy this sample. This sample deploys Azure components, custom code, and selected Identity Provider configuration.
 
 *Note:* This sample is not automated and on average will require at least a couple of hours to deploy end to end.
 
@@ -35,6 +35,13 @@ Make sure you have the pre-requisites listed below
         [Deploy an Azure AD B2C tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
         - Need to have admin access to an Azure B2C to create application registration, role assignments, create custom policies, create user accounts.
 
+    -   **For Microsoft Entra External ID:**
+
+        <!-- Use the link for Microsoft Entra External ID tenant. -->
+        - If a Microsoft Entra External ID tenant has not yet been created, please use the following link to set one up.
+        [Deploy an Microsoft Entra External ID tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
+        - Need to have admin access to Microsoft Entra External ID to create application registration, role assignments, create custom policies, create user accounts.
+
 - **Test User Accounts:**
 
     To effectively test the application, you need to create two test user accounts: one for the Patient persona and another for the Provider persona. You can choose to create these user accounts in your chosen Identity Provider
@@ -46,13 +53,27 @@ Make sure you have the pre-requisites listed below
     -   **For Azure B2C:**
         - Create two test user accounts: one for the Patient persona and one for the Provider persona. Refer [Add a test B2C user to the Azure AD B2C tenant](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
         - Make sure you have the object id of both the accounts/users from Azure B2C.
+
+    -   **For Microsoft Entra External ID:**
+        <!-- Use the link for Microsoft Entra External ID tenant. -->
+        - Create two test user accounts: one for the Patient persona and one for the Provider persona. Refer [Add a test user to the Microsoft Entra External ID tenant](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
+        - Make sure you have the object id of both the accounts/users from Microsoft Entra External ID.
   
 
 - **Azure B2C SetUp:**
-  - This setup is exclusively necessary for Smart on FHIR implementation with B2C. If you opt for Microsoft Entra ID, you can bypass this configuration.
+  - This setup is required only when Azure AD B2C is selected as the Identity Provider. You can bypass this configuration for other Identity Providers.
   - Follow below mentioned steps:
     - [Create the custom user attribute in B2C tenant.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute) Refer only to the **Link a B2C user with the fhirUser custom user attribute** section.
     - Refer [Create custom user flow using custom policy](../docs/create-custom-policy.md) section to create custom user attribute.
+
+- **Microsoft Entra External ID SetUp:**
+    - This setup is required only when Microsoft Entra External ID is selected as the Identity Provider. You can bypass this configuration for other Identity Providers.
+    - Follow below mentioned steps:
+        <!-- Update the link -->
+        - [Create the custom user attribute in Microsoft Entra External ID tenant.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute).
+        <!-- Add necessary document link -->
+        - Refer [Create custom user flow](https://<add=link>) section to create custom user attribute.
+
 
 ## 2. Prepare and deploy environment
 
@@ -60,16 +81,22 @@ Next you will need to clone this repository and prepare your environment for dep
 
 1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir` folder.
 1. Login with the Azure CLI.
-   - **For Microsoft Entra ID:** 
+    - **For Microsoft Entra ID:** 
         ```
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
         ```
 
-   - **For Azure B2C:**
+    - **For Azure B2C:**
         ```
         az login --tenant <B2CTenantDomainName> --allow-no-subscriptions
         ```
+
+    - **For Microsoft Entra External ID:**
+        ```
+        az login --tenant <EntraExternalTenantDomainName> --allow-no-subscriptions
+        ```
+
 1. Run `azd env new` to create a new deployment environment, keeping below points in mind.
     - Environment name must not exceed 18 characters in length.
     - Deployment fails if Environment name contains UpperCase Letters.
@@ -86,19 +113,23 @@ Next you will need to clone this repository and prepare your environment for dep
     - **For Microsoft Entra ID**
         ```
         azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
-        azd env set SmartonFhirwithB2C false
         ```
     - **For Azure B2C**
         ```
-        azd env set B2CTenantId <Tenant_ID_Of_B2C>
+        azd env set IDPProviderTenantId <Tenant_ID_Of_B2C>
         azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN_SMART/v2.0"
-        azd env set SmartonFhirwithB2C true
+        ```
+
+    - **For Microsoft Entra External ID**
+        ```
+        azd env set IDPProviderTenantId <Tenant_ID_Of_EntraExternalID>
+        azd env set AuthorityURL "https://<YOUR_EntraExternalID_TENANT_NAME>.ciamlogin.com/<YOUR_EntraExternalID_TENANT_ID>/v2.0"
         ```
 1. To begin the sample deployment, you need to be logged into the appropriate tenant.
 
     - **For Microsoft Entra ID**: You already completed this in step 1, so you can skip this step.
 
-    - **For Azure B2C**: Although you logged into the B2C tenant in step 1, you still need to log in to the Azure tenant using below commands. 
+    - **For non-Microsoft Entra ID Identity Provider**: Although you logged into the selected Identity Provider tenant in [step 1.2](#2-prepare-and-deploy-environment), you still need to log in to the Azure tenant using below commands. 
         ```
         az login --tenant <tenant-id>
         azd auth login --tenant-id <tenant-id>
@@ -117,10 +148,21 @@ Next you will need to clone this repository and prepare your environment for dep
     When running the `azd up` command, you will need to select the `subscription name` and `location` from the drop-down menus to specify where to deploy all resources. Note that this sample can only be deployed in the `EastUS2, WestUS2, or CentralUS` regions. Ensure you choose one of these regions during deployment.
 
     The `azd up` command will prompt you to enter values for the following parameters:   
-    
-    - `B2CTenantId` : 
-        - Enter the Tenant ID of your B2C Tenant deployed earlier. (*If you have opted for Microsoft Entra ID you can keep this parameter blank.*)           
-        **Note**: If you have already set this value using the command `azd env set B2CTenantId <Tenant_ID_Of_B2C>`, you will **not be prompted** during deployment. The existing value will be used automatically.
+    - `IDPProvider`:
+        - Choose the Identity Provider you want to use for this sample. The options are:
+            - `EntraID`: Microsoft Entra ID  
+            (Supports only users from your own Microsoft Entra tenant, typically employees or internal members of your organization.)
+
+            - `AzureADB2C`: Azure Active Directory B2C  
+            (Supports consumer-facing scenarios. Users can sign in using local accounts (email/username) or social identity providers such as Google, Facebook, Microsoft Account, etc.)
+
+            - `EntraExternalID`: Microsoft Entra External ID  
+            (Supports external users from other Microsoft Entra tenants as well as users from third-party identity providers like Google Facebook, etc.)
+
+    - `IDPProviderTenantId` : 
+        
+        - Enter the Tenant ID of your selected Identity Provider Tenant deployed earlier. (*If you have selected **Microsoft Entra ID** you can keep this parameter blank.*)           
+        **Note**: If you have already set this value using the command `azd env set IDPProviderTenantId`, you will **not be prompted** during deployment. The existing value will be used automatically.
     
     - `enableVNetSupport`: 
      
@@ -203,7 +245,6 @@ As part of the scope selection process, the Auth Custom Operation Azure Function
         ![](./images/deployment/4_open_application_administrator.png)
         ![](./images/deployment/4_assign_function_application_administrator.png)
         </details>
-        <br />
 
 ### Set the Auth User Input Redirect URL
 
@@ -243,7 +284,7 @@ Mac/Linux:
 pwsh ./scripts/Load-ProfilesData.ps1
 ```
 
-**For SMART on FHIR with B2C:** 
+**For non-Microsoft Entra ID Identity Providers:** 
 
 To run the script given below, you need to pass the FHIR Server Audience parameter. To get the FHIR Server Audience, follow these steps:
 - Open the resource group named as {env_name}-rg, or with the name of the existing resource group you specified. Find the FHIR Server.
@@ -274,23 +315,23 @@ To learn more about the sample data, read [sample data](./sample-data.md).
 
    Modifying Microsoft Graph directory extensions requires API requests to Microsoft Graph. Use the command below to set the `fhirUser` claim via a helper script for your patient test user. You will need the `object id` of your patient test user. In a production environment, integrate this step into your user registration process.
 
-    *Note - If you have chosen Smart on FHIR with B2C, log in to your B2C tenant before running the script. Refer to step [2.2](#2-prepare-and-deploy-environment) for instructions on logging into your B2C tenant.*
+    *Note - If you have selected a non-Microsoft Entra ID Identity Provider, log in to your selected Identity Provider tenant before running the script. Refer to step [2.2](#2-prepare-and-deploy-environment) for instructions on logging into your selected Identity Provider tenant.*
 
     Create a Microsoft Graph Directory Extension to hold the `fhirUser` information for users.
     
     Windows:
     ```powershell
-    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
+    powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you selected a non-Microsoft Entra ID Identity Provider pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
     ```
 
     Mac/Linux:
     ```bash
-    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you opted for B2C pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
+    pwsh ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<If you selected a non-Microsoft Entra ID Identity Provider pass B2C_EXTENSION_APP_ID otherwise for Microsoft Entra ID pass Fhir Resource Application Id>" -UserObjectId "<Patient Object Id>" -FhirUserValue "<Complete Fhir Url without /metadata>/Patient/PatientA"
     ```
     
 **Assign `FHIR SMART User` Role:**
 
-- If you have opted for Microsoft Entra ID, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Server deployed as part of this sample.
+- If you have selected Microsoft Entra ID as you Identity Provider, then make sure your test user has the role `FHIR SMART User` assigned to your FHIR Server deployed as part of this sample.
 - This role is necessary for enabling the SMART scope logic with your access token scopes in the FHIR Server.
 
 ## 6. Use Postman to access FHIR resource via SMART on FHIR sample
@@ -299,9 +340,9 @@ Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman
 
 ## 7. Identity Provider Configuration
 
-**For SMART on FHIR with B2C:** 
+**For non-Microsoft Entra ID Identity Providers:** 
 
-To set up SMART on FHIR with B2C, you need to provide the Application Registration details from the B2C tenant. Specifically, you will need to provide the Application Registration ID and Secret. This allows Third Party IDP Support for FHIR Service as well as resources deployed in the Azure AD tenant to access and interact with the Application Registration created in the B2C tenant. Note that resources in the Azure AD tenant cannot directly access the B2C Application Registration without these details.
+To set up SMART on FHIR with a non-Microsoft Entra ID Identity Provider, you need to provide the Application Registration details from the non-Microsoft Entra ID Identity Providers tenant. Specifically, you will need to provide the Application Registration ID and Secret. This allows Third Party IDP Support for FHIR Service as well as resources deployed in the Azure AD tenant to access and interact with the Application Registration created in the non-Microsoft Entra ID Identity Provider tenant. Note that resources in the Azure AD tenant cannot directly access the non-Microsoft Entra ID Identity Provider Tenant's Application Registration without these details.
 
 - Configure Identity Provider:
     1. Open the FHIR Service from the {env_name}-rg resource group, or with the name of the existing resource group you specified.
