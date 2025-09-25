@@ -12,11 +12,11 @@ To facilitate this, Microsoft provides a sample SMART launcher tool that helps g
 **1. Clone the Microsoft FHIR Server**
 
 ```
-git clone https://github.com/microsoft/fhir-server-samples.git
+git clone https://github.com/microsoft/fhir-server.git
 ```
 Navigate to the following path:
 ```
-cd fhir-server-samples/SmartLauncher
+cd fhir-server/samples/apps/SmartLauncher
 ```
 **2. Run the Smart Launcher Locally**
 
@@ -47,67 +47,3 @@ After you enter all these information, you notice that the **Launch context** is
 ```https://inferno.healthit.gov/suites/custom/smart/launch?launch=eyJwYXRpZW50IjoiUGF0aWVudEEifQ%3D%3D&iss=https%3A%2F%2Fyour-fhir-service.azure-api.net%2Fsmart```
 
 - Click **Launch** to continue. This will continue the inferno test to run with the appropriate ```launch``` and ```iss``` parameters.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
