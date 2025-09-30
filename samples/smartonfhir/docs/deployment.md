@@ -112,19 +112,22 @@ Next you will need to clone this repository and prepare your environment for dep
         ```
     - **For Microsoft Entra ID**
         ```
-        azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft Entra ID Tenant Id>/v2.0" 
+        azd env set AuthorityURL "https://login.microsoftonline.com/<Microsoft_Entra_ID_Tenant_Id>/v2.0" 
         ```
     - **For Azure B2C**
         ```
         azd env set IDPProviderTenantId <Tenant_ID_Of_B2C>
         azd env set AuthorityURL "https://<YOUR_B2C_TENANT_NAME>.b2clogin.com/<YOUR_B2C_TENANT_NAME>.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN_SMART/v2.0"
         ```
+        - For example: If your B2C tenant name is `contoso` then your AuthorityURL will be `https://contoso.b2clogin.com/contoso.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN_SMART/v2.0`
 
     - **For Microsoft Entra External ID**
         ```
         azd env set IDPProviderTenantId <Tenant_ID_Of_EntraExternalID>
         azd env set AuthorityURL "https://<YOUR_EntraExternalID_TENANT_NAME>.ciamlogin.com/<YOUR_EntraExternalID_TENANT_ID>/v2.0"
         ```
+        - For example: If your EntraExternalID tenant name is `contoso` and tenant id is `26263b74-bb1d-4478-973d-adefd3e0deeb` then your AuthorityURL will be `https://contoso.ciamlogin.com/26263b74-bb1d-4478-973d-adefd3e0deeb/v2.0`
+
 1. To begin the sample deployment, you need to be logged into the appropriate tenant.
 
     - **For Microsoft Entra ID**: You already completed this in step 1, so you can skip this step.
@@ -231,20 +234,34 @@ Next you will need to clone this repository and prepare your environment for dep
 As part of the scope selection process, the Auth Custom Operation Azure Function modifies user permissions for the signed-in user.
 
 - **For Microsoft Entra ID:** 
-  - You will need to grant the Azure Managed Identity associated with the Azure Function appropriate permissions, such as the Application Administrator role (or similar).
+You will need to grant the Azure Managed Identity associated with the Azure Function appropriate permissions, such as the Application Administrator role (or similar).
 
-    1. Open the Azure Function for SMART Auth Custom Operations from the {env_name}-rg resource group, or use the name of the existing resource group you specified. The function will have a suffix of `aad-func`. 
-    1. From the left navbar open `Identity` -> `System assigned`. Copy the Object(principal) ID for the next steps.
-    1. Open Microsoft Entra ID and navigate to `Roles and Administrators`. Open the `Application Administrator` role.
-    1. Add the Azure Function Managed Identity to this Microsoft Entra ID role.
-        <br />
-        <details>
-        <summary>Click to expand and see screenshots.</summary>
+    1. Open the Azure Function
+        - Navigate to the Azure Function for SMART Auth Custom Operations in the `{env_name}-rg` resource group (or the resource group you specified earlier). The function name should end with the suffix `aad-func`.
+    1. Copy the Object (Principal) ID
+        - In the Function App, go to **Identity** → **System assigned**.
+        - Copy the **Object (principal) ID**.
+    1. Open Microsoft Entra ID
+        - Go to **Microsoft Entra ID** → **Roles and administrators**.
+        - Select **Application Administrator**.
+    1. Add a Role Assignment
+        - Click **+ Add assignments**.
+        - Set **Scope** to **Directory**, then click **No members selected**.
+        - Paste the **Object (principal) ID**, select the identity, and click **Select**.
+    1. Complete the Assignment
+        - Set **Assignment type** to **Active**.
+        - Add a **Justification** and click **Assign**.
 
-        ![](./images/deployment/4_copy_function_managed_identity.png)
-        ![](./images/deployment/4_open_application_administrator.png)
-        ![](./images/deployment/4_assign_function_application_administrator.png)
-        </details>
+    <br />
+    <details>
+    <summary>Click to expand and see screenshots.</summary>
+
+    ![](./images/deployment/4_copy_function_managed_identity.png)
+    ![](./images/deployment/4_open_application_administrator.png)
+    ![](./images/deployment/4_add_assignments.png)
+    ![](./images/deployment/4_assign_function_application_administrator.png)
+    ![](./images/deployment/4_add_assignment_type.png)
+    </details>
 
 ### Set the Auth User Input Redirect URL
 
