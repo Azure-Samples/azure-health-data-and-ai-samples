@@ -1,0 +1,33 @@
+### REST Client
+@fhirurl= <fhirurl>
+@clientid= <clientid>
+@clientsecret= <clientsecret>
+@tenantid= <tenantid>
+@contentType = application/json
+
+
+### -----------------------------
+### Get Access Token (Client Credentials)
+### -----------------------------
+# @name getAADToken
+POST https://login.microsoftonline.com/{{tenantid}}/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+&resource={{fhirurl}}
+&client_id={{clientid}}
+&client_secret={{clientsecret}}
+
+### Capture token
+@token={{getAADToken.response.body.access_token}}
+
+### -----------------------------
+### Create Profiles (US Core 6.1.0)
+### -----------------------------
+
+
+POST {{fhirurl}}
+Authorization: Bearer {{token}}
+content-type: {{contentType}}
+
+< ./USCore6-resource-bundle.json
