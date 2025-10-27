@@ -1,0 +1,52 @@
+{
+  "name": "auth-context-frontend-app",
+  "homepage": "./",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@azure/msal-browser": "^2.31.0",
+    "@azure/msal-react": "^1.4.10",
+    "@fluentui/react": "^8.100.0",
+    "@microsoft/applicationinsights-common": "^2.8.9",
+    "@microsoft/applicationinsights-react-js": "^3.4.0",
+    "@microsoft/applicationinsights-web": "^2.8.9",
+    "@types/node": "^16.18.3",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "axios": "^1.7.4",
+    "buffer": "^6.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "envconfig": "node entrypoint.js -e .env -o ./public/env-config.js",
+    "prestart": "npm run envconfig",
+    "start": "react-scripts start",
+    "prebuild": "npm run envconfig",
+    "build": "react-scripts build",
+    "setbuildenv": "npm run envconfig && npm run build",
+    "pretest": "npm run envconfig",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src --ext .ts,.tsx"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

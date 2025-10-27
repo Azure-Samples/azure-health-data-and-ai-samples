@@ -1,0 +1,88 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- Default to our Auth Function -->
+        <set-backend-service id="apim-generated-policy" backend-id="smartAuth" />
+        <rewrite-uri template="/authorize" copy-unmatched-params="true" />
+        <!-- Read form-urlencoded body -->
+        <set-variable name="formBody" value="@(context.Request.Body.As<string>(preserveContent: true))" />
+        <set-variable name="launch" value="@{return context.Variables.GetValueOrDefault<string>("formBody")?.Contains("launch");}" />
+        <set-variable name="user" value="@{
+            var json = context.Variables.GetValueOrDefault<JObject>("jsonBody");
+            if (json != null && json["user"] != null)
+            {
+                return json["user"].ToString();
+            }
+            return null;
+        }" />
+        <set-variable name="aud" value="@{
+            var json = context.Variables.GetValueOrDefault<JObject>("jsonBody");
+            if (json != null && json["aud"] != null)
+            {
+                return json["aud"].ToString();
+            }
+            return null;
+        }" />
+        <!-- Convert body into query string -->
+        <set-variable name="redirectQuery" value="@{
+            var body = context.Variables.GetValueOrDefault<string>("formBody") ?? string.Empty;
+            var result = new List<string>();
+            int current = 0;
+
+            while (current < body.Length)
+            {
+                int ampIndex = body.IndexOf('&', current);
+                if (ampIndex == -1)
+                {
+                    ampIndex = body.Length;
+                }
+
+                var pair = body.Substring(current, ampIndex - current);
+                int equalsIndex = pair.IndexOf('=');
+
+                if (equalsIndex > 0)
+                {
+                    var key = pair.Substring(0, equalsIndex);
+                    var value = pair.Substring(equalsIndex + 1);
+
+                    result.Add(Uri.EscapeDataString(Uri.UnescapeDataString(key)) + "=" +
+                                Uri.EscapeDataString(Uri.UnescapeDataString(value)));
+                }
+
+                current = ampIndex + 1;
+            }
+
+            return string.Join("&", result);
+        }" />
+        <!-- When standalone launch, redirect to context static app (if not from there already) -->
+        <choose>
+            <when condition="@(context.Variables.GetValueOrDefault<bool>("launch") &&
+                               context.Variables.GetValueOrDefault<string>("user") != "true")">
+                <return-response>
+                    <set-status code="303" reason="Redirecting" />
+                    <set-header name="Location" exists-action="override">
+                        <value>@($"https://{context.Request.OriginalUrl.Host}/auth/context/?{context.Variables.GetValueOrDefault<string>("redirectQuery")}")</value>
+                    </set-header>
+                </return-response>
+            </when>
+        </choose>
+        <choose>
+            <when condition="@(context.Variables.GetValueOrDefault<string>("aud") != null &&
+                            !context.Variables.GetValueOrDefault<string>("aud")
+                                .Equals("{{Audience}}", StringComparison.OrdinalIgnoreCase))">
+                <return-response>
+                    <set-status code="400" reason="Invalid audience" />
+                </return-response>
+            </when>
+        </choose>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
