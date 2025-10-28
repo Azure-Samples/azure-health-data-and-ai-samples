@@ -1,0 +1,19 @@
+<policies>
+    <inbound>
+        <base />
+        <rewrite-uri template="/metadata" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <set-variable name="JWKS" value="{{JWKS}}" />
+        <set-body template="liquid">
+            {{context.Variables["JWKS"]}}
+        </set-body>
+        <set-header name="Content-Type" exists-action="override">
+            <value>application/json</value>
+        </set-header>
+    </outbound>
+</policies>
