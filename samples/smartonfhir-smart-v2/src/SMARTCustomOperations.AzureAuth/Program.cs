@@ -1,0 +1,107 @@
+// -------------------------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// -------------------------------------------------------------------------------------------------
+
+using System.Reflection;
+using Azure.Identity;
+using Microsoft.AzureHealth.DataServices.Bindings;
+using Microsoft.AzureHealth.DataServices.Caching;
+using Microsoft.AzureHealth.DataServices.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using SMARTCustomOperations.AzureAuth.Configuration;
+using SMARTCustomOperations.AzureAuth.Factories;
+using SMARTCustomOperations.AzureAuth.Filters;
+using SMARTCustomOperations.AzureAuth.Services;
+
+
+namespace SMARTCustomOperations.AzureAuth
+{
+    internal class Program
+    {
+        internal static async Task Main(string[] args)
+        {
+            AzureAuthOperationsConfig config = new();
+            using IHost host = new HostBuilder()
+                .ConfigureAppConfiguration((context, configuration) =>
+                {
+                    configuration.Sources.Clear();
+                    IHostEnvironment env = context.HostingEnvironment;
+
+                    // Pull configuration from user secrets and local settings for local dev
+                    // Pull from environment variables for Azure deployment
+                    configuration
+                        .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
+                        .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+                        .AddEnvironmentVariables("AZURE_");
+
+                    IConfigurationRoot configurationRoot = configuration.Build();
+                    configurationRoot.Bind(config);
+                    config.Validate();
+                })
+                .ConfigureFunctionsWorkerDefaults()
+                .ConfigureServices(services =>
+                {
+                    if (config.AppInsightsConnectionString is not null)
+                    {
+                        services.UseAppInsightsLogging(config.AppInsightsConnectionString, LogLevel.Information);
+                        services.UseTelemetry(config.AppInsightsConnectionString);
+                    }                   
+                    // Add configuration
+                    services.AddSingleton<AzureAuthOperationsConfig>(config);
+
+                    // Add services needed for backend services
+                    services.AddScoped<IAsymmetricAuthorizationService, AsymmetricAuthorizationService>();
+                    services.AddScoped<IServiceBaseUrlBundleGeneratorService, ServiceBaseUrlBundleGeneratorService>();
+                    services.AddScoped<IClientConfigService, KeyVaultClientConfiguratinService>();
+                    services.AddScoped<EntraTokenIntrospectionService>();
+                    services.AddSingleton<ITokenIntrospectionServiceFactory, TokenIntrospectionServiceFactory>();
+
+                    // Add services needed for Microsoft Graph
+                    services.AddMicrosoftGraphClient(options =>
+                    {
+                        options.Credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { TenantId = config.IDPProviderTenantId });
+                    });
+                    services.AddScoped<GraphConsentService>();
+
+                    services.AddHttpClient<IAuthProvider, AuthProvider>();
+
+                    // Add cache for token context
+                    services.AddMemoryCache();
+                    services.AddRedisCacheBackingStore(options =>
+                    {
+                        options.ConnectionString = config.CacheConnectionString;
+                    });
+                    services.AddJsonObjectMemoryCache(options =>
+                    {
+                        options.CacheItemExpiry = TimeSpan.FromSeconds(3600);
+                    });
+                    services.AddScoped<ContextCacheService>();
+
+                    // Use the toolkit Azure Function pipeline
+                    services.UseAzureFunctionPipeline();
+
+                    // Add toolkit elements
+                    services.AddInputFilter(typeof(AuthorizeInputFilter));
+                    services.AddInputFilter(typeof(TokenInputFilter));
+                    services.AddInputFilter(typeof(AppConsentInfoInputFilter));
+                    services.AddInputFilter(typeof(ContextCacheInputFilter));
+
+                    services.AddBinding<RestBinding, RestBindingOptions>(options =>
+                    {
+                        options.BaseAddress = new Uri(config.Authority_URL!);
+                    });
+
+                    services.AddOutputFilter(typeof(ServiceBaseUrlListOutputFilter));
+                    services.AddOutputFilter(typeof(TokenOutputFilter));
+                    services.AddOutputFilter(typeof(TokenIntrospectionOutputFilter));
+                })
+                .Build();
+
+            await host.RunAsync();
+        }
+    }
+}
