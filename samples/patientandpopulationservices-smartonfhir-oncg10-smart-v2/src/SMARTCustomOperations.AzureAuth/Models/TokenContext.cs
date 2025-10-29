@@ -62,7 +62,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
             else if (formData.AllKeys.Contains("grant_type") && formData["grant_type"] == GrantType.client_credentials.ToString())
             {
                 // TODO - fix this string in code?
-                if (formData.AllKeys.Contains("client_assertion_type") && formData.AllKeys.Contains("client_assertion_type") &&
+                if (formData.AllKeys.Contains("client_assertion_type") &&
                     Uri.UnescapeDataString(formData["client_assertion_type"]!) == "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
                 {
                     tokenContext = new BackendServiceTokenContext(formData, audience);
