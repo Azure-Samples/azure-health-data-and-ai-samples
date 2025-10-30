@@ -15,7 +15,7 @@ The Patient Standalone Launch application is a standard confidential client appl
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Delegated)
 
-| Common Scope        | `.rs` Scope                         | `.read` Scope                               | Microsoft Graph Scope |
+| Common Scopes        | SMART V2 Scopes                         | SMART V1 Scopes                               | Microsoft Graph Scopes |
 |---------------------|-------------------------------------|---------------------------------------------|------------------------|
 | `fhirUser`          | `patient.AllergyIntolerance.rs`     | `patient.AllergyIntolerance.read`           | `openid`               |
 | `launch.patient`    | `patient.CarePlan.rs`               | `patient.CarePlan.read`                     | `offline_access`       |
@@ -53,10 +53,10 @@ The EHR launch confidential client application is a standard confidential client
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource Application (Delegated)
     
-| Common Scope        | `.rs` Scope                         | `.read` Scope                               | Microsoft Graph Scope |
+| Common Scopes        | SMART V2 Scopes                         | SMART V1 Scopes                               | Microsoft Graph Scopes |
 |---------------------|-------------------------------------|---------------------------------------------|------------------------|
 | `fhirUser`          | `user.AllergyIntolerance.rs`        | `user.AllergyIntolerance.read`              | `openid`               |
-| `launch.patient`    | `user.CarePlan.rs`                  | `user.CarePlan.read`                        | `offline_access`       |
+| `launch`    | `user.CarePlan.rs`                  | `user.CarePlan.read`                        | `offline_access`       |
 |                     | `user.CareTeam.rs`                  | `user.CareTeam.read`                        |                        |
 |                     | `user.Condition.rs`                 | `user.Condition.read`                       |                        |
 |                     | `user.Device.rs`                    | `user.Device.read`                          |                        |
@@ -78,6 +78,7 @@ The EHR launch confidential client application is a standard confidential client
 
 
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_ehr_confidental_app_scopes.png)
@@ -88,10 +89,10 @@ The EHR launch confidential client application is a standard confidential client
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide. In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
 
 1. Create a new application in Microsoft Entra ID. No platform or redirect URL is needed.
-1. Grant this application `FHIR SMART User` and `FHIR Exporter` role in your FHIR Service.
+1. Grant this application `FHIR SMART User` and `FHIR Data Exporter` role in your FHIR Service.
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource API (Application)
-        - user.all.read
+        - user.all.rs
 1. Grant admin consent for your Application on the API Permission page-->
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
@@ -111,6 +112,8 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 ![](./images/5_keyvault_secret_details.png)
 </details>
 
+Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
+
 ## Asymmetric Client Standalone Application
 
 Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the SMART on FHIR implementation guide for [Client Authentication: Asymmetric (public key)](https://hl7.org/fhir/smart-app-launch/client-confidential-asymmetric.html). In order to provide this capability, custom code is required to validate the JWT assertion and return a bearer token generated for the client with the corresponding client secret in an Azure KeyVault.
@@ -119,7 +122,7 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 1. In API Permissions for this new application, add the below:
     - Your FHIR Resource Application (Delegated)
     
-| Common Scope        | `.rs` Scope                         | `.read` Scope                               | Microsoft Graph Scope |
+| Common Scopes        | SMART V2 Scope                         | SMART V1 Scopes                               | Microsoft Graph Scopes |
 |---------------------|-------------------------------------|---------------------------------------------|------------------------|
 | `fhirUser`          | `patient.AllergyIntolerance.rs`     | `patient.AllergyIntolerance.read`           | `openid`               |
 | `launch.patient`    | `patient.CarePlan.rs`               | `patient.CarePlan.read`                     | `offline_access`       |
@@ -144,11 +147,12 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 
 1. Generate a secret for this application. Save this and the client id.
 1. In the resource group that matches your environment, open the KeyVault with the suffix `backkv`.
-1. Add a new secret that corresponds to the Application you just generated. 
+1. Add a new secret that corresponds to the Application you just generated. (Screenshots from the Backend Service Client Application section can be used as a reference for performing below steps.)
     - Name: Application ID/Client ID of the application
     - Secret: The secret you generated for the application
     - Tags: Make sure to add the tag `jwks_url` with the backend service JWKS URL. For Inferno testing, this is: https://inferno.healthit.gov/suites/custom/g10_certification/.well-known/jwks.json
 1. Save the client id for later testing.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
 ## Inferno Public Service Base URL
 

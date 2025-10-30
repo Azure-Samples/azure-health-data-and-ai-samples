@@ -8,6 +8,43 @@
     </backend>
     <outbound>
         <base />
+        <choose>
+            <when condition="@(context.Response.StatusCode == 200)">
+                <set-variable name="bodyText" value="@(context.Response.Body.As<string>(preserveContent: true))" />
+                <set-variable name="isJson" value="@(!string.IsNullOrEmpty((string)context.Variables["bodyText"]) && ((string)context.Variables["bodyText"]).TrimStart().StartsWith("{"))" />
+                <choose>
+                    <when condition="@((bool)context.Variables["isJson"])">
+                        <set-variable name="bodyJson" value="@(Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["bodyText"]))" />
+                        <set-variable name="outputArray" value="@((Newtonsoft.Json.Linq.JArray)((Newtonsoft.Json.Linq.JObject)context.Variables["bodyJson"])["output"])" />
+                        <set-variable name="errorArray" value="@((Newtonsoft.Json.Linq.JArray)((Newtonsoft.Json.Linq.JObject)context.Variables["bodyJson"])["error"])" />
+                        <set-variable name="issuesArray" value="@((Newtonsoft.Json.Linq.JArray)((Newtonsoft.Json.Linq.JObject)context.Variables["bodyJson"])["issues"])" />
+                        <choose>
+                            <when condition="@(
+                                context.Variables["outputArray"] != null &&
+                                context.Variables["errorArray"] != null &&
+                                context.Variables["issuesArray"] != null &&
+                                ((Newtonsoft.Json.Linq.JArray)context.Variables["outputArray"]).Count == 0 &&
+                                ((Newtonsoft.Json.Linq.JArray)context.Variables["errorArray"]).Count == 0 &&
+                                ((Newtonsoft.Json.Linq.JArray)context.Variables["issuesArray"]).Count == 0
+                            )">
+                                <set-variable name="operationOutcomeJson" value="@(
+                                    "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"The requested export job was deleted or is no longer available.\"}}]}"
+                                )" />
+                                <set-status code="404" reason="Not Found" />
+                                <set-header name="Content-Type" exists-action="override">
+                                    <value>application/fhir+json</value>
+                                </set-header>
+                            </when>
+                        </choose>
+                    </when>
+                </choose>
+                <set-header name="Content-Type" exists-action="override">
+                    <value>application/json</value>
+                </set-header>
+                <set-body>@((string)context.Variables["bodyText"])</set-body>
+            </when>
+            <otherwise />
+        </choose>
     </outbound>
     <on-error>
         <base />
