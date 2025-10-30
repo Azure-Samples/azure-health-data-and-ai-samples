@@ -27,7 +27,7 @@
                                 ((Newtonsoft.Json.Linq.JArray)context.Variables["errorArray"]).Count == 0 &&
                                 ((Newtonsoft.Json.Linq.JArray)context.Variables["issuesArray"]).Count == 0
                             )">
-                                <set-variable name="operationOutcomeJson" value="@(
+                                <set-variable name="bodyText" value="@(
                                     "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"The requested export job was deleted or is no longer available.\"}}]}"
                                 )" />
                                 <set-status code="404" reason="Not Found" />
