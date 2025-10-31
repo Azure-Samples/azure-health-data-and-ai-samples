@@ -5,10 +5,17 @@ This sample demonstrates how [Azure Health Data Services](https://www.healthit.g
 - [United States Core Data for Interoperability (USCDI)](https://www.healthit.gov/isa/us-core-data-interoperability-uscdi)
 - [HL7® FHIR® Bulk Data Access (Flat FHIR®) (v2.0.0:STU 2)](https://hl7.org/fhir/uv/bulkdata/STU2/)
 - [FHIR® US Core Implementation Guide STU V6.1.0](https://hl7.org/fhir/us/core/STU6.1/)
-- [HL7® SMART Application Launch Framework Implementation Guide Release 2.2.0](hhttps://hl7.org/fhir/smart-app-launch/index.html)
+- [HL7® SMART Application Launch Framework Implementation Guide Release 2.2.0](https://hl7.org/fhir/smart-app-launch/index.html)
 - [OpenID Connect Core 1.0 incorporating errata set 1](https://openid.net/specs/openid-connect-core-1_0.html)
 
 While Azure Health Data Services is the core of this sample, some custom behavior is required to fully meet the §170.315(g)(10) Standardized API for patient and population services criteria requirements, mostly around SMART on FHIR authentication. This sample is therefore *not* using only the FHIR Server but other Azure Services with sample code to pass the Inferno tests. You can use this sample as a starting point and reference for building your applications and solutions.
+
+> [!NOTE]  
+> ***Known Issues and In-Progress Updates:*** 
+>  
+> *Please note that there are a few known issues and updates that are currently in progress for SMART v2. These will be updated soon:*  
+> *- Currently, Entra ID does not support forward slashes ("/") specifically in the SMART v2 granular scopes. We are working on a fix that will allow you to use the URL-encoded representation for forward slashes in replacement ("%2f").*  
+> *- Currently, _include and _revinclude searches are not enabled when using SMART v2 granular scopes. We are working on a fix to enable this functionality.*
 
 ## Sample Components
 
