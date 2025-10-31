@@ -1,6 +1,21 @@
 # Azure SMART on FHIR Sample 
 
-This sample shows extending [Azure Health Data Services, FHIR service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) or [Existing Azure API for FHIR](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/overview) with first party Azure products to enable [SMART on FHIR Implementation Guide](https://docs.smarthealthit.org/). 
+This sample shows extending [Azure Health Data Services, FHIR service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) or [Existing Azure API for FHIR](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/overview) with first party Azure products to enable [SMART on FHIR Implementation Guide](https://docs.smarthealthit.org/). It also includes:
+
+- [Health Level 7 (HL7®) Version 4.0.1 Fast Healthcare Interoperability Resources Specification (FHIR®)](http://hl7.org/fhir/directory.html)
+- [United States Core Data for Interoperability (USCDI)](https://www.healthit.gov/isa/us-core-data-interoperability-uscdi)
+- [FHIR® US Core Implementation Guide STU V6.1.0](https://hl7.org/fhir/us/core/STU6.1/)
+- [HL7® SMART Application Launch Framework Implementation Guide Release 2.2.0](https://hl7.org/fhir/smart-app-launch/index.html)
+- [OpenID Connect Core 1.0 incorporating errata set 1](https://openid.net/specs/openid-connect-core-1_0.html)
+
+> [!NOTE]  
+> ***Known Issues and In-Progress Updates:*** 
+>  
+> *Please note that there are a few known issues and updates that are currently in progress for SMART v2. These will be updated soon:*  
+> *- Currently, Entra ID does not support forward slashes ("/") specifically in the SMART v2 granular scopes. We are working on a fix that will allow you to use the URL-encoded representation for forward slashes in replacement ("%2f").*  
+> *- Currently, _include and _revinclude searches are not enabled when using SMART v2 granular scopes. We are working on a fix to enable this functionality.*</br>
+> *- Currently, SMART v2 is not working with Entra External ID. We are working on enabling this functionality.*
+
 
 As a pre-requisite to the sample deployment, you will need to have
 * Azure Subscription with Owner privileges.
@@ -41,7 +56,7 @@ The below components will be deployed only for non-Microsoft Entra ID Identity P
 
 Working of the sample at high level
 1. User initiates Authentication by calling APIM endpoint managed by [Azure API Management API Gateway](https://learn.microsoft.com/azure/api-management/api-management-gateways-overview) which also handles routing and SMART Conformance.
-2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/1.0.0/index.html) is handled by selected Identity Provider ([Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)/[Azure AD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview)/[Microsoft Entra External ID](https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview)), so frontend app interacts with the Identity Provider to authenticate the user and after successful authentication, the user provide scopes/permissions to access FHIR Service.
+2. Authorization as defined by [SMART on FHIR Implementation Guide](https://hl7.org/fhir/smart-app-launch/STU2.2/) is handled by selected Identity Provider ([Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)/[Azure AD B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview)/[Microsoft Entra External ID](https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview)), so frontend app interacts with the Identity Provider to authenticate the user and after successful authentication, the user provide scopes/permissions to access FHIR Service.
 3. User can select the required scopes and grant consent to the selected scopes.
 4. Access Token is returned after granting consent to the scope.
 5. The SMART on FHIR app sends an API request to the FHIR Server via Azure API Management where the access token is attached to this request to validate the user's identity and permissions.

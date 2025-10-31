@@ -19,26 +19,26 @@
     - Your FHIR Resource API (Delegated)
         - fhirUser
         - launch.patient
-        - patient.AllergyIntolerance.read
-        - patient.CarePlan.read
-        - patient.CareTeam.read
-        - patient.Condition.read
-        - patient.Device.read
-        - patient.DiagnosticReport.read
-        - patient.DocumentReference.read
-        - patient.Encounter.read
-        - patient.Goal.read
-        - patient.Immunization.read
-        - patient.Location.read
-        - patient.MedicationRequest.read
-        - patient.Medication.read
-        - patient.Observation.read
-        - patient.Organization.read
-        - patient.Patient.read
-        - patient.Practitioner.read
-        - patient.PractitionerRole.read
-        - patient.Procedure.read
-        - patient.Provenance.read
+        - patient.AllergyIntolerance.rs
+        - patient.CarePlan.rs
+        - patient.CareTeam.rs
+        - patient.Condition.rs
+        - patient.Device.rs
+        - patient.DiagnosticReport.rs
+        - patient.DocumentReference.rs
+        - patient.Encounter.rs
+        - patient.Goal.rs
+        - patient.Immunization.rs
+        - patient.Location.rs
+        - patient.MedicationRequest.rs
+        - patient.Medication.rs
+        - patient.Observation.rs
+        - patient.Organization.rs
+        - patient.Patient.rs
+        - patient.Practitioner.rs
+        - patient.PractitionerRole.rs
+        - patient.Procedure.rs
+        - patient.Provenance.rs
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
@@ -69,26 +69,26 @@
     - Your FHIR Resource Application (Delegated)
         - fhirUser
         - launch
-        - user.AllergyIntolerance.read
-        - user.CarePlan.read
-        - user.CareTeam.read
-        - user.Condition.read
-        - user.Device.read
-        - user.DiagnosticReport.read
-        - user.DocumentReference.read
-        - user.Encounter.read
-        - user.Goal.read
-        - user.Immunization.read
-        - user.Location.read
-        - user.MedicationRequest.read
-        - user.Medication.read
-        - user.Observation.read
-        - user.Organization.read
-        - user.Patient.read
-        - user.Practitioner.read
-        - user.PractitionerRole.read
-        - user.Procedure.read
-        - user.Provenance.read
+        - user.AllergyIntolerance.rs
+        - user.CarePlan.rs
+        - user.CareTeam.rs
+        - user.Condition.rs
+        - user.Device.rs
+        - user.DiagnosticReport.rs
+        - user.DocumentReference.rs
+        - user.Encounter.rs
+        - user.Goal.rs
+        - user.Immunization.rs
+        - user.Location.rs
+        - user.MedicationRequest.rs
+        - user.Medication.rs
+        - user.Observation.rs
+        - user.Organization.rs
+        - user.Patient.rs
+        - user.Practitioner.rs
+        - user.PractitionerRole.rs
+        - user.Procedure.rs
+        - user.Provenance.rs
     - Microsoft Graph (Delegated)
         - openid
         - offline_access

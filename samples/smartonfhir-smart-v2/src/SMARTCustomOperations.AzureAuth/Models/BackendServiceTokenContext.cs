@@ -93,10 +93,20 @@ namespace SMARTCustomOperations.AzureAuth.Models
             {
                 new KeyValuePair<string, string>("code", Code),
                 new KeyValuePair<string, string>("grant_type", GrantType.ToString()),
-                new KeyValuePair<string, string>("redirect_uri", RedirectUri.ToString()),
+                //new KeyValuePair<string, string>("redirect_uri", RedirectUri.ToString()),
                 new KeyValuePair<string, string>("client_id", ClientId),
                 new KeyValuePair<string, string>("client_secret", clientSecret)
             };
+
+            if (RedirectUri != null)
+            {
+                formValues.Add(new KeyValuePair<string, string>("redirect_uri", RedirectUri.ToString()));
+            }
+
+            if (Scope != null)
+            {
+                formValues.Add(new KeyValuePair<string, string>("scope", Scope));
+            }
 
             if (!String.IsNullOrEmpty(CodeVerifier))
             {

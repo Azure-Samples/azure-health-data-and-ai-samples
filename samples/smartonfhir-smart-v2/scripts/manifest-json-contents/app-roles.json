@@ -25,6 +25,17 @@
     "allowedMemberTypes": [
       "Application"
     ],
+    "description": "Allows a user to search all resources in their compartment.",
+    "displayName": "user.all.rs",
+    "id": "f4c5c908-3ea6-4b41-8164-7f3abec967e5",
+    "isEnabled": true,
+    "origin": "Application",
+    "value": "user.all.rs"
+  },
+  {
+    "allowedMemberTypes": [
+      "Application"
+    ],
     "description": "system.all.read",
     "displayName": "system.all.read",
     "id": "446c1a33-8f34-43b3-855c-db21aab2889f",

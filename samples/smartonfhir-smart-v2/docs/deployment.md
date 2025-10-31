@@ -37,9 +37,8 @@ Make sure you have the pre-requisites listed below
 
     -   **For Microsoft Entra External ID:**
 
-        <!-- Use the link for Microsoft Entra External ID tenant. -->
         - If a Microsoft Entra External ID tenant has not yet been created, please use the following link to set one up.
-        [Deploy an Microsoft Entra External ID tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-azure-ad-b2c-tenant-by-using-an-arm-template)
+        [Deploy an Microsoft Entra External ID tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?tabs=powershell-script#deploy-an-entra-external-id-tenant-by-using-an-arm-template)
         - Need to have admin access to Microsoft Entra External ID to create application registration, role assignments, create custom policies, create user accounts.
 
 - **Test User Accounts:**
@@ -55,8 +54,7 @@ Make sure you have the pre-requisites listed below
         - Make sure you have the object id of both the accounts/users from Azure B2C.
 
     -   **For Microsoft Entra External ID:**
-        <!-- Use the link for Microsoft Entra External ID tenant. -->
-        - Create two test user accounts: one for the Patient persona and one for the Provider persona. Refer [Add a test user to the Microsoft Entra External ID tenant](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#add-a-test-b2c-user-to-the-azure-ad-b2c-tenant)
+        - Create two test user accounts: one for the Patient persona and one for the Provider persona. Refer [Add a test user to the Microsoft Entra External ID tenant](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?tabs=command-line-script#add-a-test-user-to-the-microsoft-entra-external-id-tenant)
         - Make sure you have the object id of both the accounts/users from Microsoft Entra External ID.
   
 
@@ -69,10 +67,8 @@ Make sure you have the pre-requisites listed below
 - **Microsoft Entra External ID SetUp:**
     - This setup is required only when Microsoft Entra External ID is selected as the Identity Provider. You can bypass this configuration for other Identity Providers.
     - Follow below mentioned steps:
-        <!-- Update the link -->
-        - [Create the custom user attribute in Microsoft Entra External ID tenant.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-ad-b2c-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#link-a-b2c-user-with-the-fhiruser-custom-user-attribute).
-        <!-- Add necessary document link -->
-        - Refer [Create custom user flow](https://<add=link>) section to create custom user attribute.
+        - [Create the custom user attribute in Microsoft Entra External ID tenant.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?tabs=command-line-script#link-an-entra-external-id-user-with-the-fhiruser-custom-user-attribute).
+        - Refer [Create a new user flow in Microsoft Entra External ID](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?tabs=command-line-script#create-a-new-user-flow-in-microsoft-entra-external-id) section to create custom user attribute.
 
 
 ## 2. Prepare and deploy environment
