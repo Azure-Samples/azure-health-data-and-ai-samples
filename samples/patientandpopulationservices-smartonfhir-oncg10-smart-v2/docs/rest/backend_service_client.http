@@ -1,0 +1,42 @@
+# -------------------------------------------
+# Backend Service Client Requests
+# -------------------------------------------
+
+# Set the base URL from the .env file
+@baseUrl = {{$dotenv BASE_URL}}
+
+
+### Provide the Client Assertion (Replace 'xxx' with the client assertion generated through utility tool)
+@client_assertion=xxx
+
+### Token Endpoint
+POST {{baseUrl}}/auth/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Faraday v1.10.2
+
+&grant_type=client_credentials
+&resource={{baseUrl}}
+&client_assertion={{client_assertion}}
+&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+&scope=system%2F%2A.read
+
+
+### Access Token (Replace 'xxx' with the access token generated from above request)
+@access_token=xxx
+
+### Group Export
+GET {{baseUrl}}/smart/Group/GroupABC/$export
+User-Agent: Faraday v1.10.2
+Accept: application/fhir+json
+prefer: respond-async
+Authorization: Bearer {{access_token}}
+
+
+### Export Status URL (Replace 'xxx' with the Content-Location value generated from the above request below)
+@exportStatusUrl=xxx
+
+### Export Status
+GET {{exportStatusUrl}}
+User-Agent: Faraday v1.10.2
+Accept: application/json
+Authorization: Bearer {{access_token}}

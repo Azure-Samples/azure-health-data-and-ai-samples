@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: fhir-smart-onc-g10-solution
+metadata:
+  template: smartonfhir@1.0.0
+requiredVersions: 
+  azd: ">= 1.0.1"
+services:
+  auth:
+    project: src/SMARTCustomOperations.AzureAuth
+    language: csharp
+    host: function
+  context:
+    project: src/auth-context-frontend-app
+    dist: build
+    language: js
+    host: staticwebapp
+hooks:
+  postprovision:
+    shell: pwsh
+    run: npm run setbuildenv --prefix src/auth-context-frontend-app 

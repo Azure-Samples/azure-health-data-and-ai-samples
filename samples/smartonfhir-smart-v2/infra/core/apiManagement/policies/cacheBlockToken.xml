@@ -1,0 +1,28 @@
+<policies>
+    <inbound>
+        <base />
+        <set-variable name="uti" value="@{
+            var accessToken = context.Request.Body.As<string>();
+            string uti = "";
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                Jwt token = accessToken.AsJwt();
+                uti = token.Claims.GetValueOrDefault("uti", "");
+            }
+            return uti;
+        }" />
+        <cache-store-value key="@("access" + ((string)context.Variables["uti"]))" value="true" duration="6000" caching-type="prefer-external" />
+        <return-response>
+            <set-status code="204" reason="No Content" />
+        </return-response>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

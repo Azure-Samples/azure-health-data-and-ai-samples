@@ -1,0 +1,33 @@
+<policies>
+    <inbound>
+        <base />
+        <set-variable name="uti" value="@{
+            string authHeader = context.Request.Headers.GetValueOrDefault("Authorization", "");
+            string accessToken = authHeader.StartsWith("Bearer ") ? authHeader.Substring(7) : "";
+            string uti = "";
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                Jwt token = accessToken.AsJwt();
+                uti = token.Claims.GetValueOrDefault("uti", "");
+            }
+            return uti;
+        }" />
+        <cache-lookup-value key="@("access" + ((string)context.Variables["uti"]))" default-value="false" variable-name="accessTokenBlocked" caching-type="prefer-external" />
+        <choose>
+            <when condition="@(((string)context.Variables["accessTokenBlocked"]) == "true")">
+                <return-response>
+                    <set-status code="401" reason="Blocked" />
+                </return-response>
+            </when>
+        </choose>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
