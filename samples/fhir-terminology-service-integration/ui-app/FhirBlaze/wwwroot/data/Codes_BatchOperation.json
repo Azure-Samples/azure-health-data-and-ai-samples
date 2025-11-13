@@ -1,7 +1,0 @@
-{
-  "Codes": [
-    "icd9cm-001.1=>icd10cm&Local-GLU=>Loinc",
-    "icd9cm-001.1=>icd10cm_&_icd10cm-A00.1",
-    "Batch_Validate"
-  ]
-} 
