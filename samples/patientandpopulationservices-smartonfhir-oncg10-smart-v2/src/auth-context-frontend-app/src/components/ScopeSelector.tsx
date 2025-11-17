@@ -70,14 +70,14 @@ export const ScopeSelector: FC<ScopeSelectorProps> = (props: ScopeSelectorProps)
             {(mode.includes('existing') || mode.includes('new')) &&
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Requested Access:</Text>
-                    <List items={requestedScopes?.map(x => ({ name: x }))} />
+                    <List items={requestedScopes?.map(x => ({ name: x.replace(/%2f/g, '/') }))} />
                 </Stack.Item>
             }
 
             {mode.includes('existing') &&
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Approved Access:</Text>
-                    <List items={consentInfo?.scopes.filter(x => x.consented).filter(x => !x.hidden)} />
+                    <List items={consentInfo?.scopes.filter(x => x.consented).filter(x => !x.hidden).map(x => ({ name: x.name.replace(/%2f/g, '/') }))} />
                 </Stack.Item>
             }
 
@@ -85,7 +85,7 @@ export const ScopeSelector: FC<ScopeSelectorProps> = (props: ScopeSelectorProps)
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Select Access:</Text>
                     {consentInfo?.scopes.map((scope) => (
-                        scope.hidden ? null : <Checkbox key={scope.id} label={scope.name} checked={scope.enabled} onChange={handleScopeChecked(scope)} />
+                        scope.hidden ? null : <Checkbox key={scope.id} label={scope.name.replace(/%2f/g, '/')} checked={scope.enabled} onChange={handleScopeChecked(scope)} />
                     ))}
                 </Stack.Item>
             }

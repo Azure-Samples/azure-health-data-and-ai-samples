@@ -29,8 +29,8 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
                     {
                         // Microsoft Entra ID v2.0 uses fully qualified scope URIs
                         // and does not allow '/'. Therefore, we need to
-                        // replace '/' with '.' in the scope URI
-                        var formattedScope = s.Replace("/", ".", StringComparison.InvariantCulture);
+                        // replace '/' with '%2f' in the scope URI
+                        var formattedScope = s.Replace("/", "%2f", StringComparison.InvariantCulture);
 
                         formattedScope = formattedScope.Replace(".*", ".all", StringComparison.InvariantCulture);
 

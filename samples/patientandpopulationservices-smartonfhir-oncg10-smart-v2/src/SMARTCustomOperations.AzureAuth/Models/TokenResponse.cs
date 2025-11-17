@@ -154,10 +154,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 transformedScopes.Add(scope
                     .Replace(_configuration.FhirAudience!, string.Empty, StringComparison.InvariantCulture)
                     .TrimStart('/')
-                    .Replace("patient.", "patient/", StringComparison.InvariantCulture)
-                    .Replace("user.", "user/", StringComparison.InvariantCulture)
-                    .Replace("system.", "system/", StringComparison.InvariantCulture)
-                    .Replace("launch.", "launch/", StringComparison.InvariantCulture)
+                    .Replace("%2f", "/", StringComparison.InvariantCulture)
                     .Replace("all", "*")
                 );
             }

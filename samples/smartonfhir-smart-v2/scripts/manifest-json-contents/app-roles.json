@@ -8,7 +8,7 @@
     "id": "5a03b38d-4081-4265-9558-aab5f2b18b8b",
     "isEnabled": true,
     "origin": "Application",
-    "value": "user.all.all"
+    "value": "user%2fall.all"
   },
   {
     "allowedMemberTypes": [
@@ -19,7 +19,7 @@
     "id": "5a03b38d-4081-4265-9558-aab5f2a18b8b",
     "isEnabled": true,
     "origin": "Application",
-    "value": "user.all.read"
+    "value": "user%2fall.read"
   },
   {
     "allowedMemberTypes": [
@@ -30,7 +30,7 @@
     "id": "f4c5c908-3ea6-4b41-8164-7f3abec967e5",
     "isEnabled": true,
     "origin": "Application",
-    "value": "user.all.rs"
+    "value": "user%2fall.rs"
   },
   {
     "allowedMemberTypes": [
@@ -41,6 +41,6 @@
     "id": "446c1a33-8f34-43b3-855c-db21aab2889f",
     "isEnabled": true,
     "origin": "Application",
-    "value": "system.all.read"
+    "value": "system%2fall.read"
   }
 ]
