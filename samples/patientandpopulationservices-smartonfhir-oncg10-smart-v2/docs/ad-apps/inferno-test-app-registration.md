@@ -79,6 +79,9 @@ The EHR launch confidential client application is a standard confidential client
 
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+
+Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
+
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_ehr_confidental_app_scopes.png)
@@ -111,8 +114,6 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 ![](./images/5_keyvault_create_secret.png)
 ![](./images/5_keyvault_secret_details.png)
 </details>
-
-Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
 
 ## Asymmetric Client Standalone Application
 
