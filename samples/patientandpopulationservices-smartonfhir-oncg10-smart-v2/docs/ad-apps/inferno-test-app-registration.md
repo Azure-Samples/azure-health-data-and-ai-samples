@@ -155,6 +155,27 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 1. Save the client id for later testing.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 
+## SMART Launch with Fine-Grained Scopes
+The SMART Launch with Fine-Grained Scopes application is a standard confidential client application which represents an application that can protect a secret (section 9 of the test). Follow the below mentioned instructions. 
+
+1. Create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. Entra ID does not support the use of `/` in granular scopes. Therefore, replace `/` with `%2f` when adding granular scopes in API Permissions for this new application as shown below:
+    - Your FHIR Resource API (Delegated)
+        - fhirUser
+        - launch.patient
+        - patient.condition.rs
+        - patient.Condition.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fcondition-category|health-concern
+        - patient.Condition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|encounter-diagnosis
+        - patient.Observation.rs
+        - patient.Observation.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fus-core-category|sdoh
+        - patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|laboratory
+    - Microsoft Graph (Delegated)
+        - openid
+        - offline_access
+1. Generate a secret for this application. Save this and the client id for testing Inferno *9.23. SMART App Launch with fine-grained scopes*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token. 
+
+
 ## Inferno Public Service Base URL
 
 This repository contains a sample code to validate conformance to the HTI-1 rule from the API Condition and Maintenance of Certification. The test suite, known as **Service Base URL Test Suite**, ensures that Certified API Developers with patient-facing apps publish their service base URLs and related organizational details in the specified format. Specifically, it checks that the service base URLs are publicly accessible and formatted according to the FHIR 4.0.1 standard, and that the necessary organizational details are correctly referenced and bundled. This sample provides a public endpoint to pass the test suite.

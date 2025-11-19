@@ -12,7 +12,6 @@ This sample shows extending [Azure Health Data Services, FHIR service](https://l
 > ***Known Issues and In-Progress Updates:*** 
 >  
 > *Please note that there are a few known issues and updates that are currently in progress for SMART v2. These will be updated soon:*  
-> *- Currently, Entra ID does not support forward slashes ("/") specifically in the SMART v2 granular scopes. We are working on a fix that will allow you to use the URL-encoded representation for forward slashes in replacement ("%2f").*  
 > *- Currently, _include and _revinclude searches are not enabled when using SMART v2 granular scopes. We are working on a fix to enable this functionality.*</br>
 > *- Currently, SMART v2 is not working with Entra External ID. We are working on enabling this functionality.*
 
