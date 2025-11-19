@@ -9,7 +9,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "userConsentDisplayName": "patient.Observation.rs?category=sdoh",
-      "value": "patient%2fObservation.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fus-core-category|sdoh"
+      "value": "patient.Observation.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fus-core-category|sdoh"
     },
     {
       "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
@@ -19,7 +19,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "userConsentDisplayName": "patient.Observation.rs?category=survey",
-      "value": "patient%2fObservation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|survey"
+      "value": "patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|survey"
     },
     {
       "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
@@ -29,7 +29,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "userConsentDisplayName": "patient.Observation.rs?category=vital-signs",
-      "value": "patient%2fObservation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|vital-signs"
+      "value": "patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|vital-signs"
     },
     {
       "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
@@ -39,7 +39,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "userConsentDisplayName": "patient.Observation.rs?category=laboratory",
-      "value": "patient%2fObservation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|laboratory"
+      "value": "patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|laboratory"
     },
     {
       "adminConsentDescription": "Allows user to search granular Condition resources in their compartment.",
@@ -49,7 +49,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Condition resources in their compartment.",
       "userConsentDisplayName": "patient.Condition.rs?category=problem-list-item",
-      "value": "patient%2fCondition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|problem-list-item"
+      "value": "patient.Condition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|problem-list-item"
     },
     {
       "adminConsentDescription": "Allows user to search granular Condition resources in their compartment.",
@@ -59,7 +59,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Condition resources in their compartment.",
       "userConsentDisplayName": "patient.Condition.rs?category=health-concern",
-      "value": "patient%2fCondition.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fcondition-category|health-concern"
+      "value": "patient.Condition.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fcondition-category|health-concern"
     },
     {
       "adminConsentDescription": "Allows user to search granular Condition resources in their compartment.",
@@ -69,7 +69,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Condition resources in their compartment.",
       "userConsentDisplayName": "patient.Condition.rs?category=encounter-diagnosis",
-      "value": "patient%2fCondition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|encounter-diagnosis"
+      "value": "patient.Condition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|encounter-diagnosis"
     },
     {
       "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
@@ -79,7 +79,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "userConsentDisplayName": "patient.Observation.rs?category=social-history",
-      "value": "patient%2fObservation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|social-history"
+      "value": "patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|social-history"
     },
     {
       "adminConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
@@ -89,7 +89,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
       "userConsentDisplayName": "user.RelatedPerson.rs",
-      "value": "user%2fRelatedPerson.rs"
+      "value": "user.RelatedPerson.rs"
     },
     {
       "adminConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
@@ -99,7 +99,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
       "userConsentDisplayName": "user.RelatedPerson.read",
-      "value": "user%2fRelatedPerson.read"
+      "value": "user.RelatedPerson.read"
     },
     {
       "adminConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
@@ -109,7 +109,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search RelatedPerson resources in their compartment.",
       "userConsentDisplayName": "patient.RelatedPerson.rs",
-      "value": "patient%2fRelatedPerson.rs"
+      "value": "patient.RelatedPerson.rs"
     },
     {
       "adminConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
@@ -119,7 +119,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
       "userConsentDisplayName": "patient.RelatedPerson.read",
-      "value": "patient%2fRelatedPerson.read"
+      "value": "patient.RelatedPerson.read"
     },
     {
       "adminConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
@@ -129,7 +129,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
       "userConsentDisplayName": "patient.ServiceRequest.rs",
-      "value": "patient%2fServiceRequest.rs"
+      "value": "patient.ServiceRequest.rs"
     },
     {
       "adminConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
@@ -139,7 +139,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
       "userConsentDisplayName": "patient.ServiceRequest.read",
-      "value": "patient%2fServiceRequest.read"
+      "value": "patient.ServiceRequest.read"
     },
     {
       "adminConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
@@ -149,7 +149,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",
       "userConsentDisplayName": "user.ServiceRequest.rs",
-      "value": "user%2fServiceRequest.rs"
+      "value": "user.ServiceRequest.rs"
     },
     {
       "adminConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
@@ -159,7 +159,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read ServiceRequest resources in their compartment.",
       "userConsentDisplayName": "user.ServiceRequest.read",
-      "value": "user%2fServiceRequest.read"
+      "value": "user.ServiceRequest.read"
     },
     {
       "adminConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
@@ -169,7 +169,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
       "userConsentDisplayName": "user.MedicationDispense.rs",
-      "value": "user%2fMedicationDispense.rs"
+      "value": "user.MedicationDispense.rs"
     },
     {
       "adminConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
@@ -179,7 +179,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
       "userConsentDisplayName": "user.MedicationDispense.read",
-      "value": "user%2fMedicationDispense.read"
+      "value": "user.MedicationDispense.read"
     },
     {
       "adminConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
@@ -189,7 +189,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search MedicationDispense resources in their compartment.",
       "userConsentDisplayName": "patient.MedicationDispense.rs",
-      "value": "patient%2fMedicationDispense.rs"
+      "value": "patient.MedicationDispense.rs"
     },
     {
       "adminConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
@@ -199,7 +199,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read MedicationDispense resources in their compartment.",
       "userConsentDisplayName": "patient.MedicationDispense.read",
-      "value": "patient%2fMedicationDispense.read"
+      "value": "patient.MedicationDispense.read"
     },
     {
       "adminConsentDescription": "Allows user to search Coverage resources in their compartment.",
@@ -209,7 +209,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Coverage resources in their compartment.",
       "userConsentDisplayName": "user.Coverage.rs",
-      "value": "user%2fCoverage.rs"
+      "value": "user.Coverage.rs"
     },
     {
       "adminConsentDescription": "Allows user to read Coverage resources in their compartment.",
@@ -219,7 +219,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Coverage resources in their compartment.",
       "userConsentDisplayName": "user.Coverage.read",
-      "value": "user%2fCoverage.read"
+      "value": "user.Coverage.read"
     },
     {
       "adminConsentDescription": "Allows user to search Coverage resources in their compartment.",
@@ -229,7 +229,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Coverage resources in their compartment.",
       "userConsentDisplayName": "patient.Coverage.rs",
-      "value": "patient%2fCoverage.rs"
+      "value": "patient.Coverage.rs"
     },
     {
       "adminConsentDescription": "Allows user to read Coverage resources in their compartment.",
@@ -239,7 +239,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Coverage resources in their compartment.",
       "userConsentDisplayName": "patient.Coverage.read",
-      "value": "patient%2fCoverage.read"
+      "value": "patient.Coverage.read"
     },
     {
       "adminConsentDescription": "Allows user to search Specimen resources in their compartment.",
@@ -249,7 +249,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Specimen resources in their compartment.",
       "userConsentDisplayName": "patient.Specimen.rs",
-      "value": "patient%2fSpecimen.rs"
+      "value": "patient.Specimen.rs"
     },
     {
       "adminConsentDescription": "Allows user to read Specimen resources in their compartment.",
@@ -259,7 +259,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Specimen resources in their compartment.",
       "userConsentDisplayName": "patient.Specimen.read",
-      "value": "patient%2fSpecimen.read"
+      "value": "patient.Specimen.read"
     },
     {
       "adminConsentDescription": "Allows user to search Specimen resources in their compartment.",
@@ -269,7 +269,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Specimen resources in their compartment.",
       "userConsentDisplayName": "user.Specimen.rs",
-      "value": "user%2fSpecimen.rs"
+      "value": "user.Specimen.rs"
     },
     {
       "adminConsentDescription": "Allows user to read Specimen resources in their compartment.",
@@ -279,7 +279,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Specimen resources in their compartment.",
       "userConsentDisplayName": "user.Specimen.read",
-      "value": "user%2fSpecimen.read"
+      "value": "user.Specimen.read"
     },
     {
       "adminConsentDescription": "Allows user to search Immunization resources in their compartment.",
@@ -289,7 +289,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Immunization resources in their compartment.",
       "userConsentDisplayName": "user.Immunization.rs",
-      "value": "user%2fImmunization.rs"
+      "value": "user.Immunization.rs"
     },
     {
       "adminConsentDescription": "Allows a user to search Location resources in a patient's compartment.",
@@ -299,7 +299,7 @@
       "type": "User",
       "userConsentDescription": "Allows a user to search Location resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Location.rs",
-      "value": "patient%2fLocation.rs"
+      "value": "patient.Location.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Provenance resources in their own compartment.",
@@ -309,7 +309,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Provenance resources in their own compartment.",
       "userConsentDisplayName": "user.Provenance.rs",
-      "value": "user%2fProvenance.rs"
+      "value": "user.Provenance.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Procedure resources in their own compartment.",
@@ -319,7 +319,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Procedure resources in their own compartment.",
       "userConsentDisplayName": "user.Procedure.rs",
-      "value": "user%2fProcedure.rs"
+      "value": "user.Procedure.rs"
     },
     {
       "adminConsentDescription": "Allows user to serach Practitioner resources in their own compartment.",
@@ -329,7 +329,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Practitioner resources in their own compartment.",
       "userConsentDisplayName": "user.Practitioner.rs",
-      "value": "user%2fPractitioner.rs"
+      "value": "user.Practitioner.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Patient resources in their own compartment.",
@@ -339,7 +339,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Patient resources in their own compartment.",
       "userConsentDisplayName": "user.Patient.rs",
-      "value": "user%2fPatient.rs"
+      "value": "user.Patient.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Organization resources in their own compartment.",
@@ -349,7 +349,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Organization resources in their own compartment.",
       "userConsentDisplayName": "user.Organization.rs",
-      "value": "user%2fOrganization.rs"
+      "value": "user.Organization.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Observation resources in their own compartment.",
@@ -359,7 +359,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Observation resources in their own compartment.",
       "userConsentDisplayName": "user.Observation.rs",
-      "value": "user%2fObservation.rs"
+      "value": "user.Observation.rs"
     },
     {
       "adminConsentDescription": "Allows user to search MedicationRequest resources in their own compartment.",
@@ -369,7 +369,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search MedicationRequest resources in their own compartment.",
       "userConsentDisplayName": "user.MedicationRequest.rs",
-      "value": "user%2fMedicationRequest.rs"
+      "value": "user.MedicationRequest.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Location resources in their own compartment.",
@@ -379,7 +379,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Location resources in their own compartment.",
       "userConsentDisplayName": "user.Location.rs",
-      "value": "user%2fLocation.rs"
+      "value": "user.Location.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Goal resources in their own compartment.",
@@ -389,7 +389,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Goal resources in their own compartment.",
       "userConsentDisplayName": "user.Goal.rs",
-      "value": "user%2fGoal.rs"
+      "value": "user.Goal.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Encounter resources in their own compartment.",
@@ -399,7 +399,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Encounter resources in their own compartment.",
       "userConsentDisplayName": "user.Encounter.rs",
-      "value": "user%2fEncounter.rs"
+      "value": "user.Encounter.rs"
     },
     {
       "adminConsentDescription": "Allows user to search DiagnosticReport resources in their own compartment.",
@@ -409,7 +409,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search DiagnosticReport resources in their own compartment.",
       "userConsentDisplayName": "user.DiagnosticReport.rs",
-      "value": "user%2fDiagnosticReport.rs"
+      "value": "user.DiagnosticReport.rs"
     },
     {
       "adminConsentDescription": "Allows user to search DocumentReference resources in their own compartment.",
@@ -419,7 +419,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search DocumentReference resources in their own compartment.",
       "userConsentDisplayName": "user.DocumentReference.rs",
-      "value": "user%2fDocumentReference.rs"
+      "value": "user.DocumentReference.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Device resources in their own compartment.",
@@ -429,7 +429,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Device resources in their own compartment.",
       "userConsentDisplayName": "user.Device.rs",
-      "value": "user%2fDevice.rs"
+      "value": "user.Device.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Condition resources in their own compartment.",
@@ -439,7 +439,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Condition resources in their own compartment.",
       "userConsentDisplayName": "user.Condition.rs",
-      "value": "user%2fCondition.rs"
+      "value": "user.Condition.rs"
     },
     {
       "adminConsentDescription": "Allows user to search CareTeam resources in their own compartment.",
@@ -449,7 +449,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search CareTeam resources in their own compartment.",
       "userConsentDisplayName": "user.CareTeam.rs",
-      "value": "user%2fCareTeam.rs"
+      "value": "user.CareTeam.rs"
     },
     {
       "adminConsentDescription": "Allows user to search PractitionerRole resources in their own compartment.",
@@ -459,7 +459,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search PractitionerRole resources in their own compartment.",
       "userConsentDisplayName": "user.PractitionerRole.rs",
-      "value": "user%2fPractitionerRole.rs"
+      "value": "user.PractitionerRole.rs"
     },
     {
       "adminConsentDescription": "Allows user to search PractitionerRole resources in a patient's compartment.",
@@ -469,7 +469,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search PractitionerRole resources in a patient's compartment.",
       "userConsentDisplayName": "patient.PractitionerRole.rs",
-      "value": "patient%2fPractitionerRole.rs"
+      "value": "patient.PractitionerRole.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Provenance resources in a patient's compartment.",
@@ -479,7 +479,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Provenance resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Provenance.rs",
-      "value": "patient%2fProvenance.rs"
+      "value": "patient.Provenance.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Procedure resources in a patient's compartment.",
@@ -489,7 +489,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Procedure resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Procedure.rs",
-      "value": "patient%2fProcedure.rs"
+      "value": "patient.Procedure.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Practitioner resources in a patient's compartment.",
@@ -499,7 +499,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Practitioner resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Practitioner.rs",
-      "value": "patient%2fPractitioner.rs"
+      "value": "patient.Practitioner.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Patient resources in a patient's compartment.",
@@ -509,7 +509,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Patient resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Patient.rs",
-      "value": "patient%2fPatient.rs"
+      "value": "patient.Patient.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Organization resources in a patient's compartment.",
@@ -519,7 +519,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Organization resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Organization.rs",
-      "value": "patient%2fOrganization.rs"
+      "value": "patient.Organization.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Observation resources in a patient's compartment.",
@@ -529,7 +529,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Observation resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Observation.rs",
-      "value": "patient%2fObservation.rs"
+      "value": "patient.Observation.rs"
     },
     {
       "adminConsentDescription": "Allows user to search MedicationRequest resources in a patient's compartment.",
@@ -539,7 +539,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search MedicationRequest resources in a patient's compartment.",
       "userConsentDisplayName": "patient.MedicationRequest.rs",
-      "value": "patient%2fMedicationRequest.rs"
+      "value": "patient.MedicationRequest.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Immunization resources in a patient's compartment.",
@@ -549,7 +549,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Immunization resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Immunization.rs",
-      "value": "patient%2fImmunization.rs"
+      "value": "patient.Immunization.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Goal resources in a patient's compartment.",
@@ -559,7 +559,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Goal resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Goal.rs",
-      "value": "patient%2fGoal.rs"
+      "value": "patient.Goal.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Encounter resources in a patient's compartment.",
@@ -569,7 +569,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Encounter resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Encounter.rs",
-      "value": "patient%2fEncounter.rs"
+      "value": "patient.Encounter.rs"
     },
     {
       "adminConsentDescription": "Allows user to search DocumentReference resources in a patient's compartment.",
@@ -579,7 +579,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search DocumentReference resources in a patient's compartment.",
       "userConsentDisplayName": "patient.DocumentReference.rs",
-      "value": "patient%2fDocumentReference.rs"
+      "value": "patient.DocumentReference.rs"
     },
     {
       "adminConsentDescription": "Allows user to search DiagnosticReport resources in a patient's compartment.",
@@ -589,7 +589,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search DiagnosticReport resources in a patient's compartment.",
       "userConsentDisplayName": "patient.DiagnosticReport.rs",
-      "value": "patient%2fDiagnosticReport.rs"
+      "value": "patient.DiagnosticReport.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Device resources in a patient's compartment.",
@@ -599,7 +599,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Device resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Device.rs",
-      "value": "patient%2fDevice.rs"
+      "value": "patient.Device.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Condition resources in a patient's compartment.",
@@ -609,7 +609,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Condition resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Condition.rs",
-      "value": "patient%2fCondition.rs"
+      "value": "patient.Condition.rs"
     },
     {
       "adminConsentDescription": "Allows user to search CareTeam resources in a patient's compartment.",
@@ -619,7 +619,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search CareTeam resources in a patient's compartment.",
       "userConsentDisplayName": "patient.CareTeam.rs",
-      "value": "patient%2fCareTeam.rs"
+      "value": "patient.CareTeam.rs"
     },
     {
       "adminConsentDescription": "Allows user to search CarePlan resources in a patient's compartment.",
@@ -629,7 +629,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search CarePlan resources in a patient's compartment.",
       "userConsentDisplayName": "patient.CarePlan.rs",
-      "value": "patient%2fCarePlan.rs"
+      "value": "patient.CarePlan.rs"
     },
     {
       "adminConsentDescription": "Allows user to search CarePlan resources in their own compartment.",
@@ -639,7 +639,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search CarePlan resources in their own compartment.",
       "userConsentDisplayName": "user.CarePlan.rs",
-      "value": "user%2fCarePlan.rs"
+      "value": "user.CarePlan.rs"
     },
     {
       "adminConsentDescription": "Allows user to search AllergyIntolerance resources in their own compartment.",
@@ -649,7 +649,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search AllergyIntolerance resources in their own compartment.",
       "userConsentDisplayName": "user.AllergyIntolerance.rs",
-      "value": "user%2fAllergyIntolerance.rs"
+      "value": "user.AllergyIntolerance.rs"
     },
     {
       "adminConsentDescription": "Allows user to search AllergyIntolerance resources in a patient's compartment.",
@@ -659,7 +659,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search AllergyIntolerance resources in a patient's compartment.",
       "userConsentDisplayName": "patient.AllergyIntolerance.rs",
-      "value": "patient%2fAllergyIntolerance.rs"
+      "value": "patient.AllergyIntolerance.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Medication resources in their own compartment.",
@@ -669,7 +669,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search Medication resources in their own compartment.",
       "userConsentDisplayName": "user.Medication.rs",
-      "value": "user%2fMedication.rs"
+      "value": "user.Medication.rs"
     },
     {
       "adminConsentDescription": "Allows user to search Medication resources in a patient's compartment.",
@@ -679,7 +679,7 @@
       "type": "User",
       "userConsentDescription": "samples readAllows user to search Medication resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Medication.rs",
-      "value": "patient%2fMedication.rs"
+      "value": "patient.Medication.rs"
     },
     {
       "adminConsentDescription": "Allows a user to search all resources in their compartment.",
@@ -689,7 +689,7 @@
       "type": "User",
       "userConsentDescription": "Allows a user to search all resources in their compartment.",
       "userConsentDisplayName": "user.all.rs",
-      "value": "user%2fall.rs"
+      "value": "user.all.rs"
     },
     {
       "adminConsentDescription": "Allows user to search all resources in a patient's compartment.",
@@ -699,7 +699,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to search all resources in a patient's compartment.",
       "userConsentDisplayName": "patient.all.rs",
-      "value": "patient%2fall.rs"
+      "value": "patient.all.rs"
     },
     {
       "adminConsentDescription": "Allow the application to access Azure Healthcare APIs on behalf of the signed-in user.",
@@ -719,7 +719,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Immunization resources in their compartment.",
       "userConsentDisplayName": "user.Immunization.read",
-      "value": "user%2fImmunization.read"
+      "value": "user.Immunization.read"
     },
     {
       "adminConsentDescription": "Allows a user to read Location resources in a patient's compartment.",
@@ -729,7 +729,7 @@
       "type": "User",
       "userConsentDescription": "Allows a user to read Location resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Location.read",
-      "value": "patient%2fLocation.read"
+      "value": "patient.Location.read"
     },
     {
       "adminConsentDescription": "Allows user to read Provenance resources in their own compartment.",
@@ -739,7 +739,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Provenance resources in their own compartment.",
       "userConsentDisplayName": "user.Provenance.read",
-      "value": "user%2fProvenance.read"
+      "value": "user.Provenance.read"
     },
     {
       "adminConsentDescription": "Allows user to read Procedure resources in their own compartment.",
@@ -749,7 +749,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Procedure resources in their own compartment.",
       "userConsentDisplayName": "user.Procedure.read",
-      "value": "user%2fProcedure.read"
+      "value": "user.Procedure.read"
     },
     {
       "adminConsentDescription": "Allows user to read Practitioner resources in their own compartment.",
@@ -759,7 +759,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Practitioner resources in their own compartment.",
       "userConsentDisplayName": "user.Practitioner.read",
-      "value": "user%2fPractitioner.read"
+      "value": "user.Practitioner.read"
     },
     {
       "adminConsentDescription": "Allows user to read Patient resources in their own compartment.",
@@ -769,7 +769,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Patient resources in their own compartment.",
       "userConsentDisplayName": "user.Patient.read",
-      "value": "user%2fPatient.read"
+      "value": "user.Patient.read"
     },
     {
       "adminConsentDescription": "Allows user to read Organization resources in their own compartment.",
@@ -779,7 +779,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Organization resources in their own compartment.",
       "userConsentDisplayName": "user.Organization.read",
-      "value": "user%2fOrganization.read"
+      "value": "user.Organization.read"
     },
     {
       "adminConsentDescription": "Allows user to read Observation resources in their own compartment.",
@@ -789,7 +789,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Observation resources in their own compartment.",
       "userConsentDisplayName": "user.Observation.read",
-      "value": "user%2fObservation.read"
+      "value": "user.Observation.read"
     },
     {
       "adminConsentDescription": "Allows user to read MedicationRequest resources in their own compartment.",
@@ -799,7 +799,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read MedicationRequest resources in their own compartment.",
       "userConsentDisplayName": "user.MedicationRequest.read",
-      "value": "user%2fMedicationRequest.read"
+      "value": "user.MedicationRequest.read"
     },
     {
       "adminConsentDescription": "Allows user to read Location resources in their own compartment.",
@@ -809,7 +809,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Location resources in their own compartment.",
       "userConsentDisplayName": "user.Location.read",
-      "value": "user%2fLocation.read"
+      "value": "user.Location.read"
     },
     {
       "adminConsentDescription": "Allows user to read Goal resources in their own compartment.",
@@ -819,7 +819,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Goal resources in their own compartment.",
       "userConsentDisplayName": "user.Goal.read",
-      "value": "user%2fGoal.read"
+      "value": "user.Goal.read"
     },
     {
       "adminConsentDescription": "Allows user to read Encounter resources in their own compartment.",
@@ -829,7 +829,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Encounter resources in their own compartment.",
       "userConsentDisplayName": "user.Encounter.read",
-      "value": "user%2fEncounter.read"
+      "value": "user.Encounter.read"
     },
     {
       "adminConsentDescription": "Allows user to read DiagnosticReport resources in their own compartment.",
@@ -839,7 +839,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read DiagnosticReport resources in their own compartment.",
       "userConsentDisplayName": "user.DiagnosticReport.read",
-      "value": "user%2fDiagnosticReport.read"
+      "value": "user.DiagnosticReport.read"
     },
     {
       "adminConsentDescription": "Allows user to read DocumentReference resources in their own compartment.",
@@ -849,7 +849,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read DocumentReference resources in their own compartment.",
       "userConsentDisplayName": "user.DocumentReference.read",
-      "value": "user%2fDocumentReference.read"
+      "value": "user.DocumentReference.read"
     },
     {
       "adminConsentDescription": "Allows user to read Device resources in their own compartment.",
@@ -859,7 +859,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Device resources in their own compartment.",
       "userConsentDisplayName": "user.Device.read",
-      "value": "user%2fDevice.read"
+      "value": "user.Device.read"
     },
     {
       "adminConsentDescription": "Allows user to read Condition resources in their own compartment.",
@@ -869,7 +869,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Condition resources in their own compartment.",
       "userConsentDisplayName": "user.Condition.read",
-      "value": "user%2fCondition.read"
+      "value": "user.Condition.read"
     },
     {
       "adminConsentDescription": "Allows user to read CareTeam resources in their own compartment.",
@@ -879,7 +879,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read CareTeam resources in their own compartment.",
       "userConsentDisplayName": "user.CareTeam.read",
-      "value": "user%2fCareTeam.read"
+      "value": "user.CareTeam.read"
     },
     {
       "adminConsentDescription": "Allows user to read PractitionerRole resources in their own compartment.",
@@ -889,7 +889,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read PractitionerRole resources in their own compartment.",
       "userConsentDisplayName": "user.PractitionerRole.read",
-      "value": "user%2fPractitionerRole.read"
+      "value": "user.PractitionerRole.read"
     },
     {
       "adminConsentDescription": "Allows user to read PractitionerRole resources in a patient's compartment.",
@@ -899,7 +899,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read PractitionerRole resources in a patient's compartment.",
       "userConsentDisplayName": "patient.PractitionerRole.read",
-      "value": "patient%2fPractitionerRole.read"
+      "value": "patient.PractitionerRole.read"
     },
     {
       "adminConsentDescription": "Allows user to read Provenance resources in a patient's compartment.",
@@ -909,7 +909,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Provenance resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Provenance.read",
-      "value": "patient%2fProvenance.read"
+      "value": "patient.Provenance.read"
     },
     {
       "adminConsentDescription": "Allows user to read Procedure resources in a patient's compartment.",
@@ -919,7 +919,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Procedure resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Procedure.read",
-      "value": "patient%2fProcedure.read"
+      "value": "patient.Procedure.read"
     },
     {
       "adminConsentDescription": "Allows user to read Practitioner resources in a patient's compartment.",
@@ -929,7 +929,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Practitioner resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Practitioner.read",
-      "value": "patient%2fPractitioner.read"
+      "value": "patient.Practitioner.read"
     },
     {
       "adminConsentDescription": "Allows user to read Patient resources in a patient's compartment.",
@@ -939,7 +939,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Patient resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Patient.read",
-      "value": "patient%2fPatient.read"
+      "value": "patient.Patient.read"
     },
     {
       "adminConsentDescription": "Allows user to read Organization resources in a patient's compartment.",
@@ -949,7 +949,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Organization resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Organization.read",
-      "value": "patient%2fOrganization.read"
+      "value": "patient.Organization.read"
     },
     {
       "adminConsentDescription": "Allows user to read Observation resources in a patient's compartment.",
@@ -959,7 +959,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Observation resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Observation.read",
-      "value": "patient%2fObservation.read"
+      "value": "patient.Observation.read"
     },
     {
       "adminConsentDescription": "Allows user to read MedicationRequest resources in a patient's compartment.",
@@ -969,7 +969,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read MedicationRequest resources in a patient's compartment.",
       "userConsentDisplayName": "patient.MedicationRequest.read",
-      "value": "patient%2fMedicationRequest.read"
+      "value": "patient.MedicationRequest.read"
     },
     {
       "adminConsentDescription": "Allows user to read Immunization resources in a patient's compartment.",
@@ -979,7 +979,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Immunization resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Immunization.read",
-      "value": "patient%2fImmunization.read"
+      "value": "patient.Immunization.read"
     },
     {
       "adminConsentDescription": "Allows user to read Goal resources in a patient's compartment.",
@@ -989,7 +989,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Goal resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Goal.read",
-      "value": "patient%2fGoal.read"
+      "value": "patient.Goal.read"
     },
     {
       "adminConsentDescription": "Allows user to read Encounter resources in a patient's compartment.",
@@ -999,7 +999,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Encounter resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Encounter.read",
-      "value": "patient%2fEncounter.read"
+      "value": "patient.Encounter.read"
     },
     {
       "adminConsentDescription": "Allows user to read DocumentReference resources in a patient's compartment.",
@@ -1009,7 +1009,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read DocumentReference resources in a patient's compartment.",
       "userConsentDisplayName": "patient.DocumentReference.read",
-      "value": "patient%2fDocumentReference.read"
+      "value": "patient.DocumentReference.read"
     },
     {
       "adminConsentDescription": "Allows user to read DiagnosticReport resources in a patient's compartment.",
@@ -1019,7 +1019,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read DiagnosticReport resources in a patient's compartment.",
       "userConsentDisplayName": "patient.DiagnosticReport.read",
-      "value": "patient%2fDiagnosticReport.read"
+      "value": "patient.DiagnosticReport.read"
     },
     {
       "adminConsentDescription": "Allows user to read Device resources in a patient's compartment.",
@@ -1029,7 +1029,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Device resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Device.read",
-      "value": "patient%2fDevice.read"
+      "value": "patient.Device.read"
     },
     {
       "adminConsentDescription": "Allows user to read Condition resources in a patient's compartment.",
@@ -1039,7 +1039,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Condition resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Condition.read",
-      "value": "patient%2fCondition.read"
+      "value": "patient.Condition.read"
     },
     {
       "adminConsentDescription": "Allows user to read CareTeam resources in a patient's compartment.",
@@ -1049,7 +1049,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read CareTeam resources in a patient's compartment.",
       "userConsentDisplayName": "patient.CareTeam.read",
-      "value": "patient%2fCareTeam.read"
+      "value": "patient.CareTeam.read"
     },
     {
       "adminConsentDescription": "Allows user to read CarePlan resources in a patient's compartment.",
@@ -1059,7 +1059,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read CarePlan resources in a patient's compartment.",
       "userConsentDisplayName": "patient.CarePlan.read",
-      "value": "patient%2fCarePlan.read"
+      "value": "patient.CarePlan.read"
     },
     {
       "adminConsentDescription": "Allows user to read CarePlan resources in their own compartment.",
@@ -1069,7 +1069,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read CarePlan resources in their own compartment.",
       "userConsentDisplayName": "user.CarePlan.read",
-      "value": "user%2fCarePlan.read"
+      "value": "user.CarePlan.read"
     },
     {
       "adminConsentDescription": "Allows user to read AllergyIntolerance resources in their own compartment.",
@@ -1079,7 +1079,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read AllergyIntolerance resources in their own compartment.",
       "userConsentDisplayName": "user.AllergyIntolerance.read",
-      "value": "user%2fAllergyIntolerance.read"
+      "value": "user.AllergyIntolerance.read"
     },
     {
       "adminConsentDescription": "Allows user to read AllergyIntolerance resources in a patient's compartment.",
@@ -1089,7 +1089,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read AllergyIntolerance resources in a patient's compartment.",
       "userConsentDisplayName": "patient.AllergyIntolerance.read",
-      "value": "patient%2fAllergyIntolerance.read"
+      "value": "patient.AllergyIntolerance.read"
     },
     {
       "adminConsentDescription": "Allows user to read Medication resources in their own compartment.",
@@ -1099,7 +1099,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read Medication resources in their own compartment.",
       "userConsentDisplayName": "user.Medication.read",
-      "value": "user%2fMedication.read"
+      "value": "user.Medication.read"
     },
     {
       "adminConsentDescription": "Allows user to read Medication resources in a patient's compartment.",
@@ -1109,7 +1109,7 @@
       "type": "User",
       "userConsentDescription": "samples readAllows user to read Medication resources in a patient's compartment.",
       "userConsentDisplayName": "patient.Medication.read",
-      "value": "patient%2fMedication.read"
+      "value": "patient.Medication.read"
     },
     {
       "adminConsentDescription": "Grants permission to read information about the current logged-in user.",
@@ -1139,7 +1139,7 @@
       "type": "User",
       "userConsentDescription": "Asks for a patient to be selected at launch time.",
       "userConsentDisplayName": "launch.patient",
-      "value": "launch%2fpatient"
+      "value": "launch.patient"
     },
     {
       "adminConsentDescription": "Grants permission to obtain launch context.",
@@ -1159,7 +1159,7 @@
       "type": "User",
       "userConsentDescription": "Allows user to read all resources in a patient's compartment.",
       "userConsentDisplayName": "patient.all.read",
-      "value": "patient%2fall.read"
+      "value": "patient.all.read"
     },
     {
       "adminConsentDescription": "Allows a user to read all resources in their compartment.",
@@ -1169,7 +1169,7 @@
       "type": "User",
       "userConsentDescription": "Allows a user to read all resources in their compartment.",
       "userConsentDisplayName": "user.all.read",
-      "value": "user%2fall.read"
+      "value": "user.all.read"
     }
   ]
 }

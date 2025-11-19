@@ -30,8 +30,20 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
                         // Microsoft Entra ID v2.0 uses fully qualified scope URIs
                         // and does not allow '/'. Therefore, we need to
                         // replace '/' with '%2f' in the scope URI
-                        var formattedScope = s.Replace("/", "%2f", StringComparison.InvariantCulture);
-                        formattedScope = formattedScope.Replace(".*", ".all", StringComparison.InvariantCulture);
+
+                        var parts = s.Split('?', 2);
+                        string resourcePart = parts[0];
+                        string queryPart = parts.Length > 1 ? parts[1] : null;
+
+                        var formattedScope = resourcePart.Replace("/", ".", StringComparison.InvariantCulture);
+
+                        if (queryPart != null)
+                        {
+                            string encodedQuery = queryPart.Replace("/", "%2f", StringComparison.InvariantCulture);
+                            formattedScope = $"{formattedScope}?{encodedQuery} ";
+                        }
+			
+			formattedScope = formattedScope.Replace(".*", ".all", StringComparison.InvariantCulture);
 
                         // Leave the space in the string below
                         if (scopeAudience.EndsWith("/", StringComparison.InvariantCultureIgnoreCase) || scopeAudience.Length == 0)
