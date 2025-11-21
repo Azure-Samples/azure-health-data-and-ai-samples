@@ -79,6 +79,9 @@ The EHR launch confidential client application is a standard confidential client
 
 1. Generate a secret for this application. Save this and the client id for testing Inferno *3. EHR Practitioner App*.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+
+Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
+
 <br /><details><summary>Click to expand and see screenshots.</summary>
 ![](./images/5_confidential_client_1.png)
 ![](./images/5_ehr_confidental_app_scopes.png)
@@ -111,8 +114,6 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
 ![](./images/5_keyvault_create_secret.png)
 ![](./images/5_keyvault_secret_details.png)
 </details>
-
-Click here to learn how to simulate an EHR Launch manually: [Simulate EHR Launch (Inferno Setup)](./smart-ehr-launch-Inferno-Setup.md)
 
 ## Asymmetric Client Standalone Application
 
@@ -153,6 +154,27 @@ Microsoft Entra ID does not support RSA384 and/or ES384 which is required by the
     - Tags: Make sure to add the tag `jwks_url` with the backend service JWKS URL. For Inferno testing, this is: https://inferno.healthit.gov/suites/custom/g10_certification/.well-known/jwks.json
 1. Save the client id for later testing.
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
+
+## SMART Launch with Fine-Grained Scopes
+The SMART Launch with Fine-Grained Scopes application is a standard confidential client application which represents an application that can protect a secret (section 9 of the test). Follow the below mentioned instructions. 
+
+1. Create a new application in Microsoft Entra ID. Make sure to select `Web` as the platform and add the redirect URL for Inferno (`https://inferno.healthit.gov/suites/custom/smart/redirect`).
+1. Entra ID does not support the use of `/` in granular scopes. Therefore, replace `/` with `%2f` when adding granular scopes in API Permissions for this new application as shown below:
+    - Your FHIR Resource API (Delegated)
+        - fhirUser
+        - launch.patient
+        - patient.condition.rs
+        - patient.Condition.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fcondition-category|health-concern
+        - patient.Condition.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fcondition-category|encounter-diagnosis
+        - patient.Observation.rs
+        - patient.Observation.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fus-core-category|sdoh
+        - patient.Observation.rs?category=http:%2f%2fterminology.hl7.org%2fCodeSystem%2fobservation-category|laboratory
+    - Microsoft Graph (Delegated)
+        - openid
+        - offline_access
+1. Generate a secret for this application. Save this and the client id for testing Inferno *9.23. SMART App Launch with fine-grained scopes*.
+1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token. 
+
 
 ## Inferno Public Service Base URL
 

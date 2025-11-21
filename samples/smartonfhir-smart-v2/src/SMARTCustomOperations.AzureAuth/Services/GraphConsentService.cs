@@ -55,12 +55,44 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
             var requestedAndApprovedScopes = string.Join(" ", permissions.Select(x => x.Scope)).Split(" ").Union(requestedScopes);
 
-            foreach (string scope in requestedAndApprovedScopes)
+            var graphAppId = "00000003-0000-0000-c000-000000000000";
+
+            var allSpScopes = resourceServicePrincipals?.Values?
+                                .Where(sp =>
+                                    sp.AppId != graphAppId &&                  // exclude MS Graph
+                                    sp.Oauth2PermissionScopes != null)         // ensure scopes exist
+                                .SelectMany(sp => sp.Oauth2PermissionScopes!)
+                                .ToList()
+                                ?? new List<PermissionScope>();
+
+            var requestedApprovedAndGranularScopes = new HashSet<string>(requestedAndApprovedScopes, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var reqScope in requestedAndApprovedScopes)
+            {
+                if (reqScope.Equals("launch", StringComparison.OrdinalIgnoreCase))
+                {
+                    requestedApprovedAndGranularScopes.Add(reqScope);
+                    continue;
+                }
+                foreach (var spScope in allSpScopes)
+                {
+                    var spRoot = GetScopeRoot(spScope.Value!);
+
+                    if (spRoot.Equals(reqScope, StringComparison.OrdinalIgnoreCase))
+                    {
+                        requestedApprovedAndGranularScopes.Add(spScope.Value!);
+                    }
+                }
+            }
+
+            _logger.LogInformation("Adding AppConsent Scope");
+            foreach (string scope in requestedApprovedAndGranularScopes)
             {
                 var requestingClientAppScopeIds = GetAppScopeIds(requestingClientApp);
                 var matchingResourcePrincipal = resourceServicePrincipals.Values.Where(x => x.Oauth2PermissionScopes!.Any(y => requestingClientAppScopeIds.Contains((Guid)y.Id!) && y.Value == scope)).FirstOrDefault();
                 var scopeInfo = matchingResourcePrincipal?.Oauth2PermissionScopes!.Where(x => x.Value == scope).FirstOrDefault();
-                var scopeConsentRecord = permissions.SingleOrDefault(x => x.ResourceId == matchingResourcePrincipal?.Id && x.Scope!.Contains(scope, StringComparison.InvariantCultureIgnoreCase));
+                var scopeConsentRecord = permissions.SingleOrDefault(x => x.ResourceId == matchingResourcePrincipal?.Id && x.Scope!.Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(s => s.Equals(scope, StringComparison.OrdinalIgnoreCase)));
+
 
                 if (matchingResourcePrincipal is not null && scopeInfo?.Id is not null)
                 {
@@ -78,6 +110,13 @@ namespace SMARTCustomOperations.AzureAuth.Services
 
             return info;
         }
+
+        private static string GetScopeRoot(string scope)
+        {
+            var idx = scope.IndexOf('?');
+            return idx < 0 ? scope : scope.Substring(0, idx);
+        }
+
 
         public async Task PersistAppConsentScopeIfRemoval(AppConsentInfo consentInfo, string userId)
         {
