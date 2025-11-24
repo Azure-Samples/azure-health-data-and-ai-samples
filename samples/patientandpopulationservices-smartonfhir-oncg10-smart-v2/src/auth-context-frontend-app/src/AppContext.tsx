@@ -267,7 +267,7 @@ useEffect(() => {
   }
 }, [msal.instance.getActiveAccount()]);
 
-const requestedScopesDisplay = requestedScopes?.split(" ").filter(x => !shouldScopeBeHiddenAndAlwaysEnabled(x)) || [];
+const requestedScopesDisplay = requestedScopes?.split(/ |\+/).filter(x => !shouldScopeBeHiddenAndAlwaysEnabled(x)) || [];
 
 let authInfo: AppContext = {
   consentInfo: appConsentInfo,

@@ -158,6 +158,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
                     .Replace("user.", "user/", StringComparison.InvariantCulture)
                     .Replace("system.", "system/", StringComparison.InvariantCulture)
                     .Replace("launch.", "launch/", StringComparison.InvariantCulture)
+                    .Replace("%2f", "/", StringComparison.InvariantCulture)
                     .Replace("all", "*")
                 );
             }

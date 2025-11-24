@@ -44,15 +44,42 @@ export const ScopeSelector: FC<ScopeSelectorProps> = (props: ScopeSelectorProps)
         return (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, isChecked?: boolean) => {
 
             if (consentInfo != undefined) {
-                scope.enabled = isChecked!;
+                // Update the clicked scope, and if we're enabling a parent scope,
+                // also uncheck (enabled = false) any granular child scopes whose name starts with the parent's name.
+                const updatedScopes = consentInfo.scopes.map(s => {
+                    // update the clicked scope itself
+                    if (s.name === scope.name && s.resourceId === scope.resourceId) {
+                        return { ...s, enabled: !!isChecked };
+                    }
+
+                    // If enabling a parent scope, clear any child scopes (UI will also disable them)
+                    if (isChecked && s.name.startsWith(scope.name) && s.name !== scope.name) {
+                        return { ...s, enabled: false };
+                    }
+
+                    // Otherwise keep as-is
+                    return s;
+                });
+
                 const updateConsentInfo = {
                     ...consentInfo,
-                    // only update the scope that was changed
-                    scopes: consentInfo!.scopes.map(x => x.name == scope.name && x.resourceId == scope.resourceId ? scope : x),
+                    scopes: updatedScopes,
                 };
                 setConsentInfo(updateConsentInfo);
             }
         }
+    }
+
+    // New helper: compute UI-only disabled state.
+    // If any other enabled scope has a name that is a prefix of this scope's name,
+    // disable this scope's checkbox in the UI. This does NOT change the underlying scope.enabled values.
+    const getIsDisabled = (scope: AppConsentScope): boolean => {
+        if (!consentInfo) return false;
+        return consentInfo.scopes.some(parent =>
+            parent.enabled &&
+            parent.name !== scope.name &&
+            scope.name.startsWith(parent.name)
+        );
     }
 
     const updateScopes = () => {
@@ -70,14 +97,14 @@ export const ScopeSelector: FC<ScopeSelectorProps> = (props: ScopeSelectorProps)
             {(mode.includes('existing') || mode.includes('new')) &&
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Requested Access:</Text>
-                    <List items={requestedScopes?.map(x => ({ name: x }))} />
+                    <List items={requestedScopes?.map(x => ({ name: x.replace(/%2f/g, '/') }))} />
                 </Stack.Item>
             }
 
             {mode.includes('existing') &&
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Approved Access:</Text>
-                    <List items={consentInfo?.scopes.filter(x => x.consented).filter(x => !x.hidden)} />
+                    <List items={consentInfo?.scopes.filter(x => x.consented).filter(x => !x.hidden).map(x => ({ name: x.name.replace(/%2f/g, '/') }))} />
                 </Stack.Item>
             }
 
@@ -85,7 +112,7 @@ export const ScopeSelector: FC<ScopeSelectorProps> = (props: ScopeSelectorProps)
                 <Stack.Item styles={moduleStyle}>
                     <Text block variant="xLarge">Select Access:</Text>
                     {consentInfo?.scopes.map((scope) => (
-                        scope.hidden ? null : <Checkbox key={scope.id} label={scope.name} checked={scope.enabled} onChange={handleScopeChecked(scope)} />
+                        scope.hidden ? null : <Checkbox key={scope.id} label={scope.name.replace(/%2f/g, '/')} checked={scope.enabled} onChange={handleScopeChecked(scope)} disabled={getIsDisabled(scope)} />
                     ))}
                 </Stack.Item>
             }
