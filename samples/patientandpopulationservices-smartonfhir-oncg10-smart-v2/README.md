@@ -1,4 +1,10 @@
-# Azure ONC (g)(10) SMART on FHIR Sample
+# Azure ONC (g)(10) SMART on FHIR v2 Sample
+
+> [!NOTE]
+> This sample demonstrates ONC (g)(10) with SMART on FHIR v2.0.0. Please see links for other samples if needed:  
+> [SMART on FHIR v2.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smart-v2)  
+> [SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir)  
+> [ONC (g)(10) SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/patientandpopulationservices-smartonfhir-oncg10) 
 
 This sample demonstrates how [Azure Health Data Services](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg) or [Existing Azure API for FHIR](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/overview) and Microsoft Entra ID can be used to pass the Inferno test suite for ONC [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg), which include:
 - [Health Level 7 (HL7®) Version 4.0.1 Fast Healthcare Interoperability Resources Specification (FHIR®)](http://hl7.org/fhir/directory.html)
