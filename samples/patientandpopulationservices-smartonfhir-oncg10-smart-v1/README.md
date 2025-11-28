@@ -2,7 +2,7 @@
 
 > [!NOTE]
 > This sample demonstrates ONC (g)(10) with SMART on FHIR v1.0.0. Please see links for other samples if needed:  
-> [SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir)  
+> [SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smart-v1)  
 > [SMART on FHIR v2.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smart-v2)  
 > [ONC (g)(10) SMART on FHIR v2.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/patientandpopulationservices-smartonfhir-oncg10-smart-v2)  
 

@@ -2,8 +2,8 @@
 > [!NOTE]
 > This sample demonstrates SMART on FHIR v2.0.0 only. Please see links for other samples if needed:  
 > [ONC (g)(10) SMART on FHIR v2.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/patientandpopulationservices-smartonfhir-oncg10-smart-v2)  
-> [SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir)  
-> [ONC (g)(10) SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/patientandpopulationservices-smartonfhir-oncg10)  
+> [SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smart-v1)  
+> [ONC (g)(10) SMART on FHIR v1.0.0 sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/patientandpopulationservices-smartonfhir-oncg10-smart-v1)  
 
 This sample shows extending [Azure Health Data Services, FHIR service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) or [Existing Azure API for FHIR](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/overview) with first party Azure products to enable [SMART on FHIR v2.0.0 Implementation Guide](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smart-v2). It also includes:
 
