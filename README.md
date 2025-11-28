@@ -47,13 +47,15 @@ This project provides samples outlining example implementations of various use c
 
 |Sample|Description|
 | --- | --- |
-| [SMART on FHIR sample](samples/smartonfhir) | Sample demonstrating using [SMART on FHIR](http://hl7.org/fhir/smart-app-launch/index.html) to interact with FHIR data in [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir).|
+| [SMART on FHIR v1 sample](samples/smartonfhir-smart-v1) | Sample demonstrating using [SMART on FHIR v1](https://hl7.org/fhir/smart-app-launch/1.0.0/) to interact with FHIR data in [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir).|
+| [SMART on FHIR v2 sample](samples/smartonfhir-smart-v2) | Sample demonstrating using [SMART on FHIR v2](http://hl7.org/fhir/smart-app-launch/index.html) to interact with FHIR data in [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir).|
 
 ### Patient and population services (g)(10) (including SMART on FHIR) sample
 
 |Sample|Description|
 | --- | --- |
-| [Patient and Population Services (g)(10) (including SMART on FHIR) sample](samples/patientandpopulationservices-smartonfhir-oncg10) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
+| [Patient and Population Services (g)(10) (including SMART on FHIR v1) sample](samples/patientandpopulationservices-smartonfhir-oncg10-smart-v1) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
+| [Patient and Population Services (g)(10) (including SMART on FHIR v2) sample](samples/patientandpopulationservices-smartonfhir-oncg10-smart-v2) | Sample utilizing [Azure Health Data Services](https://learn.microsoft.com/azure/healthcare-apis/fhir/smart-on-fhir) to demonstrate to health organizations with the steps to meet the [§170.315(g)(10) Standardized API for patient and population services criterion](https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#ccg).|
 
 ### FHIR Service and Terminology Service Integration
 

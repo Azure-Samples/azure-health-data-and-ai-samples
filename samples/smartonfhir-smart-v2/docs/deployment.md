@@ -75,7 +75,7 @@ Make sure you have the pre-requisites listed below
 
 Next you will need to clone this repository and prepare your environment for deployment by creating required Azure App Registrations and configuring your environment to use them.
 
-1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir` folder.
+1. Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir-smart-v2` folder.
 1. Login with the Azure CLI.
     - **For Microsoft Entra ID:** 
         ```
