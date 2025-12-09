@@ -45,4 +45,13 @@ While you can use the full URL in the request, it's recommended that you store t
 1. Ensure the token is in the Authorization Header of the REST call.
 1. Use this token to access FHIR resources based on the scopes specified in the environment variable.
 
+## Scope Selection Steps
+
+1. After login, you will be redirected to a page to select the scopes you want to grant to the application. 
+1. Click on the `Change Access` button to modify the scopes.
+![A screenshot that shows scope selection](../images/postman/Scope_Selection_1.png)
+1. Select the required scopes and click on the `Continue` button to proceed.
+![A screenshot that shows scope selection](../images/postman/Scope_Selection_2.png)
+1. The final access token will include all scopes selected under the `Select Access` section on the scope selection page, regardless of the scopes requested by the client.
+
 **[Back to Previous Page](../deployment.md#6-use-postman-to-access-fhir-resource-via-smart-on-fhir-sample)**
