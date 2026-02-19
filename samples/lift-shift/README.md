@@ -114,12 +114,6 @@ If the reindex operation exceeds the 15-minute wait time, you will see:
 
 3. **Search Parameter Availability**: Custom search parameters will **not** be usable for queries until the reindex operation completes successfully. Always verify that the reindex has completed before attempting to use the new search parameters.
 
-4. **Script Prerequisites**: Ensure you have:
-   - Azure CLI installed and configured
-   - Appropriate "FHIR Data Contributor" role on both source and destination FHIR services
-   - Network connectivity to both FHIR services
-
-
 ## Data Movement Verification
 
 If you'd like to verify that all of your custom search parameter was successfully imported into the new FHIR server, follow these steps. This verification will only work if the destination Azure Health Data Services FHIR service was initially doesn't have the custom search parameter resource. 
