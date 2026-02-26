@@ -12,30 +12,19 @@ param readerObjectIds array = []
 ])
 param skuName string = 'standard'
 
-var readerAccessPolicy = [for readerId in readerObjectIds: {
-  objectId: readerId
-  tenantId: tenantId
-  permissions: {
-    secrets: ['list', 'get']
-  }
-}]
+// Built-in RBAC role definitions for Key Vault
+// Key Vault Secrets Officer - Full permissions on secrets
+var keyVaultSecretsOfficerRoleId = 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7'
 
-var writerAccessPolicy = [for writerId in writerObjectIds: {
-  objectId: writerId
-  tenantId: tenantId
-  permissions: {
-    secrets: ['all']
-  }
-}]
+// Key Vault Secrets User - Read secrets
+var keyVaultSecretsUserRoleId = '4633458b-17de-408a-b874-0445c86b69e6'
 
-var comboAccessPolicy = union(readerAccessPolicy, writerAccessPolicy)
-
-resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
+resource kv 'Microsoft.KeyVault/vaults@2025-05-01' = {
   name: vaultName
   location: location
   properties: {
     tenantId: tenantId
-    accessPolicies: comboAccessPolicy
+    enableRbacAuthorization: true
     sku: {
       name: skuName
       family: 'A'
@@ -46,3 +35,25 @@ resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
     }
   }
 }
+
+// Assign Key Vault Secrets Officer role to writer principals
+resource writerRoleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for writerId in writerObjectIds: {
+  name: guid(kv.id, writerId, keyVaultSecretsOfficerRoleId)
+  scope: kv
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsOfficerRoleId)
+    principalId: writerId
+    principalType: 'User'
+  }
+}]
+
+// Assign Key Vault Secrets User role to reader principals
+resource readerRoleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for readerId in readerObjectIds: {
+  name: guid(kv.id, readerId, keyVaultSecretsUserRoleId)
+  scope: kv
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId)
+    principalId: readerId
+    principalType: 'ServicePrincipal'
+  }
+}]
