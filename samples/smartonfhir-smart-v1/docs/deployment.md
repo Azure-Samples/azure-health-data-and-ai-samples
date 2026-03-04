@@ -39,7 +39,7 @@ Make sure you have the pre-requisites listed below
 
         <!-- Use the link for Microsoft Entra External ID tenant. -->
         - If a Microsoft Entra External ID tenant has not yet been created, please use the following link to set one up.
-        [Deploy an Microsoft Entra External ID tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell#deploy-an-entra-external-id-tenant-by-using-an-arm-template)
+        [Deploy an Microsoft Entra External ID tenant by using an ARM template.](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/azure-entra-external-id-setup?branch=main&branchFallbackFrom=pr-en-us-261649&tabs=powershell-script#deploy-an-entra-external-id-tenant-by-using-an-arm-template)
         - Need to have admin access to Microsoft Entra External ID to create application registration, role assignments, create custom policies, create user accounts.
 
 - **Test User Accounts:**

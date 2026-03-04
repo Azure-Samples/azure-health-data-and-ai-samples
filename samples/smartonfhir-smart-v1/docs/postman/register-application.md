@@ -42,10 +42,10 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers.
+    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers with Grant admin consent.
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have selected a non-Microsoft Entra ID Identity Provider then Grant admin consent for app permissions.
+1. If you have selected a Azure AD B2C as Identity Provider then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
 1. If you have selected an Identity Provider other than Azure AD B2C, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 1. If you have selected a non-Microsoft Entra ID Identity Provider, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
@@ -92,10 +92,10 @@
     - Microsoft Graph (Delegated)
         - openid
         - offline_access
-    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers.
+    - Microsoft Graph (Application) - Applicable only for non-Microsoft Entra ID Identity Providers with Grant admin consent.
         - Application.Read.All
         - DelegatedPermissionGrant.ReadWrite.All 
-1. If you have selected a non-Microsoft Entra ID Identity Provider then Grant admin consent for app permissions.
+1. If you have selected a Azure AD B2C as Identity Provider then Grant admin consent for app permissions.
 1. Generate a secret for this application. Save this and the client id for testing SMART on FHIR using Postman.
 1. If you have selected an Identity Provider other than Azure AD B2C, then follow all instructions on [this page](../ad-apps/set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token.
 1. If you have selected a non-Microsoft Entra ID Identity Provider, you will need to update the Identity Provider settings. Please refer to [Step 7](../deployment.md/#7-identity-provider-configuration) in the deployment document for instructions on how to do this.
