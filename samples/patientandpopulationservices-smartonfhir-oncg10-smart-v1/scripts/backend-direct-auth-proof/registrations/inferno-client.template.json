@@ -1,0 +1,15 @@
+{
+  "name": "inferno-backend-client-template",
+  "enabled": true,
+  "clientId": "__PASTE_INFERNO_CLIENT_ID_OR_REGISTRATION_TOKEN__",
+  "jwksUri": "https://inferno.healthit.gov/suites/custom/smart_stu2/.well-known/jwks.json",
+  "allowedScopes": [
+    "system/*.r",
+    "system/*.rs"
+  ],
+  "allowedDataActions": [
+    "Read"
+  ],
+  "fhirAudience": "api://__YOUR_FHIR_RESOURCE_APP_ID__",
+  "fhirUser": "Device/inferno-backend-client"
+}

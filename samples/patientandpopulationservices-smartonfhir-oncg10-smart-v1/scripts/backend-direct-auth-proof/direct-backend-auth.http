@@ -1,0 +1,24 @@
+@token_endpoint = https://<your-tenant>.ciamlogin.com/<your-tenant-id>/oauth2/v2.0/token
+@client_id = <backend-client-id>
+@scope = api://<your-fhir-resource-app-id>/.default
+@client_assertion = <paste-client-assertion-here>
+@fhir_base_url = https://<your-fhir-service>.fhir.azurehealthcareapis.com
+
+### Request a backend token directly from Entra External
+# @name getDirectToken
+POST {{token_endpoint}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{client_id}}&
+scope={{scope}}&
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&
+client_assertion={{client_assertion}}
+
+### Use the returned token directly against the FHIR service
+GET {{fhir_base_url}}/Patient?_count=1
+Authorization: Bearer {{getDirectToken.response.body.$.access_token}}
+Accept: application/fhir+json
+
+### Optional: paste the access token from the first response into jwt.ms to inspect iss/aud/azp|appid/scp/roles.
+
