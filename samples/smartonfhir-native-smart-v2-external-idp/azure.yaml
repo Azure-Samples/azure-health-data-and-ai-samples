@@ -1,0 +1,6 @@
+name: smartonfhir-smart-v2-external-idp
+services:
+  auth:
+    project: src/SMARTCustomOperations.AzureAuth
+    language: csharp
+    host: function

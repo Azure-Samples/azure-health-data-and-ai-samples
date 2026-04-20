@@ -1,0 +1,841 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.36.177.2456",
+      "templateHash": "7388878131777007661"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "metadata": {
+        "description": "Environment name used as resource prefix."
+      }
+    },
+    "location": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Primary deployment location."
+      }
+    },
+    "ContextAppClientId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Client ID for context cache caller validation (optional)."
+      }
+    },
+    "FhirAudience": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Audience for SMART scopes. Leave blank to use FHIR URL."
+      }
+    },
+    "logAnalyticsName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name of the Log Analytics workspace. Leave blank to auto-generate."
+      }
+    },
+    "AuthorityURL": {
+      "type": "string",
+      "metadata": {
+        "description": "External IDP authority URL (example: https://your-okta-domain/oauth2/default)."
+      }
+    },
+    "UserIdClaimType": {
+      "type": "string",
+      "defaultValue": "sub",
+      "metadata": {
+        "description": "Claim name in access token containing user identifier."
+      }
+    }
+  },
+  "variables": {
+    "nameClean": "[replace(parameters('name'), '-', '')]",
+    "nameCleanShort": "[if(greater(length(variables('nameClean')), 16), substring(variables('nameClean'), 0, 16), variables('nameClean'))]",
+    "appTags": {
+      "AppID": "fhir-smart-onfhir-external-idp",
+      "azd-env-name": "[parameters('name')]"
+    },
+    "workspaceNameResolved": "[format('{0}health', variables('nameCleanShort'))]",
+    "fhirNameResolved": "fhirdata",
+    "fhirUrl": "[format('https://{0}-{1}.fhir.azurehealthcareapis.com', variables('workspaceNameResolved'), variables('fhirNameResolved'))]",
+    "fhirAudienceResolved": "[if(empty(parameters('FhirAudience')), variables('fhirUrl'), parameters('FhirAudience'))]",
+    "resourceGroupName": "[format('{0}-rg', parameters('name'))]",
+    "appInsightsName": "[format('{0}-appins', variables('nameCleanShort'))]",
+    "logAnalyticsNameResolved": "[if(greater(length(parameters('logAnalyticsName')), 0), parameters('logAnalyticsName'), format('{0}-la', variables('nameCleanShort')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[format('{0}-rg', parameters('name'))]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('appTags')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "fhirDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "createWorkspace": {
+            "value": true
+          },
+          "createFhirService": {
+            "value": true
+          },
+          "workspaceName": {
+            "value": "[variables('workspaceNameResolved')]"
+          },
+          "fhirServiceName": {
+            "value": "[variables('fhirNameResolved')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appTags": {
+            "value": "[variables('appTags')]"
+          },
+          "audience": {
+            "value": "[variables('fhirAudienceResolved')]"
+          },
+          "AuthorityURL": {
+            "value": "[parameters('AuthorityURL')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "2649973719890714126"
+            }
+          },
+          "parameters": {
+            "createWorkspace": {
+              "type": "bool"
+            },
+            "createFhirService": {
+              "type": "bool"
+            },
+            "workspaceName": {
+              "type": "string"
+            },
+            "fhirServiceName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "audience": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "appTags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "AuthorityURL": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "isFhirService": "[greater(length(parameters('workspaceName')), 0)]",
+            "resolvedAudience": "[if(greater(length(parameters('audience')), 0), parameters('audience'), if(variables('isFhirService'), format('https://{0}-{1}.fhir.azurehealthcareapis.com', parameters('workspaceName'), parameters('fhirServiceName')), format('https://{0}.azurehealthcareapis.com', parameters('fhirServiceName'))))]",
+            "aadAuthority": "[format('{0}{1}', environment().authentication.loginEndpoint, subscription().tenantId)]",
+            "newOrExistingWorkspaceName": "[if(parameters('createWorkspace'), parameters('workspaceName'), if(variables('isFhirService'), parameters('workspaceName'), ''))]",
+            "authenticationConfiguration": {
+              "authority": "[variables('aadAuthority')]",
+              "audience": "[variables('resolvedAudience')]",
+              "smartProxyEnabled": false,
+              "smartIdentityProviders": [
+                {
+                  "authority": "[parameters('AuthorityURL')]",
+                  "applications": [
+                    {
+                      "clientId": "ExternalAppClientId",
+                      "audience": "[variables('resolvedAudience')]",
+                      "allowedDataActions": [
+                        "Read"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "resources": [
+            {
+              "condition": "[parameters('createWorkspace')]",
+              "type": "Microsoft.HealthcareApis/workspaces",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[parameters('workspaceName')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('appTags')]"
+            },
+            {
+              "condition": "[parameters('createFhirService')]",
+              "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
+              "apiVersion": "2023-12-01",
+              "name": "[format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName'))]",
+              "location": "[parameters('location')]",
+              "kind": "fhir-R4",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "authenticationConfiguration": "[variables('authenticationConfiguration')]"
+              },
+              "tags": "[parameters('appTags')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('workspaceName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "fhirId": {
+              "type": "string",
+              "value": "[if(parameters('createFhirService'), resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[1]), if(variables('isFhirService'), resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[1]), resourceId('Microsoft.HealthcareApis/services', parameters('fhirServiceName'))))]"
+            },
+            "fhirIdentity": {
+              "type": "string",
+              "value": "[if(parameters('createFhirService'), reference(resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[1]), '2023-12-01', 'full').identity.principalId, if(variables('isFhirService'), reference(resourceId('Microsoft.HealthcareApis/workspaces/fhirservices', split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[0], split(format('{0}/{1}', variables('newOrExistingWorkspaceName'), parameters('fhirServiceName')), '/')[1]), '2023-12-01', 'full').identity.principalId, reference(resourceId('Microsoft.HealthcareApis/services', parameters('fhirServiceName')), '2025-04-01-preview', 'full').identity.principalId))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "monitoringDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "logAnalyticsName": {
+            "value": "[variables('logAnalyticsNameResolved')]"
+          },
+          "appInsightsName": {
+            "value": "[variables('appInsightsName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appTags": {
+            "value": "[variables('appTags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "372430805885941494"
+            }
+          },
+          "parameters": {
+            "logAnalyticsName": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "appInsightsName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "appTags": {
+              "type": "object",
+              "defaultValue": {}
+            }
+          },
+          "resources": [
+            {
+              "condition": "[greater(length(parameters('logAnalyticsName')), 0)]",
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "apiVersion": "2020-03-01-preview",
+              "name": "[parameters('logAnalyticsName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "retentionInDays": 30,
+                "sku": {
+                  "name": "PerGB2018"
+                }
+              },
+              "tags": "[parameters('appTags')]",
+              "metadata": {
+                "description": "Logging workspace for FHIR and Function App"
+              }
+            },
+            {
+              "condition": "[greater(length(parameters('logAnalyticsName')), 0)]",
+              "type": "microsoft.insights/diagnosticSettings",
+              "apiVersion": "2017-05-01-preview",
+              "scope": "[format('Microsoft.OperationalInsights/workspaces/{0}', parameters('logAnalyticsName'))]",
+              "name": "diagnosticSettings",
+              "properties": {
+                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]",
+                "logs": [
+                  {
+                    "category": "Audit",
+                    "enabled": true
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+              ],
+              "metadata": {
+                "description": "General log setting for workspace"
+              }
+            },
+            {
+              "type": "Microsoft.Insights/components",
+              "apiVersion": "2020-02-02-preview",
+              "name": "[parameters('appInsightsName')]",
+              "location": "[parameters('location')]",
+              "kind": "web",
+              "properties": {
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+              },
+              "tags": "[parameters('appTags')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+              ],
+              "metadata": {
+                "description": "Monitoring for Function App"
+              }
+            }
+          ],
+          "outputs": {
+            "appInsightsConnectionString": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02-preview').ConnectionString]"
+            },
+            "appInsightsResourceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "functionBaseDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "appTags": {
+            "value": "[variables('appTags')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[parameters('name')]"
+          },
+          "nameCleanShort": {
+            "value": "[variables('nameCleanShort')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "13280407924790396644"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "nameCleanShort": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "appTags": {
+              "type": "object"
+            }
+          },
+          "variables": {
+            "customOperationsFuncStorName": "[format('{0}funcsa', parameters('nameCleanShort'))]",
+            "customOperationsAppServiceName": "[format('{0}-appserv', parameters('name'))]",
+            "sku": {
+              "name": "Y1",
+              "tier": "Dynamic"
+            },
+            "properties": {
+              "reserved": true
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2021-08-01",
+              "name": "[variables('customOperationsFuncStorName')]",
+              "location": "[parameters('location')]",
+              "kind": "StorageV2",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "tags": "[parameters('appTags')]",
+              "metadata": {
+                "description": "Used for Custom Operation Azure Function App temp storage and auth."
+              }
+            },
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2021-03-01",
+              "name": "[variables('customOperationsAppServiceName')]",
+              "location": "[parameters('location')]",
+              "kind": "functionapp",
+              "sku": "[variables('sku')]",
+              "properties": "[variables('properties')]",
+              "tags": "[parameters('appTags')]",
+              "metadata": {
+                "description": "App Service used to run Azure Function"
+              }
+            }
+          ],
+          "outputs": {
+            "storageAccountName": {
+              "type": "string",
+              "value": "[variables('customOperationsFuncStorName')]"
+            },
+            "hostingPlanName": {
+              "type": "string",
+              "value": "[variables('customOperationsAppServiceName')]"
+            },
+            "hostingPlanId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Web/serverfarms', variables('customOperationsAppServiceName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "redisDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "namePrefix": {
+            "value": "[parameters('name')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "1052604130671926073"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Location of all resources"
+              }
+            },
+            "namePrefix": {
+              "type": "string"
+            },
+            "redisCacheSKU": {
+              "type": "string",
+              "defaultValue": "Basic",
+              "allowedValues": [
+                "Basic",
+                "Standard",
+                "Premium"
+              ],
+              "metadata": {
+                "description": "Specify the pricing tier of the new Azure Redis Cache."
+              }
+            },
+            "redisCacheFamily": {
+              "type": "string",
+              "defaultValue": "C",
+              "allowedValues": [
+                "C",
+                "P"
+              ],
+              "metadata": {
+                "description": "Specify the family for the sku. C = Basic/Standard, P = Premium."
+              }
+            },
+            "redisCacheCapacity": {
+              "type": "int",
+              "defaultValue": 0,
+              "allowedValues": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "metadata": {
+                "description": "Specify the size of the new Azure Redis Cache instance. Valid values: for C (Basic/Standard) family (0, 1, 2, 3, 4, 5, 6), for P (Premium) family (1, 2, 3, 4)"
+              }
+            },
+            "enableNonSslPort": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "Specify a boolean value that indicates whether to allow access via non-SSL ports."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Cache/redis",
+              "apiVersion": "2022-06-01",
+              "name": "[format('{0}-cache', parameters('namePrefix'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "enableNonSslPort": "[parameters('enableNonSslPort')]",
+                "minimumTlsVersion": "1.2",
+                "sku": {
+                  "capacity": "[parameters('redisCacheCapacity')]",
+                  "family": "[parameters('redisCacheFamily')]",
+                  "name": "[parameters('redisCacheSKU')]"
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "redisApiVersion": {
+              "type": "string",
+              "value": "2022-06-01"
+            },
+            "redisCacheHostName": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Cache/redis', format('{0}-cache', parameters('namePrefix'))), '2022-06-01').hostName]"
+            },
+            "redisCacheId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Cache/redis', format('{0}-cache', parameters('namePrefix')))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "authCustomOperationDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[parameters('name')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appTags": {
+            "value": "[variables('appTags')]"
+          },
+          "fhirServiceUrl": {
+            "value": "[variables('fhirUrl')]"
+          },
+          "fhirServiceAudience": {
+            "value": "[variables('fhirAudienceResolved')]"
+          },
+          "contextAadApplicationId": {
+            "value": "[parameters('ContextAppClientId')]"
+          },
+          "appInsightsConnectionString": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'monitoringDeploy'), '2022-09-01').outputs.appInsightsConnectionString.value]"
+          },
+          "customOperationsFuncStorName": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'functionBaseDeploy'), '2022-09-01').outputs.storageAccountName.value]"
+          },
+          "hostingPlanId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'functionBaseDeploy'), '2022-09-01').outputs.hostingPlanId.value]"
+          },
+          "redisCacheId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisCacheId.value]"
+          },
+          "redisApiVersion": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisApiVersion.value]"
+          },
+          "redisCacheHostName": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisCacheHostName.value]"
+          },
+          "authorityUrl": {
+            "value": "[parameters('AuthorityURL')]"
+          },
+          "userIdClaimType": {
+            "value": "[parameters('UserIdClaimType')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "3094762870697446007"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "Base name used for generating resource names."
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Location for the function app."
+              }
+            },
+            "appTags": {
+              "type": "object",
+              "metadata": {
+                "description": "Shared tags for all resources."
+              }
+            },
+            "authorityUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure B2C Directory authority url."
+              }
+            },
+            "userIdClaimType": {
+              "type": "string",
+              "metadata": {
+                "description": "Claim type to use for identifying user in access token."
+              }
+            },
+            "fhirServiceUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "FHIR server base URL used by function for SMART config discovery."
+              }
+            },
+            "fhirServiceAudience": {
+              "type": "string",
+              "metadata": {
+                "description": "Audience used to access the FHIR Service by the custom operation. (Optional, defaults to fhirUrl if not specified.)"
+              }
+            },
+            "contextAadApplicationId": {
+              "type": "string",
+              "metadata": {
+                "description": "Microsoft Entra ID Application ID for the context application."
+              }
+            },
+            "appInsightsConnectionString": {
+              "type": "string",
+              "metadata": {
+                "description": "App Insights Connection String for the sample. (Optional)"
+              }
+            },
+            "customOperationsFuncStorName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name for the storage account needed for Custom Operation Function Apps"
+              }
+            },
+            "hostingPlanId": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Resource ID for the Function App hosting plan."
+              }
+            },
+            "redisCacheId": {
+              "type": "string"
+            },
+            "redisCacheHostName": {
+              "type": "string"
+            },
+            "redisApiVersion": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "authCustomOperationsFunctionAppName": "[format('{0}-auth-func', parameters('name'))]",
+            "siteConfig": {
+              "linuxFxVersion": "dotnet-isolated|8.0",
+              "use32BitWorkerProcess": false,
+              "cors": {}
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices",
+              "apiVersion": "2021-06-01",
+              "name": "[format('{0}/{1}', parameters('customOperationsFuncStorName'), 'default')]"
+            },
+            {
+              "type": "Microsoft.Web/sites",
+              "apiVersion": "2021-03-01",
+              "name": "[variables('authCustomOperationsFunctionAppName')]",
+              "location": "[parameters('location')]",
+              "kind": "functionapp,linux",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "httpsOnly": true,
+                "enabled": true,
+                "serverFarmId": "[parameters('hostingPlanId')]",
+                "reserved": true,
+                "clientAffinityEnabled": false,
+                "siteConfig": "[variables('siteConfig')]"
+              },
+              "tags": "[union(parameters('appTags'), createObject('azd-service-name', 'auth'))]",
+              "metadata": {
+                "description": "Azure Function used to run auth flow custom operations using the Azure Health Data Services Toolkit"
+              }
+            },
+            {
+              "type": "Microsoft.Web/sites/config",
+              "apiVersion": "2020-12-01",
+              "name": "[format('{0}/{1}', variables('authCustomOperationsFunctionAppName'), 'appsettings')]",
+              "properties": {
+                "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('customOperationsFuncStorName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('customOperationsFuncStorName')), '2021-08-01').keys[0].value)]",
+                "FUNCTIONS_EXTENSION_VERSION": "~4",
+                "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+                "APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('appInsightsConnectionString')]",
+                "SCM_DO_BUILD_DURING_DEPLOYMENT": "false",
+                "ENABLE_ORYX_BUILD": "true",
+                "AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('appInsightsConnectionString')]",
+                "AZURE_Authority_URL": "[parameters('authorityUrl')]",
+                "AZURE_FhirServerUrl": "[parameters('fhirServiceUrl')]",
+                "AZURE_FhirAudience": "[parameters('fhirServiceAudience')]",
+                "AZURE_UserIdClaimType": "[parameters('userIdClaimType')]",
+                "AZURE_ContextAppClientId": "[parameters('contextAadApplicationId')]",
+                "AZURE_CacheConnectionString": "[format('{0},password={1},ssl=True,abortConnect=False', parameters('redisCacheHostName'), listKeys(parameters('redisCacheId'), parameters('redisApiVersion')).primaryKey)]",
+                "AZURE_Debug": "true"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('authCustomOperationsFunctionAppName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "functionAppUrl": {
+              "type": "string",
+              "value": "[format('https://{0}/api', reference(resourceId('Microsoft.Web/sites', variables('authCustomOperationsFunctionAppName')), '2021-03-01').defaultHostName)]"
+            },
+            "functionAppPrincipalId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Web/sites', variables('authCustomOperationsFunctionAppName')), '2021-03-01', 'full').identity.principalId]"
+            },
+            "authCustomOperationAudience": {
+              "type": "string",
+              "value": "[parameters('fhirServiceAudience')]"
+            },
+            "cacheConnectionString": {
+              "type": "string",
+              "value": "[format('{0},password={1},ssl=True,abortConnect=False', parameters('redisCacheHostName'), listKeys(parameters('redisCacheId'), parameters('redisApiVersion')).primaryKey)]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'functionBaseDeploy')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'monitoringDeploy')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "AZURE_RESOURCE_GROUP": {
+      "type": "string",
+      "value": "[variables('resourceGroupName')]"
+    },
+    "FhirUrl": {
+      "type": "string",
+      "value": "[variables('fhirUrl')]"
+    },
+    "FhirAudience": {
+      "type": "string",
+      "value": "[variables('fhirAudienceResolved')]"
+    },
+    "FunctionBaseUrl": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.functionAppUrl.value]"
+    },
+    "FunctionAppManagedIdentityPrincipalId": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.functionAppPrincipalId.value]"
+    },
+    "CacheConnectionString": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.cacheConnectionString.value]"
+    }
+  }
+}
