@@ -13,7 +13,7 @@ A full-featured ASP.NET Core 8 demonstration of all four **SMART on FHIR v2** au
 
 ## Table of Contents
 
-1. [Architecture Overview](#architecture-overview)
+1. [Components](#components)
 2. [Prerequisites](#prerequisites)
 3. [Repository Structure](#repository-structure)
 4. [Okta Configuration](#okta-configuration)
@@ -26,36 +26,39 @@ A full-featured ASP.NET Core 8 demonstration of all four **SMART on FHIR v2** au
 
 ---
 
-## Architecture Overview
+## Components
 
-```
-┌─────────────────────────────────────────────────────┐
-│  SmartOnFhirDemo  (ASP.NET Core 8 – MVC)            │
-│                                                     │
-│  Controllers/                                       │
-│    HomeController   – Dashboard & session state      │
-│    SmartController  – /login, /callback, /fhir, …    │
-│                                                     │
-│  Services/                                          │
-│    SmartConfigService  – .well-known discovery       │
-│    AuthService         – OAuth PKCE flows            │
-│    FhirService         – Bearer-token FHIR requests  │
-│    BackendTokenService – M2M token orchestration     │
-│                                                     │
-│  ┌───────────────────────────────────────────────┐  │
-│  │  OktaSmartBackend.TokenClient  (class library) │  │
-│  │    OktaM2mClient        – Token request logic  │  │
-│  │    OktaM2mJwtAssertion  – ES384 JWT signing    │  │
-│  └───────────────────────────────────────────────┘  │
-└──────────┬───────────────┬──────────────────────────┘
-           │               │
-     HTTPS (OAuth)    HTTPS (FHIR)
-           │               │
-     ┌─────▼─────┐   ┌────▼───────────────────────┐
-     │   Okta    │   │ Azure Health Data Services  │
-     │  (IdP)    │   │   (FHIR R4 Server)          │
-     └───────────┘   └────────────────────────────┘
-```
+### SmartOnFhirDemo — ASP.NET Core 8 MVC Application
+
+#### Controllers
+
+| Controller | Purpose |
+|------------|---------|
+| `HomeController` | Renders the dashboard and manages session state |
+| `SmartController` | Handles `/login`, `/callback`, `/fhir`, and other OAuth/FHIR endpoints |
+
+#### Services
+
+| Service | Purpose |
+|---------|---------|
+| `SmartConfigService` | Discovers FHIR server capabilities via `.well-known/smart-configuration` |
+| `AuthService` | Manages OAuth 2.0 authorization code + PKCE flows (Standalone and EHR Launch) |
+| `FhirService` | Makes authenticated FHIR API requests using bearer tokens |
+| `BackendTokenService` | Orchestrates machine-to-machine token acquisition for the Backend Services flow |
+
+### OktaSmartBackend.TokenClient — Class Library
+
+| Class | Purpose |
+|-------|---------|
+| `OktaM2mClient` | Builds and sends the `client_credentials` token request to Okta |
+| `OktaM2mJwtAssertion` | Creates and signs the ES384 JWT client assertion used for `private_key_jwt` authentication |
+
+### External Dependencies
+
+| System | Role |
+|--------|------|
+| **Okta** | Identity provider — handles OAuth 2.0 / OIDC authentication and authorization |
+| **Azure Health Data Services** | FHIR R4 server — stores and serves clinical data over HTTPS |
 
 ---
 
