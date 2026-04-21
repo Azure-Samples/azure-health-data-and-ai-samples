@@ -1,138 +1,309 @@
-# Deployment Guide (External IDP + Minimal Infra)
+> [!TIP]
+> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](./troubleshooting.md).*
 
-This guide is for the simplified deployment model in this repo:
+> **Note** – Throughout this document, "External IDP" refers to a non-Microsoft identity provider (for example, Okta) that you have already configured to issue OIDC-compliant tokens.
 
-- New resource group
-- New Azure Health Data Services FHIR service
-- Azure Function App (token + context-cache endpoints)
-- Azure Cache for Redis
-- Monitoring (App Insights + Log Analytics)
+# Sample Deployment: SMART on FHIR (External IDP)
 
+This document guides you through the steps needed to deploy this sample. The deployment provisions Azure infrastructure, deploys custom Function App code, and configures the FHIR service to trust your external Identity Provider.
+
+*Note:* This sample deployment is streamlined for external IDP scenarios. On average it will take approximately **15–20 minutes** to deploy end to end.
+
+---
 
 ## 1. Prerequisites
 
-- Azure subscription with permission to create resources.
-- External IDP already configured for SMART on FHIR (for example Okta auth server).
-  - This deployment does not provision the external IDP itself.
-  - You must provide an existing authority URL and valid token configuration.
-- Installed tools:
-  - `az` (Azure CLI)
-  - `azd` (Azure Developer CLI)
-  - `.NET 8 SDK`
-  - `PowerShell 7+` (recommended for scripts in this repo)
+Make sure you have the prerequisites listed below before starting deployment.
 
-## 2. Required configuration values
+### Installation
 
-Before deployment, collect:
+- [Git](https://git-scm.com/) to access the files in this repository.
+- [Azure CLI Version 2.51.0 or greater](https://learn.microsoft.com/cli/azure/install-azure-cli) to run scripts that interact with Azure.
+- [Azure Developer CLI Version 1.9.0 or greater](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd?tabs=baremetal%2Cwindows) to deploy the infrastructure and code for this sample.
+- [Visual Studio](https://visualstudio.microsoft.com/), [Visual Studio Code](https://code.visualstudio.com/), or another development environment (for changing configuration or debugging the sample code).
+- [.NET SDK Version 8+](https://learn.microsoft.com/dotnet/core/sdk) installed (for building the sample).
+- [PowerShell Version 7 or greater](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) installed for running scripts (works for Mac and Linux too!).
 
-- **AuthorityURL**
-  - OIDC authority/issuer base URL of your external IDP.
-  - Example (Okta): `https://<okta-domain>/oauth2/default`
-- **FhirAudience** (optional, recommended if you already know target audience)
-  - If omitted, infra defaults to the newly created FHIR URL.
-- **UserIdClaimType** (optional)
-  - Claim used by token augmentation logic to identify user.
-  - Default is `sub`; for some Okta setups use `uid`.
-- **ContextAppClientId** (optional)
-  - Needed only if you want strict caller validation for context-cache requests.
+### Access
 
-## 3. Login and initialize environment
+- Access to an Azure Subscription with **Owner** privileges.
+- Permissions to create resources in the target subscription.
 
-From repository root:
+### External IDP Configuration
+
+Your external Identity Provider must be pre-configured before running this deployment. The deployment **does not** provision the external IDP itself.
+
+> **Using Okta?** Follow the complete [Okta Setup Guide](./okta-setup.md) to create your authorization server, test users, custom claims, client applications, and scopes before continuing with this deployment.
+
+You will need the following from your external IDP:
+
+| Value | Description | Example |
+|---|---|---|
+| **Authority URL** | OIDC authority / issuer base URL | `https://dev-12345678.okta.com/oauth2/default` |
+| **Client ID** | Application / client ID registered in your IDP | `0oa1abc2defGHIjkl5d7` |
+| **Audience** | Token audience expected by FHIR service (optional — defaults to FHIR URL if omitted) | `https://myhealth-fhirdata.fhir.azurehealthcareapis.com` |
+
+### Test User Accounts
+
+To effectively test the application, create test user accounts in your external IDP (see [Okta Setup Guide — Create Test Users](./okta-setup.md#3-create-test-users) for Okta-specific steps):
+
+- **Patient test user** — will be mapped to a FHIR `Patient` resource.
+- **Practitioner test user** — will be mapped to a FHIR `Practitioner` resource.
+
+Ensure each test user has a `fhirUser` claim configured in the IDP. For example:
+- Patient: `https://<fhir-url>/Patient/PatientA`
+- Practitioner: `https://<fhir-url>/Practitioner/PractitionerC1`
+
+---
+
+## 2. Prepare and deploy environment
+
+### 2.1. Clone the repository
+
+Use the terminal or your git client to clone this repo. Open a terminal to the `samples/smartonfhir-native-smart-v2-external-idp` folder.
+
+```bash
+git clone https://github.com/Azure-Samples/azure-health-data-and-ai-samples.git
+cd azure-health-data-and-ai-samples/samples/smartonfhir-native-smart-v2-external-idp
+```
+
+### 2.2. Login with the Azure CLI
+
+Login to your Azure tenant where the resources will be deployed:
 
 ```powershell
-az login
-azd auth login
+az login --tenant <your-azure-tenant-id>
+azd auth login --tenant-id <your-azure-tenant-id>
+```
+
+**Example:**
+```powershell
+az login --tenant 72f988bf-86f1-41af-91ab-2d7cd011db47
+azd auth login --tenant-id 72f988bf-86f1-41af-91ab-2d7cd011db47
+```
+
+### 2.3. Create a new deployment environment
+
+Run `azd env new` to create a new deployment environment, keeping the following in mind:
+
+- Environment name must **not exceed 18 characters** in length.
+- Deployment fails if environment name contains **uppercase letters**.
+- Use **numbers and lowercase letters only**.
+- Environment name will be the **prefix for all of your resources**.
+
+```powershell
 azd env new <env-name>
 ```
 
-Use lowercase alphanumeric env name (short name recommended).
-
-## 4. Set azd environment values
-
-Set the required environment values:
-
+**Example:**
 ```powershell
-azd env set AuthorityURL "https://<your-idp-authority>"
+azd env new smartfhirokta01
 ```
 
-Optional values:
+### 2.4. Collect required configuration values
+
+Before setting environment values, gather the following information:
+
+| Parameter | Required | Description | Default |
+|---|---|---|---|
+| `AuthorityURL` | **Yes** | OIDC authority / issuer base URL of your external IDP | — |
+| `FhirAudience` | No | Audience for SMART scopes. If omitted, defaults to the newly created FHIR service URL | Auto-generated FHIR URL |
+| `UserIdClaimType` | No | Claim name in the access token containing the user identifier | `sub` |
+| `ContextAppClientId` | No | Client ID for strict caller validation on context-cache requests | — |
+
+### 2.5. Set azd environment values
+
+**Required — set the external IDP authority URL:**
 
 ```powershell
-azd env set FhirAudience "https://<expected-fhir-audience>"
+azd env set AuthorityURL "<your-idp-authority-url>"
+```
+
+**Example (Okta):**
+```powershell
+azd env set AuthorityURL "https://dev-12345678.okta.com/oauth2/default"
+```
+
+**Optional values:**
+
+```powershell
+# Set only if you have a specific audience requirement
+azd env set FhirAudience "https://<workspace>-fhirdata.fhir.azurehealthcareapis.com"
+
+# Change if your IDP uses a different claim for user identity (default: sub)
 azd env set UserIdClaimType "sub"
-azd env set ContextAppClientId ""
-```
 
-Also set deployment location if needed:
+# Set only if you need caller validation for EHR launch context-cache requests
+azd env set ContextAppClientId "<your-context-app-client-id>"
 
-```powershell
+# Set the Azure deployment region
 azd env set AZURE_LOCATION "eastus2"
 ```
 
-## 5. Deploy infrastructure and function app
+### 2.6. Deploy infrastructure and Function App
 
-Run:
+Initiate the deployment by executing the `azd up` command. This handles both infrastructure provisioning and code deployment.
+
+> *Note:* This command requires at least **PowerShell 7**. Running it in any earlier version may result in failure.
 
 ```powershell
 azd up
 ```
 
-`azd up` provisions infra from `infra/main.bicep` and deploys the Function service defined in `azure.yaml`.
+When running `azd up`, you will be prompted to:
+1. Select the **subscription** to deploy to.
+2. Select the **location** (Azure region) for deployment.
 
-## 6. Post-deployment verification
+**What gets deployed:**
 
-After deployment:
+| Resource | Name Pattern | Description |
+|---|---|---|
+| Resource Group | `{env-name}-rg` | Contains all deployed resources |
+| Azure Health Data Services Workspace | `{env-name}health` | FHIR workspace |
+| FHIR Service | `{env-name}health/fhirdata` | FHIR R4 service with SMART identity provider config |
+| Azure Function App | `{env-name}-auth-func` | .NET 8 isolated — token proxy and context cache |
+| Azure Cache for Redis | `{env-name}-cache` | Launch context store (Basic C0, TLS 1.2) |
+| Storage Account | `{env-name}funcsa` | Function App runtime storage |
+| App Service Plan | `{env-name}-appserv` | Consumption (Dynamic Y1) hosting plan |
+| Application Insights | `{env-name}-appins` | Telemetry and monitoring |
+| Log Analytics Workspace | `{env-name}-la` | Centralized logging (30-day retention) |
 
-1. Check outputs from `azd`:
-   - `AZURE_RESOURCE_GROUP`
-   - `FhirUrl`
-   - `FhirAudience`
-   - `FunctionBaseUrl`
-2. Confirm Function App settings in Azure Portal include:
-   - `AZURE_FhirServerUrl`
-   - `AZURE_FhirAudience`
-   - `AZURE_Authority_URL`
-   - `AZURE_CacheConnectionString`
-3. Verify endpoints:
-   - `POST <FunctionBaseUrl>/token`
-   - `POST <FunctionBaseUrl>/context-cache`
+---
 
-## 7. Configure FHIR authentication for external IDP
+## 3. Post-deployment verification
 
-The template sets FHIR authentication configuration with:
+After deployment completes, verify the following:
 
-- `authority` = Azure Entra authority for the deployment tenant (`https://login.microsoftonline.com/<tenant-id>`)
-- `audience` = resolved FHIR audience
-- SMART identity provider authority = `AuthorityURL`
+### 3.1. Check deployment outputs
 
-Validate in Azure Portal:
+The `azd up` command will output the following values. Record them for later use:
 
-1. Open FHIR service.
-2. Go to Authentication settings.
-3. Confirm authority/audience values align with your IDP token configuration.
+| Output | Description | Example |
+|---|---|---|
+| `AZURE_RESOURCE_GROUP` | Name of the deployed resource group | `smartfhirokta01-rg` |
+| `FhirUrl` | FHIR service base URL | `https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com` |
+| `FhirAudience` | Token audience for FHIR service | `https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com` |
+| `FunctionBaseUrl` | Function App base URL | `https://smartfhirokta01-auth-func.azurewebsites.net/api` |
 
-## 8. Redis connectivity behavior
+You can retrieve these outputs at any time by running:
 
-No manual Redis connection string entry is required.
+```powershell
+azd env get-values
+```
 
-Deployment flow:
+### 3.2. Verify Function App settings in Azure Portal
 
-1. Redis is created.
-2. Template reads Redis key and host.
-3. Template composes connection string.
-4. Template sets Function app setting `AZURE_CacheConnectionString`.
+Navigate to the Function App in the Azure Portal and confirm the following **Application Settings** are present:
 
-## 9. Troubleshooting
+| Setting | Expected Value |
+|---|---|
+| `AZURE_FhirServerUrl` | `https://{env-name}health-fhirdata.fhir.azurehealthcareapis.com` |
+| `AZURE_FhirAudience` | FHIR audience URL (same as `FhirUrl` unless overridden) |
+| `AZURE_Authority_URL` | Your external IDP authority URL |
+| `AZURE_CacheConnectionString` | Auto-populated Redis connection string |
+| `AZURE_UserIdClaimType` | `sub` (or your custom claim) |
+| `AZURE_ContextAppClientId` | Your context app client ID (if set) |
+| `AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING` | Auto-populated |
 
-- If token forwarding fails, verify:
-  - `AuthorityURL` is correct.
-  - FHIR `/.well-known/smart-configuration` is reachable.
-  - External IDP token endpoint is available.
-- If launch context is missing:
-  - Verify Redis app setting exists.
-  - Verify `POST /api/context-cache` is called before token exchange in EHR launch flow.
-- If claims are missing in token response:
-  - Ensure IDP access token includes expected claims (`patient`, `fhirUser`, or mapping used by your flow).
 
-For general issues, see `docs/troubleshooting.md`.
+## 4. Configure FHIR authentication for external IDP
+
+The Bicep template automatically configures the FHIR service with:
+
+| Configuration | Value | Description |
+|---|---|---|
+| `authority` | `https://login.microsoftonline.com/<tenant-id>` | Azure Entra authority for the deployment tenant |
+| `audience` | Resolved FHIR audience | Token audience for the FHIR service |
+| `smartIdentityProviders[0].authority` | Your `AuthorityURL` | External IDP trusted for SMART token validation |
+
+### Validate in Azure Portal
+
+1. Open the **FHIR service** from the `{env-name}-rg` resource group.
+2. Navigate to **Settings** → **Authentication**.
+3. Confirm:
+   - **Authority** is set to your Azure tenant's login URL.
+   - **Audience** matches your FHIR service URL (or custom audience).
+   - **Identity Provider 1** shows your external IDP authority URL.
+
+> [!IMPORTANT]
+> If the `smartIdentityProviders` configuration does not appear, verify that your `AuthorityURL` environment value was set correctly before running `azd up`. You can redeploy with `azd up` after correcting the value.
+
+---
+
+## 5. Add sample data and US Core resources
+
+To successfully test this sample using Postman or REST clients, both the US Core FHIR package and applicable test data need to be loaded.
+
+Ensure the user account you are using has the **FHIR Data Contributor** role assigned to the FHIR service.
+
+### Run the data loading script
+
+The script automatically reads `FhirUrl`, `FhirAudience`, and `TenantId` from your `azd` environment if not explicitly provided.
+
+**Windows:**
+```powershell
+powershell ./scripts/Load-ProfilesData.ps1
+```
+
+**Mac/Linux:**
+```bash
+pwsh ./scripts/Load-ProfilesData.ps1
+```
+
+**With explicit parameters (if not using azd environment):**
+
+```powershell
+powershell ./scripts/Load-ProfilesData.ps1 `
+  -FhirUrl "https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com" `
+  -FhirAudience "https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com" `
+  -TenantId "<your-azure-tenant-id>"
+```
+
+This script loads:
+- **US Core v6.1.0 compliant sample resources** (Patient, Observation, Condition, etc.)
+- **US Core CapabilityStatement** for the FHIR server
+
+To learn more about the sample data, read [Sample Data](./sample-data.md).
+
+---
+
+## 6. Map test users to FHIR resources
+
+> **Using Okta?** If you followed the [Okta Setup Guide](./okta-setup.md), you have already completed this step in [Section 4 — Add Custom Claims](./okta-setup.md#4-add-custom-claims-fhiruser) and [Section 5 — Map FHIR Users](./okta-setup.md#5-map-fhir-users-to-test-accounts). Verify the values below match what you configured.
+
+### Add `fhirUser` claim to test users
+
+To properly integrate with the sample data, each test user in your external IDP must have a `fhirUser` claim mapped to a FHIR resource:
+
+| Test User | `fhirUser` Claim Value |
+|---|---|
+| Patient | `<FhirUrl>/Patient/PatientA` |
+| Practitioner | `<FhirUrl>/Practitioner/PractitionerC1` |
+
+**Example (for Okta):**
+- In Okta Admin → **Directory** → **Profile Editor** → select your authorization server profile.
+- Add a custom claim `fhirUser` with the appropriate FHIR resource URL.
+
+**Example claim values:**
+```
+Patient:      https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com/Patient/PatientA
+Practitioner: https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com/Practitioner/PractitionerC1
+```
+
+> [!NOTE]
+> The exact steps to add custom claims vary by IDP. Refer to your IDP's documentation:
+> - **Okta:** [Customize tokens with a Groups claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/)
+---
+
+## 7. Use Postman to access FHIR resources
+
+Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman/configure-postman.md) for instructions to access FHIR resources via SMART on FHIR using Postman.
+
+You can also use the REST client files included in this repository:
+- [Backend Service Client](./rest/backend_service_client.http)
+- [Confidential Client](./rest/confidential_client.http)
+- [EHR Practitioner App](./rest/ehr_practitioner_app.http)
+
+---
+
+**[Back to Previous Page](../README.md)**

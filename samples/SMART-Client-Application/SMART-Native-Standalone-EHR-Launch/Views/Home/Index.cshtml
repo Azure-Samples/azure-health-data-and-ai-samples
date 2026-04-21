@@ -1,0 +1,434 @@
+@using SmartOnFhirDemo.Models
+@model HomeViewModel
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>SMART on FHIR Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/smart.css" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>SMART on FHIR v2 Sample App</h1>
+            <p class="lead">Demo of SMART login, token details, and basic FHIR resources.</p>
+            <div class="status">
+                Status:
+                @if (Model.IsAuthenticated)
+                {
+                    <span>Authenticated</span>
+                }
+                else
+                {
+                    <span>Not signed in</span>
+                }
+            </div>
+            @if (Model.IsAuthenticated)
+            {
+                <form method="post" action="/logout" style="margin-top:0.5rem;">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            }
+        </div>
+    </header>
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Model.LastError))
+        {
+            <div class="alert alert-error">
+                <strong>Error:</strong> @Model.LastError
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.LastSuccess))
+        {
+            <div class="alert alert-success alert-toast" role="status" aria-live="polite">
+                @Model.LastSuccess
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SmartConfigRawJson))
+        {
+            <div class="panel">
+                <div class="panel-header">SMART configuration (raw)</div>
+                <div class="panel-body">
+                    <pre>@Model.SmartConfigRawJson</pre>
+                </div>
+            </div>
+        }
+
+        <div class="panel">
+            <div class="panel-header">Actions</div>
+            <div class="panel-body">
+                @if (!Model.IsAuthenticated)
+                {
+                    <p class="muted">Select a SMART launch type, then start the authorization flow.</p>
+
+                    <div class="launch-options" id="launch-options">
+                        <label class="launch-option @(Model.SelectedLaunchType == "standalone" ? "selected" : "")">
+                            <input type="radio" name="launchType" value="standalone" @(Model.SelectedLaunchType == "standalone" ? "checked" : "") />
+                            <span class="launch-option-title">Standalone — Public</span>
+                            <span class="launch-option-desc">No client secret. PKCE only. App cannot safely store a secret (e.g. SPA, mobile).</span>
+                        </label>
+                        <label class="launch-option @(Model.SelectedLaunchType == "standalone-confidential" ? "selected" : "")">
+                            <input type="radio" name="launchType" value="standalone-confidential" @(Model.SelectedLaunchType == "standalone-confidential" ? "checked" : "") />
+                            <span class="launch-option-title">Standalone — Confidential</span>
+                            <span class="launch-option-desc">PKCE + <code>client_secret</code>. Server-side app that can securely store credentials.</span>
+                        </label>
+                        <label class="launch-option @(Model.SelectedLaunchType == "ehr" ? "selected" : "")">
+                            <input type="radio" name="launchType" value="ehr" @(Model.SelectedLaunchType == "ehr" ? "checked" : "") />
+                            <span class="launch-option-title">EHR Launch</span>
+                            <span class="launch-option-desc">EHR system launch with ISS + launch token and simulator workflow.</span>
+                        </label>
+                        <label class="launch-option @(Model.SelectedLaunchType == "backend" ? "selected" : "")">
+                            <input type="radio" name="launchType" value="backend" @(Model.SelectedLaunchType == "backend" ? "checked" : "") />
+                            <span class="launch-option-title">Backend Services</span>
+                            <span class="launch-option-desc">Machine-to-machine. Client credentials + signed JWT assertion. No user context.</span>
+                        </label>
+                    </div>
+
+                    <div id="confidential-info" class="launch-info-box" style="display:none;">
+                        Requires <strong>SmartOnFhir:ClientSecret</strong> to be set in <code>appsettings.json</code>.
+                        The secret is sent only server-to-server at the token endpoint — never to the browser.
+                    </div>
+
+                    <div id="backend-info" class="launch-info-box" style="display:none;">
+                        Okta M2M app (ES384 private key PEM under <code>keys/</code>, settings under <code>BackendServices</code>).
+                        Click <strong>Launch</strong> to request a token server-side (no redirect, no token proxy).
+                        Scope is fixed to <code>BackendServices:Scope</code> (recommended: <code>system/*.rs</code>).
+                    </div>
+
+                    @* ── Scope selection checkboxes ── *@
+                    <div id="scope-panel" class="scope-panel" style="display:none;">
+                        <div class="scope-panel-header">Select Scopes</div>
+
+                        <div class="scope-group" id="scope-group-identity">
+                            <div class="scope-group-title">Identity &amp; Session</div>
+                            <div class="scope-grid">
+                                <label class="scope-item"><input type="checkbox" value="openid" checked /><span>openid</span></label>
+                                <label class="scope-item"><input type="checkbox" value="fhirUser" checked /><span>fhirUser</span></label>
+                                <label class="scope-item"><input type="checkbox" value="offline_access" checked /><span>offline_access</span></label>
+                            </div>
+                        </div>
+
+                        <div class="scope-group" id="scope-group-launch">
+                            <div class="scope-group-title">Launch</div>
+                            <div class="scope-grid">
+                                <label class="scope-item" id="scope-launch-patient"><input type="checkbox" value="launch/patient" checked /><span>launch/patient</span></label>
+                                <label class="scope-item" id="scope-launch-ehr"><input type="checkbox" value="launch" /><span>launch</span></label>
+                            </div>
+                        </div>
+
+                        <div class="scope-group" id="scope-group-patient">
+                            <div class="scope-group-title">Patient-level Resources</div>
+                            <div class="scope-grid">
+                                <label class="scope-item"><input type="checkbox" value="patient/Patient.rs" checked /><span>patient/Patient.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/Observation.rs" /><span>patient/Observation.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/Condition.rs" /><span>patient/Condition.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/CarePlan.rs" checked /><span>patient/CarePlan.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/AllergyIntolerance.rs" /><span>patient/AllergyIntolerance.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/MedicationRequest.rs" /><span>patient/MedicationRequest.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/Immunization.rs" /><span>patient/Immunization.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/Procedure.rs" /><span>patient/Procedure.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/Encounter.rs" /><span>patient/Encounter.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="patient/DiagnosticReport.rs" /><span>patient/DiagnosticReport.rs</span></label>
+                            </div>
+                        </div>
+
+                        <div class="scope-group" id="scope-group-system" style="display:none;">
+                            <div class="scope-group-title">System-level Resources</div>
+                            <div class="scope-grid">
+                                <label class="scope-item"><input type="checkbox" value="system/Patient.rs" checked /><span>system/Patient.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/Observation.rs" /><span>system/Observation.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/Condition.rs" /><span>system/Condition.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/CarePlan.rs" checked /><span>system/CarePlan.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/AllergyIntolerance.rs" /><span>system/AllergyIntolerance.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/MedicationRequest.rs" /><span>system/MedicationRequest.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/Immunization.rs" /><span>system/Immunization.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/Procedure.rs" /><span>system/Procedure.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/Encounter.rs" /><span>system/Encounter.rs</span></label>
+                                <label class="scope-item"><input type="checkbox" value="system/DiagnosticReport.rs" /><span>system/DiagnosticReport.rs</span></label>
+                            </div>
+                        </div>
+
+                        <div class="scope-summary">
+                            <strong>Scope string:</strong>
+                            <code id="scope-summary-text" class="scope-summary-code"></code>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="startLaunch()">Launch</button>
+                    </div>
+                }
+                else
+                {
+                    <p class="muted">Authenticated via <strong id="launch-type-label">@Model.SelectedLaunchType</strong> launch. Select a FHIR resource to fetch.</p>
+                    <div class="resource-picker">
+                        <select id="resource-select" class="resource-select">
+                            <option value="Patient">Patient</option>
+                            <option value="Observation">Observation</option>
+                            <option value="Condition">Condition</option>
+                            <option value="CarePlan">CarePlan</option>
+                            <option value="AllergyIntolerance">AllergyIntolerance</option>
+                            <option value="MedicationRequest">MedicationRequest</option>
+                            <option value="Immunization">Immunization</option>
+                            <option value="Procedure">Procedure</option>
+                            <option value="Encounter">Encounter</option>
+                            <option value="DiagnosticReport">DiagnosticReport</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="fetchResource()">Get Resource</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* EHR Simulator — always visible except when already authenticated via EHR launch *@
+        @if (!(Model.IsAuthenticated && Model.SelectedLaunchType == "ehr"))
+        {
+            <div class="panel" id="ehr-simulator">
+                <div class="panel-header">EHR Launch Simulator</div>
+                <div class="panel-body">
+
+                    @* ── Step indicator ── *@
+                    <div style="display:flex;gap:8px;margin-bottom:18px;align-items:center;">
+                        <span style="background:@(Model.HasUserContext ? "#198754" : "#0d6efd");color:#fff;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;flex-shrink:0;">1</span>
+                        <span style="font-size:0.9em;@(Model.HasUserContext ? "color:#198754;text-decoration:line-through" : "")">Login as EHR User <span class="muted">(openid only — gets your identity for context caching)</span></span>
+                        <span style="margin:0 6px;color:#aaa;">→</span>
+                        <span style="background:@(Model.HasUserContext ? "#0d6efd" : "#6c757d");color:#fff;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;flex-shrink:0;">2</span>
+                        <span style="font-size:0.9em;@(!Model.HasUserContext ? "color:#aaa;" : "")">Fill context &amp; launch EHR</span>
+                    </div>
+
+                    @if (!Model.HasUserContext)
+                    {
+                        @* ── Step 1: User Context login ── *@
+                        <p class="muted">
+                            Click below to do a lightweight Okta login (<code>openid</code> scope only).
+                            This gives the simulator your user identity so it can securely push
+                            patient/encounter context to the proxy cache before the EHR launch.
+                        </p>
+                        <div class="btn-row">
+                            <a href="/usercontext/login" class="btn btn-primary">Login as EHR User</a>
+                        </div>
+                    }
+                    else
+                    {
+                        @* ── Step 2: Context form ── *@
+                        <p class="muted">
+                            EHR user identity confirmed. Fill in the launch context below and click
+                            <strong>Cache &amp; Launch EHR</strong>. Your context will be stored in Redis
+                            and you will be redirected to log in via the full SMART EHR flow.
+                        </p>
+                        <form method="post" action="/ehr-context-launch" id="ehr-sim-form">
+                            <div class="launch-fields" style="display:flex;flex-direction:column;gap:12px;">
+                                <div class="launch-field-group">
+                                    <label for="sim-iss">ISS (FHIR base URL)</label>
+                                    <input id="sim-iss" name="iss" type="url"
+                                           value="@Model.EhrSimulatorIssDefault"
+                                           placeholder="https://your-fhir-server.fhir.azurehealthcareapis.com"
+                                           required />
+                                </div>
+                                <div class="launch-field-group">
+                                    <label for="sim-patient">Patient ID <span style="color:#c00">*</span></label>
+                                    <input id="sim-patient" name="patientId" type="text"
+                                           placeholder="e.g. PatientA" required />
+                                </div>
+                                <div class="launch-field-group">
+                                    <label for="sim-encounter">Encounter ID <span class="muted">(optional)</span></label>
+                                    <input id="sim-encounter" name="encounterId" type="text"
+                                           placeholder="e.g. EncounterA" />
+                                </div>
+                            </div>
+
+                            @* ── EHR Scope selection ── *@
+                            <input type="hidden" name="scope" id="ehr-scope-hidden" value="" />
+                            <div class="scope-panel" id="ehr-scope-panel" style="margin-top:16px;">
+                                <div class="scope-panel-header">Select Scopes for EHR Launch</div>
+
+                                <div class="scope-group">
+                                    <div class="scope-group-title">Identity &amp; Session</div>
+                                    <div class="scope-grid">
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="openid" checked /><span>openid</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="fhirUser" checked /><span>fhirUser</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="offline_access" checked /><span>offline_access</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="scope-group">
+                                    <div class="scope-group-title">Launch</div>
+                                    <div class="scope-grid">
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="launch" checked /><span>launch</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="scope-group">
+                                    <div class="scope-group-title">Patient-level Resources</div>
+                                    <div class="scope-grid">
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Patient.rs" checked /><span>patient/Patient.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Observation.rs" /><span>patient/Observation.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Condition.rs" /><span>patient/Condition.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/CarePlan.rs" checked /><span>patient/CarePlan.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/AllergyIntolerance.rs" /><span>patient/AllergyIntolerance.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/MedicationRequest.rs" /><span>patient/MedicationRequest.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Immunization.rs" /><span>patient/Immunization.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Procedure.rs" /><span>patient/Procedure.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/Encounter.rs" /><span>patient/Encounter.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="patient/DiagnosticReport.rs" /><span>patient/DiagnosticReport.rs</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="scope-group">
+                                    <div class="scope-group-title">User-level Resources <span class="muted">(EHR practitioner context)</span></div>
+                                    <div class="scope-grid">
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Patient.rs" /><span>user/Patient.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Observation.rs" /><span>user/Observation.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Condition.rs" /><span>user/Condition.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/CarePlan.rs" /><span>user/CarePlan.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/AllergyIntolerance.rs" /><span>user/AllergyIntolerance.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/MedicationRequest.rs" /><span>user/MedicationRequest.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Immunization.rs" /><span>user/Immunization.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Procedure.rs" /><span>user/Procedure.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/Encounter.rs" /><span>user/Encounter.rs</span></label>
+                                        <label class="scope-item"><input type="checkbox" data-ehr-scope value="user/DiagnosticReport.rs" /><span>user/DiagnosticReport.rs</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="scope-summary">
+                                    <strong>Scope string:</strong>
+                                    <code id="ehr-scope-summary-text" class="scope-summary-code"></code>
+                                </div>
+                            </div>
+
+                            <div class="btn-row" style="margin-top:16px;">
+                                <button type="submit" class="btn btn-primary">Cache &amp; Launch EHR</button>
+                                <a href="/usercontext/login" class="btn btn-secondary" style="margin-left:8px;">Re-login as different user</a>
+                            </div>
+                        </form>
+                    }
+
+                </div>
+            </div>
+        }
+
+        <div class="panel" id="token-info">
+            <div class="panel-header">Access Token Info</div>
+            <div class="panel-body">
+                <dl class="key-value">
+                    <div class="key-value-row">
+                        <dt>Status</dt>
+                        <dd>@(Model.IsAuthenticated ? "Authenticated" : "Not signed in")</dd>
+                    </div>
+                    <div class="key-value-row">
+                        <dt>Access token</dt>
+                        <dd>
+                            @if (!string.IsNullOrEmpty(Model.AccessToken))
+                            {
+                                <span class="code-inline">@Model.AccessToken</span>
+                            }
+                            else
+                            {
+                                <span class="muted">No token issued yet.</span>
+                            }
+                        </dd>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.RefreshToken))
+                    {
+                        <div class="key-value-row">
+                            <dt>Refresh token</dt>
+                            <dd><span class="code-inline">@Model.RefreshToken</span></dd>
+                        </div>
+                    }
+                    <div class="key-value-row">
+                        <dt>Granted scopes</dt>
+                        <dd>@(string.IsNullOrEmpty(Model.Scopes) ? "—" : Model.Scopes)</dd>
+                    </div>
+                    <div class="key-value-row">
+                        <dt>FHIR user</dt>
+                        <dd>@(string.IsNullOrEmpty(Model.FhirUser) ? "—" : Model.FhirUser)</dd>
+                    </div>
+                </dl>
+
+                @if (!string.IsNullOrEmpty(Model.TokenResponseJson))
+                {
+                    <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,.08);">
+                        <div class="muted" style="margin-bottom:.65rem;line-height:1.45;">
+                            <strong>Token endpoint response (JSON)</strong> — full body returned by the token proxy.
+                            For EHR launch, check <code>patient</code>, <code>encounter</code>, and <code>need_patient_banner</code>
+                            after context was cached and the <code>launch</code> scope was granted.
+                        </div>
+                        <pre style="max-height:28rem;overflow:auto;font-size:.78rem;margin:0;" class="modal-pre">@Model.TokenResponseJson</pre>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.BackendM2mTokenJson))
+        {
+            <div class="panel" id="backend-m2m-token">
+                <div class="panel-header">Backend Services (Okta M2M) — token response</div>
+                <div class="panel-body">
+                    <p class="muted" style="margin-top:0;">
+                        Direct <code>client_credentials</code> + <code>private_key_jwt</code> to Okta via <code>OktaSmartBackend.TokenClient</code>.
+                        Key file path: <code>BackendServices:PrivateKeyPath</code> (relative to app root).
+                    </p>
+                    <pre style="max-height:28rem;overflow:auto;font-size:.78rem;margin:0;" class="modal-pre">@Model.BackendM2mTokenJson</pre>
+                    @if (Model.HasBackendToken)
+                    {
+                        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,.08);">
+                            <p class="muted" style="margin-top:0;">
+                                Fetch FHIR using backend token (system scopes).
+                            </p>
+                            <div class="resource-picker">
+                                <select id="backend-resource-select" class="resource-select">
+                                    <option value="Patient">Patient</option>
+                                    <option value="Observation">Observation</option>
+                                    <option value="Condition">Condition</option>
+                                    <option value="CarePlan">CarePlan</option>
+                                    <option value="AllergyIntolerance">AllergyIntolerance</option>
+                                    <option value="MedicationRequest">MedicationRequest</option>
+                                    <option value="Immunization">Immunization</option>
+                                    <option value="Procedure">Procedure</option>
+                                    <option value="Encounter">Encounter</option>
+                                    <option value="DiagnosticReport">DiagnosticReport</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="fetchBackendResource()">Get Resource (Backend)</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <!-- FHIR Result Modal -->
+    <div id="fhir-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="fhir-modal-title">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <span id="fhir-modal-title" class="modal-title"></span>
+                <button class="modal-close" onclick="closeFhirModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre id="fhir-modal-content" class="modal-pre"></pre>
+            </div>
+            <div class="modal-footer">
+                <a href="#token-info" class="btn btn-secondary" onclick="closeFhirModal()">&#8592; Back to Token Info</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var FHIR = {
+            resultJson: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.FhirResultJson ?? string.Empty)),
+            resultType: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.FhirResultType ?? string.Empty)),
+            autoOpen:   @Html.Raw(string.IsNullOrEmpty(Model.ShowFhirModal) ? "false" : "true")
+        };
+        var SELECTED_LAUNCH_TYPE = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedLaunchType));
+    </script>
+    <script src="/js/smart.js"></script>
+</body>
+</html>

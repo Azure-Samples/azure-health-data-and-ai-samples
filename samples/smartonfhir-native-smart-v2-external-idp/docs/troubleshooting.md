@@ -1,115 +1,165 @@
 # Troubleshooting
 
+> [!TIP]
+> Start with **Application Insights** for any HTTP errors — it provides the most detailed trace and request information.
+
+---
+
 ## Application Insights
 
-This sample deploys Application Insights. This will collect information from both Azure API Management and the Azure Functions in this sample. This is the best place to look if you are seeing any HTTP errors at all. This will give you insights into configuration and request information as well as any changes you may need for your own environment.
+This sample deploys Application Insights connected to the Azure Function App. This is the best place to look if you are seeing any HTTP errors. It gives you insights into configuration, request/response data, and dependencies (Redis, external IDP, FHIR service).
 
-## Browser Console
+**Where to look:**
+1. Open Application Insights from the `{env-name}-rg` resource group.
+2. Navigate to **Failures** blade to see failed requests.
+3. Use **Transaction search** to trace individual requests end-to-end.
+4. Check **Live Metrics** for real-time debugging during testing.
 
-For the Authorize Input Application, the browser console is the best place to start. Often you will see configuration issues here because requests are going to a different API than you expect.
+---
 
 ## Common Issues
 
-### Microsoft Entra ID Issues
+### Token Forwarding Fails
 
-This sample makes some assumptions about Microsoft Entra ID configuration. You may run into errors if your Microsoft Entra ID is not setup with the following:
+If the Function App cannot forward token requests to the external IDP:
 
-- Allowing users to consent to scopes (this is needed for them to choose and store scopes).
-- Allowing developers to register applications.
-- Your account needs elevated permissions to setup the context application.
+- Verify `AuthorityURL` is correct and resolves to a valid OIDC discovery endpoint:
+  ```bash
+  # Should return a valid OIDC discovery document
+  curl https://dev-12345678.okta.com/oauth2/default/.well-known/openid-configuration
+  ```
+- Confirm FHIR `/.well-known/smart-configuration` is reachable:
+  ```bash
+  curl https://<env-name>health-fhirdata.fhir.azurehealthcareapis.com/.well-known/smart-configuration
+  ```
+- Confirm the external IDP token endpoint is available and not rate-limited.
+- Check Application Insights → **Failures** → look for HTTP 400/401/500 responses from the `/api/token` endpoint.
 
-### Azure Configuration Issues
+### Launch Context Is Missing
 
-Some common Azure issues that you need to watch out for are:
+If the EHR launch flow does not return launch context in the token response:
 
-- Not enough permissions in Azure
-- Resource Providers for applications are not registered. If the deployment fails
+- Verify the `AZURE_CacheConnectionString` app setting exists in the Function App.
+- Verify `POST /api/context-cache` is called **before** the token exchange in the EHR launch flow.
+- Check Redis connectivity in Application Insights → **Failures** blade.
+- Verify the Redis cache (`{env-name}-cache`) is running in the Azure Portal.
 
-### Deployment Issues with the Azure Developer CLI
+### Claims Are Missing in Token Response
 
-The Azure Developer CLI creates a deployment in Azure as part of the `azd up` command. To get additional details about deployment issues, it's best to find the newly created resource group in Azure and look at the deployments in the resource group for more information. A single `azd up` command will spawn off multiple child deployments, so make sure to click into the failing deployment for more details.
+If the token response does not contain expected claims (`patient`, `fhirUser`, `scope`):
 
-### Powershell Script Issues
+- Decode the access token at [jwt.ms](https://jwt.ms/) to inspect the claims present.
+- Ensure the IDP is configured to include `fhirUser`, `patient`, and `scope` claims in the access token.
+- Verify the `AZURE_UserIdClaimType` setting matches the claim used by your IDP (default: `sub`).
+- For Okta: check your Authorization Server → **Claims** tab to confirm custom claims are configured.
 
-If you encounter an error while attempting to run the PowerShell scripts with the below message:
+### Unauthorized Errors (401 / 403)
+
+If you encounter `Unauthorized (401)` or `Forbidden (403)` errors:
+
+- **User configuration:**
+  - Test user is mapped with the appropriate `fhirUser` claim in the external IDP.
+  - Required scopes were selected during authentication.
+  - Decode the token at [jwt.ms](https://jwt.ms/) to identify `fhirUser` and `scope` claim values.
+
+- **FHIR service configuration:**
+  - Open FHIR service → **Settings** → **Authentication**.
+  - Confirm `smartIdentityProviders` includes your external IDP authority URL.
+  - Confirm the `audience` matches what the IDP issues in the token.
+
+- **Postman / REST client configuration:**
+  - All environment variables contain proper values.
+  - The `resource` variable matches the FHIR Server audience.
+
+### FHIR Authentication Configuration Issues
+
+If the FHIR service does not accept tokens from your external IDP:
+
+- Open the FHIR service in Azure Portal → **Settings** → **Authentication**.
+- Verify:
+  - **Authority** is set to `https://login.microsoftonline.com/<tenant-id>`.
+  - **Audience** matches the FHIR service URL (or your custom audience).
+  - **Identity Provider 1** shows your external IDP authority URL under `smartIdentityProviders`.
+- If `smartIdentityProviders` is missing, verify the `AuthorityURL` was set correctly before `azd up` and redeploy.
+
+### Not Getting Correct Scopes
+
+If you are getting more scopes assigned to your token than expected:
+
+- Ensure you have **not** applied admin consent for any scopes. Admin consent overrides user-selected scopes.
+- In your external IDP, verify that scope consent is configured at the user level, not the admin level.
+
+---
+
+## Deployment Issues
+
+### Azure Developer CLI Deployment Failures
+
+The Azure Developer CLI creates a deployment in Azure as part of the `azd up` command. To get additional details:
+
+1. Open the Azure Portal and navigate to the resource group (`{env-name}-rg`).
+2. Go to **Deployments** in the left menu.
+3. A single `azd up` command spawns multiple child deployments — click into the failing deployment for specifics.
+4. Check the **Error details** tab for the root cause.
+
+Common deployment issues:
+- **Not enough permissions** — Ensure your Azure account has **Owner** privileges on the subscription.
+- **Resource providers not registered** — Register required providers: `Microsoft.HealthcareApis`, `Microsoft.Cache`, `Microsoft.Web`, `Microsoft.Insights`.
+- **Environment name too long** — Must be 18 characters or fewer, lowercase alphanumeric only.
+- **Region not supported** — Ensure the selected Azure region supports all required resource types (FHIR, Redis, Functions).
+
+### PowerShell Script Issues
+
+If you encounter an error while running PowerShell scripts:
 
 ```
-Script cannot be loaded. The script is not digitally signed. You cannot run this script on the current system. 
+Script cannot be loaded. The script is not digitally signed. You cannot run this script on the current system.
 ```
 
-To resolve this issue, you can temporarily change the script execution policy to bypass the digital signature requirement by running the following command in your PowerShell session:
+Temporarily bypass the execution policy:
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-This command allows you to run the script without altering the execution policy permanently. For more information on PowerShell execution policies, refer to the documentation at [about_Execution_Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4).
+This allows you to run the script without altering the execution policy permanently. For more information, see [about_Execution_Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies).
 
-### Not getting correct scopes
+### Redeployment After Configuration Changes
 
-If you are getting more scopes assigned to your token, make sure you HAVE NOT applied admin consent for any scopes. Any admin consent that you apply will override user selected scopes.
+If you need to fix a configuration value (e.g., `AuthorityURL`) after initial deployment:
 
-### Unauthorized Errors
+1. Update the environment value:
+   ```powershell
+   azd env set AuthorityURL "https://corrected-idp-url.com/oauth2/default"
+   ```
+2. Redeploy:
+   ```powershell
+   azd up
+   ```
 
-If you encounter Unauthorized(401) or Forbidden(403) errors while accessing resources or during authentication, please check the following:
+---
 
-**For Microsoft Entra ID:**
-- User Configuration:
-  - `FHIR SMART User` Role is assigned to the Test User.
-  - Test User is mapped with appropriate `fhirUser` claim.
-  - Required scopes were selected during authentication.
-  - To identify `fhirUser` and `scope` claim value decode obtained token using [jwt.ms](https://jwt.ms/).
-- Postman Configuration:
-  - All the environment variables contain proper values.
-  - Specifically, `resource` environment variable match the FHIR Server audience.
+## Redis Connectivity Issues
 
-**For non-Microsoft Entra ID Identity Providers:**
-- User Configuration:
-  - Test User is mapped with appropriate `fhirUser` claim.
-  - Required scopes were selected during authentication.
-  - To identify `fhirUser` and `scope` claim value decode obtained token using [jwt.ms](https://jwt.ms/).
-- Postman Configuration:
-  - All the environment variables contain proper values.
-  - Specifically, `resource` environment variable match the FHIR Server audience.
+If the Function App cannot connect to Redis:
 
-### Not Found Errors for API Requests
+- Verify the `AZURE_CacheConnectionString` app setting is present in the Function App.
+- In the Azure Portal, check that the Redis cache (`{env-name}-cache`) has status **Running**.
+- Redis is deployed with **TLS 1.2** minimum — ensure your connection string includes `ssl=True`.
+- Check Application Insights for Redis-related dependency failures.
 
-This is usually an issue with Azure API Management. Either an API configuration in Azure API Management is setup correctly or your testing tool is pointed at the wrong API Management Issue.
+---
 
-To find out more, information, check out:
+## Useful Diagnostic Tools
 
-- The request information and trace logs in Azure Application Insights.
-- This could be an issue with the Authorize User Input static app. Check the browser developer tools for more details.
-- Ensure your Azure Deployment of the sample was successful.
+| Tool | Purpose |
+|---|---|
+| [jwt.ms](https://jwt.ms/) | Decode and inspect access tokens |
+| Application Insights → **Failures** | View failed requests and dependency calls |
+| Application Insights → **Transaction search** | End-to-end request tracing |
+| Azure Portal → Resource Group → **Deployments** | Infrastructure deployment error details |
+| `azd env get-values` | Retrieve current environment configuration |
 
-### Adding scopes to the FHIR resource app
+---
 
-- You can add a new scope in the "oauth2Permissions" array in the manifest.json file of the FHIR resource app.
-- Or, you can also add it from the "Expose an API" blade of the FHIR resource app by clicking on "Add a scope" button.
-- Once added, these scopes would be available for adding as permission from the "API permissions" blade on your selected Identity Provider application.
-
-<br /><details><summary>Click to expand and see screenshots.</summary>
-![](./images/troubleshooting/AddingScopesFromManifest.png)
-![](./images/troubleshooting/AddingScopesFromExposeAnAPI.png)
-</details><br />
-
-### Getting ClientAuthError on launching the sample app for the first time
-
-- This error occurs while launching the sample app for the first time, it arises when some files are not properly copied over or some configuration variables are not properly set when deploying the sample.
-- To resolve this issue, simply rerun the `azd up` command in the terminal where the app was initially deployed. No additional steps are required.
-- The error is displayed in the screenshot below.
-
-<br /><details><summary>Click to expand and see screenshots.</summary>
-![](./images/troubleshooting/ClientAuthError.png)
-</details>
-
-### Unexpected Screen Displayed Instead of Login Screen
-- When accessing the frontend application, you may encounter an unexpected screen shown below instead of the login page.
-- This issue typically occurs if the frontend build deployment to Azure Static Web Apps is still in progress. The app remains in the **Waiting for Deployment** state instead of transitioning to the **Ready** state.
-- Follow below steps to resolve this issue
-  - Wait for the `azd up` command to complete, as the deployment may still be processing.
-  - If the deployment appears to be stuck, you can rerun the `azd up` command in the terminal where the app was originally deployed.
-
-<br /><details><summary>Click to expand and see screenshots.</summary>
-![](./images/troubleshooting/FrontendLoginError.png)
-</details>
+**[Back to Previous Page](../README.md)**
