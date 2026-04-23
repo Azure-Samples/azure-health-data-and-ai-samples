@@ -123,6 +123,10 @@ azd env set AuthorityURL "<your-idp-authority-url>"
 ```powershell
 azd env set AuthorityURL "https://dev-12345678.okta.com/oauth2/default"
 ```
+```powershell
+# Change if your IDP uses a different claim for user identity 
+azd env set UserIdClaimType "uid"
+```
 
 **Optional values:**
 
@@ -130,14 +134,9 @@ azd env set AuthorityURL "https://dev-12345678.okta.com/oauth2/default"
 # Set only if you have a specific audience requirement
 azd env set FhirAudience "https://<workspace>-fhirdata.fhir.azurehealthcareapis.com"
 
-# Change if your IDP uses a different claim for user identity (default: sub)
-azd env set UserIdClaimType "sub"
-
 # Set only if you need caller validation for EHR launch context-cache requests
 azd env set ContextAppClientId "<your-context-app-client-id>"
 
-# Set the Azure deployment region
-azd env set AZURE_LOCATION "eastus2"
 ```
 
 ### 2.6. Deploy infrastructure and Function App
@@ -293,17 +292,6 @@ Practitioner: https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.co
 > [!NOTE]
 > The exact steps to add custom claims vary by IDP. Refer to your IDP's documentation:
 > - **Okta:** [Customize tokens with a Groups claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/)
----
-
-## 7. Use Postman to access FHIR resources
-
-Follow the directions on the [Access SMART on FHIR Using Postman Page](./postman/configure-postman.md) for instructions to access FHIR resources via SMART on FHIR using Postman.
-
-You can also use the REST client files included in this repository:
-- [Backend Service Client](./rest/backend_service_client.http)
-- [Confidential Client](./rest/confidential_client.http)
-- [EHR Practitioner App](./rest/ehr_practitioner_app.http)
-
 ---
 
 **[Back to Previous Page](../README.md)**

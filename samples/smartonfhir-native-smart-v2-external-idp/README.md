@@ -76,24 +76,35 @@ The following Azure components are deployed with this sample:
 
 1. **Configure your external IDP** — If using Okta, follow the [Okta Setup Guide](./docs/okta-setup.md) to create your authorization server, test users, custom claims, and client applications.
 2. **Deploy to Azure** — Follow the [Deployment Guide](./docs/deployment.md) to provision infrastructure and deploy the Function App.
-3. **Understand the architecture** — Read the [Technical Guide](./docs/technical-guide.md) to understand how the deployed components integrate with Azure Health Data Services FHIR service.
+3. **Register SMART client applications with the FHIR Service** — For each SMART client application that will request tokens from the external IDP, you must register its Client ID on the FHIR Service:
+
+   1. Open the **FHIR Service** from the `{env-name}-rg` resource group in the [Azure Portal](https://portal.azure.com).
+   2. Navigate to **Settings** → **Authentication**.
+   3. Under **Identity Provider**, add the **Client ID** of the application registered in your external IDP.
+   4. Click **Save**.
+
+   > [!NOTE]
+   > Authentication configuration changes can take up to **10 minutes** to propagate. Wait before testing token-based access.
+
+   Repeat for each client application (Standalone Patient, EHR Practitioner, Backend Service) as per your use case that you configured in your external IDP.
+
 
 ---
 
 ## Testing the Sample
 
-### Sample Data
 
-Load US Core profiles and test data using the provided PowerShell script. See [Sample Data](./docs/sample-data.md) for details.
+### SMART Client Application
 
-### Postman
+A sample SMART client application is available at [`SMART-Client-Application`](../SMART-Client-Application/) (sibling folder). It simulates all three SMART launch flows:
 
-Use the included Postman collection and environment to test SMART on FHIR flows:
+- **Standalone Patient Launch** — launches outside an EHR session as a patient-facing app.
+- **EHR Practitioner Launch** — launches within an EHR session with pre-existing patient context.
+- **Backend Service** — server-to-server access using client credentials (no user interaction).
 
-- [Configure Postman](./docs/postman/configure-postman.md)
-- [Register a Client Application](./docs/postman/register-application.md)
-- [Postman Collection](./docs/postman/postman-collection/fhir-proxy-smart-client-calls-sample-v2.postman_collection.json)
-- [Postman Environment](./docs/postman/postman-collection/apim-smart-env-sample.postman_environment.json)
+Refer to the README in that folder for setup and usage instructions.
+
+
 
 ### REST Client
 

@@ -3,7 +3,7 @@
 
 # Okta Setup Guide for SMART on FHIR v2
 
-This guide walks you through configuring Okta as the external Identity Provider for the SMART on FHIR v2 sample. Complete **all sections** before running the Azure deployment (`azd up`).
+This guide walks you through configuring Okta as the external Identity Provider for the SMART on FHIR v2 sample. Complete **sections 1–5** before running the Azure deployment (`azd up`). For client applications (sections 6–8), create only the ones that match your use case.
 
 ---
 
@@ -130,7 +130,7 @@ Add each scope with **User consent** set to `Required` so users are prompted to 
 
 | Scope Name | Display Name | Description |
 |---|---|---|
-| `system/*.read` | System Read All | Read all resources (backend service) |
+| `system/*.rs` | System Read All | Read all resources (backend service) |
 
 ### Standard OIDC Scopes
 
@@ -283,9 +283,15 @@ https://smartfhirokta01health-fhirdata.fhir.azurehealthcareapis.com/Practitioner
 
 ---
 
+> [!NOTE]
+> **Sections 6, 7, and 8 are optional.** Create only the client application(s) that apply to your use case:
+> - **Section 6** — Standalone Patient Launch (patient-facing apps)
+> - **Section 7** — EHR Practitioner Launch (apps launched from within an EHR)
+> - **Section 8** — Backend Service (server-to-server / bulk data access)
+
 ## 6. Create Client Application — Standalone Patient Launch
 
-This application is used by SMART apps launching outside an EHR session (patient-facing apps).
+This application is used by SMART apps launching outside an EHR session (patient-facing apps). **Skip this section if your use case does not require standalone patient launch.**
 
 ### Create the Application
 
@@ -320,10 +326,6 @@ After saving, note the following from the **General** tab:
 > [!NOTE]
 > If you want a **public client** (no secret, PKCE-only), set the **Client authentication** to `None` under **General Settings** → **Client Credentials**. Public clients must use PKCE (`code_challenge` + `code_verifier`).
 
-### Scopes Used by This Application
-
-Custom SMART scopes are **not** configured on the application's "Okta API Scopes" tab (that tab is only for Okta's own management API scopes). The SMART scopes you added to the authorization server in [Section 2](#2-add-smart-on-fhir-scopes) are available to any client app — the authorization server's **Access Policies** control which grant types and scopes are permitted.
-
 This application will request the following scopes during authorization:
 
 ```
@@ -341,7 +343,7 @@ patient/Procedure.rs patient/Provenance.rs
 
 ## 7. Create Client Application — EHR Practitioner Launch
 
-This application is used when the app is launched from within an EHR session with pre-existing context (e.g., patient already selected).
+This application is used when the app is launched from within an EHR session with pre-existing context (e.g., patient already selected). **Skip this section if your use case does not require EHR practitioner launch.**
 
 ### Create the Application
 
@@ -368,10 +370,6 @@ This application is used when the app is launched from within an EHR session wit
 
 Note the **Client ID** and **Client Secret** from the **General** tab.
 
-### Scopes Used by This Application
-
-As with the Standalone app, custom SMART scopes are defined on the authorization server ([Section 2](#2-add-smart-on-fhir-scopes)) and do not appear on the application's "Okta API Scopes" tab.
-
 This application will request the following scopes during authorization:
 
 ```
@@ -389,7 +387,7 @@ user/Procedure.rs user/Provenance.rs
 
 ## 8. Create Client Application — Backend Service (Client Credentials)
 
-This application is used for server-to-server access with no user interaction (e.g., bulk data, system-level reads).
+This application is used for server-to-server access with no user interaction (e.g., bulk data, system-level reads). **Skip this section if your use case does not require backend service access.**
 
 ### Create the Application
 
@@ -410,18 +408,18 @@ This application is used for server-to-server access with no user interaction (e
 
 ### Configure Client Authentication (JWT Bearer)
 
-Backend services use a signed JWT assertion instead of a client secret.
+Backend services use a signed JWT assertion instead of a client secret. Use an existing key pair or JWKS to configure the application.
 
 1. Go to your application → **General** tab.
 2. Under **Client Credentials**, select **Public key / Private key**.
 3. Click **Add Key** → either:
-   - **Generate a new key** — download and save the private key securely.
-   - **Paste a public key** — if you already have a key pair.
+   - **Paste a public key** — paste the public key from your existing key pair (JWK format).
+   - **Provide a JWKS URI** — if your service exposes a JWKS endpoint, configure it under **General Settings** → **JWKS URI**.
 4. Click **Done**.
 
 ### Scopes and Access Policy for Backend Service
 
-The `system/*.read` scope is a custom scope on the authorization server. You must create an **Access Policy rule** that grants this scope to the backend service app via the Client Credentials grant.
+The `system/*.rs` scope is a custom scope on the authorization server. You must create an **Access Policy rule** that grants this scope to the backend service app via the Client Credentials grant.
 
 1. Go to **Security** → **API** → **Authorization Servers** → your server.
 2. Click **Access Policies** tab.
@@ -431,7 +429,7 @@ The `system/*.read` scope is a custom scope on the authorization server. You mus
    | Field | Value |
    |---|---|
    | **Grant type** | Check: `Client Credentials` |
-   | **Scopes** | `system/*.read` |
+   | **Scopes** | `system/*.rs` |
    | **Assigned to** | The backend service application |
 
 5. Click **Save**.
@@ -452,41 +450,20 @@ Ensure your authorization server has access policies that allow the configured g
 
    | Rule | Grant Types | Scopes |
    |---|---|---|
-   | **Standalone Launch** | Authorization Code, Refresh Token | `openid`, `offline_access`, `fhirUser`, `launch/patient`, `patient/*.rs` |
-   | **EHR Launch** | Authorization Code, Refresh Token | `openid`, `offline_access`, `fhirUser`, `launch`, `user/*.rs` |
-   | **Backend Service** | Client Credentials | `system/*.read` |
+   | **Standalone Launch** | Authorization Code, Refresh Token | `openid`, `offline_access`, `fhirUser`, `launch/patient`, `patient/patient.rs etc.` |
+   | **EHR Launch** | Authorization Code, Refresh Token | `openid`, `offline_access`, `fhirUser`, `launch`, `user/patient.rs etc.` |
+   | **Backend Service** | Client Credentials | `system/*.rs` |
 
 ---
 
 ## 10. Verify Configuration
-
-### Test Token Generation
-
-Use Okta's built-in **Token Preview** to verify your setup:
-
-1. Go to **Security** → **API** → **Authorization Servers** → your server.
-2. Click **Token Preview** tab.
-3. Test for the **Standalone Patient App**:
-
-   | Field | Value |
-   |---|---|
-   | **Grant Type** | Authorization Code |
-   | **User** | Patient test user |
-   | **Scopes** | `openid fhirUser launch/patient patient/Patient.rs patient/Observation.rs` |
-   | **Client** | SMART Standalone Patient App |
-
-4. Click **Preview Token**.
-5. Verify in the **Access Token**:
-   - `sub` claim is present
-   - `fhirUser` claim contains the FHIR Patient URL
-   - `scp` (scope) array includes the requested SMART scopes
 
 ### Test OIDC Discovery
 
 Verify the OIDC discovery endpoint is accessible:
 
 ```bash
-curl https://dev-12345678.okta.com/oauth2/default/.well-known/openid-configuration
+curl https://<your okta server>/oauth2/default/.well-known/openid-configuration
 ```
 
 Expected response should include:
@@ -511,16 +488,6 @@ After completing all Okta configuration, gather the following values for the Azu
 | **Backend Service Client ID** | Applications → SMART Backend Service → General → Client ID | Backend service testing |
 | **Patient Test User Email** | Directory → People → Patient user | Authentication testing |
 | **Practitioner Test User Email** | Directory → People → Practitioner user | Authentication testing |
-
-### Set Azure Deployment Environment Values
-
-```powershell
-# Required
-azd env set AuthorityURL "https://dev-12345678.okta.com/oauth2/default"
-
-# Optional (defaults to sub, which is correct for Okta)
-azd env set UserIdClaimType "sub"
-```
 
 ## Next Steps
 

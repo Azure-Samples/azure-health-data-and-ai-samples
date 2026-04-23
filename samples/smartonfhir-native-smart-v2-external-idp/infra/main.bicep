@@ -113,6 +113,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
 }
 
 output AZURE_RESOURCE_GROUP string = resourceGroupName
+output TenantId string = subscription().tenantId
 output FhirUrl string = fhirUrl
 output FhirAudience string = fhirAudienceResolved
 output FunctionBaseUrl string = authCustomOperation.outputs.functionAppUrl
