@@ -1,0 +1,151 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\controllers\\contextcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:controllers\\contextcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\services\\tokenvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:services\\tokenvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\controllers\\authorizecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:controllers\\authorizecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\services\\smartscopemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:services\\smartscopemapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\smartonfhir.server\\configuration\\smartconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87CA42DA-9C1C-9396-150F-5C57D898963B}|SMARTOnFhir.Server.csproj|solutionrelative:configuration\\smartconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAhwEgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:07:32.565Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ContextController.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Controllers\\ContextController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ContextController.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Controllers\\ContextController.cs",
+              "RelativeToolTip": "Controllers\\ContextController.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAYwCgAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-29T13:35:25.393Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TokenValidationService.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Services\\TokenValidationService.cs",
+              "RelativeDocumentMoniker": "Services\\TokenValidationService.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Services\\TokenValidationService.cs",
+              "RelativeToolTip": "Services\\TokenValidationService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAEEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-29T10:19:32.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-28T13:03:55.653Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthorizeController.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Controllers\\AuthorizeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthorizeController.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Controllers\\AuthorizeController.cs",
+              "RelativeToolTip": "Controllers\\AuthorizeController.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAawCMAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T11:54:20.285Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SmartScopeMapper.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Services\\SmartScopeMapper.cs",
+              "RelativeDocumentMoniker": "Services\\SmartScopeMapper.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Services\\SmartScopeMapper.cs",
+              "RelativeToolTip": "Services\\SmartScopeMapper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T11:53:30.191Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SmartConfig.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Configuration\\SmartConfig.cs",
+              "RelativeDocumentMoniker": "Configuration\\SmartConfig.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\Configuration\\SmartConfig.cs",
+              "RelativeToolTip": "Configuration\\SmartConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T11:52:45.566Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 128,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

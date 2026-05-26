@@ -1,0 +1,219 @@
+[
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.ConsentController",
+    "Method": "GetConsentInfo",
+    "RelativePath": "auth/appConsentInfo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "client_id",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "scope",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.ConsentController",
+    "Method": "SaveConsentInfo",
+    "RelativePath": "auth/appConsentInfo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.ConsentController",
+    "Method": "AppConsentInfoOptions",
+    "RelativePath": "auth/appConsentInfo",
+    "HttpMethod": "OPTIONS",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.AuthorizeController",
+    "Method": "AuthorizeGet",
+    "RelativePath": "auth/authorize",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.AuthorizeController",
+    "Method": "AuthorizePost",
+    "RelativePath": "auth/authorize",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.ContextController",
+    "Method": "SaveContext",
+    "RelativePath": "auth/context-cache",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.ContextController",
+    "Method": "ContextCacheOptions",
+    "RelativePath": "auth/context-cache",
+    "HttpMethod": "OPTIONS",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.TokenController",
+    "Method": "Token",
+    "RelativePath": "auth/token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.CallbackController",
+    "Method": "Callback",
+    "RelativePath": "callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "state",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "error",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "error_description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "session_state",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.SmartConfigurationController",
+    "Method": "GetSmartConfiguration",
+    "RelativePath": "smart/.well-known/smart-configuration",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.FhirProxyController",
+    "Method": "ProxyToFhir",
+    "RelativePath": "smart/{path}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.FhirProxyController",
+    "Method": "ProxyToFhir",
+    "RelativePath": "smart/{path}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.FhirProxyController",
+    "Method": "ProxyToFhir",
+    "RelativePath": "smart/{path}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.FhirProxyController",
+    "Method": "ProxyToFhir",
+    "RelativePath": "smart/{path}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SMARTOnFhir.Server.Controllers.FhirProxyController",
+    "Method": "ProxyToFhir",
+    "RelativePath": "smart/{path}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

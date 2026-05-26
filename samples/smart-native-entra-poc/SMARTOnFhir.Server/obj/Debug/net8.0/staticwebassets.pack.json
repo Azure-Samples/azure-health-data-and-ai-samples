@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\asset-manifest.json",
+      "PackagePath": "staticwebassets\\auth\\context\\asset-manifest.json"
+    },
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\env-config.js",
+      "PackagePath": "staticwebassets\\auth\\context\\env-config.js"
+    },
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\index.html",
+      "PackagePath": "staticwebassets\\auth\\context\\index.html"
+    },
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\static\\js\\main.a077d2ae.js",
+      "PackagePath": "staticwebassets\\auth\\context\\static\\js\\main.a077d2ae.js"
+    },
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\static\\js\\main.a077d2ae.js.LICENSE.txt",
+      "PackagePath": "staticwebassets\\auth\\context\\static\\js\\main.a077d2ae.js.LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\smartonfhir-smart-v2\\src\\SMARTOnFhir.Server\\wwwroot\\auth\\context\\static\\js\\main.a077d2ae.js.map",
+      "PackagePath": "staticwebassets\\auth\\context\\static\\js\\main.a077d2ae.js.map"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SMARTOnFhir.Server.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.SMARTOnFhir.Server.props",
+      "PackagePath": "build\\SMARTOnFhir.Server.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.SMARTOnFhir.Server.props",
+      "PackagePath": "buildMultiTargeting\\SMARTOnFhir.Server.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.SMARTOnFhir.Server.props",
+      "PackagePath": "buildTransitive\\SMARTOnFhir.Server.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

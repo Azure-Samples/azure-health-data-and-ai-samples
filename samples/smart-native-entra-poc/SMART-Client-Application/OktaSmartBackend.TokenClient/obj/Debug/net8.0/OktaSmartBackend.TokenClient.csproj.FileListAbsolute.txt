@@ -1,0 +1,13 @@
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\bin\Debug\net8.0\OktaSmartBackend.TokenClient.deps.json
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\bin\Debug\net8.0\OktaSmartBackend.TokenClient.dll
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\bin\Debug\net8.0\OktaSmartBackend.TokenClient.pdb
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.csproj.AssemblyReference.cache
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.AssemblyInfoInputs.cache
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.AssemblyInfo.cs
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.csproj.CoreCompileInputs.cache
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.sourcelink.json
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.dll
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\refint\OktaSmartBackend.TokenClient.dll
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\OktaSmartBackend.TokenClient.pdb
+C:\Working Folder\azure-health-data-and-ai-samples\samples\SMART-Client-Application\OktaSmartBackend.TokenClient\obj\Debug\net8.0\ref\OktaSmartBackend.TokenClient.dll
