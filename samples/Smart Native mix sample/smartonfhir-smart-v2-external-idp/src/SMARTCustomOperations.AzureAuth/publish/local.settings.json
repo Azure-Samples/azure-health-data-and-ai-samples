@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "AZURE_FhirServerUrl": "https://gksmartws-fhirexternalidp.fhir.azurehealthcareapis.com",
+    "AZURE_FhirAudience": "https://gksmartws-fhirexternalidp.fhir.azurehealthcareapis.com",
+    "AZURE_CacheConnectionString": "<your-redis-connection-string>",
+    "AZURE_UserIdClaimType": "uid",
+    "AZURE_ContextAppClientId": ""
+  }
+}

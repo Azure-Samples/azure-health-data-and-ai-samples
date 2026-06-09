@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Token",
+    "scriptFile": "SMARTCustomOperations.AzureAuth.dll",
+    "entryPoint": "SMARTCustomOperations.AzureAuth.AzureFunctions.RunTokenFunction",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Anonymous",
+        "methods": [
+          "post"
+        ],
+        "route": "api/token",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "ContextCache",
+    "scriptFile": "SMARTCustomOperations.AzureAuth.dll",
+    "entryPoint": "SMARTCustomOperations.AzureAuth.AzureFunctions.RunContextCache",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Anonymous",
+        "methods": [
+          "post"
+        ],
+        "route": "api/context-cache",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  },
+  {
+    "name": "FhirProxy",
+    "scriptFile": "SMARTCustomOperations.AzureAuth.dll",
+    "entryPoint": "SMARTCustomOperations.AzureAuth.FhirProxyFunction.Run",
+    "language": "dotnet-isolated",
+    "properties": {
+      "IsCodeless": false
+    },
+    "bindings": [
+      {
+        "name": "req",
+        "direction": "In",
+        "type": "httpTrigger",
+        "authLevel": "Anonymous",
+        "methods": [
+          "get",
+          "post",
+          "put",
+          "patch",
+          "delete"
+        ],
+        "route": "{*path:regex(^(?!api/).*)}",
+        "properties": {}
+      },
+      {
+        "name": "$return",
+        "type": "http",
+        "direction": "Out"
+      }
+    ]
+  }
+]

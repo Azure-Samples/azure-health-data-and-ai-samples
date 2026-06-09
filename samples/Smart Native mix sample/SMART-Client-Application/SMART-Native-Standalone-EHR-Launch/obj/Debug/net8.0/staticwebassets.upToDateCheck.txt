@@ -1,0 +1,2 @@
+wwwroot\css\smart.css
+wwwroot\js\smart.js

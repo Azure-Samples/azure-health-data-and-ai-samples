@@ -1,0 +1,120 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smart-client-application\\smart-native-standalone-ehr-launch\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smart-client-application\\smart-native-standalone-ehr-launch\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smart-client-application\\smart-native-standalone-ehr-launch\\controllers\\smartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|solutionrelative:controllers\\smartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smart-client-application\\smart-native-standalone-ehr-launch\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|c:\\working folder\\azure-health-data-and-ai-samples\\samples\\smart-client-application\\smart-native-standalone-ehr-launch\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{EFA68264-C801-728C-CC3B-52C429C4964B}|SmartOnFhirDemo.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SmartController.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Controllers\\SmartController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SmartController.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Controllers\\SmartController.cs",
+              "RelativeToolTip": "Controllers\\SmartController.cs",
+              "ViewState": "AgIAAEoBAAAAAAAAAAAIwFUBAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-22T15:21:36.167Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAYwCEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-22T15:20:04.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAMYAAAAAAAAAAAAAANYAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-22T12:19:54.456Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AgIAAPAAAAAAAAAAAAApwKYAAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T14:08:12.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\SMART-Native-Standalone-EHR-Launch\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-30T13:44:42.909Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 128,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

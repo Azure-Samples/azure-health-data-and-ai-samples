@@ -1,0 +1,34 @@
+{
+  "dependencies": {
+    "storage1": {
+      "restored": true,
+      "restoreTime": "2026-04-16T10:54:57.8324516Z"
+    },
+    "appInsights1": {
+      "restored": true,
+      "restoreTime": "2026-04-16T10:54:56.0481949Z"
+    }
+  },
+  "parameters": {
+    "appInsights1.resourceGroupName": {
+      "Name": "appInsights1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "v-gakuber-smartnative"
+    },
+    "storage1.resourceGroupName": {
+      "Name": "storage1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "v-gakuber-smartnative"
+    },
+    "storage1.subscriptionId": {
+      "Name": "storage1.subscriptionId",
+      "Type": "subscription",
+      "Value": "a6e8e222-2130-4895-8310-9faad3c1b978"
+    },
+    "appInsights1.subscriptionId": {
+      "Name": "appInsights1.subscriptionId",
+      "Type": "subscription",
+      "Value": "a6e8e222-2130-4895-8310-9faad3c1b978"
+    }
+  }
+}

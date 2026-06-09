@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "Qmkd/aFMdCg=",
+  "success": true,
+  "projectFilePath": "C:\\Working Folder\\azure-health-data-and-ai-samples\\samples\\SMART-Client-Application\\OktaSmartBackend.TokenClient\\OktaSmartBackend.TokenClient.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\v-gakuber\\.nuget\\packages\\microsoft.identitymodel.abstractions\\7.6.3\\microsoft.identitymodel.abstractions.7.6.3.nupkg.sha512",
+    "C:\\Users\\v-gakuber\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\7.6.3\\microsoft.identitymodel.jsonwebtokens.7.6.3.nupkg.sha512",
+    "C:\\Users\\v-gakuber\\.nuget\\packages\\microsoft.identitymodel.logging\\7.6.3\\microsoft.identitymodel.logging.7.6.3.nupkg.sha512",
+    "C:\\Users\\v-gakuber\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.6.3\\microsoft.identitymodel.tokens.7.6.3.nupkg.sha512",
+    "C:\\Users\\v-gakuber\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.6.3\\system.identitymodel.tokens.jwt.7.6.3.nupkg.sha512"
+  ],
+  "logs": []
+}
