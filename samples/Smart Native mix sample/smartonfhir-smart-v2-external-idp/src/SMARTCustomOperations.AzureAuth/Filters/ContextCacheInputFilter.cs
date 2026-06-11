@@ -18,8 +18,9 @@ namespace SMARTCustomOperations.AzureAuth.Filters
 {
     /// <summary>
     /// Handles EHR launch context caching. The EHR pushes session context (patient, encounter, etc.)
-    /// to this endpoint before launch. The context is stored in Redis and injected into the
-    /// token response by TokenOutputFilter.
+    /// to this endpoint before launch. The context is stored in the configured cache
+    /// (in-memory by default, or Redis if AZURE_CacheConnectionString is set) and injected
+    /// into the token response by TokenOutputFilter.
     /// </summary>
     public sealed class ContextCacheInputFilter : IInputFilter
     {

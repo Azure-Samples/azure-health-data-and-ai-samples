@@ -97,7 +97,7 @@
                     </div>
 
                     <div id="backend-info" class="launch-info-box" style="display:none;">
-                        Okta M2M app (ES384 private key PEM under <code>keys/</code>, settings under <code>BackendServices</code>).
+                        SMART v2 Backend Services app (ES384 private key PEM under <code>keys/</code>, settings under <code>BackendServices</code>).
                         Click <strong>Launch</strong> to request a token server-side (no redirect, no token proxy).
                         Scope is fixed to <code>BackendServices:Scope</code> (recommended: <code>system/*.rs</code>).
                     </div>
@@ -207,7 +207,7 @@
                     {
                         @* ── Step 1: User Context login ── *@
                         <p class="muted">
-                            Click below to do a lightweight Okta login (<code>openid</code> scope only).
+                            Click below to do a lightweight OIDC login (<code>openid</code> scope only).
                             This gives the simulator your user identity so it can securely push
                             patient/encounter context to the proxy cache before the EHR launch.
                         </p>
@@ -369,10 +369,10 @@
         @if (!string.IsNullOrEmpty(Model.BackendM2mTokenJson))
         {
             <div class="panel" id="backend-m2m-token">
-                <div class="panel-header">Backend Services (Okta M2M) — token response</div>
+                <div class="panel-header">Backend Services — token response</div>
                 <div class="panel-body">
                     <p class="muted" style="margin-top:0;">
-                        Direct <code>client_credentials</code> + <code>private_key_jwt</code> to Okta via <code>OktaSmartBackend.TokenClient</code>.
+                        Direct <code>client_credentials</code> + <code>private_key_jwt</code> to the SMART token endpoint via <code>SmartBackendServices.TokenClient</code>.
                         Key file path: <code>BackendServices:PrivateKeyPath</code> (relative to app root).
                     </p>
                     <pre style="max-height:28rem;overflow:auto;font-size:.78rem;margin:0;" class="modal-pre">@Model.BackendM2mTokenJson</pre>

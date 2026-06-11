@@ -5,7 +5,14 @@ param fhirServiceName string
 param location string
 param audience string = ''
 param appTags object = {}
-param AuthorityURL string
+param AuthorityURL string = ''
+
+@description('Upstream IdP integration mode. EntraId uses default AAD auth; ExternalIdp adds a smartIdentityProviders entry pointing at AuthorityURL.')
+@allowed([
+  'EntraId'
+  'ExternalIdp'
+])
+param idpType string = 'EntraId'
 
 var isFhirService = length(workspaceName) > 0
 var resolvedAudience = length(audience) > 0 ? audience : isFhirService ? 'https://${workspaceName}-${fhirServiceName}.fhir.azurehealthcareapis.com' : 'https://${fhirServiceName}.azurehealthcareapis.com'
@@ -22,10 +29,13 @@ resource healthWorkspaceExisting 'Microsoft.HealthcareApis/workspaces@2021-06-01
 }
 var newOrExistingWorkspaceName = createWorkspace ? healthWorkspace.name : isFhirService ? healthWorkspaceExisting.name : ''
 
-var authenticationConfiguration = {
+var authenticationConfigurationBase = {
   authority: aadAuthority
   audience: resolvedAudience
   smartProxyEnabled: false
+}
+
+var authenticationConfiguration = idpType == 'ExternalIdp' ? union(authenticationConfigurationBase, {
   smartIdentityProviders: [
     {
       authority: AuthorityURL
@@ -38,7 +48,7 @@ var authenticationConfiguration = {
       ]
     }
   ]
-}
+}) : authenticationConfigurationBase
 
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if(createFhirService) {
   name: '${newOrExistingWorkspaceName}/${fhirServiceName}'

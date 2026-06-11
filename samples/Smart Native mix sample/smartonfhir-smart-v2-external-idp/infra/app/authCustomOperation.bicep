@@ -7,8 +7,21 @@ param location string
 @description('Shared tags for all resources.')
 param appTags object
 
-@description('Azure B2C Directory authority url.')
-param authorityUrl string
+@description('Upstream IdP integration mode. EntraId proxies authorize/token to Microsoft Entra; ExternalIdp forwards to an external IdP (e.g. Okta).')
+@allowed([
+  'EntraId'
+  'ExternalIdp'
+])
+param idpType string = 'EntraId'
+
+@description('Microsoft Entra tenant id. Required when idpType is EntraId.')
+param tenantId string = ''
+
+@description('External IDP authority URL (e.g. https://your-okta-domain/oauth2/default). Required when idpType is ExternalIdp.')
+param authorityUrl string = ''
+
+@description('Key Vault name hosting backend service client secrets. Empty disables SMART v2 Backend Services on the proxy.')
+param backendServiceVaultName string = ''
 
 @description('Claim type to use for identifying user in access token.')
 param userIdClaimType string
@@ -22,6 +35,9 @@ param fhirServiceAudience string
 @description('Microsoft Entra ID Application ID for the context application.')
 param contextAadApplicationId string
 
+@description('Microsoft Entra Application (client) ID representing the FHIR resource API. Exposed as an app setting for downstream tooling (custom fhirUser claim, data loading). Only meaningful when idpType is EntraId.')
+param fhirResourceAppId string = ''
+
 @description('App Insights Connection String for the sample. (Optional)')
 param appInsightsConnectionString string
 
@@ -31,9 +47,8 @@ param customOperationsFuncStorName string
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
 
-param redisCacheId string
-param redisCacheHostName string
-param redisApiVersion string
+@description('Optional Redis-compatible connection string for distributed EHR launch context cache. Leave blank to use in-memory caching.')
+param cacheConnectionString string = ''
 
 @description('Name for the Function App to deploy custom operations.')
 var authCustomOperationsFunctionAppName = '${name}-auth-func'
@@ -77,8 +92,6 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
 }
 
 var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
-var redisPrimaryKey = listKeys(redisCacheId, redisApiVersion).primaryKey
-var redisConnectionString = '${redisCacheHostName},password=${redisPrimaryKey},ssl=True,abortConnect=False'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
   name: 'appsettings'
@@ -94,12 +107,16 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     ENABLE_ORYX_BUILD: 'true'
 
     AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
+    AZURE_IdpType: idpType
+    AZURE_TenantId: tenantId
     AZURE_Authority_URL: authorityUrl
     AZURE_FhirServerUrl: fhirServiceUrl
     AZURE_FhirAudience: fhirServiceAudience
+    AZURE_FhirResourceAppId: fhirResourceAppId
     AZURE_UserIdClaimType: userIdClaimType
     AZURE_ContextAppClientId: contextAadApplicationId
-    AZURE_CacheConnectionString: redisConnectionString
+    AZURE_CacheConnectionString: cacheConnectionString
+    AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
     AZURE_Debug: 'true'
   }
 }
@@ -107,4 +124,3 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
 output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}/api'
 output functionAppPrincipalId string = authCustomOperationFunctionApp.identity.principalId
 output authCustomOperationAudience string = fhirServiceAudience
-output cacheConnectionString string = redisConnectionString

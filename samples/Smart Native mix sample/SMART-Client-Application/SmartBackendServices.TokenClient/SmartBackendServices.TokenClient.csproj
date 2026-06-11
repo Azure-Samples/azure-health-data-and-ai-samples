@@ -1,13 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>SmartBackendServices.TokenClient</RootNamespace>
+    <Description>SMART v2 Backend Services token helper: client_credentials + private_key_jwt (ES384). IdP-agnostic. Referenced by SmartOnFhirDemo.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SmartBackendServices.TokenClient\SmartBackendServices.TokenClient.csproj" />
   </ItemGroup>
 </Project>

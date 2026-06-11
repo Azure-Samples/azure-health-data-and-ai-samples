@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartOnFhirDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64d2e2c8241ffcb74ba59e76fe60f8d1625ae3d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f50015dc6482d5c6e340722532fae07ae9be1527")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartOnFhirDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartOnFhirDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -22,7 +22,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
         private string? _userId;
 
         /// <param name="userIdClaimType">
-        /// JWT claim used as the Redis cache key for EHR launch context.
+        /// JWT claim used as the cache key for EHR launch context.
         /// Must match AzureAuthOperationsConfig.UserIdClaimType and ContextCacheInputFilter when storing context.
         /// </param>
         /// <param name="scopeBackTranslator">
@@ -64,7 +64,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 if (_userId is null && _tokenResponseDict.ContainsKey("access_token"))
                 {
                     var parsedToken = new JwtSecurityToken(_tokenResponseDict["access_token"].ToString());
-                    // Primary: configured claim — MUST match ContextCacheInputFilter / Redis key.
+                    // Primary: configured claim — MUST match ContextCacheInputFilter / cache key.
                     _userId = parsedToken.Claims.FirstOrDefault(x => x.Type == _userIdClaimType)?.Value;
                     // Fallbacks only if the configured claim is absent (legacy / misconfiguration).
                     if (string.IsNullOrEmpty(_userId))
@@ -92,7 +92,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
             output["scope"] = string.Join(' ', Scopes);
 
-            // Do not overwrite patient / fhirUser already merged from EHR launch context (Redis).
+            // Do not overwrite patient / fhirUser already merged from EHR launch context (cache).
             // Okta often emits patient + fhirUser on the access token; those would otherwise replace
             // the values pushed via context-cache (e.g. PatientA from simulator vs PatientB on JWT).
             if (!output.ContainsKey("patient"))
@@ -167,7 +167,11 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
             if (_scopeBackTranslator is not null)
             {
-                return _scopeBackTranslator(scopes).ToList();
+                // Dedup after translation: the raw set may contain both the bare scope (e.g.
+                // "patient.Patient.rs" from JWT scp) and its audience-prefixed form (e.g.
+                // "{audience}/patient.Patient.rs" from the response scope field). Both translate
+                // to the same SMART scope ("patient/Patient.rs"), producing duplicates.
+                return _scopeBackTranslator(scopes).Distinct(StringComparer.Ordinal).ToList();
             }
 
             return scopes.ToList();

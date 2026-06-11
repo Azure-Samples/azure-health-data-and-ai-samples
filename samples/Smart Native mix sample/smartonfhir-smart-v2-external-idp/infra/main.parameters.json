@@ -6,7 +6,10 @@
       "value": "${ContextAppClientId=}"
     },
     "FhirAudience": {
-      "value": "${FhirAudience}"
+      "value": "${FhirAudience=}"
+    },
+    "FhirResourceAppId": {
+      "value": "${FhirResourceAppId=}"
     },
     "location": {
       "value": "${AZURE_LOCATION}"
@@ -14,11 +17,23 @@
     "name": {
       "value": "${AZURE_ENV_NAME}"
     },
+    "IdpType": {
+      "value": "${IdpType}"
+    },
+    "TenantId": {
+      "value": "${TenantId=}"
+    },
     "AuthorityURL": {
-      "value": "${AuthorityURL}"
+      "value": "${AuthorityURL=}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
     },
     "UserIdClaimType": {
-      "value": "${UserIdClaimType=sub}"
+      "value": "${UserIdClaimType=}"
+    },
+    "CacheConnectionString": {
+      "value": "${AZURE_CacheConnectionString=}"
     }
   }
 }

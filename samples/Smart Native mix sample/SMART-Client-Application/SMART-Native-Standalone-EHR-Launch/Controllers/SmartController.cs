@@ -53,7 +53,8 @@ public class SmartController : Controller
     }
 
     /// <summary>
-    /// SMART Backend Services: server-side <c>client_credentials</c> + <c>private_key_jwt</c> to Okta (no proxy).
+    /// SMART v2 Backend Services: server-side <c>client_credentials</c> + <c>private_key_jwt</c>
+    /// to the SMART token endpoint (no proxy redirect needed).
     /// Triggered from the single UI when "Backend Services" is selected and Launch is clicked.
     /// </summary>
     [HttpPost("/backend/token")]
@@ -69,7 +70,7 @@ public class SmartController : Controller
             HttpContext.Session.SetString(SessionKeys.BackendTokenResponseJson, pretty);
             HttpContext.Session.SetString(SessionKeys.BackendAccessToken, result.AccessToken ?? string.Empty);
             HttpContext.Session.SetString(SessionKeys.LastSuccess,
-                "Backend Services: access token received from Okta (client_credentials).");
+                "Backend Services: access token received from the SMART token endpoint (client_credentials).");
         }
         else
         {
@@ -196,7 +197,7 @@ public class SmartController : Controller
         try
         {
             // Standalone confidential: always send secret.
-            // EHR launch: send secret when one is configured — Okta "Web" apps require
+            // EHR launch: send secret when one is configured — some IdP "Web" app types require
             // client_secret at the token endpoint even with PKCE; omitting it causes invalid_client.
             // Standalone public: never send secret (even if appsettings has one for other flows).
             var launchType      = HttpContext.Session.GetString(SessionKeys.LaunchType) ?? string.Empty;
@@ -467,7 +468,8 @@ public class SmartController : Controller
 
         // Extract user identifier from the token used for context-cache.
         // Must match SmartOnFhir:UserIdClaimType and the proxy's AZURE_UserIdClaimType (same value).
-        // For Okta, "uid" is the stable internal id (e.g. 00u11p7hktqOjjgt6698); "sub" is often the login/email.
+        // Some IdPs (e.g. Okta) surface a stable internal id in "uid" while "sub" is the login/email;
+        // others (e.g. Entra ID) use "oid" or "sub". Pick the claim that is stable across logins.
         // ReadJwtToken does NOT apply InboundClaimTypeMap — claim names are raw JWT names.
         string? userId;
         try
@@ -550,7 +552,7 @@ public class SmartController : Controller
         HttpContext.Session.Remove(SessionKeys.LastFhirResourceJson);
         HttpContext.Session.Remove(SessionKeys.LastFhirResourceType);
 
-        // Use a random opaque value as the launch token passed to Okta.
+        // Use a random opaque value as the launch token passed to the IdP.
         // The proxy's TokenOutputFilter looks up context by userId (sub), not this value.
         var launchToken = Guid.NewGuid().ToString("N");
 

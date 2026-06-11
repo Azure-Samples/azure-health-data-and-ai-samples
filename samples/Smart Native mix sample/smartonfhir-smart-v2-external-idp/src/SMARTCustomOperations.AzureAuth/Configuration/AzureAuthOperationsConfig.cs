@@ -85,7 +85,7 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
 
             if (string.IsNullOrEmpty(CacheConnectionString))
             {
-                System.Diagnostics.Trace.TraceWarning("CacheConnectionString is not configured. EHR launch context caching will be unavailable.");
+                System.Diagnostics.Trace.TraceInformation("CacheConnectionString is not configured. EHR launch context will be cached in-memory (process-scoped). Set a Redis connection string to enable distributed caching.");
             }
 
             if (string.Equals(IdpType, "EntraId", StringComparison.OrdinalIgnoreCase))

@@ -23,7 +23,7 @@ public sealed class HomeViewModel
     /// Drives which step of the EHR simulator is shown in the UI.</summary>
     public bool HasUserContext { get; init; }
 
-    /// <summary>Okta client_credentials response (Backend Services), pretty-printed JSON.</summary>
+    /// <summary>SMART v2 Backend Services <c>client_credentials</c> response, pretty-printed JSON.</summary>
     public string? BackendM2mTokenJson { get; init; }
 
     /// <summary>True when backend-services token exists in session.</summary>

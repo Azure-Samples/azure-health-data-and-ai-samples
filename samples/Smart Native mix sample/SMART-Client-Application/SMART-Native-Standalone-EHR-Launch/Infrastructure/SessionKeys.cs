@@ -28,7 +28,7 @@ public static class SessionKeys
     /// <summary>PKCE code verifier for the User Context OIDC flow.</summary>
     public const string UserContextCodeVerifier = "smart.usercontext.code_verifier";
 
-    /// <summary>Pretty-printed JSON from Okta M2M token response (Backend Services flow).</summary>
+    /// <summary>Pretty-printed JSON from the SMART v2 Backend Services token response.</summary>
     public const string BackendTokenResponseJson = "smart.backend_token_response_json";
 
     /// <summary>Access token from Backend Services client_credentials flow.</summary>

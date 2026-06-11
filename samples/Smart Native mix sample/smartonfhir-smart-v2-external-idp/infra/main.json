@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.36.177.2456",
-      "templateHash": "7388878131777007661"
+      "templateHash": "16598814024666368152"
     }
   },
   "parameters": {
@@ -38,6 +38,13 @@
         "description": "Audience for SMART scopes. Leave blank to use FHIR URL."
       }
     },
+    "FhirResourceAppId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Microsoft Entra Application (client) ID representing the FHIR resource API. Used to configure the custom fhirUser claim and data loading scripts. Only meaningful when IdpType is EntraId."
+      }
+    },
     "logAnalyticsName": {
       "type": "string",
       "defaultValue": "",
@@ -45,17 +52,50 @@
         "description": "Name of the Log Analytics workspace. Leave blank to auto-generate."
       }
     },
+    "IdpType": {
+      "type": "string",
+      "defaultValue": "EntraId",
+      "allowedValues": [
+        "EntraId",
+        "ExternalIdp"
+      ],
+      "metadata": {
+        "description": "Upstream IdP integration mode. EntraId proxies authorize/token to Microsoft Entra; ExternalIdp forwards to an external IdP (e.g. Okta). When EntraId, a backend services Key Vault is also provisioned."
+      }
+    },
+    "TenantId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Microsoft Entra tenant id. Leave blank to use the deployment subscription tenant. Used only when IdpType is EntraId."
+      }
+    },
     "AuthorityURL": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
-        "description": "External IDP authority URL (example: https://your-okta-domain/oauth2/default)."
+        "description": "External IDP authority URL (example: https://your-okta-domain/oauth2/default). Required only when IdpType is ExternalIdp."
+      }
+    },
+    "principalId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Azure AD object ID of the deployer. Granted Key Vault Secrets Officer on the backend services KV (EntraId mode only). Provided automatically by azd as AZURE_PRINCIPAL_ID."
       }
     },
     "UserIdClaimType": {
       "type": "string",
-      "defaultValue": "sub",
+      "defaultValue": "",
       "metadata": {
-        "description": "Claim name in access token containing user identifier."
+        "description": "Claim name in access token containing user identifier. Leave blank to auto-derive: oid for EntraId, sub for ExternalIdp. Set explicitly only for non-standard IdPs."
+      }
+    },
+    "CacheConnectionString": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional Redis-compatible connection string for distributed EHR launch context cache (e.g. Azure Managed Redis). Leave blank to use in-memory caching inside the Function App (suitable for samples and single-instance deployments)."
       }
     }
   },
@@ -70,6 +110,10 @@
     "fhirNameResolved": "fhirdata",
     "fhirUrl": "[format('https://{0}-{1}.fhir.azurehealthcareapis.com', variables('workspaceNameResolved'), variables('fhirNameResolved'))]",
     "fhirAudienceResolved": "[if(empty(parameters('FhirAudience')), variables('fhirUrl'), parameters('FhirAudience'))]",
+    "tenantIdResolved": "[if(empty(parameters('TenantId')), subscription().tenantId, parameters('TenantId'))]",
+    "userIdClaimTypeResolved": "[if(empty(parameters('UserIdClaimType')), if(equals(parameters('IdpType'), 'EntraId'), 'oid', 'sub'), parameters('UserIdClaimType'))]",
+    "deployBackendVault": "[equals(parameters('IdpType'), 'EntraId')]",
+    "backendVaultName": "[format('{0}-bk-kv', parameters('name'))]",
     "resourceGroupName": "[format('{0}-rg', parameters('name'))]",
     "appInsightsName": "[format('{0}-appins', variables('nameCleanShort'))]",
     "logAnalyticsNameResolved": "[if(greater(length(parameters('logAnalyticsName')), 0), parameters('logAnalyticsName'), format('{0}-la', variables('nameCleanShort')))]"
@@ -116,6 +160,9 @@
           },
           "AuthorityURL": {
             "value": "[parameters('AuthorityURL')]"
+          },
+          "idpType": {
+            "value": "[parameters('IdpType')]"
           }
         },
         "template": {
@@ -125,7 +172,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.36.177.2456",
-              "templateHash": "2649973719890714126"
+              "templateHash": "14153015813305159230"
             }
           },
           "parameters": {
@@ -153,7 +200,19 @@
               "defaultValue": {}
             },
             "AuthorityURL": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": ""
+            },
+            "idpType": {
+              "type": "string",
+              "defaultValue": "EntraId",
+              "allowedValues": [
+                "EntraId",
+                "ExternalIdp"
+              ],
+              "metadata": {
+                "description": "Upstream IdP integration mode. EntraId uses default AAD auth; ExternalIdp adds a smartIdentityProviders entry pointing at AuthorityURL."
+              }
             }
           },
           "variables": {
@@ -161,25 +220,12 @@
             "resolvedAudience": "[if(greater(length(parameters('audience')), 0), parameters('audience'), if(variables('isFhirService'), format('https://{0}-{1}.fhir.azurehealthcareapis.com', parameters('workspaceName'), parameters('fhirServiceName')), format('https://{0}.azurehealthcareapis.com', parameters('fhirServiceName'))))]",
             "aadAuthority": "[format('{0}{1}', environment().authentication.loginEndpoint, subscription().tenantId)]",
             "newOrExistingWorkspaceName": "[if(parameters('createWorkspace'), parameters('workspaceName'), if(variables('isFhirService'), parameters('workspaceName'), ''))]",
-            "authenticationConfiguration": {
+            "authenticationConfigurationBase": {
               "authority": "[variables('aadAuthority')]",
               "audience": "[variables('resolvedAudience')]",
-              "smartProxyEnabled": false,
-              "smartIdentityProviders": [
-                {
-                  "authority": "[parameters('AuthorityURL')]",
-                  "applications": [
-                    {
-                      "clientId": "ExternalAppClientId",
-                      "audience": "[variables('resolvedAudience')]",
-                      "allowedDataActions": [
-                        "Read"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
+              "smartProxyEnabled": false
+            },
+            "authenticationConfiguration": "[if(equals(parameters('idpType'), 'ExternalIdp'), union(variables('authenticationConfigurationBase'), createObject('smartIdentityProviders', createArray(createObject('authority', parameters('AuthorityURL'), 'applications', createArray(createObject('clientId', 'ExternalAppClientId', 'audience', variables('resolvedAudience'), 'allowedDataActions', createArray('Read'))))))), variables('authenticationConfigurationBase'))]"
           },
           "resources": [
             {
@@ -463,128 +509,6 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "redisDeploy",
-      "resourceGroup": "[variables('resourceGroupName')]",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "namePrefix": {
-            "value": "[parameters('name')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.36.177.2456",
-              "templateHash": "1052604130671926073"
-            }
-          },
-          "parameters": {
-            "location": {
-              "type": "string",
-              "metadata": {
-                "description": "Location of all resources"
-              }
-            },
-            "namePrefix": {
-              "type": "string"
-            },
-            "redisCacheSKU": {
-              "type": "string",
-              "defaultValue": "Basic",
-              "allowedValues": [
-                "Basic",
-                "Standard",
-                "Premium"
-              ],
-              "metadata": {
-                "description": "Specify the pricing tier of the new Azure Redis Cache."
-              }
-            },
-            "redisCacheFamily": {
-              "type": "string",
-              "defaultValue": "C",
-              "allowedValues": [
-                "C",
-                "P"
-              ],
-              "metadata": {
-                "description": "Specify the family for the sku. C = Basic/Standard, P = Premium."
-              }
-            },
-            "redisCacheCapacity": {
-              "type": "int",
-              "defaultValue": 0,
-              "allowedValues": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-              ],
-              "metadata": {
-                "description": "Specify the size of the new Azure Redis Cache instance. Valid values: for C (Basic/Standard) family (0, 1, 2, 3, 4, 5, 6), for P (Premium) family (1, 2, 3, 4)"
-              }
-            },
-            "enableNonSslPort": {
-              "type": "bool",
-              "defaultValue": false,
-              "metadata": {
-                "description": "Specify a boolean value that indicates whether to allow access via non-SSL ports."
-              }
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Cache/redis",
-              "apiVersion": "2022-06-01",
-              "name": "[format('{0}-cache', parameters('namePrefix'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "enableNonSslPort": "[parameters('enableNonSslPort')]",
-                "minimumTlsVersion": "1.2",
-                "sku": {
-                  "capacity": "[parameters('redisCacheCapacity')]",
-                  "family": "[parameters('redisCacheFamily')]",
-                  "name": "[parameters('redisCacheSKU')]"
-                }
-              }
-            }
-          ],
-          "outputs": {
-            "redisApiVersion": {
-              "type": "string",
-              "value": "2022-06-01"
-            },
-            "redisCacheHostName": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Cache/redis', format('{0}-cache', parameters('namePrefix'))), '2022-06-01').hostName]"
-            },
-            "redisCacheId": {
-              "type": "string",
-              "value": "[resourceId('Microsoft.Cache/redis', format('{0}-cache', parameters('namePrefix')))]"
-            }
-          }
-        }
-      },
-      "dependsOn": [
-        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
       "name": "authCustomOperationDeploy",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -620,20 +544,24 @@
           "hostingPlanId": {
             "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'functionBaseDeploy'), '2022-09-01').outputs.hostingPlanId.value]"
           },
-          "redisCacheId": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisCacheId.value]"
+          "cacheConnectionString": {
+            "value": "[parameters('CacheConnectionString')]"
           },
-          "redisApiVersion": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisApiVersion.value]"
+          "idpType": {
+            "value": "[parameters('IdpType')]"
           },
-          "redisCacheHostName": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy'), '2022-09-01').outputs.redisCacheHostName.value]"
+          "tenantId": {
+            "value": "[variables('tenantIdResolved')]"
           },
           "authorityUrl": {
             "value": "[parameters('AuthorityURL')]"
           },
           "userIdClaimType": {
-            "value": "[parameters('UserIdClaimType')]"
+            "value": "[variables('userIdClaimTypeResolved')]"
+          },
+          "backendServiceVaultName": "[if(variables('deployBackendVault'), createObject('value', variables('backendVaultName')), createObject('value', ''))]",
+          "fhirResourceAppId": {
+            "value": "[parameters('FhirResourceAppId')]"
           }
         },
         "template": {
@@ -643,7 +571,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.36.177.2456",
-              "templateHash": "3094762870697446007"
+              "templateHash": "3080369797919889200"
             }
           },
           "parameters": {
@@ -665,10 +593,36 @@
                 "description": "Shared tags for all resources."
               }
             },
+            "idpType": {
+              "type": "string",
+              "defaultValue": "EntraId",
+              "allowedValues": [
+                "EntraId",
+                "ExternalIdp"
+              ],
+              "metadata": {
+                "description": "Upstream IdP integration mode. EntraId proxies authorize/token to Microsoft Entra; ExternalIdp forwards to an external IdP (e.g. Okta)."
+              }
+            },
+            "tenantId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Microsoft Entra tenant id. Required when idpType is EntraId."
+              }
+            },
             "authorityUrl": {
               "type": "string",
+              "defaultValue": "",
               "metadata": {
-                "description": "Azure B2C Directory authority url."
+                "description": "External IDP authority URL (e.g. https://your-okta-domain/oauth2/default). Required when idpType is ExternalIdp."
+              }
+            },
+            "backendServiceVaultName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Key Vault name hosting backend service client secrets. Empty disables SMART v2 Backend Services on the proxy."
               }
             },
             "userIdClaimType": {
@@ -695,6 +649,13 @@
                 "description": "Microsoft Entra ID Application ID for the context application."
               }
             },
+            "fhirResourceAppId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Microsoft Entra Application (client) ID representing the FHIR resource API. Exposed as an app setting for downstream tooling (custom fhirUser claim, data loading). Only meaningful when idpType is EntraId."
+              }
+            },
             "appInsightsConnectionString": {
               "type": "string",
               "metadata": {
@@ -713,14 +674,12 @@
                 "description": "Azure Resource ID for the Function App hosting plan."
               }
             },
-            "redisCacheId": {
-              "type": "string"
-            },
-            "redisCacheHostName": {
-              "type": "string"
-            },
-            "redisApiVersion": {
-              "type": "string"
+            "cacheConnectionString": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Optional Redis-compatible connection string for distributed EHR launch context cache. Leave blank to use in-memory caching."
+              }
             }
           },
           "variables": {
@@ -771,12 +730,16 @@
                 "SCM_DO_BUILD_DURING_DEPLOYMENT": "false",
                 "ENABLE_ORYX_BUILD": "true",
                 "AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('appInsightsConnectionString')]",
+                "AZURE_IdpType": "[parameters('idpType')]",
+                "AZURE_TenantId": "[parameters('tenantId')]",
                 "AZURE_Authority_URL": "[parameters('authorityUrl')]",
                 "AZURE_FhirServerUrl": "[parameters('fhirServiceUrl')]",
                 "AZURE_FhirAudience": "[parameters('fhirServiceAudience')]",
+                "AZURE_FhirResourceAppId": "[parameters('fhirResourceAppId')]",
                 "AZURE_UserIdClaimType": "[parameters('userIdClaimType')]",
                 "AZURE_ContextAppClientId": "[parameters('contextAadApplicationId')]",
-                "AZURE_CacheConnectionString": "[format('{0},password={1},ssl=True,abortConnect=False', parameters('redisCacheHostName'), listKeys(parameters('redisCacheId'), parameters('redisApiVersion')).primaryKey)]",
+                "AZURE_CacheConnectionString": "[parameters('cacheConnectionString')]",
+                "AZURE_BackendServiceKeyVaultStore": "[parameters('backendServiceVaultName')]",
                 "AZURE_Debug": "true"
               },
               "dependsOn": [
@@ -796,10 +759,6 @@
             "authCustomOperationAudience": {
               "type": "string",
               "value": "[parameters('fhirServiceAudience')]"
-            },
-            "cacheConnectionString": {
-              "type": "string",
-              "value": "[format('{0},password={1},ssl=True,abortConnect=False', parameters('redisCacheHostName'), listKeys(parameters('redisCacheId'), parameters('redisApiVersion')).primaryKey)]"
             }
           }
         }
@@ -807,9 +766,263 @@
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'functionBaseDeploy')]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'monitoringDeploy')]",
-        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'redisDeploy')]",
         "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
       ]
+    },
+    {
+      "condition": "[variables('deployBackendVault')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "backendVaultDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[variables('backendVaultName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appTags": {
+            "value": "[variables('appTags')]"
+          },
+          "writerObjectIds": "[if(empty(parameters('principalId')), createObject('value', createArray()), createObject('value', createArray(parameters('principalId'))))]",
+          "readerObjectIds": {
+            "value": [
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.functionAppPrincipalId.value]"
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "11367504372367060109"
+            }
+          },
+          "parameters": {
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Key Vault name. Globally unique, 3-24 chars, alphanumeric and hyphens, must start with a letter."
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Location for the Key Vault."
+              }
+            },
+            "appTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Shared tags applied to the Key Vault."
+              }
+            },
+            "writerObjectIds": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "Azure AD object IDs (User principals) granted Key Vault Secrets Officer at vault scope. Typically the deployer."
+              }
+            },
+            "readerObjectIds": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "Azure AD object IDs (Service Principal / Managed Identity) granted Key Vault Secrets User at vault scope. Typically the Function App MI."
+              }
+            }
+          },
+          "variables": {
+            "secretsOfficerRoleId": "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+            "secretsUserRoleId": "4633458b-17de-408a-b874-0445c86b69e6"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "apiVersion": "2023-07-01",
+              "name": "[parameters('keyVaultName')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('appTags')]",
+              "properties": {
+                "sku": {
+                  "family": "A",
+                  "name": "standard"
+                },
+                "tenantId": "[subscription().tenantId]",
+                "enableRbacAuthorization": true,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 7,
+                "publicNetworkAccess": "Enabled"
+              }
+            },
+            {
+              "copy": {
+                "name": "writerRoleAssignments",
+                "count": "[length(parameters('writerObjectIds'))]"
+              },
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+              "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), parameters('writerObjectIds')[copyIndex()], variables('secretsOfficerRoleId'))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('secretsOfficerRoleId'))]",
+                "principalId": "[parameters('writerObjectIds')[copyIndex()]]",
+                "principalType": "User"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "readerRoleAssignments",
+                "count": "[length(parameters('readerObjectIds'))]"
+              },
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+              "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), parameters('readerObjectIds')[copyIndex()], variables('secretsUserRoleId'))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('secretsUserRoleId'))]",
+                "principalId": "[parameters('readerObjectIds')[copyIndex()]]",
+                "principalType": "ServicePrincipal"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "keyVaultName": {
+              "type": "string",
+              "value": "[parameters('keyVaultName')]"
+            },
+            "keyVaultUri": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), '2023-07-01').vaultUri]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ]
+    },
+    {
+      "condition": "[not(empty(parameters('principalId')))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "fhirContributorForDeployer",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "fhirId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'fhirDeploy'), '2022-09-01').outputs.fhirId.value]"
+          },
+          "principalId": {
+            "value": "[parameters('principalId')]"
+          },
+          "principalType": {
+            "value": "User"
+          },
+          "roleType": {
+            "value": "fhirContributor"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.36.177.2456",
+              "templateHash": "9936658895235799384"
+            }
+          },
+          "parameters": {
+            "fhirId": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the FHIR service to grant access to."
+              }
+            },
+            "principalId": {
+              "type": "string",
+              "metadata": {
+                "description": "Object ID of the user, group, or service principal to grant access to."
+              }
+            },
+            "principalType": {
+              "type": "string",
+              "defaultValue": "ServicePrincipal",
+              "allowedValues": [
+                "User",
+                "ServicePrincipal",
+                "Group"
+              ],
+              "metadata": {
+                "description": "Type of principal. User for human deployers, ServicePrincipal for managed identities or app registrations."
+              }
+            },
+            "roleType": {
+              "type": "string",
+              "allowedValues": [
+                "fhirContributor",
+                "fhirSmart"
+              ],
+              "metadata": {
+                "description": "FHIR role to assign."
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[equals(parameters('roleType'), 'fhirContributor')]",
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('fhirId'), parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd'))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5a1fc7df-4bf1-4951-a576-89034ee01acd')]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            },
+            {
+              "condition": "[equals(parameters('roleType'), 'fhirSmart')]",
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('fhirId'), parameters('principalId'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4ba50f17-9666-485c-a643-ff00808643f0'))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4ba50f17-9666-485c-a643-ff00808643f0')]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'fhirDeploy')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}-rg', parameters('name')))]"
+      ],
+      "metadata": {
+        "description": "Grant the deployer FHIR Data Contributor on the FHIR service so test data load and direct FHIR calls work without manual role assignment."
+      }
     }
   ],
   "outputs": {
@@ -825,6 +1038,14 @@
       "type": "string",
       "value": "[variables('fhirAudienceResolved')]"
     },
+    "FhirResourceAppId": {
+      "type": "string",
+      "value": "[parameters('FhirResourceAppId')]"
+    },
+    "TenantId": {
+      "type": "string",
+      "value": "[variables('tenantIdResolved')]"
+    },
     "FunctionBaseUrl": {
       "type": "string",
       "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.functionAppUrl.value]"
@@ -835,7 +1056,15 @@
     },
     "CacheConnectionString": {
       "type": "string",
-      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'authCustomOperationDeploy'), '2022-09-01').outputs.cacheConnectionString.value]"
+      "value": "[parameters('CacheConnectionString')]"
+    },
+    "BackendServiceKeyVaultName": {
+      "type": "string",
+      "value": "[coalesce(tryGet(if(variables('deployBackendVault'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'backendVaultDeploy'), '2022-09-01'), null()), 'outputs', 'keyVaultName', 'value'), '')]"
+    },
+    "BackendServiceKeyVaultUri": {
+      "type": "string",
+      "value": "[coalesce(tryGet(if(variables('deployBackendVault'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'backendVaultDeploy'), '2022-09-01'), null()), 'outputs', 'keyVaultUri', 'value'), '')]"
     }
   }
 }

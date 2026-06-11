@@ -1,10 +1,12 @@
 using System.Text.Json;
-using OktaSmartBackend.TokenClient;
+using SmartBackendServices.TokenClient;
 
 namespace SmartOnFhirDemo.Services;
 
 /// <summary>
-/// Server-side SMART Backend Services: Okta <c>client_credentials</c> + <c>private_key_jwt</c> (OktaM2mClient).
+/// Server-side SMART v2 Backend Services: <c>client_credentials</c> + <c>private_key_jwt</c>
+/// via <see cref="SmartBackendTokenClient"/>. IdP-agnostic — token endpoint is discovered
+/// from the FHIR server's <c>.well-known/smart-configuration</c>.
 /// </summary>
 public sealed class BackendTokenService
 {
@@ -29,7 +31,7 @@ public sealed class BackendTokenService
     /// Requests an access token using configured <c>BackendServices:*</c>.
     /// Backend Services flow always uses configured scope (typically <c>system/*.rs</c>).
     /// </summary>
-    public async Task<(OktaM2mTokenResult Result, string? PrettyJsonForDisplay)> RequestTokenAsync(
+    public async Task<(SmartBackendTokenResult Result, string? PrettyJsonForDisplay)> RequestTokenAsync(
         CancellationToken cancellationToken)
     {
         var clientId = _configuration["BackendServices:ClientId"];
@@ -40,7 +42,7 @@ public sealed class BackendTokenService
         if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(keyId)
             || string.IsNullOrWhiteSpace(privateKeyRelative))
         {
-            return (new OktaM2mTokenResult
+            return (new SmartBackendTokenResult
             {
                 IsSuccess = false,
                 ErrorSummary =
@@ -54,7 +56,7 @@ public sealed class BackendTokenService
         var tokenEndpoint = smartConfig.TokenEndpoint;
         if (string.IsNullOrWhiteSpace(tokenEndpoint))
         {
-            return (new OktaM2mTokenResult
+            return (new SmartBackendTokenResult
             {
                 IsSuccess = false,
                 ErrorSummary = "SMART discovery response is missing token_endpoint."
@@ -66,7 +68,7 @@ public sealed class BackendTokenService
             : Path.Combine(_environment.ContentRootPath, privateKeyRelative);
 
         var http = _httpClientFactory.CreateClient();
-        var client = new OktaM2mClient(http);
+        var client = new SmartBackendTokenClient(http);
         var result = await client.RequestAccessTokenFromPemFileAtEndpointAsync(
             keyPath,
             keyId,

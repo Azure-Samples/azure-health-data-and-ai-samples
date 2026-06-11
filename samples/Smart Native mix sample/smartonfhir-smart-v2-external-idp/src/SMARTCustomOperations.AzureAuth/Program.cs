@@ -6,6 +6,7 @@
 using System.Reflection;
 using Microsoft.AzureHealth.DataServices.Bindings;
 using Microsoft.AzureHealth.DataServices.Caching;
+using Microsoft.AzureHealth.DataServices.Caching.StorageProviders;
 using Microsoft.AzureHealth.DataServices.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -100,37 +101,55 @@ namespace SMARTCustomOperations.AzureAuth
                         services.AddSingleton<IIdpStrategy, ExternalIdpStrategy>();
                     }
 
-                    // Cache for launch context (required for EHR launch, optional for standalone)
+                    // Context cache for EHR launch (patient/encounter context).
+                    // The JsonObjectCache requires an ICacheBackingStoreProvider in DI. Default is
+                    // a no-op provider so the cache is strictly in-memory (process-scoped) — fine
+                    // for dev and single-instance use. Set AZURE_CacheConnectionString to a
+                    // Redis-compatible connection string (e.g. Azure Managed Redis) to add a
+                    // distributed backing store that survives restarts and works across instances.
                     services.AddMemoryCache();
+                    services.AddJsonObjectMemoryCache(options =>
+                    {
+                        options.CacheItemExpiry = TimeSpan.FromSeconds(3600);
+                    });
+                    services.AddScoped<ContextCacheService>();
                     if (!string.IsNullOrEmpty(config.CacheConnectionString))
                     {
                         services.AddRedisCacheBackingStore(options =>
                         {
                             options.ConnectionString = config.CacheConnectionString;
                         });
-                        services.AddJsonObjectMemoryCache(options =>
-                        {
-                            options.CacheItemExpiry = TimeSpan.FromSeconds(3600);
-                        });
-                        services.AddScoped<ContextCacheService>();
+                        Console.WriteLine("Context cache: in-memory with Redis backing store.");
+                    }
+                    else
+                    {
+                        services.AddSingleton<ICacheBackingStoreProvider, InMemoryOnlyCacheBackingStoreProvider>();
+                        Console.WriteLine("Context cache: in-memory only (set AZURE_CacheConnectionString to add Redis backing).");
                     }
 
                     // Backend services (SMART v2 client_credentials + private_key_jwt).
                     // Entra cannot validate arbitrary client-registered JWKS, so the proxy validates
                     // the inbound client_assertion and swaps to a KV-stored Entra client_secret.
                     // Enabled only when Entra is the upstream IdP AND a KV store is configured.
-                    if (string.Equals(config.IdpType, "EntraId", StringComparison.OrdinalIgnoreCase) &&
-                        !string.IsNullOrWhiteSpace(config.BackendServiceKeyVaultStore))
+                    // External IdPs (Okta, Ping, etc.) handle backend services natively at their own
+                    // token endpoint — the proxy is not in the path.
+                    bool isEntraId = string.Equals(config.IdpType, "EntraId", StringComparison.OrdinalIgnoreCase);
+                    bool hasKvStore = !string.IsNullOrWhiteSpace(config.BackendServiceKeyVaultStore);
+                    if (isEntraId && hasKvStore)
                     {
                         services.AddSingleton<IAssertionReplayProtector, MemoryAssertionReplayProtector>();
                         services.AddSingleton<IClientConfigService, KeyVaultClientConfigurationService>();
                         services.AddSingleton<IBackendClientAssertionValidator, BackendClientAssertionValidator>();
                         services.AddHttpClient(); // for JWKS fetch
-                        Console.WriteLine($"Backend services enabled. KV store: {config.BackendServiceKeyVaultStore}");
+                        Console.WriteLine($"Backend services proxy enabled. KV store: {config.BackendServiceKeyVaultStore}");
+                    }
+                    else if (!isEntraId)
+                    {
+                        Console.WriteLine($"Backend services proxy not applicable for IdpType '{config.IdpType}'. Clients call the IdP token endpoint directly.");
                     }
                     else
                     {
-                        Console.WriteLine("Backend services disabled (set AZURE_BackendServiceKeyVaultStore to enable, Entra mode only).");
+                        Console.WriteLine("Backend services proxy disabled. Set AZURE_BackendServiceKeyVaultStore to enable.");
                     }
 
                     services.UseAzureFunctionPipeline();

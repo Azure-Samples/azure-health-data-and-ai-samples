@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "AZURE_IdpType": "EntraId",
+    "AZURE_TenantId": "740c6439-7b12-42d3-b9a3-115b5104a3fc",
+    "AZURE_FhirServerUrl": "https://gksmartnativews-smartnative.fhir.azurehealthcareapis.com",
+    "AZURE_FhirAudience": "https://smartnative.extahdsfhir12.onmicrosoft.com",
+    "_comment_FhirResourceAppId": "Entra app ID representing the FHIR resource API. Used for custom fhirUser claim setup and data loading scripts (EntraId only).",
+    "AZURE_FhirResourceAppId": "",
+    "_comment_CacheConnectionString": "Optional Redis-compatible connection string (e.g. Azure Managed Redis). Leave AZURE_CacheConnectionString unset for in-memory caching.",
+    "AZURE_CacheConnectionString": "",
+    "AZURE_UserIdClaimType": "oid",
+    "AZURE_ContextAppClientId": "054ed038-f69d-421c-8070-4ec698184122",
+    "AZURE_BackendServiceKeyVaultStore": "smart-native-kv"
+  }
+}
