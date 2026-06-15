@@ -1,0 +1,27 @@
+# Secrets / local config
+keys/*.pem
+keys/*.key
+keys/*.pfx
+keys/*.p12
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+!appsettings.*.json.example
+
+# Build output
+**/bin/
+**/obj/
+*.zip
+
+# IDE / Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+
+# Rider / JetBrains
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,23 @@
+{
+  "//": "Copy this file to appsettings.Development.json and fill in your local values. The Development file is gitignored.",
+  "SmartOnFhir": {
+    "FhirBaseUrl": "https://<your-auth-func>.azurewebsites.net",
+    "EhrIssDefault": "https://<your-auth-func>.azurewebsites.net",
+    "ClientId": "<standalone-or-confidential-client-id>",
+    "ClientSecret": "<confidential-client-secret-or-empty-for-public>",
+    "RedirectUri": "https://localhost:53361/callback",
+    "FhirAudience": "https://<your-fhir-workspace>health-fhirdata.fhir.azurehealthcareapis.com",
+    "ContextCacheUrl": "https://<your-auth-func>.azurewebsites.net/api/context-cache",
+    "IdpType": "ExternalIdp",
+    "UserContextClientId": "<ehr-launch-client-id>",
+    "UserContextClientSecret": "<ehr-launch-client-secret>",
+    "UserContextRedirectUri": "https://localhost:53361/usercontext/callback"
+  },
+  "BackendServices": {
+    "FhirBaseUrl": "https://<your-auth-func>.azurewebsites.net",
+    "ClientId": "<backend-services-client-id>",
+    "Scope": "system/*.rs",
+    "PrivateKeyPath": "keys/es384_private.pem",
+    "KeyId": "<jwks-key-id>"
+  }
+}
