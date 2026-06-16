@@ -117,6 +117,6 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
   }
 }
 
-output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}/api'
+output functionAppUrl string = 'https://${authCustomOperationFunctionApp.properties.defaultHostName}'
 output functionAppPrincipalId string = authCustomOperationFunctionApp.identity.principalId
 output authCustomOperationAudience string = fhirServiceAudience

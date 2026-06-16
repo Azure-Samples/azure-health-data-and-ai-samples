@@ -147,7 +147,7 @@ This represents an application that is launched from within an EHR session with 
 
 4. Follow [Set fhirUser Claim Mapping](./set-fhir-user-mapping.md).
 
-5. The EHR launch flow requires an **EHR launch initiator** to first POST a launch payload to `<FunctionBaseUrl>/auth/context/`. The SMART client sample app documents how to simulate this; follow its instructions for driving the EHR-launch demo.
+5. The EHR launch flow requires an **EHR launch initiator** to first POST a launch payload to `<FunctionBaseUrl>/api/context-cache`. The SMART client sample app documents how to simulate this; follow its instructions for driving the EHR-launch demo.
 
 ---
 
@@ -178,7 +178,7 @@ Microsoft Entra ID does not natively support `private_key_jwt` with ES384 / RS38
 7. The backend service requests tokens via:
 
    ```http
-   POST <FunctionBaseUrl>/token
+   POST <FunctionBaseUrl>/api/token
    grant_type=client_credentials
    client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
    client_assertion=<signed JWT>

@@ -31,20 +31,6 @@ Both paths need:
 
 IdP-specific prerequisites are detailed in each deployment guide.
 
-## What gets deployed
-
-| Component | EntraId | ExternalIdp |
-| --- | :---: | :---: |
-| Azure Health Data Services FHIR Service | ✓ | ✓ |
-| Azure Function App (SMART gateway) | ✓ | ✓ |
-| App Service Plan (Linux, dotnet-isolated 8) | ✓ | ✓ |
-| Storage Account | ✓ | ✓ |
-| Application Insights + Log Analytics | ✓ | ✓ |
-| Backend Services Key Vault | ✓ | — |
-| Azure Cache for Redis (optional) | opt | opt |
-
-The Bicep entry point is `infra/main.bicep`; the `azd` service definition is in `azure.yaml`.
-
 ## Next steps
 
 1. Choose your IdP path above.

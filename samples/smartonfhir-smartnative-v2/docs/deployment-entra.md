@@ -69,30 +69,27 @@ Follow the steps in [FHIR Resource App Registration](./ad-apps/fhir-resource-app
 Follow the steps in [Auth Context Frontend App Registration](./ad-apps/auth-context-frontend-app-registration.md). When you are done you will have:
 
 - A second app registration (an SPA) used by EHR launch initiators to deliver launch context to the gateway.
-- The Client ID recorded for the next step.
 
 ---
 
 ## 5. Set environment values
 
-Set the required values:
+Set the required value:
 
 ```powershell
 azd env set IdpType "EntraId"
-azd env set TenantId "<your-entra-tenant-id>"
-azd env set FhirAudience "<application-id-uri-from-step-3>"
-azd env set FhirResourceAppId "<fhir-resource-app-client-id>"
-azd env set ContextAppClientId "<auth-context-frontend-app-client-id>"
 ```
 
 Optional values:
 
 ```powershell
-azd env set AZURE_CacheConnectionString "<redis-connection-string>"
-azd env set AZURE_LOCATION "eastus2"
-```
+# Only if your Entra tenant differs from the subscription tenant.
+azd env set TenantId "<your-entra-tenant-id>"
 
-> Use only `eastus2`, `westus2`, or `centralus` for the deployment location.
+# Only if you want a distributed EHR launch context cache (e.g. Azure Managed Redis).
+azd env set AZURE_CacheConnectionString "<redis-connection-string>"
+
+```
 
 ---
 
@@ -102,7 +99,7 @@ azd env set AZURE_LOCATION "eastus2"
 azd up
 ```
 
-`azd up` will prompt for any values not already set (subscription, location, `IdpType`, `TenantId`, etc.). The deployment provisions the resource group, FHIR Service, Function App, Key Vault, and supporting resources, then deploys the gateway code from `src/SMARTCustomOperations.AzureAuth/`.
+`azd up` will prompt for subscription, `AZURE_LOCATION`, and `IdpType` if they are not already set. The deployment provisions the resource group, FHIR Service, Function App, Key Vault, and supporting resources, then deploys the gateway code from `src/SMARTCustomOperations.AzureAuth/`.
 
 When deployment completes, `azd` writes outputs to `.azure/<env-name>/.env`, including:
 
@@ -140,16 +137,10 @@ Each test user in Entra ID must have its `fhirUser` directory extension set to t
 
 ```powershell
 # Patient persona
-pwsh ./scripts/Add-FhirUserInfoToUser.ps1 `
-  -ApplicationId   "<FhirResourceAppId>" `
-  -UserObjectId    "<patient-test-user-object-id>" `
-  -FhirUserValue   "<FhirUrl>/Patient/PatientA"
+powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<FhirResourceAppId>" -UserObjectId "<patient-test-user-object-id>" -FhirUserValue "Patient/PatientA"
 
 # Practitioner persona
-pwsh ./scripts/Add-FhirUserInfoToUser.ps1 `
-  -ApplicationId   "<FhirResourceAppId>" `
-  -UserObjectId    "<practitioner-test-user-object-id>" `
-  -FhirUserValue   "<FhirUrl>/Practitioner/PractitionerC1"
+powershell ./scripts/Add-FhirUserInfoToUser.ps1 -ApplicationId "<FhirResourceAppId>" -UserObjectId "<practitioner-test-user-object-id>" -FhirUserValue "Practitioner/PractitionerC1"
 ```
 
 Then assign the **FHIR SMART User** role to each test user on the FHIR Service:
@@ -166,7 +157,6 @@ This role is required for the SMART scope evaluation to apply on the FHIR Servic
 
 Run a few quick checks to confirm the gateway and the FHIR Service are wired up correctly:
 
-- `GET <FhirUrl>/.well-known/smart-configuration` returns SMART metadata whose `authorization_endpoint` and `token_endpoint` point at the gateway (`<FunctionBaseUrl>/...`).
 - `GET <FunctionBaseUrl>/.well-known/smart-configuration` returns the gateway-published version of the same document.
 
 ### End-to-end test with the SMART client sample app
@@ -182,7 +172,7 @@ Before running the SMART client sample app, register up to four client applicati
 
 Then point the SMART client sample app at this deployment to exercise all four SMART v2 launch flows — **EHR launch**, **Standalone launch**, **Backend Services**, and **Refresh**:
 
-> **SMART Client Sample App**: <!-- TODO: replace with link --> `<smart-client-app-link>`
+> **SMART Client Sample App**: [SMART Client Application](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/personal/gkuber/smartnative-smart-v2/samples/SMART-Client-Application)
 
 That repository documents how to:
 

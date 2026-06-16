@@ -5,7 +5,7 @@
 
 The `fhirUser` claim mapping informs the SMART client of the user's FHIR identity through the ID token, and informs the FHIR Service of the user's FHIR identity through the access token. The FHIR Service uses this claim to enforce SMART scope evaluation and compartment-based access control.
 
-This claim mapping needs to be set up on the **FHIR Resource App** so that the directory extension (`extension_<appId>_fhirUser`) is mapped to a top-level claim called `fhirUser`. This is required only when deploying with `IdpType=EntraId`.
+This claim mapping needs to be set up on the **FHIR Resource App** so that the directory extension (`extension_<appId>_fhirUser`) is mapped to a top-level claim called `fhirUser`.
 
 ---
 

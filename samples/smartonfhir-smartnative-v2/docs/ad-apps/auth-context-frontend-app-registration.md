@@ -5,8 +5,6 @@
 
 This application registration represents the **EHR launch context delivery client** — the SPA (or service) that the EHR uses to push SMART launch context (`patient`, `encounter`, `launch`, etc.) into the gateway's `/api/context-cache` endpoint before the SMART app exchanges its launch code for a token.
 
-This is required only when deploying with `IdpType=EntraId`. External IdPs handle launch context delivery through their own authorization servers and the gateway accepts it directly from the upstream IdP token response.
-
 ---
 
 ## Steps

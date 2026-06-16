@@ -18,7 +18,7 @@ A full-featured ASP.NET Core 8 demonstration of all four **SMART on FHIR v2** au
 | [.NET SDK](https://dotnet.microsoft.com/download) | **8.0** or later |
 | [OpenSSL](https://www.openssl.org/) | recent — for ES384 key generation |
 | FHIR R4 server | Azure Health Data Services or compatible |
-| SMART proxy | The `smartonfhir-smart-v2-external-idp` sample, deployed and reachable |
+| SMART proxy | The `SMART on FHIR v2 — Native IdP-Agnostic Sample`, deployed and reachable |
 | IdP | Microsoft Entra ID **or** Okta |
 
 > [!NOTE]
