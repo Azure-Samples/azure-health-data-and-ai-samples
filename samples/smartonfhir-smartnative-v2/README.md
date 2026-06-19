@@ -1,27 +1,16 @@
 # SMART on FHIR v2 — Native IdP-Agnostic Sample
 
-This sample adds **SMART on FHIR v2** application launch and authorization on top of the **Azure Health Data Services FHIR Service**, using either **Microsoft Entra ID** or an **External Identity Provider** (e.g. Okta) as the upstream authorization server.
+The [Azure Health Data Services FHIR Service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) supports Substitutable Medical Applications and Reusable Technologies ([SMART on FHIR] (https://docs.smarthealthit.org/)) by implementing the key server-side behaviors required for SMART clients to securely access FHIR data using OAuth 2.0 and OpenID Connect. 
 
-It is *IdP-agnostic*: the same gateway, infrastructure, and deployment flow support both modes — the choice is a single configuration switch (`IdpType`). There is **no API Management**, **no Static Web App**, and **no scope-selector frontend**. A single Azure Function App acts as the SMART gateway, and the FHIR Service is the source of truth for SMART discovery.
+This sample demonstrates **SMART on FHIR v2** setting application launch and authorization on top of the **Azure Health Data Services FHIR Service**. Sample is *IdP-agnostic*: the same gateway, infrastructure, and deployment flow support both **Microsoft Entra ID** or an **External Identity Provider** (e.g. Okta). 
 
----
+In short this sample, shows creation of an orchestration layer which acts as the bridge between the identity provider, the clinical system (such as an EHR), and the FHIR service. Addition for the users using Entra ID,  Integration OF AHDS FHIR native support with Microsoft Entra ID needs additional components to complete the end-to-end SMART on FHIR experience.This is because SMART on FHIR introduces behaviors that are not natively supported by enterprise identity providers like Entra ID. To bridge this gap, leverage this sample.
 
-## Why this sample?
-
-The Azure Health Data Services FHIR Service understands **SMART scopes natively** (e.g. `patient/Observation.rs`, `user/*.read`) and enforces resource access using the `fhirUser` claim and SMART scopes inside the access token.
-
-What it does **not** do on its own:
-
-- It does not host a SMART `/authorize` or `/token` endpoint.
-- It does not issue or enrich tokens with SMART launch context (`patient`, `encounter`, `launch`, `fhirUser`).
-- It does not advertise a SMART discovery document tailored to the deployment.
-
-This sample fills those gaps by introducing a thin **SMART gateway Function App** that:
+This sample provides with  **SMART gateway Function App**
 
 1. Translates SMART concepts (scopes, launch parameters, PKCE flows) into terms the configured Identity Provider understands.
 2. Enriches token responses with SMART launch context (cached during EHR launch).
-3. Publishes a SMART discovery document and capability statement transformations consistent with SMART v2.
-4. Provides **SMART v2 Backend Services** support (`client_credentials` + `private_key_jwt`) where the IdP cannot do this natively.
+3. Provides **SMART v2 Backend Services** support (`client_credentials` + `private_key_jwt`) where the IdP cannot do this natively.
 
 ### Why the gateway is needed per IdP
 
