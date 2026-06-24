@@ -160,8 +160,12 @@ public class AuthService
     // ── User Context (EHR Simulator identity login) ───────────────────────────
 
     /// <summary>
-    /// Builds an OIDC-only authorization URL for the User Context app registration.
-    /// Uses openid scope only — no FHIR audience, no SMART scopes.
+    /// Builds an OIDC authorization URL for the User Context app registration.
+    /// Requests `openid profile` only — no FHIR audience, no SMART scopes.
+    /// `profile` is required so Entra v2 emits the user's `oid` (and `name`/`preferred_username`)
+    /// in the id_token; with bare `openid` Entra only emits the OIDC skeleton claims
+    /// (`sub`, `aud`, `iss`, `iat`, `nbf`, `exp`, `tid`, `uti`, `ver`, `rh`) and the proxy
+    /// would not be able to derive a stable user-id for the cache key.
     /// The resulting token is used solely to authenticate the context-cache call.
     /// </summary>
     public async Task<(string redirectUrl, string state, string codeVerifier)> BuildUserContextAuthorizationRequestAsync(
@@ -188,7 +192,7 @@ public class AuthService
             ["response_type"]          = "code",
             ["client_id"]              = clientId,
             ["redirect_uri"]           = redirectUri,
-            ["scope"]                  = "openid",
+            ["scope"]                  = "openid profile",
             ["state"]                  = state,
             ["code_challenge"]         = codeChallenge,
             ["code_challenge_method"]  = "S256",

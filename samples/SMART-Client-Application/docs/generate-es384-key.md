@@ -61,7 +61,7 @@ Then point [`appsettings.json`](../SMART-Native-Standalone-EHR-Launch/appsetting
 1. In the Okta Admin Console, open the **`smart-backend-services`** API Services app you registered in [idp-setup-okta.md](idp-setup-okta.md).
 2. Go to **General → Client Credentials → Edit**.
 3. Set **Client authentication** to **Public key / Private key**.
-4. Click **Add key**, paste the contents of `es384_public.pem`, and save.
+4. Click **Add key**, paste the contents of `es384_public.pem` or add jwks url where public key is published and save.
 5. Copy the **Key ID (kid)** Okta displays for the new key — paste it into `BackendServices:KeyId` in [`appsettings.json`](../SMART-Native-Standalone-EHR-Launch/appsettings.json).
 
 That's all — the proxy's SMART discovery will route the client sample's token request to the right Okta endpoint.
@@ -72,29 +72,11 @@ That's all — the proxy's SMART discovery will route the client sample's token 
 
 Entra fronts the proxy via the Azure Function App, and the proxy's Backend Services validator reads JWKS from a Key Vault secret tagged with `jwks_url`. So instead of uploading raw PEM, you publish a JWK to Key Vault.
 
-### A. Convert the public key to a JWK
+### A. Create a JWK key
 
 Pick any tool that can convert a PEM EC public key to a JWK — common options:
 
-- The **`jose-util`** CLI (Go).
-- The **`pem-jwk`** npm package, with a small wrapper since out-of-the-box `pem-jwk` is RSA-only; for EC use **`jwk-from-pem`** or **`node-jose`**.
-- A short Node script:
-  ```js
-  // npm i node-jose
-  const jose = require('node-jose');
-  const fs = require('fs');
-  (async () => {
-    const ks = jose.JWK.createKeyStore();
-    const key = await ks.add(fs.readFileSync('es384_public.pem'), 'pem');
-    const jwk = key.toJSON();           // public-only by default
-    jwk.kid = 'smart-key-1';            // pick a kid you'll remember
-    jwk.alg = 'ES384';
-    jwk.use = 'sig';
-    console.log(JSON.stringify({ keys: [jwk] }, null, 2));
-  })();
-  ```
-
-The output should look like:
+The key should look like:
 
 ```json
 {

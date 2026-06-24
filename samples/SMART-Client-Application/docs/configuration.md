@@ -17,7 +17,7 @@ The application is **IdP-agnostic**. The single switch [`SmartOnFhir:IdpType`](#
 | `ClientId` | yes | Client ID of the SMART app registration used by the **Standalone (public)**, **Standalone (confidential)**, and **EHR launch** buttons. See [idp-setup-entra.md](idp-setup-entra.md) / [idp-setup-okta.md](idp-setup-okta.md). |
 | `ClientSecret` | confidential / EHR | Client secret. Sent only when the flow is **Standalone Confidential** or **EHR Launch**. Leave blank for public-PKCE-only operation. |
 | `RedirectUri` | yes | Must match the redirect URI registered with the IdP. Default: `https://localhost:53361/callback`. |
-| `FhirAudience` | yes | `aud` parameter on `/authorize`. Typically the FHIR service URL (e.g. `https://<workspace>-<fhir>.fhir.azurehealthcareapis.com`). |
+| `FhirAudience` | yes | Audience for the FHIR service. You can get this from FHIR Service -> Settings -> Authentication -> Audience field. |
 | `ContextCacheUrl` | EHR only | Full URL of the proxy's `context-cache` endpoint — usually `<FhirBaseUrl>/api/context-cache`. |
 | `IdpType` | yes | `EntraId` or `ExternalIdp`. See below. |
 | `UserContextClientId` | EHR only | Client ID of the OIDC-only **User Context** app used in the EHR simulator. |

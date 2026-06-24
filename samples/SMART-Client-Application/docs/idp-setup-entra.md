@@ -25,9 +25,6 @@ Apps **1–4** are SMART-on-FHIR clients in the strict sense — the proxy trans
 
 Follow the proxy sample's app-registration guide for these four apps:
 
-> [!TIP]
-> **Source of truth:** `docs/ad-apps/smart-client-app-registrations.md` in the proxy sample (`smartonfhir-smart-v2-external-idp` repo).
-
 It tells you, per app:
 
 - **Redirect URIs** — for this client sample, set `https://localhost:53361/callback` on apps 1–3.
