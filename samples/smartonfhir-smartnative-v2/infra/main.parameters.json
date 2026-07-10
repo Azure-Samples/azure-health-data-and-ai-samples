@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ContextAppClientId": {
+      "value": "${ContextAppClientId=}"
+    },
+    "FhirAudience": {
+      "value": "${FhirAudience=}"
+    },
+    "FhirResourceAppId": {
+      "value": "${FhirResourceAppId=}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "name": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "IdpType": {
+      "value": "${IdpType}"
+    },
+    "TenantId": {
+      "value": "${TenantId=}"
+    },
+    "AuthorityURL": {
+      "value": "${AuthorityURL=}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "CacheConnectionString": {
+      "value": "${AZURE_CacheConnectionString=}"
+    }
+  }
+}
