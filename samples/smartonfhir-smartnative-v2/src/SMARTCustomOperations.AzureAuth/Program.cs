@@ -107,7 +107,16 @@ namespace SMARTCustomOperations.AzureAuth
                     // for dev and single-instance use. Set AZURE_CacheConnectionString to a
                     // Redis-compatible connection string (e.g. Azure Managed Redis) to add a
                     // distributed backing store that survives restarts and works across instances.
-                    services.AddMemoryCache();
+                    //
+                    // MemoryCache is also used by MemoryAssertionReplayProtector for backend-services
+                    // jti replay tracking. Cap size so a flood of unique jti values cannot grow memory
+                    // unbounded within the 5-minute TTL window. Entries opt in via Size=1 in the
+                    // protector; consumers that omit Size are not counted.
+                    services.AddMemoryCache(options =>
+                    {
+                        options.SizeLimit = 10_000;
+                        options.CompactionPercentage = 0.2;
+                    });
                     services.AddJsonObjectMemoryCache(options =>
                     {
                         options.CacheItemExpiry = TimeSpan.FromSeconds(3600);

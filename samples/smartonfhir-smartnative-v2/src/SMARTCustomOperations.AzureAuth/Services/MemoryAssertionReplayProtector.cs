@@ -34,7 +34,13 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 return false;
             }
 
-            _cache.Set(key, true, ttl);
+            // Size=1 is required for the shared MemoryCache SizeLimit (configured in Program.cs)
+            // to actually enforce the cap — entries without a Size are never counted.
+            _cache.Set(key, true, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = ttl,
+                Size = 1
+            });
             return true;
         }
     }

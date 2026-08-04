@@ -80,6 +80,28 @@ namespace SMARTCustomOperations.AzureAuth.Models
             {
                 throw new ArgumentException("BackendServiceTokenContext invalid");
             }
+
+            // Reject un-parseable JWTs here so a malformed assertion surfaces as 400 via
+            // TokenInputFilter's Validate() catch, instead of blowing up later as 500 when
+            // ClientId (which reads iss/sub from the JWT) is accessed.
+            if (!Handler.CanReadToken(ClientAssertion))
+            {
+                throw new ArgumentException("client_assertion is not a valid JWT.");
+            }
+        }
+
+        public override string ToLogString()
+        {
+            // Do not serialize ClientId — its getter parses the JWT and would throw on a
+            // malformed assertion, defeating the error-log path. ClientAssertion itself is
+            // already [JsonIgnore]. Report only low-risk metadata.
+            return System.Text.Json.JsonSerializer.Serialize(new
+            {
+                GrantType,
+                ClientAssertionType,
+                Scope,
+                ClientAssertionLength = ClientAssertion?.Length ?? 0
+            });
         }
     }
 }

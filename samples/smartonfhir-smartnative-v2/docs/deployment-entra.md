@@ -7,8 +7,8 @@ This guide walks through deploying the SMART on FHIR v2 native IdP-agnostic samp
 
 The deployment provisions:
 
-- A new resource group
-- An Azure Health Data Services workspace and FHIR Service
+- A new resource group (`<env-name>-rg`)
+- An Azure Health Data Services workspace and FHIR Service *(skipped when reusing an existing FHIR service — see [Reuse mode](#reuse-mode-optional) below)*
 - An Azure Function App (the SMART gateway) and its dependencies (App Service Plan, Storage, App Insights, Log Analytics)
 - A Key Vault for SMART Backend Services client registrations
 - *(Optional)* an Azure Cache for distributed EHR launch context
@@ -89,6 +89,9 @@ azd env set TenantId "<your-entra-tenant-id>"
 # Only if you want a distributed EHR launch context cache (e.g. Azure Managed Redis).
 azd env set AZURE_CacheConnectionString "<redis-connection-string>"
 
+# Only if you want to reuse an existing AHDS FHIR service instead of creating a new one.
+# See the "Reuse mode" section below for the two manual configuration steps required afterwards.
+azd env set ExistingFhirServiceId "/subscriptions/<sub>/resourceGroups/<fhir-rg>/providers/Microsoft.HealthcareApis/workspaces/<ws>/fhirservices/<svc>"
 ```
 
 ---
@@ -107,6 +110,8 @@ When deployment completes, `azd` writes outputs to `.azure/<env-name>/.env`, inc
 - `FhirUrl`
 - `FhirAudience`
 - `FhirResourceAppId`
+- `FhirServiceId` — full resource id of the FHIR service (new or reused)
+- `FhirResourceGroup` — RG containing the FHIR service (equal to `AZURE_RESOURCE_GROUP` in create-new mode; the reused FHIR's RG in reuse mode)
 - `TenantId`
 - `FunctionBaseUrl`
 - `FunctionAppManagedIdentityPrincipalId`
@@ -118,6 +123,19 @@ For subsequent code-only redeploys (no infrastructure changes), use:
 azd deploy auth
 ```
 
+### Reuse mode (optional)
+
+If `ExistingFhirServiceId` was set in step 5, `azd up` **does not** touch the existing FHIR service. Two things the create-new path does automatically must therefore be done by you, one time, against the reused FHIR:
+
+1. **Align the FHIR service audience** to your Application ID URI (the `FhirAudience` value).
+
+   Portal: open the FHIR service → **Authentication** → set **Audience** to the `FhirAudience` value → **Save**. The **Authority** should be `https://login.microsoftonline.com/<TenantId>`.
+   
+
+2. **Grant yourself FHIR Data Contributor** on the reused FHIR service if you plan to run `Load-ProfilesData.ps1` or hit the data plane directly. Reuse mode intentionally skips this role assignment (see the note in step 7 below).
+
+Everything else — the Function App, Key Vault, monitoring, and the app settings that point the gateway at `FhirUrl` / `FhirAudience` — is wired up automatically.
+
 
 ## 7. Add sample data and US Core resources
 
@@ -127,7 +145,7 @@ See [Sample Data](./sample-data.md) for the full procedure. In short, on Windows
 powershell ./scripts/Load-ProfilesData.ps1
 ```
 
-The user account running the script needs the **FHIR Data Contributor** role on the FHIR Service. The `azd up` deployment automatically grants this role to the deployer (via the `principalId` parameter), so you can run the script as the same user that ran `azd up`.
+The user account running the script needs the **FHIR Data Contributor** role on the FHIR Service. The `azd up` deployment automatically grants this role to the deployer (via the `principalId` parameter) **in create-new mode only**. In [reuse mode](#reuse-mode-optional) the role is intentionally not granted — assign it manually on the reused FHIR before running the script, or skip data loading entirely if the reused FHIR already contains the data you need.
 
 ---
 
@@ -172,7 +190,7 @@ Before running the SMART client sample app, register up to four client applicati
 
 Then point the SMART client sample app at this deployment to exercise all four SMART v2 launch flows — **EHR launch**, **Standalone launch**, **Backend Services**, and **Refresh**:
 
-> **SMART Client Sample App**: [SMART Client Application](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/personal/gkuber/smartnative-smart-v2/samples/SMART-Client-Application)
+> **SMART Client Sample App**: [SMART Client Application](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/SMART-Client-Application)
 
 That repository documents how to:
 

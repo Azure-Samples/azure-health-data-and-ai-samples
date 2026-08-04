@@ -78,8 +78,6 @@ This represents an application that can protect a client secret (server-rendered
 
 4. Follow [Set fhirUser Claim Mapping](./set-fhir-user-mapping.md) to map the `fhirUser` claim onto the access token.
 
-5. Add this app's **Client ID** to the FHIR Service identity-provider whitelist if your deployment requires it. (For `IdpType=EntraId` the gateway typically handles this; check your deployment notes.)
-
 ---
 
 ## 2. Standalone Patient Launch — Public client (SPA)

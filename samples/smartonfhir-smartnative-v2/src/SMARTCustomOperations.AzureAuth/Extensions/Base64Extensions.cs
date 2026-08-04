@@ -3,7 +3,6 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
-using Google.Protobuf.WellKnownTypes;
 using System.Text;
 
 namespace SMARTCustomOperations.AzureAuth.Extensions

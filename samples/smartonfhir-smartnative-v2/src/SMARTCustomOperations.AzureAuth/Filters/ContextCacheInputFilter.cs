@@ -65,6 +65,20 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 return context.SetContextErrorBody(cacheError, _configuration.Debug);
             }
 
+            // Guard: missing / non-Bearer / empty Authorization header → 401 (not a 500 NRE).
+            var authHeader = context.Request.Headers.Authorization;
+            if (authHeader is null
+                || !string.Equals(authHeader.Scheme, "Bearer", StringComparison.OrdinalIgnoreCase)
+                || string.IsNullOrWhiteSpace(authHeader.Parameter))
+            {
+                _logger?.LogWarning("Context cache request missing valid Bearer Authorization header.");
+                FilterErrorEventArgs missingAuthError = new(name: Name, id: Id, fatal: true,
+                    error: new UnauthorizedAccessException("Missing or invalid Authorization header. Expected: Bearer <token>."),
+                    code: HttpStatusCode.Unauthorized);
+                OnFilterError?.Invoke(this, missingAuthError);
+                return context.SetContextErrorBody(missingAuthError, _configuration.Debug);
+            }
+
             ClaimsPrincipal userPrincipal;
             try
             {

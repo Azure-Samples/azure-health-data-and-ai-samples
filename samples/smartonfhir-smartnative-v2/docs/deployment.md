@@ -31,6 +31,24 @@ Both paths need:
 
 IdP-specific prerequisites are detailed in each deployment guide.
 
+## Reusing an existing FHIR service (optional)
+
+Both deployment paths can be pointed at an **existing** Azure Health Data Services FHIR service instead of creating a new workspace + FHIR service. Set one `azd` environment variable before `azd up`:
+
+```powershell
+azd env set ExistingFhirServiceId "/subscriptions/<sub>/resourceGroups/<fhir-rg>/providers/Microsoft.HealthcareApis/workspaces/<ws>/fhirservices/<svc>"
+```
+
+Reuse mode is intentionally **strictly non-destructive** — the deployment reads the existing FHIR service but never writes to it. That means the caller is responsible for a few one-time configuration steps on the reused FHIR (audience/authority for Entra, `smartIdentityProviders` for External IdP, and a FHIR Data Contributor role for the deployer if they want to load sample data). Details are called out in the reuse-mode boxes inside each per-IdP guide.
+
+Assumptions:
+
+- The existing FHIR service is in the **same Azure subscription** as the deployment.
+- The AHDS resource type is `Microsoft.HealthcareApis/workspaces/fhirservices` (the legacy `Microsoft.HealthcareApis/services` / API for FHIR is not supported by reuse mode).
+- The sample components (Function App, Key Vault, monitoring) still deploy into a fresh resource group `<env-name>-rg`. Only the FHIR service lives in its own RG.
+
+Leave `ExistingFhirServiceId` unset (or empty) to keep the default create-new behavior.
+
 ## Next steps
 
 1. Choose your IdP path above.

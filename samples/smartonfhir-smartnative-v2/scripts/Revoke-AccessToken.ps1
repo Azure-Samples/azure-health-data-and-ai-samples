@@ -11,6 +11,9 @@ if ([string]::IsNullOrWhiteSpace($ApiManagementHostName)) {
 
     Write-Host "ApiManagementHostName is not set."
 
+    # Resolve the sample root (parent of the scripts folder) — used by 'azd env get-values --cwd'.
+    $SAMPLE_ROOT = Split-Path -Parent $PSScriptRoot
+
     # Load parameters from active Azure Developer CLI environment
     $AZD_ENVIRONMENT = $(azd env get-values --cwd $SAMPLE_ROOT)
     $AZD_ENVIRONMENT | foreach {

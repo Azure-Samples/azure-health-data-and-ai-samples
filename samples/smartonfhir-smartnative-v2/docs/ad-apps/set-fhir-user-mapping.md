@@ -12,7 +12,7 @@ This claim mapping needs to be set up on the **FHIR Resource App** so that the d
 ## A. Configure the `fhirUser` mapping on the Enterprise Application
 
 1. In the Azure Portal, open **Microsoft Entra ID → Enterprise applications**.
-2. Search for the **FHIR Resource App** you registered earlier (or click **Managed application in local directory** from the App Registration to jump there).
+2. Search for the app you created in previous step (or click **Managed application in local directory** from the App Registration to jump there).
 3. Select **Single sign-on** in the left menu.
 4. Open the **Attributes & Claims** section and click **Edit**.
 5. Click **Add new claim**.

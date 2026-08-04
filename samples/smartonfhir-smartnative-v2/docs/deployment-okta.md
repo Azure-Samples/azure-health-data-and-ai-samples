@@ -7,8 +7,8 @@ This guide walks through deploying the SMART on FHIR v2 native IdP-agnostic samp
 
 The deployment provisions:
 
-- A new resource group
-- An Azure Health Data Services workspace and FHIR Service
+- A new resource group (`<env-name>-rg`)
+- An Azure Health Data Services workspace and FHIR Service *(skipped when reusing an existing FHIR service — see [Reuse mode](#reuse-mode-optional) below)*
 - An Azure Function App (the SMART gateway) and its dependencies (App Service Plan, Storage, App Insights, Log Analytics)
 - *(Optional)* an Azure Cache for distributed EHR launch context
 
@@ -75,6 +75,10 @@ azd env set FhirAudience              "<audience-from-step-2>"
 azd env set ContextAppClientId        "<context-app-client-id>"
 azd env set AZURE_CacheConnectionString "<redis-connection-string>"
 azd env set AZURE_LOCATION            "eastus2"
+
+# Only if you want to reuse an existing AHDS FHIR service instead of creating a new one.
+# See the "Reuse mode" section below for the manual configuration steps required afterwards.
+azd env set ExistingFhirServiceId     "/subscriptions/<sub>/resourceGroups/<fhir-rg>/providers/Microsoft.HealthcareApis/workspaces/<ws>/fhirservices/<svc>"
 ```
 
 - `FhirAudience` — leave blank to default to the FHIR Service URL after deployment.
@@ -97,6 +101,8 @@ When deployment completes, `azd` writes outputs to `.azure/<env-name>/.env`, inc
 - `AZURE_RESOURCE_GROUP`
 - `FhirUrl`
 - `FhirAudience`
+- `FhirServiceId` — full resource id of the FHIR service (new or reused)
+- `FhirResourceGroup` — RG containing the FHIR service (equal to `AZURE_RESOURCE_GROUP` in create-new mode; the reused FHIR's RG in reuse mode)
 - `FunctionBaseUrl`
 - `FunctionAppManagedIdentityPrincipalId`
 
@@ -105,6 +111,23 @@ For subsequent code-only redeploys (no infrastructure changes), use:
 ```powershell
 azd deploy auth
 ```
+
+### Reuse mode (optional)
+
+If `ExistingFhirServiceId` was set in step 4, `azd up` **does not** touch the existing FHIR service. Two things the create-new path does automatically must therefore be done by you, one time, against the reused FHIR:
+
+1. **Add the SMART identity provider entry** on the reused FHIR service pointing at your Okta `AuthorityURL` with the correct `audience`. In create-new mode the Bicep template seeds this with a placeholder `applications[]` entry; in reuse mode nothing is written, so you must add the entry yourself.
+
+   Portal: open the FHIR service → **Authentication** → under **SMART Identity Providers** add an entry with:
+   - **Authority** = `AuthorityURL` from step 2
+   - **Audience** = `FhirAudience` from step 2
+   - **Applications** = the `client_id` of each SMART client that will call this FHIR service (with `Read` allowed data action)
+
+   Save. See step 6 below for the full applications-whitelist details — it applies identically in reuse mode, you just start from an empty list instead of a placeholder.
+
+2. **Grant yourself FHIR Data Contributor** on the reused FHIR service if you plan to run `Load-ProfilesData.ps1` or hit the data plane directly. Reuse mode intentionally skips this role assignment (see the note in step 7 below).
+
+Everything else — the Function App, monitoring, and the app settings that point the gateway at `FhirUrl` / `FhirAudience` / `AuthorityURL` — is wired up automatically.
 
 ---
 
@@ -136,7 +159,7 @@ See [Sample Data](./sample-data.md) for the full procedure. In short:
 pwsh ./scripts/Load-ProfilesData.ps1 -FhirAudience "<your FHIR audience>"
 ```
 
-The user account running the script needs the **FHIR Data Contributor** role on the FHIR Service. The `azd up` deployment automatically grants this role to the deployer (via the `principalId` parameter), so you can run the script as the same user that ran `azd up`.
+The user account running the script needs the **FHIR Data Contributor** role on the FHIR Service. The `azd up` deployment automatically grants this role to the deployer (via the `principalId` parameter) **in create-new mode only**. In [reuse mode](#reuse-mode-optional) the role is intentionally not granted — assign it manually on the reused FHIR before running the script, or skip data loading entirely if the reused FHIR already contains the data you need.
 
 > Confirm the test users you mapped in [step 2](./external-idp/okta-configuration.md#f-map-the-test-users) point at resources that exist in this loaded sample data (e.g. `Patient/PatientA`, `Practitioner/PractitionerC1`).
 
@@ -153,7 +176,7 @@ Run a few quick checks to confirm the gateway and the FHIR Service are wired up 
 
 To exercise all four SMART v2 launch flows against this deployment — **EHR launch**, **Standalone launch**, **Backend Services**, and **Refresh** — use the companion SMART client sample application:
 
-> **SMART Client Sample App**: <!-- TODO: replace with link --> `<smart-client-app-link>`
+> **SMART Client Sample App**: [SMART Client Application](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/SMART-Client-Application)
 
 That repository documents how to:
 

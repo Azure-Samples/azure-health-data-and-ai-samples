@@ -107,6 +107,7 @@ namespace SMARTCustomOperations.AzureAuth.Strategies
 
                 s = s.TrimStart('/')
                     .Replace("patient.", "patient/", StringComparison.Ordinal)
+                    .Replace("encounter.", "encounter/", StringComparison.Ordinal)
                     .Replace("user.", "user/", StringComparison.Ordinal)
                     .Replace("system.", "system/", StringComparison.Ordinal)
                     .Replace("launch.", "launch/", StringComparison.Ordinal)
