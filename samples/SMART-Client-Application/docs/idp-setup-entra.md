@@ -23,7 +23,7 @@ Apps **1–4** are SMART-on-FHIR clients in the strict sense — the proxy trans
 
 ## 1. Standalone Public, Standalone Confidential, EHR Launch, Backend Services
 
-Follow the proxy sample's app-registration guide for these four apps:
+Follow the proxy sample's [app-registration guide](../../smartonfhir-smartnative-v2/docs/ad-apps/smart-client-app-registrations.md) for these four apps:
 
 It tells you, per app:
 

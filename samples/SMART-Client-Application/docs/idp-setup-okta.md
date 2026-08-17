@@ -3,7 +3,7 @@
 This page walks you through registering the **five** Okta applications the client sample needs, then maps each one back to the corresponding [`appsettings.json`](../SMART-Native-Standalone-EHR-Launch/appsettings.json) value.
 
 > [!IMPORTANT]
-> The proxy sample (the one you deployed alongside this client) already ships a complete Okta tenant recipe in `docs/external-idp/okta-configuration.md`. That document covers the **authorization server**, **audience**, **scopes**, **claims** (including the `appid` claim required by the FHIR service), the **`fhirUser` user attribute**, **test users**, **access policies**, and **OIDC discovery**. Configure those tenant-level pieces first; this page only covers the per-app registrations on top of that.
+> The proxy sample (the one you deployed alongside this client) already ships a complete Okta tenant recipe: [Configure Okta as the SMART Authorization Server](../../smartonfhir-smartnative-v2/docs/external-idp/okta-configuration.md). That document covers the **authorization server**, **audience**, **scopes**, **claims** (including the `appid` claim required by the FHIR service), the **`fhirUser` user attribute**, **test users**, **access policies**, and **OIDC discovery**. Configure those tenant-level pieces first; this page only covers the per-app registrations on top of that.
 
 ---
 
@@ -26,7 +26,7 @@ This page walks you through registering the **five** Okta applications the clien
 
 For all five apps, choose:
 
-- **Sign-on policy** → the policy attached to the SMART **custom authorization server** you set up via the proxy sample's `docs/external-idp/okta-configuration.md` page.
+- **Sign-on policy** → the policy attached to the SMART **custom authorization server** you set up via [Configure Okta as the SMART Authorization Server](../../smartonfhir-smartnative-v2/docs/external-idp/okta-configuration.md) in the proxy sample.
 - **Assignments** → assign the test users / groups you created in that same page.
 
 > [!NOTE]
