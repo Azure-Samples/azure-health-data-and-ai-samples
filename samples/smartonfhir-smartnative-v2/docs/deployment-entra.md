@@ -92,6 +92,10 @@ azd env set AZURE_CacheConnectionString "<redis-connection-string>"
 # Only if you want to reuse an existing AHDS FHIR service instead of creating a new one.
 # See the "Reuse mode" section below for the two manual configuration steps required afterwards.
 azd env set ExistingFhirServiceId "/subscriptions/<sub>/resourceGroups/<fhir-rg>/providers/Microsoft.HealthcareApis/workspaces/<ws>/fhirservices/<svc>"
+
+# Only when UPGRADING an environment first deployed with the old backend Key Vault name.
+# See the "Upgrading from a previous version" section below.
+azd env set backendVaultName "<your-existing-vault-name>"
 ```
 
 ---
@@ -135,6 +139,17 @@ If `ExistingFhirServiceId` was set in step 5, `azd up` **does not** touch the ex
 2. **Grant yourself FHIR Data Contributor** on the reused FHIR service if you plan to run `Load-ProfilesData.ps1` or hit the data plane directly. Reuse mode intentionally skips this role assignment (see the note in step 7 below).
 
 Everything else — the Function App, Key Vault, monitoring, and the app settings that point the gateway at `FhirUrl` / `FhirAudience` — is wired up automatically.
+
+### Upgrading from a previous version (optional)
+
+The backend services Key Vault name changed from `<env-name>-bk-kv` to `<nameCleanShort>-bk-kv`. If you originally deployed with the old name, pin it before redeploying so the existing vault (and its secrets) is preserved instead of a new empty one being created:
+
+```powershell
+azd env set backendVaultName "<your-existing-vault-name>"
+azd up
+```
+
+Fresh deployments do not need to set this.
 
 
 ## 7. Add sample data and US Core resources

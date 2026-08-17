@@ -43,6 +43,10 @@ param CacheConnectionString string = ''
 @description('Full resource ID of an existing AHDS FHIR service to reuse. Format: /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.HealthcareApis/workspaces/{ws}/fhirservices/{svc}. Leave blank to create a new workspace + FHIR service. When reused, this deployment does NOT modify the existing FHIR service authenticationConfiguration; the caller is responsible for ensuring audience, authority and smartIdentityProviders are correctly configured for the chosen IdpType.')
 param ExistingFhirServiceId string = ''
 
+@maxLength(24)
+@description('Override the backend services Key Vault name (3-24 chars, KV naming rules). Leave blank to auto-generate as "<nameCleanShort>-bk-kv". Set this to the existing vault name when upgrading an environment that was originally deployed with a different naming convention, so previously-provisioned client secrets are preserved instead of being stranded in an orphaned vault. Only used when IdpType is EntraId.')
+param backendVaultName string = ''
+
 var nameClean = replace(name, '-', '')
 var nameCleanShort = length(nameClean) > 16 ? substring(nameClean, 0, 16) : nameClean
 var appTags = {
@@ -65,7 +69,9 @@ var fhirUrl = 'https://${workspaceNameResolved}-${fhirNameResolved}.fhir.azurehe
 var fhirAudienceResolved = empty(FhirAudience) ? fhirUrl : FhirAudience
 var tenantIdResolved = empty(TenantId) ? subscription().tenantId : TenantId
 var deployBackendVault = IdpType == 'EntraId'
-var backendVaultName = '${nameCleanShort}-bk-kv'
+// Prefer an explicit override to preserve secrets on upgrades; otherwise auto-generate from
+// nameCleanShort so we stay within Key Vault's 24-char name limit even for long env names.
+var backendVaultNameResolved = empty(backendVaultName) ? '${nameCleanShort}-bk-kv' : backendVaultName
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: '${name}-rg'
@@ -132,7 +138,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     idpType: IdpType
     tenantId: tenantIdResolved
     authorityUrl: AuthorityURL
-    backendServiceVaultName: deployBackendVault ? backendVaultName : ''
+    backendServiceVaultName: deployBackendVault ? backendVaultNameResolved : ''
     fhirResourceAppId: FhirResourceAppId
   }
 }
@@ -141,7 +147,7 @@ module backendVault './core/keyVault.bicep' = if (deployBackendVault) {
   name: 'backendVaultDeploy'
   scope: resourceGroup(resourceGroupName)
   params: {
-    keyVaultName: backendVaultName
+    keyVaultName: backendVaultNameResolved
     location: location
     appTags: appTags
     writerObjectIds: empty(principalId) ? [] : [ principalId ]

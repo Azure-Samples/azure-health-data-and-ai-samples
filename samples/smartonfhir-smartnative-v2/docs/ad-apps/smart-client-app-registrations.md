@@ -165,7 +165,7 @@ Microsoft Entra ID does not natively support `private_key_jwt` with ES384 / RS38
 
 5. Have the backend service **publish its JWKS** at a stable HTTPS URL. This is the asymmetric public key it will sign `client_assertion`s with (ES384 or RS384).
 
-6. **Add the secret to the backend services Key Vault** (`<env-name>-bk-kv`) created by `azd up`:
+6. **Add the secret to the backend services Key Vault** created by `azd up` (its name is written to `.azure/<env-name>/.env` as `BackendServiceKeyVaultName`):
 
    - **Name** = the **Client ID** of the Entra app registration.
    - **Value** = the **client secret value** from step 3.
