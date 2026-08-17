@@ -3,7 +3,7 @@
 This page walks you through registering the **five** Microsoft Entra ID applications the client sample needs, then maps each one back to the corresponding [`appsettings.json`](../SMART-Native-Standalone-EHR-Launch/appsettings.json) value.
 
 > [!IMPORTANT]
-> The proxy sample (the one you deployed alongside this client) already ships a detailed Entra app-registration recipe in `docs/ad-apps/smart-client-app-registrations.md`. That doc covers the **first four** apps in the table below (Standalone Public, Standalone Confidential, EHR Launch, Backend Services). This page references those instructions and adds the fifth app (User Context) which is unique to the client sample's EHR simulator.
+> The proxy sample (the one you deployed alongside this client) already ships a detailed Entra app-registration recipe: [SMART Client App Registrations (Microsoft Entra ID)](../../smartonfhir-smartnative-v2/docs/ad-apps/smart-client-app-registrations.md). That doc covers the **first four** apps in the table below (Standalone Public, Standalone Confidential, EHR Launch, Backend Services). This page references those instructions and adds the fifth app (User Context) which is unique to the client sample's EHR simulator.
 
 ---
 
@@ -30,7 +30,7 @@ It tells you, per app:
 - **Redirect URIs** — for this client sample, set `https://localhost:53361/callback` on apps 1–3.
 - **Client authentication** — public for app 1; client secret for apps 2, 3; certificate (JWKS) via Key Vault for app 4. The Key Vault entry uses the `jwks_url` tag the proxy reads.
 - **API permissions** — dot-notation SMART scopes (`patient.Patient.rs`, `system.Patient.rs`, …) exposed by the FHIR service app registration.
-- **`fhirUser` mapping** — required for SMART user-level scopes. Detailed in `docs/ad-apps/set-fhir-user-mapping.md` of the proxy sample.
+- **`fhirUser` mapping** — required for SMART user-level scopes. Detailed in [Set fhirUser Claim Mapping](../../smartonfhir-smartnative-v2/docs/ad-apps/set-fhir-user-mapping.md) in the proxy sample.
 
 When you finish those four, record the values you'll paste into [`appsettings.json`](../SMART-Native-Standalone-EHR-Launch/appsettings.json) — see [Hand-off values](#hand-off-values) at the bottom of this page.
 
