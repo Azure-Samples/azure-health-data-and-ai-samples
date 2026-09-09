@@ -78,8 +78,6 @@ This represents an application that can protect a client secret (server-rendered
 
 4. Follow [Set fhirUser Claim Mapping](./set-fhir-user-mapping.md) to map the `fhirUser` claim onto the access token.
 
-5. Add this app's **Client ID** to the FHIR Service identity-provider whitelist if your deployment requires it. (For `IdpType=EntraId` the gateway typically handles this; check your deployment notes.)
-
 ---
 
 ## 2. Standalone Patient Launch — Public client (SPA)
@@ -167,7 +165,7 @@ Microsoft Entra ID does not natively support `private_key_jwt` with ES384 / RS38
 
 5. Have the backend service **publish its JWKS** at a stable HTTPS URL. This is the asymmetric public key it will sign `client_assertion`s with (ES384 or RS384).
 
-6. **Add the secret to the backend services Key Vault** (`<env-name>-bk-kv`) created by `azd up`:
+6. **Add the secret to the backend services Key Vault** created by `azd up` (its name is written to `.azure/<env-name>/.env` as `BackendServiceKeyVaultName`):
 
    - **Name** = the **Client ID** of the Entra app registration.
    - **Value** = the **client secret value** from step 3.

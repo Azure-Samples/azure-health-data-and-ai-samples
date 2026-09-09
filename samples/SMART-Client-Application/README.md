@@ -26,30 +26,6 @@ A full-featured ASP.NET Core 8 demonstration of all four **SMART on FHIR v2** au
 
 ---
 
-## Repository layout
-
-```
-SMART-Client-Application/
-├── SMART-Native-Standalone-EHR-Launch/   ← ASP.NET Core 8 MVC app (the dashboard)
-│   ├── Controllers/
-│   │   ├── HomeController.cs             ← dashboard + session
-│   │   └── SmartController.cs            ← /login, /callback, /usercontext/*, /ehr-context-launch, /fhir
-│   ├── Services/
-│   │   ├── SmartConfigService.cs         ← discovers .well-known/smart-configuration
-│   │   ├── AuthService.cs                ← authorize + token exchange (interactive flows)
-│   │   ├── BackendTokenService.cs        ← M2M token client wrapper
-│   │   └── FhirService.cs                ← Bearer-authenticated FHIR calls
-│   ├── appsettings.json                  ← placeholders only (this file)
-│   ├── appsettings.Development.json.example ← template for local overrides (gitignored once renamed)
-│   └── keys/                             ← place es384_private.pem here (gitignored)
-└── SmartBackendServices.TokenClient/     ← reusable class library — IdP-agnostic
-    ├── SmartBackendTokenClient.cs        ← signs ES384 JWT, requests token at any endpoint
-    ├── SmartBackendJwtAssertion.cs       ← assertion builder
-    └── SmartBackendEndpoints.cs          ← endpoint helpers
-```
-
----
-
 ## Documentation
 
 | Doc | What it covers |
@@ -65,11 +41,11 @@ SMART-Client-Application/
 
 ## Quick start
 
-1. **Deploy the proxy.** Follow the deployment guide in the proxy sample (`smartonfhir-smart-v2-external-idp`). Note the Function App URL and FHIR audience URL.
+1. **Deploy the proxy.** Follow the deployment guide in the [Smart Native sample](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/smartonfhir-smartnative-v2). Note the Function App URL and FHIR audience URL.
 2. **Set up your IdP.** Pick one and follow:
-   - [docs/idp-setup-entra.md](docs/idp-setup-entra.md), or
-   - [docs/idp-setup-okta.md](docs/idp-setup-okta.md).
-3. **Generate the ES384 key pair** for Backend Services per [docs/generate-es384-key.md](docs/generate-es384-key.md). Drop the private key at `SMART-Native-Standalone-EHR-Launch/keys/es384_private.pem`.
+   - [Entra ID Setup](docs/idp-setup-entra.md), or
+   - [Okta Setup](docs/idp-setup-okta.md).
+3. **Generate the ES384 key pair** for Backend Services per [docs/generate-es384-key.md](docs/generate-es384-key.md). Drop the private key at path `SMART-Native-Standalone-EHR-Launch/keys/es384_private.pem`.
 4. **Configure local overrides:**
    ```powershell
    cd SMART-Native-Standalone-EHR-Launch

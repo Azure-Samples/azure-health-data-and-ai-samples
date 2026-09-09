@@ -107,6 +107,13 @@ namespace SMARTCustomOperations.AzureAuth
                     // for dev and single-instance use. Set AZURE_CacheConnectionString to a
                     // Redis-compatible connection string (e.g. Azure Managed Redis) to add a
                     // distributed backing store that survives restarts and works across instances.
+                    //
+                    // NOTE: Do NOT set MemoryCacheOptions.SizeLimit on this shared cache.
+                    // JsonObjectCache (used by ContextCacheService) sets only an absolute expiry
+                    // on its entries and does not populate Size, so any SizeLimit here would cause
+                    // every context-cache write to throw at MemoryCache.Set. Replay-protection
+                    // bounding is handled by a dedicated MemoryCache owned by
+                    // MemoryAssertionReplayProtector.
                     services.AddMemoryCache();
                     services.AddJsonObjectMemoryCache(options =>
                     {

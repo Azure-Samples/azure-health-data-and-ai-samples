@@ -1,6 +1,6 @@
 # SMART on FHIR v2 — Native IdP-Agnostic Sample
 
-The [Azure Health Data Services FHIR Service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) supports Substitutable Medical Applications and Reusable Technologies ([SMART on FHIR] (https://docs.smarthealthit.org/)) by implementing the key server-side behaviors required for SMART clients to securely access FHIR data using OAuth 2.0 and OpenID Connect. 
+The [Azure Health Data Services FHIR Service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) supports Substitutable Medical Applications and Reusable Technologies ([SMART on FHIR](https://docs.smarthealthit.org/)) by implementing the key server-side behaviors required for SMART clients to securely access FHIR data using OAuth 2.0 and OpenID Connect. 
 
 This sample demonstrates **SMART on FHIR v2** setting application launch and authorization on top of the **Azure Health Data Services FHIR Service**. Sample is *IdP-agnostic*: the same gateway, infrastructure, and deployment flow support both **Microsoft Entra ID** or an **External Identity Provider** (e.g. Okta). 
 

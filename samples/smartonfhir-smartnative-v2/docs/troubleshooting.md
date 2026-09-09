@@ -186,7 +186,7 @@ Common rejections from the gateway, in priority order:
 | `client_assertion jku does not match registered jwks_url` | `jku` header set, but does not match the secret's `jwks_url` tag in Key Vault | Either remove `jku` from the JWT header, or align it with the registered `jwks_url` |
 | Signature verification fails | Signing key not in the published JWKS, or algorithm mismatch | Use ES384 or RS384 only; rotate JWKS endpoint to include the signing key |
 
-If the assertion validates but the swap to Entra fails, the Key Vault secret value (the Entra client secret) is wrong or expired. Update the secret in `<env-name>-bk-kv` (the secret **name** is the SMART `client_id`, the **value** is the Entra client secret).
+If the assertion validates but the swap to Entra fails, the Key Vault secret value (the Entra client secret) is wrong or expired. Update the secret in the backend services Key Vault (its name is in `.azure/<env-name>/.env` as `BackendServiceKeyVaultName`) — the secret **name** is the SMART `client_id`, the **value** is the Entra client secret.
 
 ### Function App returns 500 on `/api/token`
 

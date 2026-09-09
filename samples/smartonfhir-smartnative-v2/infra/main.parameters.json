@@ -31,6 +31,9 @@
     },
     "CacheConnectionString": {
       "value": "${AZURE_CacheConnectionString=}"
+    },
+    "ExistingFhirServiceId": {
+      "value": "${ExistingFhirServiceId=}"
     }
   }
 }

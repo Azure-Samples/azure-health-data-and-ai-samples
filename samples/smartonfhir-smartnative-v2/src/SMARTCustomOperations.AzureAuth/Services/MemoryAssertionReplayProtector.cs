@@ -11,14 +11,22 @@ namespace SMARTCustomOperations.AzureAuth.Services
     /// In-memory <c>jti</c> replay cache scoped per backend client.
     /// Note: per-process only; scale out requires a distributed implementation (e.g., Redis).
     /// </summary>
-    public sealed class MemoryAssertionReplayProtector : IAssertionReplayProtector
+    /// <remarks>
+    /// This class owns a dedicated <see cref="MemoryCache"/> instance rather than sharing the
+    /// DI-registered <see cref="IMemoryCache"/>. The dedicated instance is bounded via
+    /// <see cref="MemoryCacheOptions.SizeLimit"/> so a flood of unique jti values cannot grow
+    /// memory unbounded within the assertion TTL window. Keeping the bounded cache private
+    /// avoids coupling replay-protection sizing to other <see cref="IMemoryCache"/> consumers
+    /// (notably <c>JsonObjectCache</c>, which does not set <c>Size</c> on entries and would
+    /// throw on every write if a shared cache had <see cref="MemoryCacheOptions.SizeLimit"/> set).
+    /// </remarks>
+    public sealed class MemoryAssertionReplayProtector : IAssertionReplayProtector, IDisposable
     {
-        private readonly IMemoryCache _cache;
-
-        public MemoryAssertionReplayProtector(IMemoryCache cache)
+        private readonly MemoryCache _cache = new(new MemoryCacheOptions
         {
-            _cache = cache;
-        }
+            SizeLimit = 10_000,
+            CompactionPercentage = 0.2,
+        });
 
         public bool TryRegister(string clientId, string jti, DateTimeOffset expiresAtUtc)
         {
@@ -34,8 +42,16 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 return false;
             }
 
-            _cache.Set(key, true, ttl);
+            // Size=1 is required by the private cache's SizeLimit — entries without a Size
+            // would throw at Set() time.
+            _cache.Set(key, true, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = ttl,
+                Size = 1,
+            });
             return true;
         }
+
+        public void Dispose() => _cache.Dispose();
     }
 }

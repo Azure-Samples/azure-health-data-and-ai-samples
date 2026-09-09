@@ -75,5 +75,6 @@ resource apiForFhirExisting 'Microsoft.HealthcareApis/services@2025-04-01-previe
 }
 
 output fhirId string = createFhirService ? fhir.id : isFhirService ? fhirExisting.id : apiForFhirExisting.id
-#disable-next-line BCP053
-output fhirIdentity string = createFhirService ? fhir.identity.principalId : isFhirService ? fhirExisting.identity.principalId : apiForFhirExisting.identity.principalId
+// principalId only exists when the FHIR service was created here with SystemAssigned identity.
+// When reusing an existing FHIR service, it may not have a managed identity, so return empty.
+output fhirIdentity string = fhir.?identity.principalId ?? ''

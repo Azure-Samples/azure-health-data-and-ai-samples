@@ -77,7 +77,19 @@ namespace SMARTCustomOperations.AzureAuth.Models
                 formData.Remove("client_id");
                 formData.Remove("client_secret");
 
-                var authParameterDecoded = reqAuth.Parameter.DecodeBase64()!.Split(":");
+                var decoded = reqAuth.Parameter.DecodeBase64();
+                if (string.IsNullOrEmpty(decoded))
+                {
+                    throw new ArgumentException("Basic Authorization header is not valid Base64.");
+                }
+
+                // RFC 7617: split on the FIRST ':' only — password may contain ':'.
+                var authParameterDecoded = decoded.Split(':', 2);
+                if (authParameterDecoded.Length < 2)
+                {
+                    throw new ArgumentException("Basic Authorization header is missing the ':' separator between client_id and client_secret.");
+                }
+
                 formData.Add("client_id", authParameterDecoded[0]);
                 formData.Add("client_secret", authParameterDecoded[1]);
             }
