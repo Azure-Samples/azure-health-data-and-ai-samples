@@ -95,6 +95,11 @@ namespace SMARTCustomOperations.AzureAuth
                     if (string.Equals(config.IdpType, "EntraId", StringComparison.OrdinalIgnoreCase))
                     {
                         services.AddSingleton<IIdpStrategy, EntraIdpStrategy>();
+
+                        // Graph client + consent-picker services (Entra only).
+                        services.AddMicrosoftGraphClient();
+                        services.AddScoped<GraphConsentService>();
+                        services.AddSingleton<ContextTokenValidator>();
                     }
                     else
                     {

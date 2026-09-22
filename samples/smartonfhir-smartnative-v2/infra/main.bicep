@@ -40,6 +40,9 @@ param principalId string = ''
 @description('Optional Redis-compatible connection string for distributed EHR launch context cache (e.g. Azure Managed Redis). Leave blank to use in-memory caching inside the Function App (suitable for samples and single-instance deployments).')
 param CacheConnectionString string = ''
 
+@description('Audience the consent picker browser targets when calling /api/appConsentInfo. Leave blank to derive as api://<ContextAppClientId> at runtime. Only used when IdpType is EntraId.')
+param ConsentPickerAudience string = ''
+
 @description('Full resource ID of an existing AHDS FHIR service to reuse. Format: /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.HealthcareApis/workspaces/{ws}/fhirservices/{svc}. Leave blank to create a new workspace + FHIR service. When reused, this deployment does NOT modify the existing FHIR service authenticationConfiguration; the caller is responsible for ensuring audience, authority and smartIdentityProviders are correctly configured for the chosen IdpType.')
 param ExistingFhirServiceId string = ''
 
@@ -140,6 +143,7 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     authorityUrl: AuthorityURL
     backendServiceVaultName: deployBackendVault ? backendVaultNameResolved : ''
     fhirResourceAppId: FhirResourceAppId
+    consentPickerAudience: ConsentPickerAudience
   }
 }
 

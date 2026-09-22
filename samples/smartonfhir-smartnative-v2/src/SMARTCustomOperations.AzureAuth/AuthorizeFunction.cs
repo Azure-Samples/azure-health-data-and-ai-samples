@@ -81,10 +81,15 @@ namespace SMARTCustomOperations.AzureAuth
             if (!string.IsNullOrEmpty(aud))
             {
                 var providedAudience = HttpUtility.UrlDecode(aud).TrimEnd('/');
+
+                
+                var gatewayBaseUrl = $"{req.Url.Scheme}://{req.Url.Authority}".TrimEnd('/');
+
                 var validAudiences = new[]
                 {
                     (_config.FhirAudience ?? string.Empty).TrimEnd('/'),
                     (_config.FhirServerUrl ?? string.Empty).TrimEnd('/'),
+                    gatewayBaseUrl,
                 };
 
                 if (!validAudiences.Any(a => !string.IsNullOrEmpty(a) && string.Equals(a, providedAudience, StringComparison.OrdinalIgnoreCase)))
@@ -92,6 +97,22 @@ namespace SMARTCustomOperations.AzureAuth
                     _logger.LogError("Invalid audience. Got: {Got}, Valid: {Valid}", providedAudience, string.Join(", ", validAudiences));
                     return await BadRequest(req, "Invalid audience.");
                 }
+            }
+
+            // Standalone scope picker: on the first pass, send the user to the consent screen
+            // (/api/consent-ui) instead of straight to the IdP. The picker lets the user narrow
+            // scopes, then navigates back here with user=true to continue to the IdP.
+            // Skipped for prompt=none (no interactive UI is allowed) and for non-FHIR requests.
+            if (_idpStrategy.ProvidesConsentPicker
+                && !string.Equals(query["user"], "true", StringComparison.OrdinalIgnoreCase)
+                && HasFhirScope(scope!)
+                && !IsPromptNone(prompt))
+            {
+                var pickerUrl = $"{req.Url.Scheme}://{req.Url.Authority}/api/consent-ui{req.Url.Query}";
+                _logger.LogInformation("Redirecting authorize to consent picker.");
+                var pickerResponse = req.CreateResponse(HttpStatusCode.Redirect);
+                pickerResponse.Headers.Add("Location", pickerUrl);
+                return pickerResponse;
             }
 
             var entraScopes = _idpStrategy.TranslateScopesToIdp(scope!);
@@ -135,9 +156,39 @@ namespace SMARTCustomOperations.AzureAuth
             var location = $"{authorizeBase}?{string.Join("&", queryParams)}";
             _logger.LogInformation("Redirecting authorize to upstream IdP. EHR launch: {IsEhr}", !string.IsNullOrEmpty(launch));
 
+            // Reached here either because the consent picker is disabled/not applicable, or the
+            // user has already been through it (user=true). Redirect on to the upstream IdP.
+
             var response = req.CreateResponse(HttpStatusCode.Redirect);
             response.Headers.Add("Location", location);
             return response;
+        }
+
+        private static bool IsPromptNone(string? prompt) =>
+            !string.IsNullOrEmpty(prompt)
+            && prompt.Replace('+', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Any(p => p.Equals("none", StringComparison.OrdinalIgnoreCase));
+
+        private static bool HasPickerDoneCookie(HttpRequestData req)
+        {
+            if (!req.Headers.TryGetValues("Cookie", out var cookieHeaders))
+            {
+                return false;
+            }
+
+            foreach (var header in cookieHeaders)
+            {
+                foreach (var pair in header.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var kv = pair.Split('=', 2);
+                    if (kv.Length == 2 && kv[0].Trim().Equals("__picker_done", StringComparison.Ordinal))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static async Task<HttpResponseData> BadRequest(HttpRequestData req, string message)

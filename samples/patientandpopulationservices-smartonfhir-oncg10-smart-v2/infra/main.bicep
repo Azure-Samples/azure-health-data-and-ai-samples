@@ -169,9 +169,10 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     customOperationsFuncStorName: functionBase.outputs.storageAccountName
     hostingPlanId: functionBase.outputs.hostingPlanId
-    redisCacheId: redis.outputs.redisCacheId
+    redisDatabaseId: redis.outputs.redisDatabaseId
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
+    redisPort: redis.outputs.redisPort
     enableVNetSupport: enableVNetSupport
   }
 }
@@ -258,6 +259,8 @@ module redisApimLink './core/apiManagement/redisExternalCache.bicep'= {
     redisApiVersion: redis.outputs.redisApiVersion
     redisCacheHostName: redis.outputs.redisCacheHostName
     redisCacheId: redis.outputs.redisCacheId
+    redisDatabaseId: redis.outputs.redisDatabaseId
+    redisPort: redis.outputs.redisPort
   }
   dependsOn:[
     apim

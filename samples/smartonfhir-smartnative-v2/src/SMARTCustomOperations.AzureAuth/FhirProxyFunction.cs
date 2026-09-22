@@ -48,10 +48,18 @@ namespace SMARTCustomOperations.AzureAuth
 
         [Function("FhirProxy")]
         public async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", "put", "patch", "delete", Route = @"{*path:regex(^(?!api/).*)}")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", "put", "patch", "delete", "options", Route = @"{*path:regex(^(?!api/).*)}")] HttpRequestData req,
             string path)
         {
             var normalizedPath = (path ?? string.Empty).Trim('/');
+
+            if (req.Method.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase))
+            {
+                var preflight = req.CreateResponse(HttpStatusCode.NoContent);
+                AddCorsHeaders(req, preflight);
+                return preflight;
+            }
+
             if (req.Method.Equals("GET", StringComparison.OrdinalIgnoreCase)
                 && string.Equals(normalizedPath, ".well-known/smart-configuration", StringComparison.OrdinalIgnoreCase))
             {
@@ -137,6 +145,10 @@ namespace SMARTCustomOperations.AzureAuth
             // Build the response back to the client
             var response = req.CreateResponse(fhirResponse.StatusCode);
 
+            // Add CORS headers so browser-based SMART clients (and Inferno's CORS conformance
+            // checks on /metadata) can consume the response cross-origin.
+            AddCorsHeaders(req, response);
+
             // Copy FHIR response headers
             if (fhirResponse.Content.Headers.ContentType != null)
             {
@@ -176,9 +188,16 @@ namespace SMARTCustomOperations.AzureAuth
                     modifiedConfig["authorization_endpoint"] = JsonSerializer.SerializeToElement($"{gatewayBaseUrl}/api/authorize");
                 }
 
+                // Merge the upstream capabilities list with the SMART v2 capabilities that this
+                // gateway actually implements. Required by Inferno g10 test 1.8.05 (missing
+                // context-standalone-patient, permission-v1 in the native FHIR response).
+                modifiedConfig["capabilities"] = JsonSerializer.SerializeToElement(
+                    BuildCapabilities(smartConfig));
+
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 response.Headers.Add("Content-Type", "application/json");
                 response.Headers.Add("Cache-Control", "public, max-age=3600");
+                AddCorsHeaders(req, response);
 
                 var jsonOptions = new JsonSerializerOptions
                 {
@@ -196,6 +215,72 @@ namespace SMARTCustomOperations.AzureAuth
                 await errorResponse.WriteStringAsync("Failed to retrieve SMART configuration from FHIR Service.");
                 return errorResponse;
             }
+        }
+
+        // Capabilities this gateway supports end-to-end, per SMART App Launch 2.x.
+        // See http://hl7.org/fhir/smart-app-launch/conformance.html
+        private static readonly string[] GatewayCapabilities =
+        {
+            "launch-ehr",
+            "launch-standalone",
+            "client-public",
+            "client-confidential-symmetric",
+            "client-confidential-asymmetric",
+            "sso-openid-connect",
+            "context-ehr-patient",
+            "context-ehr-encounter",
+            "context-standalone-patient",
+            "context-standalone-encounter",
+            "permission-offline",
+            "permission-patient",
+            "permission-user",
+            "permission-v1",
+            "permission-v2",
+            "authorize-post",
+        };
+
+        private static List<string> BuildCapabilities(IReadOnlyDictionary<string, JsonElement> upstreamConfig)
+        {
+            var caps = new HashSet<string>(StringComparer.Ordinal);
+
+            if (upstreamConfig.TryGetValue("capabilities", out var existing)
+                && existing.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in existing.EnumerateArray())
+                {
+                    if (item.ValueKind == JsonValueKind.String)
+                    {
+                        var s = item.GetString();
+                        if (!string.IsNullOrEmpty(s))
+                        {
+                            caps.Add(s);
+                        }
+                    }
+                }
+            }
+
+            foreach (var c in GatewayCapabilities)
+            {
+                caps.Add(c);
+            }
+
+            return caps.OrderBy(c => c, StringComparer.Ordinal).ToList();
+        }
+
+        private static void AddCorsHeaders(HttpRequestData req, HttpResponseData response)
+        {
+            var origin = req.Headers.TryGetValues("Origin", out var originValues)
+                ? originValues.FirstOrDefault()
+                : null;
+
+            response.Headers.Add("Access-Control-Allow-Origin", string.IsNullOrEmpty(origin) ? "*" : origin);
+            response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            response.Headers.Add(
+                "Access-Control-Allow-Headers",
+                "Authorization, Content-Type, Accept, Prefer, If-Match, If-None-Match, X-Requested-With");
+            response.Headers.Add("Access-Control-Expose-Headers", "Content-Location, Location, ETag");
+            response.Headers.Add("Access-Control-Max-Age", "3600");
+            response.Headers.Add("Vary", "Origin");
         }
     }
 }

@@ -60,6 +60,13 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         public string? ContextAppClientId { get; set; }
 
         /// <summary>
+        /// Audience the consent picker's browser-side MSAL token targets when calling
+        /// /api/appConsentInfo. Leave empty to derive as "api://{ContextAppClientId}" at runtime.
+        /// Only used when IdpType is EntraId.
+        /// </summary>
+        public string? ConsentPickerAudience { get; set; }
+
+        /// <summary>
         /// Key Vault name (or full https vault URI) hosting backend client registrations.
         /// Each registered client = one secret: name=clientId, value=Entra client_secret,
         /// tag "jwks_url"=HTTPS URL of client's JWKS. Leave empty to disable backend services.

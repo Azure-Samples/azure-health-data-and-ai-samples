@@ -16,6 +16,14 @@ namespace SMARTCustomOperations.AzureAuth.Strategies
         bool SupportsBackendServices { get; }
 
         /// <summary>
+        /// True when the gateway must host a scope-selection consent picker. Entra only:
+        /// Entra's consent screen is all-or-nothing, so we intercept /authorize and let
+        /// the user narrow scopes via Microsoft Graph oauth2PermissionGrants. External IdPs
+        /// (e.g. Okta custom auth servers) emit SMART scopes natively per the request.
+        /// </summary>
+        bool ProvidesConsentPicker { get; }
+
+        /// <summary>
         /// JWT claim used as the user identifier on both the User Context (context-cache) token
         /// and the EHR access token. The claim value MUST be identical across both flows for
         /// the launch-context cache to round-trip. Hard-coded per IdP because the correct value

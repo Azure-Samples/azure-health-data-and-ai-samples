@@ -13,6 +13,16 @@
     },
     {
       "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
+      "adminConsentDisplayName": "patient.Observation.rs?category=clinical-test",
+      "id": "3f6f7c4e-9a71-4a4b-90a1-1e7bb0e2ab4a",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search granular Observation resources in their compartment.",
+      "userConsentDisplayName": "patient.Observation.rs?category=clinical-test",
+      "value": "patient.Observation.rs?category=http:%2f%2fhl7.org%2ffhir%2fus%2fcore%2fCodeSystem%2fus-core-observation-category|clinical-test"
+    },
+    {
+      "adminConsentDescription": "Allows user to search granular Observation resources in their compartment.",
       "adminConsentDisplayName": "patient.Observation.rs?category=survey",
       "id": "1c9d0d12-63a3-462f-9bc1-0f9d7f1a56e2",
       "isEnabled": true,
@@ -120,6 +130,46 @@
       "userConsentDescription": "Allows user to read RelatedPerson resources in their compartment.",
       "userConsentDisplayName": "patient.RelatedPerson.read",
       "value": "patient.RelatedPerson.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search QuestionnaireResponse resources in their compartment.",
+      "adminConsentDisplayName": "patient.QuestionnaireResponse.rs",
+      "id": "96ec3176-6f43-4beb-9ea3-867c25f10023",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search QuestionnaireResponse resources in their compartment.",
+      "userConsentDisplayName": "patient.QuestionnaireResponse.rs",
+      "value": "patient.QuestionnaireResponse.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read QuestionnaireResponse resources in their compartment.",
+      "adminConsentDisplayName": "patient.QuestionnaireResponse.read",
+      "id": "2c07c26a-dfe1-48e2-bd00-f7d02113b228",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read QuestionnaireResponse resources in their compartment.",
+      "userConsentDisplayName": "patient.QuestionnaireResponse.read",
+      "value": "patient.QuestionnaireResponse.read"
+    },
+    {
+      "adminConsentDescription": "Allows user to search QuestionnaireResponse resources in their compartment.",
+      "adminConsentDisplayName": "user.QuestionnaireResponse.rs",
+      "id": "fb04e459-49e4-459e-af54-57be937f2fa6",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to search QuestionnaireResponse resources in their compartment.",
+      "userConsentDisplayName": "user.QuestionnaireResponse.rs",
+      "value": "user.QuestionnaireResponse.rs"
+    },
+    {
+      "adminConsentDescription": "Allows user to read QuestionnaireResponse resources in their compartment.",
+      "adminConsentDisplayName": "user.QuestionnaireResponse.read",
+      "id": "17eb880e-e1e6-4d5b-b323-26bd96340976",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allows user to read QuestionnaireResponse resources in their compartment.",
+      "userConsentDisplayName": "user.QuestionnaireResponse.read",
+      "value": "user.QuestionnaireResponse.read"
     },
     {
       "adminConsentDescription": "Allows user to search ServiceRequest resources in their compartment.",

@@ -20,6 +20,8 @@ namespace SMARTCustomOperations.AzureAuth.Strategies
 
         public bool SupportsBackendServices => false;
 
+        public bool ProvidesConsentPicker => false;
+
         // External IdPs (e.g. Okta) typically emit "sub" on the access_token; the User Context
         // client must also send its access_token (not id_token) for the cache key to match.
         public string UserIdClaimType => "sub";

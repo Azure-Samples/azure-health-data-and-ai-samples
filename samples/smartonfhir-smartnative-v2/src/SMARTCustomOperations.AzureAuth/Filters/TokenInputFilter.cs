@@ -136,6 +136,10 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                     {
                         pc.Scope = _idpStrategy.TranslateScopesToIdp(pc.Scope!);
                     }
+                    else if (tokenContext is RefreshTokenContext rc && !string.IsNullOrEmpty(rc.Scope))
+                    {
+                        rc.Scope = _idpStrategy.TranslateScopesToIdp(rc.Scope!);
+                    }
                 }
 
                 string tokenEndpointUrl = await _idpStrategy.GetTokenEndpointAsync();

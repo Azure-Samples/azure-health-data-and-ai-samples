@@ -34,9 +34,10 @@ param customOperationsFuncStorName string
 @description('Azure Resource ID for the Function App hosting plan.')
 param hostingPlanId string
 
-param redisCacheId string
+param redisDatabaseId string
 param redisCacheHostName string
 param redisApiVersion string
+param redisPort int
 param enableVNetSupport bool
 
 @description('Name for the Function App to deploy the SDK custom operations to.')
@@ -93,8 +94,8 @@ resource authCustomOperationFunctionApp 'Microsoft.Web/sites@2021-03-01' = {
 }
 
 var functionConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
-var redisPrimaryKey = listKeys(redisCacheId, redisApiVersion).primaryKey
-var redisConnectionString = '${redisCacheHostName},password=${redisPrimaryKey},ssl=True,abortConnect=False'
+var redisPrimaryKey = listKeys(redisDatabaseId, redisApiVersion).primaryKey
+var redisConnectionString = '${redisCacheHostName}:${redisPort},password=${redisPrimaryKey},ssl=True,abortConnect=False'
 
 resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' = {
   name: 'appsettings'
