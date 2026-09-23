@@ -28,18 +28,21 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly AzureAuthOperationsConfig _configuration;
         private readonly IIdpStrategy _idpStrategy;
         private readonly IBackendClientAssertionValidator? _backendValidator;
+        private readonly IClientAssertionAuthenticator? _assertionAuthenticator;
         private readonly string _id;
 
         public TokenInputFilter(
             ILogger<TokenInputFilter> logger,
             AzureAuthOperationsConfig configuration,
             IIdpStrategy idpStrategy,
-            IBackendClientAssertionValidator? backendValidator = null)
+            IBackendClientAssertionValidator? backendValidator = null,
+            IClientAssertionAuthenticator? assertionAuthenticator = null)
         {
             _logger = logger;
             _configuration = configuration;
             _idpStrategy = idpStrategy;
             _backendValidator = backendValidator;
+            _assertionAuthenticator = assertionAuthenticator;
             _id = Guid.NewGuid().ToString();
         }
 
@@ -77,6 +80,43 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             var expectedBackendAudience = inboundTokenUri.IsDefaultPort
                 ? $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}{inboundTokenUri.AbsolutePath}"
                 : $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}:{inboundTokenUri.Port}{inboundTokenUri.AbsolutePath}";
+
+            // Confidential asymmetric client authentication (private_key_jwt) for the user grants
+            // (authorization_code, refresh_token). Entra cannot validate a client-registered JWKS,
+            // so we validate the assertion here and swap it for the Key Vault client_secret BEFORE
+            // classification — the request then flows through the normal confidential-client path
+            // (keeping user-consented SMART scopes). The client_credentials backend-services grant
+            // keeps its own assertion handling below and is intentionally excluded here.
+            if (IsAsymmetricUserGrantRequest(requestData) && _idpStrategy.SupportsBackendServices)
+            {
+                if (_assertionAuthenticator is null)
+                {
+                    FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true,
+                        error: new ArgumentException("Asymmetric client authentication is not configured. Set AZURE_BackendServiceKeyVaultStore."),
+                        code: HttpStatusCode.BadRequest);
+                    OnFilterError?.Invoke(this, error);
+                    return context.SetContextErrorBody(error, _configuration.Debug);
+                }
+
+                try
+                {
+                    await _assertionAuthenticator.SwapAssertionForClientSecretAsync(requestData, expectedBackendAudience);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    _logger?.LogWarning("Asymmetric client_assertion rejected: {Message}", ex.Message);
+                    FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.Unauthorized);
+                    OnFilterError?.Invoke(this, error);
+                    return context.SetContextErrorBody(error, _configuration.Debug);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Asymmetric client authentication failed unexpectedly.");
+                    FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: ex, code: HttpStatusCode.InternalServerError);
+                    OnFilterError?.Invoke(this, error);
+                    return context.SetContextErrorBody(error, _configuration.Debug);
+                }
+            }
 
             TokenContext? tokenContext = null;
             try
@@ -210,6 +250,33 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             return context.Request.Content == null ||
                 !context.Request.Content.Headers.GetValues("Content-Type")
                 .Any(x => string.Equals(x.Split(";").FirstOrDefault(), "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// True when the request is a user grant (authorization_code or refresh_token) authenticated
+        /// with a jwt-bearer client_assertion and no client_secret — i.e. a confidential asymmetric
+        /// client. The client_credentials backend-services grant is deliberately excluded; it keeps
+        /// its dedicated assertion handling.
+        /// </summary>
+        private static bool IsAsymmetricUserGrantRequest(NameValueCollection form)
+        {
+            var grantType = form["grant_type"];
+            var isUserGrant =
+                string.Equals(grantType, GrantType.authorization_code.ToString(), StringComparison.Ordinal) ||
+                string.Equals(grantType, GrantType.refresh_token.ToString(), StringComparison.Ordinal);
+
+            if (!isUserGrant)
+            {
+                return false;
+            }
+
+            var assertionType = form["client_assertion_type"] is { } rawType
+                ? Uri.UnescapeDataString(rawType)
+                : null;
+
+            return !string.IsNullOrEmpty(form["client_assertion"])
+                && string.Equals(assertionType, ClientAssertionAuthenticator.JwtBearerClientAssertionType, StringComparison.Ordinal)
+                && string.IsNullOrEmpty(form["client_secret"]);
         }
     }
 }

@@ -152,6 +152,7 @@ namespace SMARTCustomOperations.AzureAuth
                         services.AddSingleton<IAssertionReplayProtector, MemoryAssertionReplayProtector>();
                         services.AddSingleton<IClientConfigService, KeyVaultClientConfigurationService>();
                         services.AddSingleton<IBackendClientAssertionValidator, BackendClientAssertionValidator>();
+                        services.AddSingleton<IClientAssertionAuthenticator, ClientAssertionAuthenticator>();
                         services.AddHttpClient(); // for JWKS fetch
                         Console.WriteLine($"Backend services proxy enabled. KV store: {config.BackendServiceKeyVaultStore}");
                     }

@@ -79,17 +79,19 @@ namespace SMARTCustomOperations.AzureAuth.Services
                 ? (DateTime?)null
                 : token.IssuedAt.ToUniversalTime();
 
-            if (issuedAt is null)
-            {
-                throw new UnauthorizedAccessException("client_assertion must include iat.");
-            }
-
+            // iat is OPTIONAL per SMART App Launch asymmetric client authentication; only exp is required.
+            // See https://hl7.org/fhir/smart-app-launch/client-confidential-asymmetric.html
             if (token.ValidTo == DateTime.MinValue)
             {
                 throw new UnauthorizedAccessException("client_assertion must include exp.");
             }
 
-            var actualLifetime = token.ValidTo.ToUniversalTime() - issuedAt.Value;
+            var expiresAtUtc = token.ValidTo.ToUniversalTime();
+
+            // exp SHALL be no more than MaxAssertionLifetime in the future. Measure the declared
+            // lifetime (exp - iat) when iat is present, otherwise measure exp relative to now.
+            var lifetimeStart = issuedAt ?? DateTime.UtcNow;
+            var actualLifetime = expiresAtUtc - lifetimeStart;
             if (actualLifetime <= TimeSpan.Zero || actualLifetime > MaxAssertionLifetime)
             {
                 throw new UnauthorizedAccessException(
