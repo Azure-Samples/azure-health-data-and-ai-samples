@@ -165,6 +165,22 @@ namespace SMARTCustomOperations.AzureAuth
                         Console.WriteLine("Backend services proxy disabled. Set AZURE_BackendServiceKeyVaultStore to enable.");
                     }
 
+                    // SMART Backend Services bulk data export (FHIR Bulk Data / Inferno g10
+                    // Multi-Patient Authorization and API). Enabled only on Entra with export
+                    // storage configured. Provides group export kickoff, status polling with URL
+                    // rewriting, and authenticated NDJSON file streaming.
+                    if (isEntraId && config.ExportEnabled)
+                    {
+                        services.AddSingleton<IFhirAccessTokenValidator, FhirAccessTokenValidator>();
+                        services.AddSingleton<IExportFileService, BlobExportFileService>();
+                        services.AddSingleton<IBulkExportService, BulkExportService>();
+                        Console.WriteLine($"Bulk export enabled. Export storage: {config.ExportStorageBlobUri}");
+                    }
+                    else if (isEntraId)
+                    {
+                        Console.WriteLine("Bulk export disabled. Set AZURE_ExportStorageBlobUri to enable.");
+                    }
+
                     services.UseAzureFunctionPipeline();
 
                     services.AddInputFilter(typeof(TokenInputFilter));

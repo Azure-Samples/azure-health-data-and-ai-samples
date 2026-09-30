@@ -60,6 +60,17 @@ namespace SMARTCustomOperations.AzureAuth.Configuration
         public string? ContextAppClientId { get; set; }
 
         /// <summary>
+        /// Blob service URI of the export storage account (e.g. https://acct.blob.core.windows.net).
+        /// When set (Entra mode), enables SMART Backend Services bulk export handling.
+        /// </summary>
+        public string? ExportStorageBlobUri { get; set; }
+
+        /// <summary>
+        /// True when export storage is configured and bulk export handling should be enabled.
+        /// </summary>
+        public bool ExportEnabled => !string.IsNullOrWhiteSpace(ExportStorageBlobUri);
+
+        /// <summary>
         /// Audience the consent picker's browser-side MSAL token targets when calling
         /// /api/appConsentInfo. Leave empty to derive as "api://{ContextAppClientId}" at runtime.
         /// Only used when IdpType is EntraId.

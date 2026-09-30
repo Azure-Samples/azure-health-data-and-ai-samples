@@ -85,6 +85,19 @@ var resourceGroupName = rg.name
 var fhirRgName = reuseFhir ? existingFhirRg : resourceGroupName
 var appInsightsName = '${nameCleanShort}-appins'
 var logAnalyticsNameResolved = length(logAnalyticsName) > 0 ? logAnalyticsName : '${nameCleanShort}-la'
+var exportStorageAccountName = '${nameCleanShort}expsa'
+
+// Dedicated export storage account (bulk export NDJSON + job records). Always created in the
+// sample resource group, even when reusing an existing FHIR service.
+module exportStorage 'core/exportStorage.bicep' = {
+  name: 'exportStorageDeploy'
+  scope: resourceGroup(resourceGroupName)
+  params: {
+    exportStorageAccountName: exportStorageAccountName
+    location: location
+    appTags: appTags
+  }
+}
 
 module fhir 'core/fhir.bicep' = {
   name: 'fhirDeploy'
@@ -99,6 +112,8 @@ module fhir 'core/fhir.bicep' = {
     audience: fhirAudienceResolved
     AuthorityURL: AuthorityURL
     idpType: IdpType
+    // For reuse mode we do not modify the existing FHIR service; the caller configures export there.
+    exportStorageAccountName: reuseFhir ? '' : exportStorage.outputs.exportStorageAccountName
   }
 }
 
@@ -144,6 +159,32 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     backendServiceVaultName: deployBackendVault ? backendVaultNameResolved : ''
     fhirResourceAppId: FhirResourceAppId
     consentPickerAudience: ConsentPickerAudience
+    exportStorageBlobUri: exportStorage.outputs.exportStorageBlobUri
+  }
+}
+
+// Allow the FHIR service managed identity to write bulk export output to the export storage.
+// Only applicable when this deployment created the FHIR service (its identity is known here).
+module fhirExportStorageRole './core/storageRoleAssignment.bicep' = if (!reuseFhir) {
+  name: 'fhirExportStorageRole'
+  scope: resourceGroup(resourceGroupName)
+  params: {
+    storageAccountName: exportStorage.outputs.exportStorageAccountName
+    principalId: fhir.outputs.fhirIdentity
+    principalType: 'ServicePrincipal'
+    roleType: 'blobContributor'
+  }
+}
+
+// Allow the gateway Function App managed identity to read export files for authenticated streaming.
+module gatewayExportStorageRole './core/storageRoleAssignment.bicep' = {
+  name: 'gatewayExportStorageRole'
+  scope: resourceGroup(resourceGroupName)
+  params: {
+    storageAccountName: exportStorage.outputs.exportStorageAccountName
+    principalId: authCustomOperation.outputs.functionAppPrincipalId
+    principalType: 'ServicePrincipal'
+    roleType: 'blobReader'
   }
 }
 
@@ -183,3 +224,5 @@ output FunctionAppManagedIdentityPrincipalId string = authCustomOperation.output
 output CacheConnectionString string = CacheConnectionString
 output BackendServiceKeyVaultName string = backendVault.?outputs.keyVaultName ?? ''
 output BackendServiceKeyVaultUri string = backendVault.?outputs.keyVaultUri ?? ''
+output ExportStorageAccountName string = exportStorage.outputs.exportStorageAccountName
+output ExportStorageBlobUri string = exportStorage.outputs.exportStorageBlobUri

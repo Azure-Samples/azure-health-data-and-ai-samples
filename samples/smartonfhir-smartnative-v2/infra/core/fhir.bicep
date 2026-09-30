@@ -7,6 +7,9 @@ param audience string = ''
 param appTags object = {}
 param AuthorityURL string = ''
 
+@description('Name of the storage account the FHIR service exports bulk data to. Leave blank to skip export configuration.')
+param exportStorageAccountName string = ''
+
 @description('Upstream IdP integration mode. EntraId uses default AAD auth; ExternalIdp adds a smartIdentityProviders entry pointing at AuthorityURL.')
 @allowed([
   'EntraId'
@@ -50,6 +53,16 @@ var authenticationConfiguration = idpType == 'ExternalIdp' ? union(authenticatio
   ]
 }) : authenticationConfigurationBase
 
+// Only attach an export configuration when an export storage account name is supplied.
+var baseProperties = {
+  authenticationConfiguration: authenticationConfiguration
+}
+var fhirProperties = empty(exportStorageAccountName) ? baseProperties : union(baseProperties, {
+  exportConfiguration: {
+    storageAccountName: exportStorageAccountName
+  }
+})
+
 resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if(createFhirService) {
   name: '${newOrExistingWorkspaceName}/${fhirServiceName}'
   location: location
@@ -59,9 +72,7 @@ resource fhir 'Microsoft.HealthcareApis/workspaces/fhirservices@2023-12-01' = if
     type: 'SystemAssigned'
   }
 
-  properties: {
-    authenticationConfiguration: authenticationConfiguration
-  }
+  properties: fhirProperties
 
   tags: appTags
 }

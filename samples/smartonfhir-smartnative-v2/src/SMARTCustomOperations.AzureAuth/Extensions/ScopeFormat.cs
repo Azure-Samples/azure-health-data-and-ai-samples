@@ -75,14 +75,18 @@ namespace SMARTCustomOperations.AzureAuth.Extensions
                     ? scope
                     : scope.Replace(aud, string.Empty, StringComparison.Ordinal);
 
+                // Convert the resource wildcard (".all" -> ".*") BEFORE turning the
+                // "prefix." separator into "prefix/". Otherwise "system.all.read" becomes
+                // "system/all.read" (the ".all" no longer matches once preceded by "/"),
+                // which then never round-trips back to the SMART "system/*.read" form.
                 s = s.TrimStart('/')
+                    .Replace(".all", ".*", StringComparison.Ordinal)
                     .Replace("patient.", "patient/", StringComparison.Ordinal)
                     .Replace("encounter.", "encounter/", StringComparison.Ordinal)
                     .Replace("user.", "user/", StringComparison.Ordinal)
                     .Replace("system.", "system/", StringComparison.Ordinal)
                     .Replace("launch.", "launch/", StringComparison.Ordinal)
-                    .Replace("%2f", "/", StringComparison.Ordinal)
-                    .Replace(".all", ".*", StringComparison.Ordinal);
+                    .Replace("%2f", "/", StringComparison.Ordinal);
 
                 result.Add(s);
             }
