@@ -77,6 +77,14 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             // Capture the inbound token URL BEFORE we retarget — used as the expected
             // audience for backend services client_assertion validation (per SMART v2).
             var inboundTokenUri = context.Request.RequestUri!;
+
+            // Also capture the gateway base URL (scheme+host) so TokenOutputFilter can build an
+            // absolute smart_style_url for the SMART launch context (context-style capability).
+            var gatewayBaseUrl = inboundTokenUri.IsDefaultPort
+                ? $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}"
+                : $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}:{inboundTokenUri.Port}";
+            context.Properties["gatewayBaseUrl"] = gatewayBaseUrl;
+
             var expectedBackendAudience = inboundTokenUri.IsDefaultPort
                 ? $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}{inboundTokenUri.AbsolutePath}"
                 : $"{inboundTokenUri.Scheme}://{inboundTokenUri.Host}:{inboundTokenUri.Port}{inboundTokenUri.AbsolutePath}";

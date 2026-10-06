@@ -63,7 +63,16 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 Func<IEnumerable<string>, IEnumerable<string>>? scopeBackTranslator =
                     _idpStrategy.ProvidesAuthorizeProxy ? _idpStrategy.TranslateScopesFromIdp : null;
 
-                tokenResponse = new(context.ContentString, _idpStrategy.UserIdClaimType, scopeBackTranslator);
+                // Gateway base URL captured by TokenInputFilter; used to build an absolute
+                // smart_style_url for the SMART launch context.
+                string? smartStyleUrl = null;
+                if (context.Properties.TryGetValue("gatewayBaseUrl", out var gatewayBaseObj)
+                    && gatewayBaseObj is string gatewayBase && !string.IsNullOrEmpty(gatewayBase))
+                {
+                    smartStyleUrl = $"{gatewayBase}/smart-style.json";
+                }
+
+                tokenResponse = new(context.ContentString, _idpStrategy.UserIdClaimType, scopeBackTranslator, smartStyleUrl);
 
                 bool isEhrLaunch = tokenResponse.Scopes.Any(s => s == "launch");
 

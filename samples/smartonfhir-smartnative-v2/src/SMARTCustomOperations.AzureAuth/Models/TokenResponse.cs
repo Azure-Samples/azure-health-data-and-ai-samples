@@ -19,6 +19,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
         private readonly Dictionary<string, object> _tokenResponseDict;
         private readonly string _userIdClaimType;
         private readonly Func<IEnumerable<string>, IEnumerable<string>>? _scopeBackTranslator;
+        private readonly string? _smartStyleUrl;
         private string? _userId;
 
         /// <param name="userIdClaimType">
@@ -29,12 +30,17 @@ namespace SMARTCustomOperations.AzureAuth.Models
         /// Optional. When set, applied to scopes after they are collected from the access token / response
         /// body. Used by Entra mode to translate IdP-format scopes back to SMART format before serialization.
         /// </param>
-        public TokenResponse(string tokenResponseString, string? userIdClaimType = null, Func<IEnumerable<string>, IEnumerable<string>>? scopeBackTranslator = null)
+        /// <param name="smartStyleUrl">
+        /// Optional absolute URL for the SMART style document. When set, emitted as smart_style_url
+        /// on launch responses (SMART App Launch context-style capability).
+        /// </param>
+        public TokenResponse(string tokenResponseString, string? userIdClaimType = null, Func<IEnumerable<string>, IEnumerable<string>>? scopeBackTranslator = null, string? smartStyleUrl = null)
         {
             _tokenResponseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(tokenResponseString)
                 ?? new Dictionary<string, object>();
             _userIdClaimType = string.IsNullOrWhiteSpace(userIdClaimType) ? "sub" : userIdClaimType;
             _scopeBackTranslator = scopeBackTranslator;
+            _smartStyleUrl = smartStyleUrl;
         }
 
         public string? FhirUser
@@ -108,6 +114,11 @@ namespace SMARTCustomOperations.AzureAuth.Models
             if (Scopes.Any(x => x == "launch"))
             {
                 output["need_patient_banner"] = true;
+
+                if (!string.IsNullOrEmpty(_smartStyleUrl))
+                {
+                    output["smart_style_url"] = _smartStyleUrl;
+                }
             }
 
             return JsonConvert.SerializeObject(output);

@@ -16,8 +16,10 @@ namespace SMARTCustomOperations.AzureAuth
     /// <summary>
     /// Gateway authorize endpoint used by Entra mode. Validates SMART parameters,
     /// translates scopes via the IdP strategy, and 302-redirects to the upstream
-    /// authorize endpoint. In External mode this function is a no-op (404) because
-    /// clients call the IdP /authorize directly per the well-known config.
+    /// authorize endpoint. Accepts both GET and POST (SMART "authorize-post" capability):
+    /// for POST the SMART parameters are read from the application/x-www-form-urlencoded body.
+    /// In External mode this function is a no-op (404) because clients call the IdP /authorize
+    /// directly per the well-known config.
     /// </summary>
     public class AuthorizeFunction
     {
@@ -34,7 +36,7 @@ namespace SMARTCustomOperations.AzureAuth
 
         [Function("Authorize")]
         public async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/authorize")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "api/authorize")] HttpRequestData req)
         {
             if (!_idpStrategy.ProvidesAuthorizeProxy)
             {
@@ -43,8 +45,31 @@ namespace SMARTCustomOperations.AzureAuth
                 return notFound;
             }
 
-            var query = HttpUtility.ParseQueryString(req.Url.Query);
+            // SMART authorize-post: parameters arrive in the form body on POST, otherwise in the
+            // query string on GET. Parse from the correct source so both methods behave identically.
+            System.Collections.Specialized.NameValueCollection query;
+            if (req.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                var body = await new StreamReader(req.Body).ReadToEndAsync();
+                query = HttpUtility.ParseQueryString(body);
+            }
+            else
+            {
+                query = HttpUtility.ParseQueryString(req.Url.Query);
+            }
+
             string? Get(string k) => query[k];
+
+            // Reconstruct a leading-'?' query string from the parsed parameters so downstream
+            // redirects (consent picker) carry the SMART params regardless of GET vs POST.
+            string BuildForwardQuery()
+            {
+                var pairs = query.AllKeys
+                    .Where(k => !string.IsNullOrEmpty(k))
+                    .Select(k => $"{HttpUtility.UrlEncode(k)}={HttpUtility.UrlEncode(query[k])}");
+                var joined = string.Join("&", pairs);
+                return string.IsNullOrEmpty(joined) ? string.Empty : "?" + joined;
+            }
 
             var responseType = Get("response_type");
             var clientId = Get("client_id");
@@ -99,16 +124,20 @@ namespace SMARTCustomOperations.AzureAuth
                 }
             }
 
-            // Standalone scope picker: on the first pass, send the user to the consent screen
-            // (/api/consent-ui) instead of straight to the IdP. The picker lets the user narrow
-            // scopes, then navigates back here with user=true to continue to the IdP.
+            // Scope picker + consent narrowing: on the first pass, send the user to the consent
+            // screen (/api/consent-ui) instead of straight to the IdP. The picker signs the user
+            // in and narrows their Entra oauth2PermissionGrant (via Graph) to exactly the requested
+            // scopes, then navigates back here with user=true to continue to the IdP. This runs for
+            // BOTH standalone and EHR launch: EHR launch must narrow too, otherwise previously
+            // consented scopes (e.g. user/*.rs) linger and get mixed with the current request's
+            // patient/*.rs, which the FHIR server rejects ("scopes must use a single context").
             // Skipped for prompt=none (no interactive UI is allowed) and for non-FHIR requests.
             if (_idpStrategy.ProvidesConsentPicker
                 && !string.Equals(query["user"], "true", StringComparison.OrdinalIgnoreCase)
                 && HasFhirScope(scope!)
                 && !IsPromptNone(prompt))
             {
-                var pickerUrl = $"{req.Url.Scheme}://{req.Url.Authority}/api/consent-ui{req.Url.Query}";
+                var pickerUrl = $"{req.Url.Scheme}://{req.Url.Authority}/api/consent-ui{BuildForwardQuery()}";
                 _logger.LogInformation("Redirecting authorize to consent picker.");
                 var pickerResponse = req.CreateResponse(HttpStatusCode.Redirect);
                 pickerResponse.Headers.Add("Location", pickerUrl);

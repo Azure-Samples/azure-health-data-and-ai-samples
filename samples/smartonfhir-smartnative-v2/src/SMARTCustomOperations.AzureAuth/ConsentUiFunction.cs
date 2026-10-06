@@ -119,6 +119,9 @@ namespace SMARTCustomOperations.AzureAuth
   .status.info { background: #eff6fc; border: 1px solid #b3d7f2; }
   .status.error { background: #fde7e9; border: 1px solid #f1707b; }
   .status.ok { background: #dff6dd; border: 1px solid #6fdd8b; }
+  .status.progress { display: flex; align-items: center; gap: 10px; }
+  .spinner { width: 16px; height: 16px; border: 2px solid #b3d7f2; border-top-color: #0f6cbd; border-radius: 50%; animation: spin 0.7s linear infinite; flex: 0 0 auto; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .hidden { display: none; }
 </style>
 </head>
@@ -216,6 +219,15 @@ namespace SMARTCustomOperations.AzureAuth
   function setStatus(kind, text) {
     statusEl.className = 'status ' + kind;
     statusEl.textContent = text;
+    statusEl.classList.remove('hidden');
+  }
+  // Progress status: scroll the page to the top and show an animated spinner next to the message
+  // so the user can see something is happening after they click Continue.
+  function setProgress(text) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    statusEl.className = 'status info progress';
+    statusEl.innerHTML = '<span class="spinner"></span><span></span>';
+    statusEl.lastChild.textContent = text;
     statusEl.classList.remove('hidden');
   }
   function hideStatus() { statusEl.classList.add('hidden'); }
@@ -340,11 +352,7 @@ namespace SMARTCustomOperations.AzureAuth
       const name = document.createElement('div');
       name.className = 'name';
       name.textContent = displayName(s.name);
-      const desc = document.createElement('div');
-      desc.className = 'desc';
-      desc.textContent = s.userDescription || '';
       meta.appendChild(name);
-      if (desc.textContent) meta.appendChild(desc);
       li.appendChild(cb);
       li.appendChild(meta);
       ul.appendChild(li);
@@ -410,14 +418,17 @@ namespace SMARTCustomOperations.AzureAuth
   async function submit() {
     const body = collectSelection();
     updateBtn.disabled = true;
-    // Same message the reference sample shows while it waits for Graph to replicate the change.
-    setStatus('info', 'Saving your preferences...this may take a bit...');
+    // Hide the scope editor, scroll to the top, and show a spinner so the user clearly sees their
+    // selection is being saved (Graph replication can take several seconds).
+    appBlock.classList.add('hidden');
+    setProgress('Saving your preferences… this may take a few seconds.');
     const res = await fetch('/api/appConsentInfo', {
       method: 'POST',
       headers: { Authorization: `Bearer ${currentToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
     if (!res.ok) {
+      appBlock.classList.remove('hidden');
       updateBtn.disabled = false;
       throw new Error(`POST /api/appConsentInfo returned ${res.status}: ${await res.text()}`);
     }
@@ -444,9 +455,12 @@ namespace SMARTCustomOperations.AzureAuth
     await sleep(5000);
 
     if (!scopeSaveSuccessful) {
+      appBlock.classList.remove('hidden');
       updateBtn.disabled = false;
       throw new Error('Scopes did not properly replicate. Please try again.');
     }
+
+    setProgress('Preferences saved. Redirecting to sign-in…');
 
     // Forward the visible selected scopes PLUS the always-granted hidden scopes (launch*, openid,
     // fhirUser) taken from the original request — the latter are needed for the token/launch

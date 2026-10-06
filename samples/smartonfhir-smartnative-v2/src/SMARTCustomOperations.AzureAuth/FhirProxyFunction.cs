@@ -71,6 +71,14 @@ namespace SMARTCustomOperations.AzureAuth
                 return await BuildSmartConfigurationResponseAsync(req);
             }
 
+            // SMART style JSON referenced by smart_style_url in the token response (context-style
+            // capability). Served by the gateway so it is always a valid, stable JSON document.
+            if (req.Method.Equals("GET", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(normalizedPath, "smart-style.json", StringComparison.OrdinalIgnoreCase))
+            {
+                return await BuildSmartStyleResponseAsync(req);
+            }
+
             // When bulk export is enabled, augment /metadata so the CapabilityStatement declares the
             // Group $export operation (required by Inferno g10 test 7.2.02). AHDS does not advertise
             // it natively, and this sample has no APIM layer to rewrite it.
@@ -265,6 +273,34 @@ namespace SMARTCustomOperations.AzureAuth
                 await response.WriteStringAsync(result.Body);
             }
 
+            return response;
+        }
+
+        private async Task<HttpResponseData> BuildSmartStyleResponseAsync(HttpRequestData req)
+        {
+            // Static SMART style document (SMART App Launch context-style). Values mirror the
+            // reference sample so launched apps can theme consistently.
+            const string styleJson = """
+{
+    "color_background": "#edeae3",
+    "color_error": "#9e2d2d",
+    "color_highlight": "#69b5ce",
+    "color_modal_backdrop": "",
+    "color_success": "#498e49",
+    "color_text": "#303030",
+    "dim_border_radius": "6px",
+    "dim_font_size": "13px",
+    "dim_spacing_size": "20px",
+    "font_family_body": "Georgia, Times, 'Times New Roman', serif",
+    "font_family_heading": "'HelveticaNeue-Light', Helvetica, Arial, 'Lucida Grande', sans-serif;"
+}
+""";
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            AddCorsHeaders(req, response);
+            response.Headers.Add("Content-Type", "application/json");
+            response.Headers.Add("Cache-Control", "public, max-age=3600");
+            await response.WriteStringAsync(styleJson);
             return response;
         }
 
@@ -530,6 +566,8 @@ namespace SMARTCustomOperations.AzureAuth
             "context-ehr-encounter",
             "context-standalone-patient",
             "context-standalone-encounter",
+            "context-banner",
+            "context-style",
             "permission-offline",
             "permission-patient",
             "permission-user",

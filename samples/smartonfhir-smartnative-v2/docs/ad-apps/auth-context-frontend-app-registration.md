@@ -20,6 +20,13 @@ This application registration represents the **EHR launch context delivery clien
 4. Click **Register**.
 5. Record the **Application (client) ID** — this is `ContextAppClientId`.
 
+> [!IMPORTANT]
+> To drive the built-in EHR launch initiator page (used for the Inferno **EHR Practitioner App** test),
+> also add a **Single-page application (SPA)** redirect URI pointing at the gateway's EHR launch page:
+> `https://<your-gateway-host>/api/ehr-launch`
+> (the gateway host is the `FunctionBaseUrl` value in `.azure/<env>/.env`). This lets the practitioner
+> sign in on that page before the launch context is delivered to `/api/context-cache`.
+
 ### 2. Tell `azd` about the application
 
 From the repository root:
