@@ -110,9 +110,10 @@ The gateway also caches the upstream discovery document so per-request token for
 | --- | --- | --- | --- |
 | `/api/.well-known/smart-configuration` | GET | SMART discovery (proxied + rewritten) | both |
 | `/api/.well-known/openid-configuration` | GET | OIDC discovery (proxied) | both |
-| `/api/authorize` | GET | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. | both |
+| `/api/authorize` | GET, POST | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. POST (form-encoded) is supported for the SMART `authorize-post` capability. | both |
 | `/api/token` | POST | Exchanges authorization code or client credentials for an access token. Enriches the response with SMART launch context. | both |
 | `/api/context-cache` | POST | Accepts launch context from EHR launch initiators and stores it in Redis (or in-memory) keyed by an opaque `launch` token. | both |
+| `/api/block-access-token` | POST | Revokes an access token. The body is the raw access token; the gateway blocklists its `uti`/`jti` so the FHIR proxy rejects it with 401. Advertised as `revocation_endpoint` in SMART discovery. Entra cannot natively revoke access tokens, so this provides the revocation behavior. Use a distributed (Redis) cache for multi-instance deployments. | both |
 
 ---
 

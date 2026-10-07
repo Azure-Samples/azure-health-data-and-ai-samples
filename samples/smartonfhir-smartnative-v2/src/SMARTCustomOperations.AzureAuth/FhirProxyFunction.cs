@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // -------------------------------------------------------------------------------------------------
 
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -33,6 +34,7 @@ namespace SMARTCustomOperations.AzureAuth
         private readonly IIdpStrategy _idpStrategy;
         private readonly HttpClient _httpClient;
         private readonly IBulkExportService? _bulkExportService;
+        private readonly ITokenBlocklistService _tokenBlocklist;
 
         public FhirProxyFunction(
             ILogger<FhirProxyFunction> logger,
@@ -40,6 +42,7 @@ namespace SMARTCustomOperations.AzureAuth
             FhirSmartConfigService smartConfigService,
             IIdpStrategy idpStrategy,
             IHttpClientFactory httpClientFactory,
+            ITokenBlocklistService tokenBlocklist,
             IBulkExportService? bulkExportService = null)
         {
             _logger = logger;
@@ -47,6 +50,7 @@ namespace SMARTCustomOperations.AzureAuth
             _smartConfigService = smartConfigService;
             _idpStrategy = idpStrategy;
             _httpClient = httpClientFactory.CreateClient("FhirProxy");
+            _tokenBlocklist = tokenBlocklist;
             _bulkExportService = bulkExportService;
         }
 
@@ -108,6 +112,18 @@ namespace SMARTCustomOperations.AzureAuth
             }
 
             _logger.LogInformation("FHIR proxy: {Method} /{Path}", req.Method, path);
+
+            // Token revocation: reject FHIR requests presenting a blocklisted (revoked) access
+            // token before forwarding to the FHIR Service. Entra cannot natively revoke access
+            // tokens, so this gateway-side check enforces revocation.
+            if (await IsRevokedTokenAsync(req))
+            {
+                _logger.LogInformation("Rejecting FHIR request with revoked access token.");
+                var revoked = req.CreateResponse(HttpStatusCode.Unauthorized);
+                AddCorsHeaders(req, revoked);
+                revoked.Headers.Add("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Token has been revoked\"");
+                return revoked;
+            }
 
             var fhirBaseUrl = _config.FhirServerUrl?.TrimEnd('/');
             if (string.IsNullOrEmpty(fhirBaseUrl))
@@ -506,6 +522,9 @@ namespace SMARTCustomOperations.AzureAuth
                     modifiedConfig["authorization_endpoint"] = JsonSerializer.SerializeToElement($"{gatewayBaseUrl}/api/authorize");
                 }
 
+                // Advertise the gateway's token revocation endpoint (SMART/ONC token revocation).
+                modifiedConfig["revocation_endpoint"] = JsonSerializer.SerializeToElement($"{gatewayBaseUrl}/api/block-access-token");
+
                 // Merge the upstream capabilities list with the SMART v2 capabilities that this
                 // gateway actually implements. Required by Inferno g10 test 1.8.05 (missing
                 // context-standalone-patient, permission-v1 in the native FHIR response).
@@ -644,6 +663,41 @@ namespace SMARTCustomOperations.AzureAuth
             }
 
             return values;
+        }
+
+        // Returns true when the request carries a bearer access token whose unique id (uti/jti) is
+        // on the revocation blocklist. Malformed/missing tokens are not treated as revoked here —
+        // the FHIR Service still performs full token validation downstream.
+        private async Task<bool> IsRevokedTokenAsync(HttpRequestData req)
+        {
+            if (!req.Headers.TryGetValues("Authorization", out var authValues))
+            {
+                return false;
+            }
+
+            var header = authValues.FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(header) || !header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var token = header.Substring("Bearer ".Length).Trim();
+            var handler = new JwtSecurityTokenHandler();
+            if (!handler.CanReadToken(token))
+            {
+                return false;
+            }
+
+            try
+            {
+                var tokenId = RevocationKey.ForToken(token);
+                return await _tokenBlocklist.IsBlockedAsync(tokenId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to evaluate token revocation status; allowing request to proceed to FHIR validation.");
+                return false;
+            }
         }
 
         private static void AddCorsHeaders(HttpRequestData req, HttpResponseData response)

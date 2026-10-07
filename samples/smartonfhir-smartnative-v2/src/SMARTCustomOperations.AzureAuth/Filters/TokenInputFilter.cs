@@ -29,6 +29,7 @@ namespace SMARTCustomOperations.AzureAuth.Filters
         private readonly IIdpStrategy _idpStrategy;
         private readonly IBackendClientAssertionValidator? _backendValidator;
         private readonly IClientAssertionAuthenticator? _assertionAuthenticator;
+        private readonly ITokenBlocklistService? _tokenBlocklist;
         private readonly string _id;
 
         public TokenInputFilter(
@@ -36,13 +37,15 @@ namespace SMARTCustomOperations.AzureAuth.Filters
             AzureAuthOperationsConfig configuration,
             IIdpStrategy idpStrategy,
             IBackendClientAssertionValidator? backendValidator = null,
-            IClientAssertionAuthenticator? assertionAuthenticator = null)
+            IClientAssertionAuthenticator? assertionAuthenticator = null,
+            ITokenBlocklistService? tokenBlocklist = null)
         {
             _logger = logger;
             _configuration = configuration;
             _idpStrategy = idpStrategy;
             _backendValidator = backendValidator;
             _assertionAuthenticator = assertionAuthenticator;
+            _tokenBlocklist = tokenBlocklist;
             _id = Guid.NewGuid().ToString();
         }
 
@@ -137,6 +140,32 @@ namespace SMARTCustomOperations.AzureAuth.Filters
                 FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true, error: new ArgumentException($"Token request invalid. {tokenContext?.ToLogString() ?? context.ContentString}"), code: HttpStatusCode.BadRequest);
                 OnFilterError?.Invoke(this, error);
                 return context.SetContextErrorBody(error, _configuration.Debug);
+            }
+
+            // Reject a refresh_token grant whose refresh token has been revoked (blocklisted).
+            // The refresh request targets this gateway's /token endpoint, so we can enforce
+            // revocation here before forwarding to Entra. Required by the SMART token revocation
+            // test (refresh after revocation must fail with 400/401).
+            if (tokenContext is RefreshTokenContext refreshContext && _tokenBlocklist is not null)
+            {
+                try
+                {
+                    var refreshKey = RevocationKey.ForToken(refreshContext.RefreshToken);
+                    if (await _tokenBlocklist.IsBlockedAsync(refreshKey))
+                    {
+                        _logger?.LogInformation("Rejecting refresh_token grant: refresh token has been revoked.");
+                        FilterErrorEventArgs error = new(name: Name, id: Id, fatal: true,
+                            error: new ArgumentException("The refresh token has been revoked."),
+                            code: HttpStatusCode.BadRequest);
+                        OnFilterError?.Invoke(this, error);
+                        return context.SetContextErrorBody(error, _configuration.Debug);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Fail open on blocklist errors — do not break legitimate refresh on a cache hiccup.
+                    _logger?.LogWarning(ex, "Refresh token revocation check failed; proceeding.");
+                }
             }
 
             // Reject backend services on IdP strategies that do not support it (e.g. External/Okta).
