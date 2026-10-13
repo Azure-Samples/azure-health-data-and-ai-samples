@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide collects the most common issues you may hit when deploying or running the SMART on FHIR v2 native IdP-agnostic sample, organized by where the problem typically surfaces.
+This guide collects the most common issues you may hit when deploying or running the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample, organized by where the problem typically surfaces.
 
 ---
 
@@ -10,7 +10,9 @@ Before drilling into individual issues, gather these signals — they make the c
 
 ### Application Insights
 
-The deployment provisions Application Insights for the Function App and the FHIR Service. Use the **Failures** and **Performance** blades, and the **Logs** experience for ad‑hoc KQL.
+The deployment provisions Application Insights and Log Analytics for the Function App. Use the **Failures** and **Performance** blades, and the **Logs** experience for ad-hoc KQL.
+
+FHIR data-plane logs are not connected automatically. If you need FHIR audit or diagnostic events, configure Azure Monitor diagnostic settings on the FHIR service and route the supported categories to your chosen Log Analytics workspace.
 
 Useful queries:
 
@@ -168,6 +170,34 @@ The token response was issued without launch context being merged in. Causes:
 - The gateway is using **in-memory caching** (no `AZURE_CacheConnectionString` set) and the request landed on a different Function App instance from the one that received the context post.
 
 For multi-instance deployments, set `AZURE_CacheConnectionString` to a Redis-compatible connection string.
+
+The deployment does not create the Redis-compatible service. Provision it separately and store its connection string in the `AZURE_CacheConnectionString` application setting.
+
+### Consent picker returns `403` from `/api/appConsentInfo`
+
+In Entra mode, the Function App managed identity needs Microsoft Graph application permissions to read applications and manage per-user delegated grants. Run the idempotent post-deployment script:
+
+```powershell
+pwsh ./scripts/Grant-FunctionAppGraphPermissions.ps1
+```
+
+Verify that the Function managed identity has:
+
+- `Application.Read.All`
+- `DelegatedPermissionGrant.ReadWrite.All`
+
+The signed-in administrator running the script must be allowed to assign Microsoft Graph application roles.
+
+### Bulk export kickoff, status, or file download fails
+
+For a new FHIR service created by this sample, `azd up` configures export storage and managed-identity RBAC automatically. Check:
+
+- The FHIR service export configuration names `ExportStorageAccountName`.
+- The FHIR service managed identity has **Storage Blob Data Contributor**.
+- The Function App managed identity has **Storage Blob Data Reader**.
+- `AZURE_ExportStorageBlobUri` equals `ExportStorageBlobUri`.
+
+When reusing an existing FHIR service, these FHIR-side export settings and the contributor role must be configured manually. Bulk export through the gateway is enabled only in `EntraId` mode.
 
 ### Backend services returns `Backend services proxy not applicable for IdpType 'ExternalIdp'`
 

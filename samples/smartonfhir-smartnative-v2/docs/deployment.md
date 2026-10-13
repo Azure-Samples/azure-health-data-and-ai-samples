@@ -21,6 +21,21 @@ The two paths deploy the **same Azure components** with the same Bicep templates
 
 For a deeper view of what runs in each mode, see the [Technical Guide](./technical-guide.md).
 
+### Supported capability matrix
+
+| Capability | EntraId | ExternalIdp | Deployment requirement |
+| --- | :---: | :---: | --- |
+| Standalone public/confidential launch | ✓ | ✓ | Register the SMART client in the selected IdP and allow it on the FHIR service. |
+| EHR launch context injection | ✓ | ✓ | Configure a launch initiator and `/api/context-cache`; use a Redis-compatible cache for multi-instance reliability. |
+| Built-in EHR launch initiator page | ✓ | — | Create the Auth Context Frontend App registration and add the gateway redirect URI. |
+| Built-in consent picker | ✓ | — | Create the Auth Context Frontend App and grant the Function managed identity its required Microsoft Graph application permissions after deployment. |
+| Refresh token exchange | ✓ | ✓ | Request `offline_access` and configure it on the client registration. |
+| Backend Services | Gateway validates `private_key_jwt` and exchanges with Entra | Client calls the external IdP directly | Entra uses the deployed Key Vault; external IdPs require native backend-services configuration. |
+| Token revocation enforcement | ✓ | ✓ | Clients must send FHIR traffic through the gateway proxy; configure distributed cache for multi-instance consistency. |
+| FHIR Bulk Data group export proxy | ✓ | — | Export storage is deployed automatically. Reused FHIR services require manual export configuration and RBAC. |
+
+The deployment always creates the export storage account. It does **not** create a Redis resource; `AZURE_CacheConnectionString` must reference a separately provisioned Redis-compatible service.
+
 ## Common prerequisites
 
 Both paths need:
@@ -54,6 +69,6 @@ Leave `ExistingFhirServiceId` unset (or empty) to keep the default create-new be
 1. Choose your IdP path above.
 2. Complete the deployment guide.
 3. Load sample data and map test users (covered in each guide and in [Sample Data](./sample-data.md)).
-4. Validate the deployment using the Postman or REST collections under `docs/postman/` and `docs/rest/`.
+4. Run the validation commands in the selected deployment guide, then use the companion [SMART Client Application](https://github.com/Azure-Samples/azure-health-data-and-ai-samples/tree/main/samples/SMART-Client-Application) for end-to-end launch, refresh, backend-services, and export tests.
 
 [Back to README](../README.md)

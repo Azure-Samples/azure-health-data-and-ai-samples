@@ -1,6 +1,6 @@
 # Configure Okta as the SMART Authorization Server
 
-This document covers everything you need to do **inside Okta** so that the SMART on FHIR v2 native IdP-agnostic sample can use it as the upstream authorization server. 
+This document covers everything you need to do **inside Okta** so that the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample can use it as the upstream authorization server.
 
 The same general steps apply to any SMART-capable OpenID Provider (Auth0, Ping, etc.) that can issue SMART scopes and a `fhirUser` claim natively. Where a step is Okta-specific, it is called out.
 

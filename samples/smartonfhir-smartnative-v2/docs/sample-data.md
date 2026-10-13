@@ -1,16 +1,46 @@
+# Load Sample Data and US Core Resources
+
 > [!TIP]
-> *If you encounter any issues during configuration, deployment, or testing, please refer to the [Trouble Shooting Document](./troubleshooting.md)*
+> If you encounter an issue, see the [Troubleshooting Guide](./troubleshooting.md#data-issues).
 
-## 4. Add sample data and US Core resources
+The repository includes [Load-ProfilesData.ps1](../scripts/Load-ProfilesData.ps1), which loads the bundled US Core capability statement and sample resources into the configured FHIR service.
 
-We have created a Powershell script that will load US Core artifacts and test data quickly for testing. Open [this script](../scripts/Load-ProfilesData.ps1), change the variables at the top, and execute.
+## Prerequisites
 
-### Loading the US Core resources
+- Azure CLI and PowerShell 7.
+- An active `azd` environment for this sample, or explicit `FhirUrl`, `FhirAudience`, and `TenantId` parameters.
+- The signed-in account must have **FHIR Data Contributor** on the FHIR service.
 
-Information about loading profiles for the FHIR Service can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/store-profiles-in-fhir) and for the Azure API for FHIR can be found at [this documentation page](https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/store-profiles-in-fhir). In general, you will want to load all of the artifacts that are part of the US Core package.
+Create-new deployments grant the deployer this role automatically. Reuse-mode deployments do not modify role assignments on the existing FHIR service, so grant it manually before loading data.
 
-### Loading Data
+## Run the loader
 
-We have created a bundle containing US Core compliant sample data. This can be found [here](https://raw.githubusercontent.com/microsoft/fhir-server/main/docs/rest/Inferno/V3.1.1_USCoreCompliantResources.json). Postman or another REST client can be used to load this file.
+From the sample root:
 
-**[Back to Previous Page](./deployment.md#4-add-sample-data-and-us-core-resources)**
+```powershell
+pwsh ./scripts/Load-ProfilesData.ps1
+```
+
+The script reads missing values from the active `azd` environment. You can also provide them explicitly:
+
+```powershell
+pwsh ./scripts/Load-ProfilesData.ps1 `
+  -FhirUrl "https://<workspace>-<service>.fhir.azurehealthcareapis.com" `
+  -FhirAudience "<fhir-audience>" `
+  -TenantId "<tenant-id>"
+```
+
+The loader uses the bundled US Core 6.1 sample resources under `scripts/test-resources/`; do not edit the script to set deployment values.
+
+## Verify
+
+Confirm the capability statement and a sample resource are available:
+
+```http
+GET <FhirUrl>/CapabilityStatement/us-core-server
+GET <FhirUrl>/Patient/PatientA
+```
+
+For information about storing implementation guides and profiles in the FHIR service, see [Store profiles in the FHIR service](https://learn.microsoft.com/azure/healthcare-apis/fhir/store-profiles-in-fhir).
+
+[Back to Deployment Overview](./deployment.md)
