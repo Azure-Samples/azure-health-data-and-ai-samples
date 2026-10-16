@@ -40,9 +40,6 @@ param principalId string = ''
 @description('Optional Redis-compatible connection string for distributed EHR launch context cache (e.g. Azure Managed Redis). Leave blank to use in-memory caching inside the Function App (suitable for samples and single-instance deployments).')
 param CacheConnectionString string = ''
 
-@description('Audience the consent picker browser targets when calling /api/appConsentInfo. Leave blank to derive as api://<ContextAppClientId> at runtime. Only used when IdpType is EntraId.')
-param ConsentPickerAudience string = ''
-
 @description('Full resource ID of an existing AHDS FHIR service to reuse. Format: /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.HealthcareApis/workspaces/{ws}/fhirservices/{svc}. Leave blank to create a new workspace + FHIR service. When reused, this deployment does NOT modify the existing FHIR service authenticationConfiguration; the caller is responsible for ensuring audience, authority and smartIdentityProviders are correctly configured for the chosen IdpType.')
 param ExistingFhirServiceId string = ''
 
@@ -85,19 +82,6 @@ var resourceGroupName = rg.name
 var fhirRgName = reuseFhir ? existingFhirRg : resourceGroupName
 var appInsightsName = '${nameCleanShort}-appins'
 var logAnalyticsNameResolved = length(logAnalyticsName) > 0 ? logAnalyticsName : '${nameCleanShort}-la'
-var exportStorageAccountName = '${nameCleanShort}expsa'
-
-// Dedicated export storage account (bulk export NDJSON + job records). Always created in the
-// sample resource group, even when reusing an existing FHIR service.
-module exportStorage 'core/exportStorage.bicep' = {
-  name: 'exportStorageDeploy'
-  scope: resourceGroup(resourceGroupName)
-  params: {
-    exportStorageAccountName: exportStorageAccountName
-    location: location
-    appTags: appTags
-  }
-}
 
 module fhir 'core/fhir.bicep' = {
   name: 'fhirDeploy'
@@ -112,8 +96,6 @@ module fhir 'core/fhir.bicep' = {
     audience: fhirAudienceResolved
     AuthorityURL: AuthorityURL
     idpType: IdpType
-    // For reuse mode we do not modify the existing FHIR service; the caller configures export there.
-    exportStorageAccountName: reuseFhir ? '' : exportStorage.outputs.exportStorageAccountName
   }
 }
 
@@ -158,33 +140,6 @@ module authCustomOperation './app/authCustomOperation.bicep' = {
     authorityUrl: AuthorityURL
     backendServiceVaultName: deployBackendVault ? backendVaultNameResolved : ''
     fhirResourceAppId: FhirResourceAppId
-    consentPickerAudience: ConsentPickerAudience
-    exportStorageBlobUri: exportStorage.outputs.exportStorageBlobUri
-  }
-}
-
-// Allow the FHIR service managed identity to write bulk export output to the export storage.
-// Only applicable when this deployment created the FHIR service (its identity is known here).
-module fhirExportStorageRole './core/storageRoleAssignment.bicep' = if (!reuseFhir) {
-  name: 'fhirExportStorageRole'
-  scope: resourceGroup(resourceGroupName)
-  params: {
-    storageAccountName: exportStorage.outputs.exportStorageAccountName
-    principalId: fhir.outputs.fhirIdentity
-    principalType: 'ServicePrincipal'
-    roleType: 'blobContributor'
-  }
-}
-
-// Allow the gateway Function App managed identity to read export files for authenticated streaming.
-module gatewayExportStorageRole './core/storageRoleAssignment.bicep' = {
-  name: 'gatewayExportStorageRole'
-  scope: resourceGroup(resourceGroupName)
-  params: {
-    storageAccountName: exportStorage.outputs.exportStorageAccountName
-    principalId: authCustomOperation.outputs.functionAppPrincipalId
-    principalType: 'ServicePrincipal'
-    roleType: 'blobReader'
   }
 }
 
@@ -224,5 +179,3 @@ output FunctionAppManagedIdentityPrincipalId string = authCustomOperation.output
 output CacheConnectionString string = CacheConnectionString
 output BackendServiceKeyVaultName string = backendVault.?outputs.keyVaultName ?? ''
 output BackendServiceKeyVaultUri string = backendVault.?outputs.keyVaultUri ?? ''
-output ExportStorageAccountName string = exportStorage.outputs.exportStorageAccountName
-output ExportStorageBlobUri string = exportStorage.outputs.exportStorageBlobUri

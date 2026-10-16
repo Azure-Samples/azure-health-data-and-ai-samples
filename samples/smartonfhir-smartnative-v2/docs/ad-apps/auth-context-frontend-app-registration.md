@@ -3,10 +3,7 @@
 > [!TIP]
 > If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](../troubleshooting.md).
 
-This application registration is used by the sample's Entra-only browser experiences:
-
-- the built-in EHR launch initiator, which pushes SMART context (`patient`, `encounter`, `launch`, etc.) to `/api/context-cache`; and
-- the built-in consent picker, which obtains a token before calling `/api/appConsentInfo`.
+This application registration represents the **EHR launch context delivery client** — the SPA (or service) that the EHR uses to push SMART launch context (`patient`, `encounter`, `launch`, etc.) into the gateway's `/api/context-cache` endpoint before the SMART app exchanges its launch code for a token.
 
 ---
 
@@ -22,14 +19,6 @@ This application registration is used by the sample's Entra-only browser experie
    - **Redirect URI**: select **Single-page application (SPA)** and enter `http://localhost:3000` for local debugging or EHR application from where you will be launching smart app.
 4. Click **Register**.
 5. Record the **Application (client) ID** — this is `ContextAppClientId`.
-
-> [!IMPORTANT]
-> Add both deployed gateway pages as **Single-page application (SPA)** redirect URIs:
->
-> - `https://<your-gateway-host>/api/ehr-launch`
-> - `https://<your-gateway-host>/api/consent-ui`
->
-> The gateway host is the `FunctionBaseUrl` value in `.azure/<env>/.env`. The first URI supports the built-in EHR launch initiator used by the Inferno **EHR Practitioner App** test. The second supports the built-in Entra consent picker. MSAL redirect sign-in fails if either page is used without its matching redirect URI.
 
 ### 2. Tell `azd` about the application
 
@@ -52,10 +41,7 @@ If your EHR launch initiator signs the user in to acquire a token before posting
 When you finish you will have:
 
 - `ContextAppClientId` set on the `azd` environment.
-- A SPA-style app registration with the local-development URI and both deployed gateway redirect URIs.
+- A SPA-style app registration with both the local-dev and the deployed gateway redirect URIs.
 - The gateway configured to authorize callers of `/api/context-cache` against this `client_id`.
-- The consent picker configured to acquire a token for `/api/appConsentInfo`.
-
-After `azd up`, also complete the mandatory managed-identity Graph permission step in [Deploy with Microsoft Entra ID](../deployment-entra.md#grant-microsoft-graph-permissions-to-the-gateway).
 
 [Back to Microsoft Entra ID Deployment](../deployment-entra.md)

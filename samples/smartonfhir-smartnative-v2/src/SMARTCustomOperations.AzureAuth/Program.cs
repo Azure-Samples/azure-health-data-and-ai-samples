@@ -95,11 +95,6 @@ namespace SMARTCustomOperations.AzureAuth
                     if (string.Equals(config.IdpType, "EntraId", StringComparison.OrdinalIgnoreCase))
                     {
                         services.AddSingleton<IIdpStrategy, EntraIdpStrategy>();
-
-                        // Graph client + consent-picker services (Entra only).
-                        services.AddMicrosoftGraphClient();
-                        services.AddScoped<GraphConsentService>();
-                        services.AddSingleton<ContextTokenValidator>();
                     }
                     else
                     {
@@ -139,12 +134,6 @@ namespace SMARTCustomOperations.AzureAuth
                         Console.WriteLine("Context cache: in-memory only (set AZURE_CacheConnectionString to add Redis backing).");
                     }
 
-                    // Token revocation blocklist (SMART/ONC token revocation). Reuses the shared
-                    // JsonObjectCache so it is distributed when Redis is configured. Entra cannot
-                    // natively revoke access tokens, so the gateway rejects blocklisted tokens on
-                    // FHIR requests. Registered in both IdP modes; keyed on the token's uti/jti.
-                    services.AddScoped<ITokenBlocklistService, TokenBlocklistService>();
-
                     // Backend services (SMART v2 client_credentials + private_key_jwt).
                     // Entra cannot validate arbitrary client-registered JWKS, so the proxy validates
                     // the inbound client_assertion and swaps to a KV-stored Entra client_secret.
@@ -158,7 +147,6 @@ namespace SMARTCustomOperations.AzureAuth
                         services.AddSingleton<IAssertionReplayProtector, MemoryAssertionReplayProtector>();
                         services.AddSingleton<IClientConfigService, KeyVaultClientConfigurationService>();
                         services.AddSingleton<IBackendClientAssertionValidator, BackendClientAssertionValidator>();
-                        services.AddSingleton<IClientAssertionAuthenticator, ClientAssertionAuthenticator>();
                         services.AddHttpClient(); // for JWKS fetch
                         Console.WriteLine($"Backend services proxy enabled. KV store: {config.BackendServiceKeyVaultStore}");
                     }
@@ -169,22 +157,6 @@ namespace SMARTCustomOperations.AzureAuth
                     else
                     {
                         Console.WriteLine("Backend services proxy disabled. Set AZURE_BackendServiceKeyVaultStore to enable.");
-                    }
-
-                    // SMART Backend Services bulk data export (FHIR Bulk Data / Inferno g10
-                    // Multi-Patient Authorization and API). Enabled only on Entra with export
-                    // storage configured. Provides group export kickoff, status polling with URL
-                    // rewriting, and authenticated NDJSON file streaming.
-                    if (isEntraId && config.ExportEnabled)
-                    {
-                        services.AddSingleton<IFhirAccessTokenValidator, FhirAccessTokenValidator>();
-                        services.AddSingleton<IExportFileService, BlobExportFileService>();
-                        services.AddSingleton<IBulkExportService, BulkExportService>();
-                        Console.WriteLine($"Bulk export enabled. Export storage: {config.ExportStorageBlobUri}");
-                    }
-                    else if (isEntraId)
-                    {
-                        Console.WriteLine("Bulk export disabled. Set AZURE_ExportStorageBlobUri to enable.");
                     }
 
                     services.UseAzureFunctionPipeline();

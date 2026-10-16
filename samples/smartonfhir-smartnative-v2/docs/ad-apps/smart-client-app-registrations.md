@@ -3,7 +3,7 @@
 > [!TIP]
 > If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](../troubleshooting.md).
 
-This document walks through registering the **client applications** used to demo the four launch flows against an `IdpType=EntraId` deployment of the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample:
+This document walks through registering the **client applications** used to demo the four SMART on FHIR v2 launch flows against an `IdpType=EntraId` deployment of this sample:
 
 1. **Standalone Patient Launch — Confidential client** (web app that can keep a secret).
 2. **Standalone Patient Launch — Public client** (SPA / native app that cannot keep a secret).

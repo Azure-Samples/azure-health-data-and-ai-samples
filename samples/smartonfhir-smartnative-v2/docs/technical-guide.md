@@ -1,6 +1,6 @@
 # Technical Guide
 
-This document explains how the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample works on top of Azure Health Data Services. It covers the deployed components, the role of the gateway in each Identity Provider mode, the discovery mechanism, and the four supported SMART flows.
+This document explains how the SMART on FHIR v2 native IdP-agnostic sample works on top of Azure Health Data Services. It covers the deployed components, the role of the gateway in each Identity Provider mode, the discovery mechanism, and the four supported SMART flows.
 
 For step-by-step deployment, see the per-IdP guides:
 
@@ -22,9 +22,8 @@ flowchart LR
     subgraph Azure["Azure subscription · resource group &lt;env&gt;-rg"]
         direction TB
         GW{{"Function App<br/>SMART gateway"}}
-        Cache[("External Redis-compatible cache<br/>optional · not provisioned")]
+        Cache[("Azure Cache (Redis)<br/>optional")]
         KV[("Key Vault<br/>EntraId only")]
-        Export[("Storage Account<br/>bulk export output")]
         FHIR[("FHIR Service")]
         Insights["App Insights<br/>+ Log Analytics"]
     end
@@ -40,9 +39,8 @@ flowchart LR
     GW -->|/authorize and /token| IdP
     GW <-.->|cache| Cache
     GW -.->|secret + JWKS| KV
-    FHIR -->|bulk export output| Export
-    GW -->|authenticated export reads| Export
     GW -->|traces| Insights
+    FHIR -->|traces| Insights
 
     UApp -->|FHIR resources| FHIR
     BApp -->|FHIR resources| FHIR
@@ -54,10 +52,9 @@ flowchart LR
 | **Azure Health Data Services FHIR Service** | Stores FHIR resources, evaluates SMART scopes natively, and acts as the source of truth for SMART discovery. Validates incoming access tokens against the configured authority and audience. |
 | **Azure Function App (SMART gateway)** | Hosts SMART endpoints (`/authorize`, `/token`, `/context-cache`, `/.well-known/*`) and translates SMART concepts into terms the configured IdP understands. The Function App uses a **system-assigned managed identity** for outbound access (FHIR, Key Vault). |
 | **Storage Account, App Service Plan** | Function App runtime dependencies (Linux, dotnet-isolated 8). |
-| **Application Insights + Log Analytics** | Function App observability and tracing. FHIR data-plane diagnostics require separate diagnostic settings. |
-| **Redis-compatible cache (optional, externally provisioned)** | Distributed EHR launch context and revocation backing store. When absent, the gateway falls back to process-local memory. |
+| **Application Insights + Log Analytics** | Observability and tracing for both the gateway and the FHIR Service. |
+| **Azure Cache (Redis-compatible, optional)** | Distributed EHR launch context cache. When absent, the gateway falls back to in-memory caching (single-instance only). |
 | **Backend Services Key Vault** *(EntraId only)* | Stores SMART backend service client registrations as secrets keyed by `client_id`. |
-| **Export Storage Account** | Stores FHIR Bulk Data NDJSON output. The FHIR service writes exports and the gateway reads files through managed identity. |
 
 The same components are deployed for both IdP modes; the Key Vault is provisioned only when `IdpType=EntraId`.
 
@@ -111,19 +108,11 @@ The gateway also caches the upstream discovery document so per-request token for
 
 | Endpoint | Method | Purpose | Mode |
 | --- | --- | --- | --- |
-| `/.well-known/smart-configuration` | GET | SMART discovery (proxied + rewritten) | both |
-| `/.well-known/openid-configuration` | GET | OIDC discovery (proxied) | both |
-| `/api/authorize` | GET, POST | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. POST (form-encoded) is supported for the SMART `authorize-post` capability. | both |
+| `/api/.well-known/smart-configuration` | GET | SMART discovery (proxied + rewritten) | both |
+| `/api/.well-known/openid-configuration` | GET | OIDC discovery (proxied) | both |
+| `/api/authorize` | GET | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. | both |
 | `/api/token` | POST | Exchanges authorization code or client credentials for an access token. Enriches the response with SMART launch context. | both |
-| `/api/context-cache` | POST | Validates the launch initiator token and stores launch context against the authenticated user. Returns `204 No Content`. | both |
-| `/api/ehr-launch` | GET | Built-in browser-based EHR launch initiator used by the sample and Inferno tests. | EntraId |
-| `/api/consent-ui` | GET | Built-in Entra consent picker page. | EntraId |
-| `/api/appConsentInfo` | GET, POST | Reads and narrows the authenticated user's delegated grants for the consent picker. Requires Function managed-identity Graph permissions. | EntraId |
-| `/api/block-access-token` | POST | Revokes an access token. The body is the raw access token; the gateway blocklists its `uti`/`jti` so the FHIR proxy rejects it with 401. Advertised as `revocation_endpoint` in SMART discovery. Entra cannot natively revoke access tokens, so this provides the revocation behavior. Use a distributed (Redis) cache for multi-instance deployments. | both |
-| `/{fhir-path}` | FHIR methods | Proxies FHIR traffic, enforces the gateway token blocklist, and rewrites selected discovery and capability responses. | both |
-| `/Group/{id}/$export` | GET | Starts an asynchronous FHIR Bulk Data group export and forces output into a client-specific container. | EntraId |
-| `/_operations/export/{id}` | GET, DELETE | Polls or cancels an export job through the gateway. | EntraId |
-| `/_export/{container}/{file}` | GET | Authenticates and streams an exported NDJSON file from Blob Storage. | EntraId |
+| `/api/context-cache` | POST | Accepts launch context from EHR launch initiators and stores it in Redis (or in-memory) keyed by an opaque `launch` token. | both |
 
 ---
 
@@ -142,17 +131,12 @@ Application settings on the Function App (set automatically by Bicep):
 | `AZURE_ContextAppClientId` | optional | Client ID of the Auth Context Frontend App; when set, restricts callers of `/api/context-cache`. |
 | `AZURE_CacheConnectionString` | optional | Redis-compatible connection string. Blank = in-memory cache. |
 | `AZURE_BackendServiceKeyVaultStore` | EntraId backend services | Key Vault name (or vault URI) hosting backend client registrations. Empty disables backend services on the gateway. |
-| `AZURE_ConsentPickerAudience` | optional, EntraId | Audience used by the consent picker when acquiring its API token. Blank derives `api://<ContextAppClientId>`. |
-| `AZURE_ExportStorageBlobUri` | EntraId bulk export | Blob service URI used to stream FHIR Bulk Data export files. Blank disables gateway bulk-export handling. |
-| `AZURE_Debug` | optional | Includes internal error details in responses when `true`. The sample Bicep currently enables it for diagnostics; set it to `false` before using the deployment outside controlled testing. |
-
-`AZURE_CacheConnectionString` points to a separately provisioned service; the Bicep deployment does not create Redis.
 
 ---
 
 ## 6. Flow — EHR Launch
 
-EHR launch begins inside an EHR session. The launch initiator authenticates the practitioner and posts the selected patient, encounter, and launch payload to the gateway. The gateway validates that the payload user matches the token user, stores the context against that authenticated user, and returns `204 No Content`. The initiator then redirects the SMART app with the launch value. During token exchange, the gateway resolves and consumes the authenticated user's cached context and merges it into the token response.
+EHR launch begins inside an EHR session. The EHR posts launch context (selected patient, encounter, etc.) to the gateway, which caches it under an opaque `launch` token and returns that token to the EHR. The EHR redirects the SMART app to its launch URL with the `launch` token; the SMART app discovers the gateway's authorize endpoint, authenticates the user via the configured IdP, and exchanges its code for an access token. The gateway looks up the cached context and merges it into the token response.
 
 ### EntraId mode
 
@@ -165,9 +149,9 @@ sequenceDiagram
     participant FHIR as FHIR Service
 
     EHR->>GW: POST /api/context-cache (launch context)
-    GW-->>EHR: 204 No Content
-    EHR->>App: Launch URL with launch value
-    App->>GW: GET /.well-known/smart-configuration
+    GW-->>EHR: launch token
+    EHR->>App: Launch URL with launch token
+    App->>GW: GET /api/.well-known/smart-configuration
     GW-->>App: discovery (gateway endpoints)
     App->>GW: GET /api/authorize (SMART scopes + launch)
     GW->>Entra: GET /authorize (translated scopes)
@@ -192,9 +176,9 @@ sequenceDiagram
     participant FHIR as FHIR Service
 
     EHR->>GW: POST /api/context-cache (launch context)
-    GW-->>EHR: 204 No Content
-    EHR->>App: Launch URL with launch value
-    App->>GW: GET /.well-known/smart-configuration
+    GW-->>EHR: launch token
+    EHR->>App: Launch URL with launch token
+    App->>GW: GET /api/.well-known/smart-configuration
     GW-->>App: discovery (gateway endpoints)
     App->>GW: GET /api/authorize (SMART scopes + launch)
     GW->>IdP: GET /authorize (forwarded)
@@ -221,7 +205,7 @@ sequenceDiagram
     participant IdP as Identity Provider
     participant FHIR as FHIR Service
 
-    App->>GW: GET /.well-known/smart-configuration
+    App->>GW: GET /api/.well-known/smart-configuration
     GW-->>App: discovery (gateway endpoints)
     App->>GW: GET /api/authorize (SMART scopes, PKCE for public clients)
     GW->>IdP: /authorize (translated for Entra, forwarded for External)
@@ -235,12 +219,6 @@ sequenceDiagram
 ```
 
 The same endpoint handles both **public clients** (PKCE, no secret) and **confidential clients with a symmetric secret**. The choice is driven by the request body (presence of `code_verifier` vs `client_secret`). Confidential clients with `private_key_jwt` use the Backend Services flow described next.
-
-### Entra consent picker
-
-In Entra mode, `/api/authorize` can redirect the user to the built-in `/api/consent-ui` before continuing to Microsoft Entra. The browser acquires a token using the Auth Context Frontend App registration and calls `/api/appConsentInfo`. The gateway uses its managed identity to read the requesting application, list the authenticated user's delegated grants, and narrow those grants when the user removes scopes.
-
-After `azd up`, run `scripts/Grant-FunctionAppGraphPermissions.ps1` so the Function App managed identity has `Application.Read.All` and `DelegatedPermissionGrant.ReadWrite.All`. External IdP mode does not use this picker.
 
 ---
 
@@ -296,46 +274,7 @@ sequenceDiagram
 
 ---
 
-## 9. Token revocation
-
-The gateway advertises `/api/block-access-token` as the SMART `revocation_endpoint`. The caller posts the raw token. The gateway derives a revocation key and stores it in the same cache abstraction used for launch context. Subsequent FHIR requests through the gateway proxy are rejected with `401` when their token is blocklisted.
-
-Revocation is enforced by the gateway, not by the upstream FHIR service or IdP. Clients that call the FHIR service directly bypass this check. For multi-instance deployments, configure `AZURE_CacheConnectionString` so all gateway instances share revocation state.
-
----
-
-## 10. FHIR Bulk Data group export
-
-The deployment always creates a dedicated export storage account. For a newly created FHIR service, Bicep configures that account as the FHIR export destination, grants the FHIR managed identity write access, and grants the gateway managed identity read access.
-
-The gateway export proxy is enabled only in Entra mode:
-
-```mermaid
-sequenceDiagram
-    participant Client as Backend Service Client
-    participant GW as SMART Gateway
-    participant FHIR as FHIR Service
-    participant Blob as Export Storage
-
-    Client->>GW: GET /Group/{id}/$export
-    GW->>GW: Validate bearer token and derive client id
-    GW->>FHIR: GET /Group/{id}/$export?_container={client-container}
-    FHIR-->>GW: 202 + Content-Location
-    GW-->>Client: 202 + gateway status URL
-    FHIR->>Blob: Write NDJSON export files
-    Client->>GW: GET /_operations/export/{id}
-    GW->>FHIR: Poll export status
-    GW-->>Client: Manifest with gateway file URLs
-    Client->>GW: GET /_export/{container}/{file}
-    GW->>Blob: Read with managed identity
-    GW-->>Client: NDJSON stream
-```
-
-For a reused FHIR service, the deployment remains non-destructive. Configure the reused service's export storage and grant its managed identity **Storage Blob Data Contributor** manually. The gateway read role and `AZURE_ExportStorageBlobUri` are still configured by the sample deployment.
-
----
-
-## 11. Resources
+## 9. Resources
 
 - [SMART App Launch v2 Implementation Guide (HL7)](https://hl7.org/fhir/smart-app-launch/)
 - [SMART Backend Services](http://hl7.org/fhir/smart-app-launch/backend-services.html)

@@ -30,7 +30,7 @@ namespace SMARTCustomOperations.AzureAuth.Models
 
         public string RefreshToken { get; }
 
-        public string? Scope { get; set; }
+        public string? Scope { get; }
 
         public override string ClientId { get; }
 

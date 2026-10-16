@@ -16,10 +16,8 @@ namespace SMARTCustomOperations.AzureAuth
     /// <summary>
     /// Gateway authorize endpoint used by Entra mode. Validates SMART parameters,
     /// translates scopes via the IdP strategy, and 302-redirects to the upstream
-    /// authorize endpoint. Accepts both GET and POST (SMART "authorize-post" capability):
-    /// for POST the SMART parameters are read from the application/x-www-form-urlencoded body.
-    /// In External mode this function is a no-op (404) because clients call the IdP /authorize
-    /// directly per the well-known config.
+    /// authorize endpoint. In External mode this function is a no-op (404) because
+    /// clients call the IdP /authorize directly per the well-known config.
     /// </summary>
     public class AuthorizeFunction
     {
@@ -36,7 +34,7 @@ namespace SMARTCustomOperations.AzureAuth
 
         [Function("Authorize")]
         public async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "api/authorize")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/authorize")] HttpRequestData req)
         {
             if (!_idpStrategy.ProvidesAuthorizeProxy)
             {
@@ -45,31 +43,8 @@ namespace SMARTCustomOperations.AzureAuth
                 return notFound;
             }
 
-            // SMART authorize-post: parameters arrive in the form body on POST, otherwise in the
-            // query string on GET. Parse from the correct source so both methods behave identically.
-            System.Collections.Specialized.NameValueCollection query;
-            if (req.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
-            {
-                var body = await new StreamReader(req.Body).ReadToEndAsync();
-                query = HttpUtility.ParseQueryString(body);
-            }
-            else
-            {
-                query = HttpUtility.ParseQueryString(req.Url.Query);
-            }
-
+            var query = HttpUtility.ParseQueryString(req.Url.Query);
             string? Get(string k) => query[k];
-
-            // Reconstruct a leading-'?' query string from the parsed parameters so downstream
-            // redirects (consent picker) carry the SMART params regardless of GET vs POST.
-            string BuildForwardQuery()
-            {
-                var pairs = query.AllKeys
-                    .Where(k => !string.IsNullOrEmpty(k))
-                    .Select(k => $"{HttpUtility.UrlEncode(k)}={HttpUtility.UrlEncode(query[k])}");
-                var joined = string.Join("&", pairs);
-                return string.IsNullOrEmpty(joined) ? string.Empty : "?" + joined;
-            }
 
             var responseType = Get("response_type");
             var clientId = Get("client_id");
@@ -106,15 +81,10 @@ namespace SMARTCustomOperations.AzureAuth
             if (!string.IsNullOrEmpty(aud))
             {
                 var providedAudience = HttpUtility.UrlDecode(aud).TrimEnd('/');
-
-                
-                var gatewayBaseUrl = $"{req.Url.Scheme}://{req.Url.Authority}".TrimEnd('/');
-
                 var validAudiences = new[]
                 {
                     (_config.FhirAudience ?? string.Empty).TrimEnd('/'),
                     (_config.FhirServerUrl ?? string.Empty).TrimEnd('/'),
-                    gatewayBaseUrl,
                 };
 
                 if (!validAudiences.Any(a => !string.IsNullOrEmpty(a) && string.Equals(a, providedAudience, StringComparison.OrdinalIgnoreCase)))
@@ -122,26 +92,6 @@ namespace SMARTCustomOperations.AzureAuth
                     _logger.LogError("Invalid audience. Got: {Got}, Valid: {Valid}", providedAudience, string.Join(", ", validAudiences));
                     return await BadRequest(req, "Invalid audience.");
                 }
-            }
-
-            // Scope picker + consent narrowing: on the first pass, send the user to the consent
-            // screen (/api/consent-ui) instead of straight to the IdP. The picker signs the user
-            // in and narrows their Entra oauth2PermissionGrant (via Graph) to exactly the requested
-            // scopes, then navigates back here with user=true to continue to the IdP. This runs for
-            // BOTH standalone and EHR launch: EHR launch must narrow too, otherwise previously
-            // consented scopes (e.g. user/*.rs) linger and get mixed with the current request's
-            // patient/*.rs, which the FHIR server rejects ("scopes must use a single context").
-            // Skipped for prompt=none (no interactive UI is allowed) and for non-FHIR requests.
-            if (_idpStrategy.ProvidesConsentPicker
-                && !string.Equals(query["user"], "true", StringComparison.OrdinalIgnoreCase)
-                && HasFhirScope(scope!)
-                && !IsPromptNone(prompt))
-            {
-                var pickerUrl = $"{req.Url.Scheme}://{req.Url.Authority}/api/consent-ui{BuildForwardQuery()}";
-                _logger.LogInformation("Redirecting authorize to consent picker.");
-                var pickerResponse = req.CreateResponse(HttpStatusCode.Redirect);
-                pickerResponse.Headers.Add("Location", pickerUrl);
-                return pickerResponse;
             }
 
             var entraScopes = _idpStrategy.TranslateScopesToIdp(scope!);
@@ -185,39 +135,9 @@ namespace SMARTCustomOperations.AzureAuth
             var location = $"{authorizeBase}?{string.Join("&", queryParams)}";
             _logger.LogInformation("Redirecting authorize to upstream IdP. EHR launch: {IsEhr}", !string.IsNullOrEmpty(launch));
 
-            // Reached here either because the consent picker is disabled/not applicable, or the
-            // user has already been through it (user=true). Redirect on to the upstream IdP.
-
             var response = req.CreateResponse(HttpStatusCode.Redirect);
             response.Headers.Add("Location", location);
             return response;
-        }
-
-        private static bool IsPromptNone(string? prompt) =>
-            !string.IsNullOrEmpty(prompt)
-            && prompt.Replace('+', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Any(p => p.Equals("none", StringComparison.OrdinalIgnoreCase));
-
-        private static bool HasPickerDoneCookie(HttpRequestData req)
-        {
-            if (!req.Headers.TryGetValues("Cookie", out var cookieHeaders))
-            {
-                return false;
-            }
-
-            foreach (var header in cookieHeaders)
-            {
-                foreach (var pair in header.Split(';', StringSplitOptions.RemoveEmptyEntries))
-                {
-                    var kv = pair.Split('=', 2);
-                    if (kv.Length == 2 && kv[0].Trim().Equals("__picker_done", StringComparison.Ordinal))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         private static async Task<HttpResponseData> BadRequest(HttpRequestData req, string message)

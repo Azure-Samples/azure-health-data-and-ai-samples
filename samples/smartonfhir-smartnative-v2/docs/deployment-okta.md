@@ -1,6 +1,6 @@
 # Deploy with External IdP (Okta)
 
-This guide walks through deploying the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample using an **external identity provider** as the upstream authorization server. Okta is used as the running example; the same steps apply to any SMART-capable OpenID Provider (Auth0, Ping, etc.) that can issue SMART scopes and `fhirUser` claims natively.
+This guide walks through deploying the SMART on FHIR v2 native IdP-agnostic sample using an **external identity provider** as the upstream authorization server. Okta is used as the running example; the same steps apply to any SMART-capable OpenID Provider (Auth0, Ping, etc.) that can issue SMART scopes and `fhirUser` claims natively.
 
 > [!TIP]
 > If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](./troubleshooting.md).
@@ -10,12 +10,9 @@ The deployment provisions:
 - A new resource group (`<env-name>-rg`)
 - An Azure Health Data Services workspace and FHIR Service *(skipped when reusing an existing FHIR service — see [Reuse mode](#reuse-mode-optional) below)*
 - An Azure Function App (the SMART gateway) and its dependencies (App Service Plan, Storage, App Insights, Log Analytics)
-- A dedicated Storage Account for FHIR Bulk Data export output (the gateway export proxy is not enabled in External IdP mode)
-- Integration with an externally provisioned Redis-compatible cache when `AZURE_CacheConnectionString` is supplied
+- *(Optional)* an Azure Cache for distributed EHR launch context
 
 A Key Vault is **not** deployed in this mode. SMART Backend Services on an External IdP are handled directly by the IdP and do not transit the gateway.
-
-The deployment does not create a Redis resource. If you set `AZURE_CacheConnectionString`, it must reference a Redis-compatible service you provision separately.
 
 ---
 
@@ -108,7 +105,6 @@ When deployment completes, `azd` writes outputs to `.azure/<env-name>/.env`, inc
 - `FhirResourceGroup` — RG containing the FHIR service (equal to `AZURE_RESOURCE_GROUP` in create-new mode; the reused FHIR's RG in reuse mode)
 - `FunctionBaseUrl`
 - `FunctionAppManagedIdentityPrincipalId`
-- `ExportStorageAccountName` and `ExportStorageBlobUri`
 
 For subsequent code-only redeploys (no infrastructure changes), use:
 

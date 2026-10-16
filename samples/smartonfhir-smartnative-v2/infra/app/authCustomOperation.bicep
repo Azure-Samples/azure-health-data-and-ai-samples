@@ -47,12 +47,6 @@ param hostingPlanId string
 @description('Optional Redis-compatible connection string for distributed EHR launch context cache. Leave blank to use in-memory caching.')
 param cacheConnectionString string = ''
 
-@description('Audience the consent picker browser calls /api/appConsentInfo with. Leave blank to derive as api://<contextAadApplicationId> at runtime. Only used when idpType is EntraId.')
-param consentPickerAudience string = ''
-
-@description('Blob service URI of the export storage account (e.g. https://<acct>.blob.core.windows.net). Enables bulk export file streaming.')
-param exportStorageBlobUri string = ''
-
 @description('Name for the Function App to deploy custom operations.')
 var authCustomOperationsFunctionAppName = '${name}-auth-func'
 
@@ -119,8 +113,6 @@ resource authCustomOperationAppSettings 'Microsoft.Web/sites/config@2020-12-01' 
     AZURE_ContextAppClientId: contextAadApplicationId
     AZURE_CacheConnectionString: cacheConnectionString
     AZURE_BackendServiceKeyVaultStore: backendServiceVaultName
-    AZURE_ConsentPickerAudience: consentPickerAudience
-    AZURE_ExportStorageBlobUri: exportStorageBlobUri
     AZURE_Debug: 'true'
   }
 }

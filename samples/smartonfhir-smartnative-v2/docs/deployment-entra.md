@@ -1,6 +1,6 @@
 # Deploy with Microsoft Entra ID
 
-This guide walks through deploying the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample using **Microsoft Entra ID** as the upstream authorization server. In this mode the gateway translates SMART scopes to Entra application scopes, injects SMART launch context into token responses, and provides SMART v2 Backend Services support backed by a Key Vault.
+This guide walks through deploying the SMART on FHIR v2 native IdP-agnostic sample using **Microsoft Entra ID** as the upstream authorization server. In this mode the gateway translates SMART scopes to Entra application scopes, injects SMART launch context into token responses, and provides SMART v2 Backend Services support backed by a Key Vault.
 
 > [!TIP]
 > If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](./troubleshooting.md).
@@ -11,8 +11,7 @@ The deployment provisions:
 - An Azure Health Data Services workspace and FHIR Service *(skipped when reusing an existing FHIR service — see [Reuse mode](#reuse-mode-optional) below)*
 - An Azure Function App (the SMART gateway) and its dependencies (App Service Plan, Storage, App Insights, Log Analytics)
 - A Key Vault for SMART Backend Services client registrations
-- A dedicated Storage Account for FHIR Bulk Data export output
-- Integration with an externally provisioned Redis-compatible cache when `AZURE_CacheConnectionString` is supplied
+- *(Optional)* an Azure Cache for distributed EHR launch context
 
 You will also create two **Microsoft Entra App Registrations** before running `azd up`:
 
@@ -121,9 +120,6 @@ When deployment completes, `azd` writes outputs to `.azure/<env-name>/.env`, inc
 - `FunctionBaseUrl`
 - `FunctionAppManagedIdentityPrincipalId`
 - `BackendServiceKeyVaultName` and `BackendServiceKeyVaultUri`
-- `ExportStorageAccountName` and `ExportStorageBlobUri`
-
-Before using the deployment outside controlled testing, set the Function App setting `AZURE_Debug` to `false` so internal exception details are not returned to callers.
 
 For subsequent code-only redeploys (no infrastructure changes), use:
 
@@ -131,26 +127,9 @@ For subsequent code-only redeploys (no infrastructure changes), use:
 azd deploy auth
 ```
 
-### Grant Microsoft Graph permissions to the gateway
-
-The Entra consent picker reads application registrations and narrows per-user delegated permission grants through Microsoft Graph. Bicep does not grant these tenant-level Graph application permissions, so run the idempotent post-deployment script once for each environment:
-
-```powershell
-pwsh ./scripts/Grant-FunctionAppGraphPermissions.ps1
-```
-
-The script reads `FunctionAppManagedIdentityPrincipalId` and `TenantId` from the active `azd` environment and grants the Function App managed identity:
-
-- `Application.Read.All`
-- `DelegatedPermissionGrant.ReadWrite.All`
-
-You must run the script while signed in with sufficient Microsoft Entra privileges to assign Microsoft Graph application roles. Verify the assignments under **Microsoft Entra ID → Enterprise applications → \<Function App managed identity\> → Permissions**.
-
-Without these permissions, `/api/appConsentInfo` returns `403` and the built-in consent picker cannot complete.
-
 ### Reuse mode (optional)
 
-If `ExistingFhirServiceId` was set in step 5, `azd up` **does not** touch the existing FHIR service. Three things the create-new path does automatically must therefore be done by you, one time, against the reused FHIR:
+If `ExistingFhirServiceId` was set in step 5, `azd up` **does not** touch the existing FHIR service. Two things the create-new path does automatically must therefore be done by you, one time, against the reused FHIR:
 
 1. **Align the FHIR service audience** to your Application ID URI (the `FhirAudience` value).
 
@@ -158,14 +137,6 @@ If `ExistingFhirServiceId` was set in step 5, `azd up` **does not** touch the ex
    
 
 2. **Grant yourself FHIR Data Contributor** on the reused FHIR service if you plan to run `Load-ProfilesData.ps1` or hit the data plane directly. Reuse mode intentionally skips this role assignment (see the note in step 7 below).
-
-3. **Configure Bulk Data export if you want to use the group-export flow.** The deployment still creates `ExportStorageAccountName`, grants the gateway read access, and sets `AZURE_ExportStorageBlobUri`, but it does not modify the reused FHIR service.
-
-   - Enable a system-assigned managed identity on the reused FHIR service if it does not already have one.
-   - Configure the FHIR service export storage account to `ExportStorageAccountName`.
-   - Grant the FHIR service managed identity **Storage Blob Data Contributor** on that storage account.
-
-   Skip this step if bulk export is not required. Other SMART launch and token flows do not depend on it.
 
 Everything else — the Function App, Key Vault, monitoring, and the app settings that point the gateway at `FhirUrl` / `FhirAudience` — is wired up automatically.
 
@@ -220,10 +191,6 @@ This role is required for the SMART scope evaluation to apply on the FHIR Servic
 Run a few quick checks to confirm the gateway and the FHIR Service are wired up correctly:
 
 - `GET <FunctionBaseUrl>/.well-known/smart-configuration` returns the gateway-published version of the same document.
-- `GET <FunctionBaseUrl>/api/consent-ui` opens the Entra consent picker.
-- `GET <FunctionBaseUrl>/api/ehr-launch` opens the built-in EHR launch initiator.
-
-If you use Bulk Data export, also verify that the FHIR service export configuration names `ExportStorageAccountName` and that both the FHIR service and gateway managed identities have their required storage roles.
 
 ### End-to-end test with the SMART client sample app
 
