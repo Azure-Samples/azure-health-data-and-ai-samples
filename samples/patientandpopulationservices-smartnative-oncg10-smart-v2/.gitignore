@@ -1,0 +1,33 @@
+# Build output
+**/bin/
+**/obj/
+**/publish/
+*.zip
+
+# IDE / Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+
+# Azure / azd
+.azure/
+**/local.settings.json
+*.env
+config.json
+
+# Publish profiles & service dependencies (user-/env-specific)
+**/Properties/PublishProfiles/
+**/Properties/ServiceDependencies/
+**/Properties/serviceDependencies*.json*
+
+# Compiled Bicep ARM output
+infra/main.json
+
+# OS
+Thumbs.db
+.DS_Store
