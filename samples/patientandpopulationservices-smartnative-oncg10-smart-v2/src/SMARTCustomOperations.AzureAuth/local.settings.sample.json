@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "AZURE_IdpType": "EntraId",
+    "AZURE_TenantId": "<your-tenant-id>",
+    "AZURE_FhirServerUrl": "https://<your-fhir-service>.fhir.azurehealthcareapis.com",
+    "AZURE_FhirAudience": "https://<your-fhir-audience>",
+    "_comment_FhirResourceAppId": "Entra app ID representing the FHIR resource API. Used for custom fhirUser claim setup and data loading scripts (EntraId only).",
+    "AZURE_FhirResourceAppId": "",
+    "_comment_CacheConnectionString": "Optional Redis-compatible connection string (e.g. Azure Managed Redis). Leave AZURE_CacheConnectionString unset for in-memory caching.",
+    "AZURE_CacheConnectionString": "",
+    "AZURE_ContextAppClientId": "<your-context-app-client-id>",
+    "AZURE_BackendServiceKeyVaultStore": "<your-keyvault-name>"
+  }
+}
