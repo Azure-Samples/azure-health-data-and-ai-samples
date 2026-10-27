@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide collects the most common issues you may hit when deploying or running the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample, organized by where the problem typically surfaces.
+This guide collects the most common issues you may hit when deploying or running the ONC (g)(10) SMART on FHIR v2 native sample, organized by where the problem typically surfaces.
 
 ---
 
@@ -36,7 +36,7 @@ union traces, exceptions, dependencies, requests
 
 Paste the token at [jwt.ms](https://jwt.ms/) and check:
 
-- `iss` — should match the configured authority (Entra `https://login.microsoftonline.com/<tenant-id>/v2.0` or your External IdP authority).
+- `iss` — should match the configured Microsoft Entra authority (`https://login.microsoftonline.com/<tenant-id>/v2.0`).
 - `aud` — should match the `FhirAudience` of the FHIR Service.
 - `fhirUser` — must be present for SMART user flows; should resolve to a real FHIR resource.
 - `scope` — should contain SMART-shaped scopes (e.g. `patient/Observation.rs`).
@@ -53,13 +53,14 @@ GET <FhirUrl>/.well-known/smart-configuration
 
 The gateway version should rewrite `authorization_endpoint` and `token_endpoint` to itself; the FHIR version should expose the upstream IdP endpoints. If they disagree on `issuer` or `audience`, that is usually the source of token validation problems downstream.
 
-### Check the FHIR identity provider whitelist
+### Check the FHIR authentication configuration
 
-In the Azure Portal, open the FHIR Service → **Authentication** → **SMART on FHIR identity providers**. Confirm:
+In the Azure Portal, open the FHIR Service → **Authentication**. Confirm:
 
-- The **authority** matches your IdP exactly (no trailing slash drift, correct `/oauth2/v2.0` segment for Entra v2).
+- The **authority** matches your Microsoft Entra tenant exactly (`https://login.microsoftonline.com/<tenant-id>`, no trailing slash drift).
 - The **audience** matches `FhirAudience`.
-- The **applications** array lists every confidential or backend service `client_id` you expect to call the FHIR Service.
+
+<!-- Additional identity providers: add checks for their FHIR SMART identity provider configuration here once they are supported. -->
 
 ---
 
@@ -67,7 +68,7 @@ In the Azure Portal, open the FHIR Service → **Authentication** → **SMART on
 
 ### `azd up` fails with insufficient permissions
 
-The deployer needs both Azure RBAC permissions to create the resource group and resources, and (for `IdpType=EntraId`) Microsoft Entra rights to create app registrations. Check that the signed-in account has:
+The deployer needs both Azure RBAC permissions to create the resource group and resources, and Microsoft Entra rights to create app registrations. Check that the signed-in account has:
 
 - **Owner** on the subscription (or a custom role with `Microsoft.Resources/*`).
 - Microsoft Entra **Application Administrator** or higher for app registration steps.
@@ -91,7 +92,7 @@ azd env list
 azd env get-values
 ```
 
-If you have multiple environments (`smartnativeokta`, `smartnativegeneric`, etc.), select the right one with `azd env select <name>` before re-running.
+If you have multiple `azd` environments, select the right one with `azd env select <name>` before re-running.
 
 ### PowerShell script execution policy blocks the helper scripts
 
@@ -118,11 +119,7 @@ This is the most common cause of `401`/`403` against the FHIR Service.
 - Confirm `acceptMappedClaims=true` in the FHIR Resource App manifest.
 - Confirm each test user has the directory extension populated (`Add-FhirUserInfoToUser.ps1`).
 
-**For External IdPs:**
-
-- Confirm the IdP's authorization server emits a `fhirUser` claim in access tokens.
-- Confirm the user's profile in the IdP has the FHIR URL stored against the right attribute, and that the attribute is wired into the access-token claim mapping.
-- Decode the access token at [jwt.ms](https://jwt.ms/) and check the claim spelling exactly — it must be `fhirUser`.
+<!-- Additional identity providers: add a "For <IdP>" block with fhirUser claim checks here once they are supported. -->
 
 ### `401 Unauthorized` from the FHIR Service
 
@@ -130,11 +127,10 @@ Decode the access token and check, in order:
 
 1. **`iss` (issuer)** matches the FHIR Service's configured authority.
 2. **`aud` (audience)** matches `FhirAudience`.
-3. **`client_id`** is in the FHIR identity provider whitelist (`applications[]`).
-4. **Token has not expired** (`exp`).
-5. **`fhirUser`** is present (for user flows).
+3. **Token has not expired** (`exp`).
+4. **`fhirUser`** is present (for user flows).
 
-If all five look correct and you still see 401, restart the failing client — caches sometimes hold onto stale discovery documents.
+If all four look correct and you still see 401, restart the failing client — caches sometimes hold onto stale discovery documents.
 
 ### `403 Forbidden` from the FHIR Service
 
@@ -175,7 +171,7 @@ The deployment does not create the Redis-compatible service. Provision it separa
 
 ### Consent picker returns `403` from `/api/appConsentInfo`
 
-In Entra mode, the Function App managed identity needs Microsoft Graph application permissions to read applications and manage per-user delegated grants. Run the idempotent post-deployment script:
+The Function App managed identity needs Microsoft Graph application permissions to read applications and manage per-user delegated grants. Run the idempotent post-deployment script:
 
 ```powershell
 pwsh ./scripts/Grant-FunctionAppGraphPermissions.ps1
@@ -197,13 +193,9 @@ For a new FHIR service created by this sample, `azd up` configures export storag
 - The Function App managed identity has **Storage Blob Data Reader**.
 - `AZURE_ExportStorageBlobUri` equals `ExportStorageBlobUri`.
 
-When reusing an existing FHIR service, these FHIR-side export settings and the contributor role must be configured manually. Bulk export through the gateway is enabled only in `EntraId` mode.
+When reusing an existing FHIR service, these FHIR-side export settings and the contributor role must be configured manually.
 
-### Backend services returns `Backend services proxy not applicable for IdpType 'ExternalIdp'`
-
-Backend services in External IdP mode go **directly to the IdP**, not through the gateway. Reconfigure your backend client so its discovery URL resolves to the **FHIR Service**'s `.well-known/smart-configuration` (so it picks up the IdP token endpoint), not the gateway's.
-
-### Backend services `client_assertion` rejected (Entra mode)
+### Backend services `client_assertion` rejected
 
 Common rejections from the gateway, in priority order:
 
@@ -223,8 +215,8 @@ If the assertion validates but the swap to Entra fails, the Key Vault secret val
 Check Application Insights for the underlying exception. Frequent causes:
 
 - `AZURE_FhirServerUrl` or `AZURE_FhirAudience` blank or malformed.
-- `AZURE_TenantId` blank in `EntraId` mode.
-- The Function App managed identity does not have **Key Vault Secrets User** on the backend services Key Vault (only relevant for Entra backend services).
+- `AZURE_TenantId` blank or incorrect.
+- The Function App managed identity does not have **Key Vault Secrets User** on the backend services Key Vault (only relevant for backend services).
 
 ---
 
@@ -232,12 +224,11 @@ Check Application Insights for the underlying exception. Frequent causes:
 
 ### Client uses the wrong `BackendServices:FhirBaseUrl`
 
-When testing backend services from a client app:
+When testing backend services from a client app, point at the **gateway** (`<FunctionBaseUrl>`). The client's discovery resolves the gateway's `/api/token` (which performs assertion validation and Entra swap).
 
-- **Entra mode**: point at the **gateway** (`<FunctionBaseUrl>`). The client's discovery resolves the gateway's `/api/token` (which performs assertion validation and Entra swap).
-- **External mode**: point at the **FHIR Service** (`<FhirUrl>`). The client's discovery resolves the IdP token endpoint directly.
+Pointing the client directly at the FHIR Service causes it to call the wrong endpoint and fail with confusing errors.
 
-Mixing these causes the client to call the wrong endpoint and fail with confusing errors.
+<!-- Additional identity providers: document their backend services base URL here once they are supported. -->
 
 ### Discovery URL is the wrong one
 
@@ -265,7 +256,7 @@ The user account running `Load-ProfilesData.ps1` needs the **FHIR Data Contribut
 
 ### Sample data load fails with 400 on the audience parameter
 
-For External IdPs, `Load-ProfilesData.ps1` requires `-FhirAudience`. Get it from:
+`Load-ProfilesData.ps1` requires a FHIR audience. It reads `FhirAudience` from the active `azd` environment, or you can pass `-FhirAudience` explicitly. Get the value from:
 
 - `azd env get-values | findstr FhirAudience`, or
 - FHIR Service → **Authentication** → **Audience** in the Azure Portal.

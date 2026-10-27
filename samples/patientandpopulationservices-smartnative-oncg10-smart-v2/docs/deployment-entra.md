@@ -1,6 +1,6 @@
 # Deploy with Microsoft Entra ID
 
-This guide walks through deploying the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample using **Microsoft Entra ID** as the upstream authorization server. In this mode the gateway translates SMART scopes to Entra application scopes, injects SMART launch context into token responses, and provides SMART v2 Backend Services support backed by a Key Vault.
+This guide walks through deploying the ONC (g)(10) SMART on FHIR v2 native sample using **Microsoft Entra ID** as the upstream authorization server. In this mode the gateway translates SMART scopes to Entra application scopes, injects SMART launch context into token responses, and provides SMART v2 Backend Services support backed by a Key Vault.
 
 > [!TIP]
 > If you encounter any issues during configuration, deployment, or testing, please refer to the [Troubleshooting Guide](./troubleshooting.md).

@@ -1,29 +1,34 @@
-# ONC (g)(10) SMART on FHIR v2 — Native IdP-Agnostic Sample
+# ONC (g)(10) SMART on FHIR v2 — Native Sample
 
 The [Azure Health Data Services FHIR Service](https://learn.microsoft.com/en-us/azure/healthcare-apis/fhir/overview) supports Substitutable Medical Applications and Reusable Technologies ([SMART on FHIR](https://docs.smarthealthit.org/)) by implementing the key server-side behaviors required for SMART clients to securely access FHIR data using OAuth 2.0 and OpenID Connect. 
 
-This sample demonstrates **SMART App Launch v2** authorization flows on top of the **Azure Health Data Services FHIR Service**. It is IdP-agnostic: the same gateway and infrastructure support either **Microsoft Entra ID** or an **external identity provider** such as Okta.
+This sample demonstrates **SMART App Launch v2** authorization flows on top of the **Azure Health Data Services FHIR Service**, using **Microsoft Entra ID** as the identity provider.
+
+<!-- Additional identity providers: list them here once they are supported. -->
+
 
 The gateway is an orchestration layer between the identity provider, a clinical system such as an EHR, SMART applications, and the FHIR service. It supplies SMART-specific behavior that general-purpose identity providers do not provide natively.
 
 This sample provides a **SMART gateway Function App** that:
 
-1. Translates SMART concepts (scopes, launch parameters, PKCE flows) into terms the configured Identity Provider understands.
+1. Translates SMART concepts (scopes, launch parameters, PKCE flows) into terms Microsoft Entra ID understands.
 2. Enriches token responses with SMART launch context (cached during EHR launch).
-3. Provides **SMART v2 Backend Services** support (`client_credentials` + `private_key_jwt`) where the IdP cannot do this natively.
+3. Provides **SMART v2 Backend Services** support (`client_credentials` + `private_key_jwt`), which Microsoft Entra ID does not support natively.
 4. Provides token revocation enforcement through the gateway FHIR proxy.
-5. In Entra mode, provides a consent picker, an EHR launch initiator, and authenticated FHIR Bulk Data export proxying.
+5. Provides a consent picker, an EHR launch initiator, and authenticated FHIR Bulk Data export proxying.
 
-### Why the gateway is needed per IdP
+### Why the gateway is needed
 
-| Concern | Microsoft Entra ID | External IdP (e.g. Okta) |
-| --- | --- | --- |
-| **SMART scope syntax** (`patient/*.rs`) | Not understood by Entra — gateway translates to/from Entra application scopes. | Understood natively by SMART-capable IdPs. Gateway only forwards. |
-| **SMART launch context** (`patient`, `encounter`, `launch`) | Not issued by Entra — gateway injects cached context into the token response. | Same — gateway injects cached context into the token response. |
-| **Backend Services (`private_key_jwt` + JWKS URL)** | Entra does not accept the SMART self-published-JWKS confidential-client model. Gateway validates the SMART `client_assertion` (ES384 / RS384) against the client's registered JWKS, then swaps to a Key Vault-stored Entra client secret. | Handled natively by the IdP. Backend service clients call the IdP token endpoint **directly**; the gateway is bypassed. |
-| **Discovery (`.well-known/smart-configuration`)** | Built by the gateway, anchored on the FHIR Service. | Built by the gateway, anchored on the FHIR Service. |
+| Concern | Microsoft Entra ID |
+| --- | --- |
+| **SMART scope syntax** (`patient/*.rs`) | Not understood by Entra — gateway translates to/from Entra application scopes. |
+| **SMART launch context** (`patient`, `encounter`, `launch`) | Not issued by Entra — gateway injects cached context into the token response. |
+| **Backend Services (`private_key_jwt` + JWKS URL)** | Entra does not accept the SMART self-published-JWKS confidential-client model. Gateway validates the SMART `client_assertion` (ES384 / RS384) against the client's registered JWKS, then swaps to a Key Vault-stored Entra client secret. |
+| **Discovery (`.well-known/smart-configuration`)** | Built by the gateway, anchored on the FHIR Service. |
 
-The Entra path therefore requires more gateway logic and a small Key Vault. The External-IdP path is intentionally minimal.
+<!-- Additional identity providers: add a column to the table above once they are supported. -->
+
+Because of these gaps, the gateway carries the SMART-specific logic and uses a small Key Vault for Backend Services.
 
 ---
 
@@ -35,27 +40,25 @@ The Entra path therefore requires more gateway logic and a small Key Vault. The 
 - Backend Services (`client_credentials` + `private_key_jwt`, ES384 / RS384)
 - Refresh token exchange (`offline_access`)
 - Token revocation through the gateway proxy
-- FHIR Bulk Data group export in Entra mode
+- FHIR Bulk Data group export
 
 ---
 
 ## Components deployed
 
-The same Azure components are deployed for both IdP modes, with one mode-specific addition for Entra ID.
+| Component | Microsoft Entra ID | Purpose |
+| --- | :---: | --- |
+| Azure Health Data Services FHIR Service | ✓ | Stores FHIR resources, evaluates SMART scopes, sources SMART discovery |
+| Azure Function App (SMART gateway) | ✓ | Hosts `/authorize`, `/token`, `/context-cache`, `/.well-known/*` proxy |
+| App Service Plan (Linux, dotnet-isolated 8) | ✓ | Hosts the Function App |
+| Storage Account | ✓ | Function App runtime storage |
+| Application Insights + Log Analytics | ✓ | Function App observability and tracing |
+| Dedicated export Storage Account | ✓ | Stores FHIR Bulk Data export output |
+| External Redis-compatible cache (optional; not provisioned) | opt | Stores EHR launch context and revocation state across multiple Function App instances. Supply `AZURE_CacheConnectionString`; otherwise state is process-local. |
+| Backend Services Key Vault | ✓ | Stores backend service client registrations (Entra secret + `jwks_url` tag) |
 
-| Component | EntraId | ExternalIdp | Purpose |
-| --- | :---: | :---: | --- |
-| Azure Health Data Services FHIR Service | ✓ | ✓ | Stores FHIR resources, evaluates SMART scopes, sources SMART discovery |
-| Azure Function App (SMART gateway) | ✓ | ✓ | Hosts `/authorize`, `/token`, `/context-cache`, `/.well-known/*` proxy |
-| App Service Plan (Linux, dotnet-isolated 8) | ✓ | ✓ | Hosts the Function App |
-| Storage Account | ✓ | ✓ | Function App runtime storage |
-| Application Insights + Log Analytics | ✓ | ✓ | Function App observability and tracing |
-| Dedicated export Storage Account | ✓ | ✓ | Stores FHIR Bulk Data export output. The gateway export proxy is enabled only in Entra mode. |
-| External Redis-compatible cache (optional; not provisioned) | opt | opt | Stores EHR launch context and revocation state across multiple Function App instances. Supply `AZURE_CacheConnectionString`; otherwise state is process-local. |
-| Backend Services Key Vault | ✓ | — | Stores backend service client registrations (Entra secret + `jwks_url` tag) |
+<!-- Additional identity providers: add a column to the table above once they are supported. -->
 
-> The Key Vault is only deployed when `IdpType=EntraId` because backend services on External IdPs talk to the IdP directly and never touch the gateway.
->
 > The deployment does not create a Redis resource. If distributed state is required, provision a Redis-compatible service separately and set `AZURE_CacheConnectionString`.
 
 ---
@@ -76,18 +79,17 @@ flowchart LR
         direction TB
         GW{{"Function App<br/>SMART gateway<br/>/authorize · /token<br/>/context-cache · /well-known/*"}}
         Cache[("External Redis-compatible cache<br/>optional · not provisioned")]
-        KV[("Key Vault<br/>EntraId only<br/>backend client registrations")]
+        KV[("Key Vault<br/>backend client registrations")]
         Export[("Storage Account<br/>bulk export output")]
         FHIR[("Azure Health Data Services<br/>FHIR Service")]
         Insights["App Insights<br/>+ Log Analytics"]
     end
 
-    IdP{{"Identity Provider<br/>Microsoft Entra ID<br/>or External IdP (e.g. Okta)"}}
+    IdP{{"Identity Provider<br/>Microsoft Entra ID"}}
 
     EHR -->|launch context| GW
     UApp -->|SMART /authorize and /token| GW
-    BApp -->|backend services EntraId| GW
-    BApp -.->|backend services ExternalIdp| IdP
+    BApp -->|backend services| GW
 
     GW -->|discovery| FHIR
     GW -->|/authorize and /token| IdP
@@ -117,24 +119,23 @@ For the per-flow sequence diagrams (EHR launch, standalone, backend services) se
   - [PowerShell 7+](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
 - Identity Provider access:
   - **Microsoft Entra ID**: tenant admin to create app registrations and Microsoft Graph directory extensions.
-  - **External IdP (Okta)**: an Okta Authorization Server with admin access to register applications and configure SMART claim mappings.
-- Two test user accounts in the chosen IdP (one *Patient* persona, one *Practitioner* persona).
+  <!-- Additional identity providers: add their access prerequisites here once they are supported. -->
+- Two test user accounts in Microsoft Entra ID (one *Patient* persona, one *Practitioner* persona).
 
-Detailed prerequisites are listed in the per-IdP deployment guides.
+Detailed prerequisites are listed in the deployment guide.
 
 ---
 
 ## Get started
 
-Pick the deployment guide that matches your identity provider.
-
-- **[Deployment Overview](docs/deployment.md)** — start here to choose an IdP path
+- **[Deployment Overview](docs/deployment.md)** — start here for common prerequisites, supported capabilities, and FHIR service reuse
 - **[Deploy with Microsoft Entra ID](docs/deployment-entra.md)**
-- **[Deploy with External IdP (Okta)](docs/deployment-okta.md)**
+
+<!-- Additional identity providers: add a link to their deployment guide here once they are supported. -->
 
 Reference material:
 
-- **[Technical Guide](docs/technical-guide.md)** — endpoint behaviors, sequence diagrams per flow, and the role of the gateway in each mode
+- **[Technical Guide](docs/technical-guide.md)** — endpoint behaviors, sequence diagrams per flow, and the role of the gateway
 - **[Troubleshooting](docs/troubleshooting.md)**
 - **[Sample Data](docs/sample-data.md)**
 

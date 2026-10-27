@@ -174,4 +174,4 @@ The SMART Launch with Fine-Grained Scopes application is a standard confidential
 1. Follow all instructions on [this page](./set-fhir-user-mapping.md) to enable mapping the `fhirUser` to the identity token. 
 
 
-**[Back to Previous Page](../deployment.md#7-create-inferno-test-applications)**
+**[Back to Previous Page](../deployment-entra.md#end-to-end-test-with-the-smart-client-sample-app)**

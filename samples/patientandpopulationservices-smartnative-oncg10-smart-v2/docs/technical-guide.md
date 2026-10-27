@@ -1,11 +1,12 @@
 # Technical Guide
 
-This document explains how the ONC (g)(10) SMART on FHIR v2 native IdP-agnostic sample works on top of Azure Health Data Services. It covers the deployed components, the role of the gateway in each Identity Provider mode, the discovery mechanism, and the four supported SMART flows.
+This document explains how the ONC (g)(10) SMART on FHIR v2 native sample works on top of Azure Health Data Services with Microsoft Entra ID as the identity provider. It covers the deployed components, the role of the gateway, the discovery mechanism, and the four supported SMART flows.
 
-For step-by-step deployment, see the per-IdP guides:
+For step-by-step deployment, see:
 
 - [Deploy with Microsoft Entra ID](./deployment-entra.md)
-- [Deploy with External IdP (Okta)](./deployment-okta.md)
+
+<!-- Additional identity providers: add a link to their deployment guide here once they are supported. -->
 
 ---
 
@@ -23,18 +24,17 @@ flowchart LR
         direction TB
         GW{{"Function App<br/>SMART gateway"}}
         Cache[("External Redis-compatible cache<br/>optional · not provisioned")]
-        KV[("Key Vault<br/>EntraId only")]
+        KV[("Key Vault<br/>backend client registrations")]
         Export[("Storage Account<br/>bulk export output")]
         FHIR[("FHIR Service")]
         Insights["App Insights<br/>+ Log Analytics"]
     end
 
-    IdP{{"Identity Provider<br/>Microsoft Entra ID<br/>or External IdP"}}
+    IdP{{"Identity Provider<br/>Microsoft Entra ID"}}
 
     EHR -->|launch context| GW
     UApp -->|/authorize and /token| GW
-    BApp -->|backend services EntraId| GW
-    BApp -.->|backend services ExternalIdp| IdP
+    BApp -->|backend services| GW
 
     GW -->|discovery| FHIR
     GW -->|/authorize and /token| IdP
@@ -52,14 +52,12 @@ flowchart LR
 | Component | Purpose |
 | --- | --- |
 | **Azure Health Data Services FHIR Service** | Stores FHIR resources, evaluates SMART scopes natively, and acts as the source of truth for SMART discovery. Validates incoming access tokens against the configured authority and audience. |
-| **Azure Function App (SMART gateway)** | Hosts SMART endpoints (`/authorize`, `/token`, `/context-cache`, `/.well-known/*`) and translates SMART concepts into terms the configured IdP understands. The Function App uses a **system-assigned managed identity** for outbound access (FHIR, Key Vault). |
+| **Azure Function App (SMART gateway)** | Hosts SMART endpoints (`/authorize`, `/token`, `/context-cache`, `/.well-known/*`) and translates SMART concepts into terms Microsoft Entra ID understands. The Function App uses a **system-assigned managed identity** for outbound access (FHIR, Key Vault). |
 | **Storage Account, App Service Plan** | Function App runtime dependencies (Linux, dotnet-isolated 8). |
 | **Application Insights + Log Analytics** | Function App observability and tracing. FHIR data-plane diagnostics require separate diagnostic settings. |
 | **Redis-compatible cache (optional, externally provisioned)** | Distributed EHR launch context and revocation backing store. When absent, the gateway falls back to process-local memory. |
-| **Backend Services Key Vault** *(EntraId only)* | Stores SMART backend service client registrations as secrets keyed by `client_id`. |
+| **Backend Services Key Vault** | Stores SMART backend service client registrations as secrets keyed by `client_id`. |
 | **Export Storage Account** | Stores FHIR Bulk Data NDJSON output. The FHIR service writes exports and the gateway reads files through managed identity. |
-
-The same components are deployed for both IdP modes; the Key Vault is provisioned only when `IdpType=EntraId`.
 
 ---
 
@@ -71,14 +69,16 @@ The FHIR Service understands SMART scopes natively (e.g. `patient/Observation.rs
 - Issue or enrich tokens with SMART launch context (`patient`, `encounter`, `launch`, `fhirUser`).
 - Publish a SMART discovery document tailored to the deployment's IdP.
 
-The gateway provides exactly those capabilities. The mechanics of the gateway differ per IdP:
+The gateway provides exactly those capabilities:
 
-| Concern | Microsoft Entra ID | External IdP (e.g. Okta) |
-| --- | --- | --- |
-| **SMART scope syntax** | Entra does not understand `patient/*.rs` or `user/*.read`. The gateway translates SMART scopes into Entra application scopes on the way out and re-injects SMART scopes on the way back. | The IdP issues SMART scopes natively. The gateway forwards. |
-| **Launch context** (`patient`, `encounter`, `launch`) | Not issued by Entra. The gateway caches launch context during EHR launch and merges it into the token response. | Same — gateway merges from cache. |
-| **Backend Services** (`private_key_jwt` + JWKS URL) | Entra does not accept the SMART self-published-JWKS confidential-client model — its asymmetric option is uploaded certificates, not `jwks_url`. The gateway validates the SMART `client_assertion` (ES384 / RS384) against the client's registered JWKS, then exchanges it for an Entra access token using a Key Vault-stored Entra client secret. | Backend services flow **directly to the IdP**. The gateway is bypassed. |
-| **Discovery** (`.well-known/smart-configuration`) | Built by the gateway, anchored on the FHIR Service. | Built by the gateway, anchored on the FHIR Service. |
+| Concern | Microsoft Entra ID |
+| --- | --- |
+| **SMART scope syntax** | Entra does not understand `patient/*.rs` or `user/*.read`. The gateway translates SMART scopes into Entra application scopes on the way out and re-injects SMART scopes on the way back. |
+| **Launch context** (`patient`, `encounter`, `launch`) | Not issued by Entra. The gateway caches launch context during EHR launch and merges it into the token response. |
+| **Backend Services** (`private_key_jwt` + JWKS URL) | Entra does not accept the SMART self-published-JWKS confidential-client model — its asymmetric option is uploaded certificates, not `jwks_url`. The gateway validates the SMART `client_assertion` (ES384 / RS384) against the client's registered JWKS, then exchanges it for an Entra access token using a Key Vault-stored Entra client secret. |
+| **Discovery** (`.well-known/smart-configuration`) | Built by the gateway, anchored on the FHIR Service. |
+
+<!-- Additional identity providers: add a column to the table above once they are supported. -->
 
 ---
 
@@ -111,16 +111,16 @@ The gateway also caches the upstream discovery document so per-request token for
 
 | Endpoint | Method | Purpose | Mode |
 | --- | --- | --- | --- |
-| `/.well-known/smart-configuration` | GET | SMART discovery (proxied + rewritten) | both |
-| `/.well-known/openid-configuration` | GET | OIDC discovery (proxied) | both |
-| `/api/authorize` | GET, POST | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. POST (form-encoded) is supported for the SMART `authorize-post` capability. | both |
-| `/api/token` | POST | Exchanges authorization code or client credentials for an access token. Enriches the response with SMART launch context. | both |
-| `/api/context-cache` | POST | Validates the launch initiator token and stores launch context against the authenticated user. Returns `204 No Content`. | both |
+| `/.well-known/smart-configuration` | GET | SMART discovery (proxied + rewritten) | EntraId |
+| `/.well-known/openid-configuration` | GET | OIDC discovery (proxied) | EntraId |
+| `/api/authorize` | GET, POST | Begins SMART authorization. Translates SMART scopes/launch parameters into the upstream IdP's authorize request and redirects. POST (form-encoded) is supported for the SMART `authorize-post` capability. | EntraId |
+| `/api/token` | POST | Exchanges authorization code or client credentials for an access token. Enriches the response with SMART launch context. | EntraId |
+| `/api/context-cache` | POST | Validates the launch initiator token and stores launch context against the authenticated user. Returns `204 No Content`. | EntraId |
 | `/api/ehr-launch` | GET | Built-in browser-based EHR launch initiator used by the sample and Inferno tests. | EntraId |
 | `/api/consent-ui` | GET | Built-in Entra consent picker page. | EntraId |
 | `/api/appConsentInfo` | GET, POST | Reads and narrows the authenticated user's delegated grants for the consent picker. Requires Function managed-identity Graph permissions. | EntraId |
-| `/api/block-access-token` | POST | Revokes an access token. The body is the raw access token; the gateway blocklists its `uti`/`jti` so the FHIR proxy rejects it with 401. Advertised as `revocation_endpoint` in SMART discovery. Entra cannot natively revoke access tokens, so this provides the revocation behavior. Use a distributed (Redis) cache for multi-instance deployments. | both |
-| `/{fhir-path}` | FHIR methods | Proxies FHIR traffic, enforces the gateway token blocklist, and rewrites selected discovery and capability responses. | both |
+| `/api/block-access-token` | POST | Revokes an access token. The body is the raw access token; the gateway blocklists its `uti`/`jti` so the FHIR proxy rejects it with 401. Advertised as `revocation_endpoint` in SMART discovery. Entra cannot natively revoke access tokens, so this provides the revocation behavior. Use a distributed (Redis) cache for multi-instance deployments. | EntraId |
+| `/{fhir-path}` | FHIR methods | Proxies FHIR traffic, enforces the gateway token blocklist, and rewrites selected discovery and capability responses. | EntraId |
 | `/Group/{id}/$export` | GET | Starts an asynchronous FHIR Bulk Data group export and forces output into a client-specific container. | EntraId |
 | `/_operations/export/{id}` | GET, DELETE | Polls or cancels an export job through the gateway. | EntraId |
 | `/_export/{container}/{file}` | GET | Authenticates and streams an exported NDJSON file from Blob Storage. | EntraId |
@@ -133,17 +133,16 @@ Application settings on the Function App (set automatically by Bicep):
 
 | Setting | Required | Description |
 | --- | :---: | --- |
-| `AZURE_IdpType` | ✓ | `EntraId` or `ExternalIdp`. |
-| `AZURE_TenantId` | EntraId | Microsoft Entra tenant id. |
-| `AZURE_Authority_URL` | optional | External IdP authority URL. If blank in External mode, auto-discovered from FHIR `.well-known/smart-configuration`. |
+| `AZURE_IdpType` | ✓ | `EntraId`. |
+| `AZURE_TenantId` | ✓ | Microsoft Entra tenant id. |
 | `AZURE_FhirServerUrl` | ✓ | Base URL of the FHIR Service. |
 | `AZURE_FhirAudience` | ✓ | Expected token audience. Defaults to `FhirServerUrl`. |
-| `AZURE_FhirResourceAppId` | EntraId | Client ID of the FHIR Resource App registration. |
+| `AZURE_FhirResourceAppId` | ✓ | Client ID of the FHIR Resource App registration. |
 | `AZURE_ContextAppClientId` | optional | Client ID of the Auth Context Frontend App; when set, restricts callers of `/api/context-cache`. |
 | `AZURE_CacheConnectionString` | optional | Redis-compatible connection string. Blank = in-memory cache. |
-| `AZURE_BackendServiceKeyVaultStore` | EntraId backend services | Key Vault name (or vault URI) hosting backend client registrations. Empty disables backend services on the gateway. |
-| `AZURE_ConsentPickerAudience` | optional, EntraId | Audience used by the consent picker when acquiring its API token. Blank derives `api://<ContextAppClientId>`. |
-| `AZURE_ExportStorageBlobUri` | EntraId bulk export | Blob service URI used to stream FHIR Bulk Data export files. Blank disables gateway bulk-export handling. |
+| `AZURE_BackendServiceKeyVaultStore` | backend services | Key Vault name (or vault URI) hosting backend client registrations. Empty disables backend services on the gateway. |
+| `AZURE_ConsentPickerAudience` | optional | Audience used by the consent picker when acquiring its API token. Blank derives `api://<ContextAppClientId>`. |
+| `AZURE_ExportStorageBlobUri` | bulk export | Blob service URI used to stream FHIR Bulk Data export files. Blank disables gateway bulk-export handling. |
 | `AZURE_Debug` | optional | Includes internal error details in responses when `true`. The sample Bicep currently enables it for diagnostics; set it to `false` before using the deployment outside controlled testing. |
 
 `AZURE_CacheConnectionString` points to a separately provisioned service; the Bicep deployment does not create Redis.
@@ -181,50 +180,25 @@ sequenceDiagram
     FHIR-->>App: 200 OK
 ```
 
-### ExternalIdp mode
-
-```mermaid
-sequenceDiagram
-    participant EHR
-    participant App as SMART App
-    participant GW as SMART Gateway
-    participant IdP as External IdP
-    participant FHIR as FHIR Service
-
-    EHR->>GW: POST /api/context-cache (launch context)
-    GW-->>EHR: 204 No Content
-    EHR->>App: Launch URL with launch value
-    App->>GW: GET /.well-known/smart-configuration
-    GW-->>App: discovery (gateway endpoints)
-    App->>GW: GET /api/authorize (SMART scopes + launch)
-    GW->>IdP: GET /authorize (forwarded)
-    IdP-->>App: authorization code
-    App->>GW: POST /api/token (code)
-    GW->>IdP: POST /token (forwarded)
-    IdP-->>GW: access_token (already SMART-shaped)
-    GW->>GW: Merge cached launch context
-    GW-->>App: access_token + patient/encounter/launch
-    App->>FHIR: GET /Patient/{id}
-    FHIR-->>App: 200 OK
-```
+<!-- Additional identity providers: add an EHR launch sequence diagram for each one here once they are supported. -->
 
 ---
 
 ## 7. Flow — Standalone Launch
 
-Standalone launch is for applications launched outside an EHR session — typically patient-facing apps. There is no pre-cached launch context, so the gateway relies on the IdP's claim mappings (and the user's selection where applicable) to populate `patient`, `fhirUser`, and similar context.
+Standalone launch is for applications launched outside an EHR session — typically patient-facing apps. There is no pre-cached launch context, so the gateway relies on Entra claim mappings (and the user's selection where applicable) to populate `patient`, `fhirUser`, and similar context.
 
 ```mermaid
 sequenceDiagram
     participant App as SMART App
     participant GW as SMART Gateway
-    participant IdP as Identity Provider
+    participant IdP as Microsoft Entra ID
     participant FHIR as FHIR Service
 
     App->>GW: GET /.well-known/smart-configuration
     GW-->>App: discovery (gateway endpoints)
     App->>GW: GET /api/authorize (SMART scopes, PKCE for public clients)
-    GW->>IdP: /authorize (translated for Entra, forwarded for External)
+    GW->>IdP: /authorize (translated scopes)
     IdP-->>App: authorization code
     App->>GW: POST /api/token (code, code_verifier or client_secret)
     GW->>IdP: /token
@@ -238,15 +212,15 @@ The same endpoint handles both **public clients** (PKCE, no secret) and **confid
 
 ### Entra consent picker
 
-In Entra mode, `/api/authorize` can redirect the user to the built-in `/api/consent-ui` before continuing to Microsoft Entra. The browser acquires a token using the Auth Context Frontend App registration and calls `/api/appConsentInfo`. The gateway uses its managed identity to read the requesting application, list the authenticated user's delegated grants, and narrow those grants when the user removes scopes.
+`/api/authorize` can redirect the user to the built-in `/api/consent-ui` before continuing to Microsoft Entra. The browser acquires a token using the Auth Context Frontend App registration and calls `/api/appConsentInfo`. The gateway uses its managed identity to read the requesting application, list the authenticated user's delegated grants, and narrow those grants when the user removes scopes.
 
-After `azd up`, run `scripts/Grant-FunctionAppGraphPermissions.ps1` so the Function App managed identity has `Application.Read.All` and `DelegatedPermissionGrant.ReadWrite.All`. External IdP mode does not use this picker.
+After `azd up`, run `scripts/Grant-FunctionAppGraphPermissions.ps1` so the Function App managed identity has `Application.Read.All` and `DelegatedPermissionGrant.ReadWrite.All`.
 
 ---
 
 ## 8. Flow — Backend Services
 
-SMART v2 Backend Services use `grant_type=client_credentials` with a `client_assertion` signed by an asymmetric key the client publishes via JWKS. The two IdP modes diverge here:
+SMART v2 Backend Services use `grant_type=client_credentials` with a `client_assertion` signed by an asymmetric key the client publishes via JWKS.
 
 ### EntraId mode — gateway validates and swaps
 
@@ -274,25 +248,7 @@ sequenceDiagram
     FHIR-->>Client: 200 OK
 ```
 
-### ExternalIdp mode — direct to the IdP
-
-SMART-capable IdPs implement Backend Services natively. The client calls the IdP token endpoint **directly**, using the `token_endpoint` advertised in the FHIR Service's `.well-known/smart-configuration`. The gateway is not involved.
-
-```mermaid
-sequenceDiagram
-    participant Client as Backend Service Client
-    participant FHIR as FHIR Service
-    participant IdP as External IdP
-
-    Client->>FHIR: GET /.well-known/smart-configuration
-    FHIR-->>Client: token_endpoint = IdP /token
-    Client->>IdP: POST /token (client_credentials, client_assertion)
-    IdP-->>Client: access_token
-    Client->>FHIR: GET /Patient
-    FHIR-->>Client: 200 OK
-```
-
-> When pointing a backend service client at an `ExternalIdp` deployment, set the client's `BackendServices:FhirBaseUrl` (or equivalent setting) to the **FHIR Service URL**, not the gateway URL, so its discovery resolves the IdP token endpoint.
+<!-- Additional identity providers: add a Backend Services sequence diagram for each one here once they are supported. -->
 
 ---
 
@@ -308,7 +264,7 @@ Revocation is enforced by the gateway, not by the upstream FHIR service or IdP. 
 
 The deployment always creates a dedicated export storage account. For a newly created FHIR service, Bicep configures that account as the FHIR export destination, grants the FHIR managed identity write access, and grants the gateway managed identity read access.
 
-The gateway export proxy is enabled only in Entra mode:
+The gateway export proxy reads export files through its managed identity:
 
 ```mermaid
 sequenceDiagram

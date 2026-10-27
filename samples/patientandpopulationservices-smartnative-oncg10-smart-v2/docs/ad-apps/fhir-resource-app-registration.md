@@ -7,7 +7,7 @@ This application registration represents the **FHIR API** in Microsoft Entra ID.
 
 Microsoft does not allow custom claim mappings on the first-party Healthcare APIs application because doing so would be a security risk for malicious applications (see [acceptMappedClaims attribute](https://learn.microsoft.com/azure/active-directory/develop/reference-app-manifest#acceptmappedclaims-attribute)). To work around that, the sample uses a custom application registration as the FHIR audience and applies the `fhirUser` claim mapping there.
 
-This is required only when deploying with `IdpType=EntraId`. External IdPs handle SMART claim mapping inside their own authorization servers.
+This is required when deploying with `IdpType=EntraId`.
 
 ---
 
